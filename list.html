@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Data Structures — Visual Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;
+  --paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;
+  --mono-bg:#1e1c18;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--blue-light:#dceefb;
+  --green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--green-light:#d8f0c4;
+  --amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--amber-light:#fdf0d0;
+  --purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--purple-light:#e0deff;
+  --teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;
+  --red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+
+/* NAV */
+.nav{display:flex;overflow-x:auto;background:var(--ink);border-bottom:none;gap:0;}
+.nav-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:13px 18px;border:none;background:none;color:rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;transition:all 0.15s;border-bottom:3px solid transparent;}
+.nav-btn:hover{color:rgba(255,255,255,0.75);}
+.nav-btn.active{color:#fff;border-bottom-color:#fff;}
+
+/* PANELS */
+.panel{display:none;padding:1.75rem;}
+.panel.active{display:block;}
+
+.page-title{font-family:'DM Serif Display',serif;font-size:1.6rem;font-weight:400;margin-bottom:0.25rem;}
+.page-sub{font-size:13px;color:var(--ink3);margin-bottom:2rem;line-height:1.5;}
+
+/* BIG METAPHOR CARD */
+.meta-card{
+  border-radius:14px;padding:1.5rem;margin-bottom:2rem;
+  display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;
+}
+.meta-icon{font-size:56px;flex-shrink:0;line-height:1;}
+.meta-right{flex:1;min-width:220px;}
+.meta-name{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:0.2rem;}
+.meta-tagline{font-size:13px;line-height:1.55;margin-bottom:0.5rem;}
+.meta-cambridge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;display:inline-block;}
+
+.meta-blue  {background:var(--blue-light); border:1.5px solid var(--blue-bd);}
+.meta-green {background:var(--green-light);border:1.5px solid var(--green-bd);}
+.meta-amber {background:var(--amber-light);border:1.5px solid var(--amber-bd);}
+.meta-purple{background:var(--purple-light);border:1.5px solid var(--purple-bd);}
+
+/* VISUAL BOXES */
+.visual-section{margin-bottom:1.5rem;}
+.visual-label{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);margin-bottom:0.5rem;}
+
+/* LIST VISUAL */
+.list-visual{display:flex;gap:4px;flex-wrap:wrap;margin:0.5rem 0;}
+.list-box{
+  width:64px;height:64px;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:2px solid var(--blue-bd);background:var(--blue-bg);
+  font-family:'DM Mono',monospace;
+}
+.list-box .idx{font-size:9px;color:var(--blue);opacity:0.7;margin-bottom:2px;}
+.list-box .val{font-size:14px;font-weight:500;color:var(--blue);}
+.list-box.empty{background:var(--paper2);border-color:var(--rule);border-style:dashed;}
+.list-box.empty .val{color:var(--ink3);font-size:11px;}
+
+/* DICT VISUAL */
+.dict-visual{display:flex;flex-direction:column;gap:4px;margin:0.5rem 0;}
+.dict-row{display:flex;gap:6px;align-items:center;}
+.dict-key{
+  min-width:100px;padding:8px 12px;border-radius:6px;
+  background:var(--amber-bg);border:1.5px solid var(--amber-bd);
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--amber);
+  text-align:center;
+}
+.dict-arrow{font-size:18px;color:var(--ink3);}
+.dict-val{
+  padding:8px 14px;border-radius:6px;
+  background:#fff;border:1.5px solid var(--rule);
+  font-family:'DM Mono',monospace;font-size:12px;color:var(--ink2);
+}
+
+
+
+/* CODE BLOCKS */
+pre.py{
+  font-family:'DM Mono',monospace;font-size:12px;
+  background:var(--mono-bg);color:#d4d0c4;
+  border-radius:8px;padding:1rem 1.1rem;line-height:1.8;
+  white-space:pre-wrap;word-break:break-word;margin:0.75rem 0;
+}
+.kw{color:#7eb8d4;font-weight:500;}
+.fn{color:#a8d8a0;}
+.st{color:#e8c878;}
+.cm{color:#6a6860;font-style:italic;}
+.nm{color:#c8a8f0;}
+
+/* OPERATIONS TABLE */
+.ops-table{width:100%;border-collapse:collapse;font-size:13px;margin:0.75rem 0;}
+.ops-table th{text-align:left;padding:7px 12px;background:var(--paper3);border:1px solid var(--rule);font-size:10.5px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;}
+.ops-table td{padding:8px 12px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.ops-table tr:nth-child(even) td{background:var(--paper2);}
+.ops-table td code{font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 5px;border-radius:3px;}
+.ops-table td.result{font-family:'DM Mono',monospace;font-size:12px;color:var(--green);font-weight:500;}
+
+/* BOXES */
+.box{border-radius:8px;padding:0.75rem 1rem;font-size:13px;line-height:1.55;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:3px;}
+.box-blue  {background:var(--blue-bg);  border:1px solid var(--blue-bd);  color:var(--blue);}
+.box-green {background:var(--green-bg); border:1px solid var(--green-bd); color:var(--green);}
+.box-amber {background:var(--amber-bg); border:1px solid var(--amber-bd); color:var(--amber);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+.box-red   {background:var(--red-bg);   border:1px solid var(--red-bd);   color:var(--red);}
+.box-teal  {background:var(--teal-bg);  border:1px solid var(--teal-bd);  color:var(--teal);}
+
+/* DIVIDER */
+.div{height:1px;background:var(--rule);margin:1.75rem 0;}
+
+/* COMPARISON TABLE (last tab) */
+.cmp{width:100%;border-collapse:collapse;font-size:13px;}
+.cmp th{padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:#fff;font-weight:500;border:1px solid rgba(255,255,255,0.15);}
+.cmp td{padding:10px 14px;border:1px solid var(--rule);vertical-align:top;line-height:1.55;}
+.cmp tr:nth-child(even) td{background:var(--paper2);}
+.cmp td:first-child{font-weight:500;}
+.th-list  {background:var(--blue);}
+.th-dict  {background:var(--amber);}
+.th-set   {background:var(--green);}
+.tick{color:#1D9E75;font-weight:500;}
+.cross{color:#E24B4A;font-weight:500;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="tab('t1',this)">📋 List</button>
+  <button class="nav-btn"        onclick="tab('t2',this)">📖 Dictionary</button>
+  <button class="nav-btn"        onclick="tab('t4',this)">⚡ Compare all</button>
+  <button class="nav-btn"        onclick="tab('t5',this)">✏️ Exercises</button>
+</div>
+
+
+<!-- ══════════════════════════════
+     TAB 1 — LIST
+══════════════════════════════ -->
+<div class="panel active" id="t1">
+
+  <div class="meta-card meta-blue">
+    <div class="meta-icon">📋</div>
+    <div class="meta-right">
+      <div class="meta-name">List</div>
+      <div class="meta-tagline" style="color:var(--blue)">Think of it like a <strong>numbered playlist</strong>. Items are in order, each one has a number (index), and you can add, remove or change any song.</div>
+      <span class="meta-cambridge" style="background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)">Cambridge calls this: ARRAY</span>
+    </div>
+  </div>
+
+  <!-- VISUAL -->
+  <div class="visual-section">
+    <div class="visual-label">What it looks like in memory</div>
+    <div class="list-visual">
+      <div class="list-box"><span class="idx">index 0</span><span class="val">85</span></div>
+      <div class="list-box"><span class="idx">index 1</span><span class="val">72</span></div>
+      <div class="list-box"><span class="idx">index 2</span><span class="val">91</span></div>
+      <div class="list-box"><span class="idx">index 3</span><span class="val">60</span></div>
+      <div class="list-box"><span class="idx">index 4</span><span class="val">78</span></div>
+    </div>
+    <div style="font-size:12px;color:var(--ink3);margin-top:4px;">Always starts at index <strong>0</strong> — not 1. So a list of 5 items has indices 0, 1, 2, 3, 4.</div>
+  </div>
+
+  <div class="box box-blue"><strong>The simplest way to think about it</strong>
+    A list is like a row of boxes. Each box has a number on it starting from 0. You can put anything inside the boxes, look inside any box, change what's inside, or add more boxes at the end.
+  </div>
+
+  <!-- CREATION -->
+  <div class="visual-label" style="margin-top:1rem;">How to create a list</div>
+  <pre class="py"><span class="cm"># Empty list — nothing in it yet</span>
+scores = []
+
+<span class="cm"># List with values already in it</span>
+scores = [<span class="nm">85</span>, <span class="nm">72</span>, <span class="nm">91</span>, <span class="nm">60</span>, <span class="nm">78</span>]
+
+<span class="cm"># List of strings</span>
+names = [<span class="st">"Ali"</span>, <span class="st">"Sara"</span>, <span class="st">"Omar"</span>]
+
+<span class="cm"># Fixed size list — all slots set to -1 (Cambridge exam style)</span>
+<span class="cm"># DECLARE arr[0:19] OF INTEGER → initialised to -1</span>
+arr = [<span class="nm">-1</span>] * <span class="nm">20</span>   <span class="cm"># 20 boxes, all containing -1</span></pre>
+
+  <!-- OPERATIONS TABLE -->
+  <div class="visual-label" style="margin-top:1rem;">Everything you can do with a list</div>
+  <table class="ops-table">
+    <tr><th>What you want</th><th>Cambridge pseudocode</th><th>Python</th><th>Result</th></tr>
+    <tr><td>Get the first item</td><td><code>arr[0]</code></td><td><code>scores[0]</code></td><td class="result">85</td></tr>
+    <tr><td>Get the last item</td><td><code>arr[LEN(arr)-1]</code></td><td><code>scores[-1]</code></td><td class="result">78</td></tr>
+    <tr><td>Change an item</td><td><code>arr[2] ← 99</code></td><td><code>scores[2] = 99</code></td><td class="result">index 2 is now 99</td></tr>
+    <tr><td>Add to the end</td><td><code>arr.append</code></td><td><code>scores.append(55)</code></td><td class="result">adds 55 at the end</td></tr>
+    <tr><td>How many items?</td><td><code>LEN(arr)</code></td><td><code>len(scores)</code></td><td class="result">5</td></tr>
+    <tr><td>Is 85 in the list?</td><td><code>85 in arr</code></td><td><code>85 in scores</code></td><td class="result">True</td></tr>
+    <tr><td>Remove an item</td><td>—</td><td><code>scores.remove(72)</code></td><td class="result">removes 72</td></tr>
+    <tr><td>Sort the list</td><td>bubble sort algorithm</td><td><code>scores.sort()</code></td><td class="result">[60,72,78,85,91]</td></tr>
+    <tr><td>Loop through all</td><td><code>FOR EACH item IN arr</code></td><td><code>for item in scores:</code></td><td class="result">visits each item</td></tr>
+  </table>
+
+  <pre class="py"><span class="cm"># Full example</span>
+scores = [<span class="nm">85</span>, <span class="nm">72</span>, <span class="nm">91</span>, <span class="nm">60</span>, <span class="nm">78</span>]
+
+<span class="fn">print</span>(scores[<span class="nm">0</span>])      <span class="cm"># 85  — first item</span>
+<span class="fn">print</span>(scores[<span class="nm">-1</span>])     <span class="cm"># 78  — last item</span>
+<span class="fn">print</span>(<span class="fn">len</span>(scores))    <span class="cm"># 5   — how many items</span>
+
+scores.<span class="fn">append</span>(<span class="nm">100</span>)    <span class="cm"># add 100 at the end</span>
+scores[<span class="nm">1</span>] = <span class="nm">99</span>        <span class="cm"># change index 1 from 72 to 99</span>
+
+<span class="kw">for</span> score <span class="kw">in</span> scores:
+    <span class="fn">print</span>(score)        <span class="cm"># prints each one</span></pre>
+
+  <div class="box box-red"><strong>The #1 beginner mistake with lists</strong>
+    A list of 5 items has indices 0, 1, 2, 3, 4. The last index is 4, NOT 5. Trying scores[5] on a 5-item list crashes with IndexError: list index out of range. Always remember: last index = len(list) - 1.
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════
+     TAB 2 — DICTIONARY
+══════════════════════════════ -->
+<div class="panel" id="t2">
+
+  <div class="meta-card meta-amber">
+    <div class="meta-icon">📖</div>
+    <div class="meta-right">
+      <div class="meta-name">Dictionary</div>
+      <div class="meta-tagline" style="color:var(--amber)">Think of it like a <strong>real dictionary</strong> or a <strong>contact list on your phone</strong>. You look something up by its name (key), not by a number.</div>
+      <span class="meta-cambridge" style="background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)">Look up by name, not by number</span>
+    </div>
+  </div>
+
+  <!-- PHONE ANALOGY -->
+  <div class="box box-amber"><strong>The phone contacts analogy</strong>
+    Imagine your phone contacts. To find Sara's number, you search for "Sara" — not "contact number 3". A dictionary works the same way. You give it a name (called a key) and it gives you back the value stored under that name. No index numbers needed.
+  </div>
+
+  <!-- VISUAL -->
+  <div class="visual-section">
+    <div class="visual-label">What a dictionary looks like</div>
+    <div class="dict-visual">
+      <div class="dict-row">
+        <div class="dict-key">"name"</div>
+        <div class="dict-arrow">→</div>
+        <div class="dict-val">"Ali"</div>
+      </div>
+      <div class="dict-row">
+        <div class="dict-key">"age"</div>
+        <div class="dict-arrow">→</div>
+        <div class="dict-val">17</div>
+      </div>
+      <div class="dict-row">
+        <div class="dict-key">"grade"</div>
+        <div class="dict-arrow">→</div>
+        <div class="dict-val">"A"</div>
+      </div>
+      <div class="dict-row">
+        <div class="dict-key">"passed"</div>
+        <div class="dict-arrow">→</div>
+        <div class="dict-val">True</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--ink3);margin-top:6px;">Left side = <strong>keys</strong> (the names you use to look things up). Right side = <strong>values</strong> (what's stored there). Keys must be unique.</div>
+  </div>
+
+  <!-- CREATION -->
+  <div class="visual-label" style="margin-top:1rem;">How to create a dictionary</div>
+  <pre class="py"><span class="cm"># Empty dictionary</span>
+student = {}
+
+<span class="cm"># Dictionary with data already in it</span>
+student = {
+    <span class="st">"name"</span>  : <span class="st">"Ali"</span>,
+    <span class="st">"age"</span>   : <span class="nm">17</span>,
+    <span class="st">"grade"</span> : <span class="st">"A"</span>,
+    <span class="st">"passed"</span>: <span class="kw">True</span>
+}</pre>
+
+  <!-- OPERATIONS TABLE -->
+  <div class="visual-label" style="margin-top:1rem;">Everything you can do with a dictionary</div>
+  <table class="ops-table">
+    <tr><th>What you want</th><th>Python</th><th>Result</th></tr>
+    <tr><td>Get a value by key</td><td><code>student["name"]</code></td><td class="result">"Ali"</td></tr>
+    <tr><td>Add a new key-value</td><td><code>student["score"] = 95</code></td><td class="result">adds score: 95</td></tr>
+    <tr><td>Change a value</td><td><code>student["age"] = 18</code></td><td class="result">age is now 18</td></tr>
+    <tr><td>Does this key exist?</td><td><code>"name" in student</code></td><td class="result">True</td></tr>
+    <tr><td>Delete a key</td><td><code>del student["grade"]</code></td><td class="result">removes grade entry</td></tr>
+    <tr><td>Get all keys</td><td><code>student.keys()</code></td><td class="result">name, age, grade...</td></tr>
+    <tr><td>Safe get (no crash)</td><td><code>student.get("score", 0)</code></td><td class="result">0 if key missing</td></tr>
+    <tr><td>Loop through keys</td><td><code>for key in student:</code></td><td class="result">visits each key</td></tr>
+  </table>
+
+  <pre class="py">student = {<span class="st">"name"</span>:<span class="st">"Ali"</span>, <span class="st">"age"</span>:<span class="nm">17</span>, <span class="st">"grade"</span>:<span class="st">"A"</span>}
+
+<span class="cm"># Read values</span>
+<span class="fn">print</span>(student[<span class="st">"name"</span>])   <span class="cm"># Ali</span>
+<span class="fn">print</span>(student[<span class="st">"age"</span>])    <span class="cm"># 17</span>
+
+<span class="cm"># Add new info</span>
+student[<span class="st">"score"</span>] = <span class="nm">95</span>
+
+<span class="cm"># Update existing info</span>
+student[<span class="st">"age"</span>] = <span class="nm">18</span>
+
+<span class="cm"># Check if a key exists before reading it</span>
+<span class="kw">if</span> <span class="st">"score"</span> <span class="kw">in</span> student:
+    <span class="fn">print</span>(<span class="st">f"Score: {student['score']}"</span>)
+
+<span class="cm"># Loop through everything</span>
+<span class="kw">for</span> key <span class="kw">in</span> student:
+    <span class="fn">print</span>(<span class="st">f"{key}: {student[key]}"</span>)</pre>
+
+  <div class="box box-red"><strong>List vs Dictionary — when to use which?</strong>
+    Use a <strong>list</strong> when you have multiple items of the same type: a list of scores, a list of names.<br>
+    Use a <strong>dictionary</strong> when you have one thing with multiple properties: one student with name, age, and grade.<br><br>
+    Think of it this way: a list is a column. A dictionary is a row in a spreadsheet.
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════
+     TAB 4 — COMPARE ALL
+══════════════════════════════ -->
+<div class="panel" id="t4">
+
+  <div class="page-title">Which one do I use?</div>
+  <div class="page-sub">One question — four answers. Pick the right structure for the job.</div>
+
+  <!-- QUICK DECISION BOXES -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2rem;margin-bottom:2rem;">
+
+    <div style="border-radius:12px;padding:1.25rem;background:var(--blue-light);border:1.5px solid var(--blue-bd);">
+      <div style="font-size:28px;margin-bottom:0.5rem;">📋</div>
+      <div style="font-weight:500;font-size:14px;color:var(--blue);margin-bottom:0.4rem;">Use a List when...</div>
+      <div style="font-size:12.5px;color:var(--blue);line-height:1.6;">You have <strong>multiple items of the same type</strong> and order matters. A list of exam scores. A list of names. A queue. An array in Cambridge pseudocode.</div>
+      <div style="margin-top:0.75rem;font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,255,255,0.6);padding:5px 8px;border-radius:5px;color:var(--ink2);">scores = [85, 72, 91]</div>
+    </div>
+
+    <div style="border-radius:12px;padding:1.25rem;background:var(--amber-light);border:1.5px solid var(--amber-bd);">
+      <div style="font-size:28px;margin-bottom:0.5rem;">📖</div>
+      <div style="font-weight:500;font-size:14px;color:var(--amber);margin-bottom:0.4rem;">Use a Dictionary when...</div>
+      <div style="font-size:12.5px;color:var(--amber);line-height:1.6;">You have <strong>one thing with multiple properties</strong>. One student with name, age, grade. One product with price and stock. You look things up by name, not number.</div>
+      <div style="margin-top:0.75rem;font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,255,255,0.6);padding:5px 8px;border-radius:5px;color:var(--ink2);">student = {"name":"Ali"}</div>
+    </div>
+
+ 
+  </div>
+
+  <!-- BIG COMPARISON TABLE -->
+  <div style="overflow-x:auto;">
+  <table class="cmp">
+    <thead>
+      <tr>
+        <th style="background:var(--ink);color:#fff;border:1px solid rgba(255,255,255,0.15);">Feature</th>
+        <th class="th-list">📋 List</th>
+        <th class="th-dict">📖 Dictionary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>How to create</td>
+        <td><code>[ ]</code></td>
+        <td><code>{ key: value }</code></td>
+        </tr>
+      <tr>
+        <td>Access items by</td>
+        <td>Index number: <code>[0]</code></td>
+        <td>Key name: <code>["name"]</code></td>
+        </tr>
+      <tr>
+        <td>Ordered?</td>
+        <td><span class="tick">✓ Yes</span> — always in order</td>
+        <td><span class="tick">✓ Yes</span> — insertion order</td>
+        </tr>
+      <tr>
+        <td>Can change items?</td>
+        <td><span class="tick">✓ Yes</span> — fully mutable</td>
+        <td><span class="tick">✓ Yes</span> — add/change/delete</td>
+        </tr>
+      <tr>
+        <td>Allows duplicates?</td>
+        <td><span class="tick">✓ Yes</span> — [1,1,2,2] is fine</td>
+        <td>Keys must be unique — values can repeat</td>
+        </tr>
+    
+      <tr>
+        <td>Best used for</td>
+        <td>Exam scores, names, queues, stacks</td>
+        <td>Student records, phone contacts, settings</td>
+        </tr>
+      <tr>
+        <td>Cambridge exam?</td>
+        <td><span class="tick">✓ Appears every year</span></td>
+        <td><span class="tick">✓ Common in Q2/Q3</span></td>
+        </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- MEMORY AID -->
+  <div class="box box-teal" style="margin-top:1.5rem;"><strong>Simple memory aid</strong>
+    <strong>[ ]  square brackets</strong> → List → like a numbered shelf<br>
+    <strong>{ : } curly + colon</strong> → Dictionary → like a phone contact (name: number)<br>
+    
+  </div>
+
+  <pre class="py" style="margin-top:1rem;"><span class="cm"># All four — side by side</span>
+my_list  = [<span class="nm">85</span>, <span class="nm">72</span>, <span class="nm">91</span>]                    <span class="cm"># ordered, indexed, changeable</span>
+my_dict  = {<span class="st">"name"</span>:<span class="st">"Ali"</span>, <span class="st">"age"</span>:<span class="nm">17</span>}        <span class="cm"># key-value, lookup by name</span>
+  <span class="cm"># ordered, indexed, LOCKED</span>
+<span class="cm"># The exam question tells you which to use:</span>
+<span class="cm"># "store 20 integers" → list</span>
+<span class="cm"># "store student name, age, grade" → dictionary</span>
+</pre>
+
+</div>
+
+
+<!-- ══════════════════════════════
+     TAB 5 — EXERCISES
+══════════════════════════════ -->
+<div class="panel" id="t5">
+
+  <div class="page-title">Practice exercises</div>
+  <div class="page-sub">Easy exercises using Lists and  Dictionaries  with for and while loops. Try to write the answer yourself first — then reveal it.</div>
+
+  <!-- EX STYLES -->
+  <style>
+  .ex{border:1px solid var(--rule);border-radius:8px;margin-bottom:1.25rem;overflow:hidden;background:#fff;}
+  .ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--paper2);border-bottom:1px solid var(--rule);flex-wrap:wrap;gap:0.5rem;cursor:pointer;user-select:none;}
+  .ex-head:hover{background:var(--paper3);}
+  .ex-hl{display:flex;align-items:center;gap:0.75rem;}
+  .ex-num{font-family:"DM Mono",monospace;font-size:11px;color:var(--ink3);}
+  .ex-title{font-weight:500;font-size:13.5px;}
+  .ex-meta{display:flex;gap:0.4rem;align-items:center;}
+  .b-easy{font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:500;text-transform:uppercase;background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);}
+  .b-mid {font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:500;text-transform:uppercase;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+  .b-marks{font-size:9.5px;padding:2px 8px;border-radius:10px;background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+  .tlbl{font-size:11px;color:var(--ink3);font-style:italic;}
+  .ex-body{padding:1rem 1.1rem;}
+  .scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.65rem 0.9rem;border-radius:0 5px 5px 0;font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:0.85rem;}
+  .task-list{list-style:none;padding:0;margin-bottom:0.85rem;}
+  .task-list li{padding:0.3rem 0 0.3rem 1.3rem;position:relative;font-size:13px;border-bottom:0.5px solid var(--paper2);}
+  .task-list li:last-child{border-bottom:none;}
+  .task-list li::before{content:"•";position:absolute;left:0.3rem;color:var(--ink3);}
+  .task-list li .pts{float:right;font-family:"DM Mono",monospace;font-size:10px;background:var(--paper3);padding:1px 6px;border-radius:10px;color:var(--ink3);}
+  .btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;}
+  .hint-btn,.ans-btn{font-family:"DM Sans",sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+  .hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+  .hint-btn:hover{background:var(--paper2);}
+  .ans-btn{background:var(--ink);border:none;color:#fff;}
+  .ans-btn:hover{background:var(--ink2);}
+  .hint-box{display:none;background:var(--paper2);border:1px dashed var(--rule);border-radius:5px;padding:0.65rem 0.9rem;font-size:13px;color:var(--ink2);margin-top:0.65rem;line-height:1.55;}
+  .hint-box.on{display:block;}
+  .hlbl{font-size:9.5px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);display:block;margin-bottom:3px;}
+  .ans-box{display:none;background:var(--mono-bg);border-radius:6px;padding:0.85rem 1rem;margin-top:0.65rem;font-family:"DM Mono",monospace;font-size:12px;line-height:1.8;color:#d4d0c4;overflow-x:auto;border:1px solid rgba(255,255,255,0.06);white-space:pre-wrap;word-break:break-word;}
+  .ans-box.on{display:block;}
+  .sout{margin-top:0.75rem;}
+  .slbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);font-weight:500;margin-bottom:4px;}
+  pre.srun{font-family:"DM Mono",monospace;font-size:12px;background:var(--paper2);border:1px solid var(--rule);border-radius:5px;padding:0.6rem 0.85rem;line-height:1.7;white-space:pre-wrap;color:var(--ink2);}
+  .out2{color:#854F0B;}
+  </style>
+
+  <!-- ── LIST EXERCISES ── -->
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--blue);margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:2px solid var(--blue-bg);">📋 List exercises</div>
+
+  <!-- L1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('l1')">
+      <div class="ex-hl"><span class="ex-num">L1</span><span class="ex-title">Print every item in a list using a for loop</span></div>
+      <div class="ex-meta"><span class="b-easy">Easy</span><span class="b-marks">[3 marks]</span><span class="tlbl" id="l1-lbl">▼</span></div>
+    </div>
+    <div class="ex-body" id="l1" style="display:none">
+      <div class="scenario">You have a list of 5 student names. Use a <strong>for loop</strong> to print each name on a new line with its position number.</div>
+      <ul class="task-list">
+        <li>Declare the list with 5 names <span class="pts">[1]</span></li>
+        <li>Use a for loop with range() and len() <span class="pts">[1]</span></li>
+        <li>Print each name with its number (starting from 1) <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sout"><div class="slbl">Expected output</div>
+      <pre class="srun"><span class="out2">1. Ali</span>
+<span class="out2">2. Sara</span>
+<span class="out2">3. Omar</span>
+<span class="out2">4. Lina</span>
+<span class="out2">5. Karim</span></pre></div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('hl1')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('al1')">Show answer</button>
+      </div>
+      <div class="hint-box" id="hl1"><span class="hlbl">Hint</span>Use <code>for i in range(len(names)):</code> so you have the index. Then <code>names[i]</code> gives the name. Add 1 to i in the print because lists start at 0 but you want to show 1.</div>
+      <div class="ans-box" id="al1"><span style="color:#a8d8a0">names</span> = [<span style="color:#e8c878">"Ali"</span>, <span style="color:#e8c878">"Sara"</span>, <span style="color:#e8c878">"Omar"</span>, <span style="color:#e8c878">"Lina"</span>, <span style="color:#e8c878">"Karim"</span>]
+
+<span style="color:#7eb8d4;font-weight:500">for</span> i <span style="color:#7eb8d4;font-weight:500">in</span> <span style="color:#a8d8a0">range</span>(<span style="color:#a8d8a0">len</span>(names)):
+    <span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"{i+1}. {names[i]}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- L2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('l2')">
+      <div class="ex-hl"><span class="ex-num">L2</span><span class="ex-title">Calculate total and average of a list</span></div>
+      <div class="ex-meta"><span class="b-easy">Easy</span><span class="b-marks">[4 marks]</span><span class="tlbl" id="l2-lbl">▼</span></div>
+    </div>
+    <div class="ex-body" id="l2" style="display:none">
+      <div class="scenario">You have a list of 6 exam scores. Use a <strong>for loop</strong> to add them all up, then calculate and print the average.</div>
+      <ul class="task-list">
+        <li>Declare the list: [72, 85, 91, 60, 78, 88] <span class="pts">[1]</span></li>
+        <li>Initialise total = 0 before the loop <span class="pts">[1]</span></li>
+        <li>Use for loop to add each score to total <span class="pts">[1]</span></li>
+        <li>Calculate average = total / len(scores) and print to 1 d.p. <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sout"><div class="slbl">Expected output</div>
+      <pre class="srun"><span class="out2">Total: 474</span>
+<span class="out2">Average: 79.0</span></pre></div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('hl2')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('al2')">Show answer</button>
+      </div>
+      <div class="hint-box" id="hl2"><span class="hlbl">Hint</span>Start with <code>total = 0</code> before the loop. Inside the loop: <code>total += score</code>. After the loop: <code>average = total / len(scores)</code>. Use <code>f"{average:.1f}"</code> for 1 decimal place.</div>
+      <div class="ans-box" id="al2"><span style="color:#a8d8a0">scores</span> = [<span style="color:#c8a8f0">72</span>, <span style="color:#c8a8f0">85</span>, <span style="color:#c8a8f0">91</span>, <span style="color:#c8a8f0">60</span>, <span style="color:#c8a8f0">78</span>, <span style="color:#c8a8f0">88</span>]
+total = <span style="color:#c8a8f0">0</span>
+
+<span style="color:#7eb8d4;font-weight:500">for</span> score <span style="color:#7eb8d4;font-weight:500">in</span> scores:
+    total += score
+
+average = total / <span style="color:#a8d8a0">len</span>(scores)
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"Total: {total}"</span>)
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"Average: {average:.1f}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- L3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('l3')">
+      <div class="ex-hl"><span class="ex-num">L3</span><span class="ex-title">Fill a list using a while loop</span></div>
+      <div class="ex-meta"><span class="b-easy">Easy</span><span class="b-marks">[4 marks]</span><span class="tlbl" id="l3-lbl">▼</span></div>
+    </div>
+    <div class="ex-body" id="l3" style="display:none">
+      <div class="scenario">Use a <strong>while loop</strong> to keep asking the user for numbers until they enter -1. Store each number in a list. At the end print how many numbers were entered.</div>
+      <ul class="task-list">
+        <li>Declare an empty list <span class="pts">[1]</span></li>
+        <li>Use while loop — stop when user enters -1 <span class="pts">[1]</span></li>
+        <li>Append each valid number to the list <span class="pts">[1]</span></li>
+        <li>Print the list and how many items <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sout"><div class="slbl">Sample run</div>
+      <pre class="srun"><span class="out2">Enter a number (-1 to stop): </span>5
+<span class="out2">Enter a number (-1 to stop): </span>12
+<span class="out2">Enter a number (-1 to stop): </span>8
+<span class="out2">Enter a number (-1 to stop): </span>-1
+<span class="out2">Your numbers: [5, 12, 8]</span>
+<span class="out2">Count: 3</span></pre></div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('hl3')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('al3')">Show answer</button>
+      </div>
+      <div class="hint-box" id="hl3"><span class="hlbl">Hint</span>Start with <code>numbers = []</code> and read the first number before the loop. Inside the loop: append the number, then ask for the next one. The condition is <code>while num != -1</code>.</div>
+      <div class="ans-box" id="al3"><span style="color:#a8d8a0">numbers</span> = []
+num = <span style="color:#a8d8a0">int</span>(<span style="color:#a8d8a0">input</span>(<span style="color:#e8c878">"Enter a number (-1 to stop): "</span>))
+
+<span style="color:#7eb8d4;font-weight:500">while</span> num != <span style="color:#c8a8f0">-1</span>:
+    numbers.<span style="color:#a8d8a0">append</span>(num)
+    num = <span style="color:#a8d8a0">int</span>(<span style="color:#a8d8a0">input</span>(<span style="color:#e8c878">"Enter a number (-1 to stop): "</span>))
+
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"Your numbers: {numbers}"</span>)
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"Count: {len(numbers)}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- L4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('l4')">
+      <div class="ex-hl"><span class="ex-num">L4</span><span class="ex-title">Find the highest score in a list</span></div>
+      <div class="ex-meta"><span class="b-mid">Intermediate</span><span class="b-marks">[5 marks]</span><span class="tlbl" id="l4-lbl">▼</span></div>
+    </div>
+    <div class="ex-body" id="l4" style="display:none">
+      <div class="scenario">Use a <strong>for loop</strong> to find the highest value in a list <strong>without using max()</strong>. Also find which index it's at.</div>
+      <ul class="task-list">
+        <li>Declare: scores = [64, 91, 78, 55, 88, 72] <span class="pts">[1]</span></li>
+        <li>Initialise highest = scores[0] and pos = 0 <span class="pts">[1]</span></li>
+        <li>Loop through — update highest and pos when a bigger value is found <span class="pts">[2]</span></li>
+        <li>Print the highest score and its position <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sout"><div class="slbl">Expected output</div>
+      <pre class="srun"><span class="out2">Highest score: 91</span>
+<span class="out2">Found at index: 1</span></pre></div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('hl4')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('al4')">Show answer</button>
+      </div>
+      <div class="hint-box" id="hl4"><span class="hlbl">Hint</span>Start by assuming the first item is the highest: <code>highest = scores[0]</code>, <code>pos = 0</code>. Then loop with <code>for i in range(len(scores))</code>. Inside: if <code>scores[i] > highest</code>, update both <code>highest</code> and <code>pos</code>.</div>
+      <div class="ans-box" id="al4"><span style="color:#a8d8a0">scores</span> = [<span style="color:#c8a8f0">64</span>, <span style="color:#c8a8f0">91</span>, <span style="color:#c8a8f0">78</span>, <span style="color:#c8a8f0">55</span>, <span style="color:#c8a8f0">88</span>, <span style="color:#c8a8f0">72</span>]
+highest = scores[<span style="color:#c8a8f0">0</span>]
+pos     = <span style="color:#c8a8f0">0</span>
+
+<span style="color:#7eb8d4;font-weight:500">for</span> i <span style="color:#7eb8d4;font-weight:500">in</span> <span style="color:#a8d8a0">range</span>(<span style="color:#a8d8a0">len</span>(scores)):
+    <span style="color:#7eb8d4;font-weight:500">if</span> scores[i] > highest:
+        highest = scores[i]
+        pos     = i
+
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"Highest score: {highest}"</span>)
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"Found at index: {pos}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- ── DICTIONARY EXERCISES ── -->
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--amber);margin:1.5rem 0 0.75rem;padding-bottom:0.4rem;border-bottom:2px solid var(--amber-bg);">📖 Dictionary exercises</div>
+
+  <!-- D1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('d1')">
+      <div class="ex-hl"><span class="ex-num">D1</span><span class="ex-title">Create and read a student dictionary</span></div>
+      <div class="ex-meta"><span class="b-easy">Easy</span><span class="b-marks">[4 marks]</span><span class="tlbl" id="d1-lbl">▼</span></div>
+    </div>
+    <div class="ex-body" id="d1" style="display:none">
+      <div class="scenario">Create a dictionary for one student with name, age, score and grade. Then print each piece of information on its own line.</div>
+      <ul class="task-list">
+        <li>Create the dictionary with 4 key-value pairs <span class="pts">[2]</span></li>
+        <li>Use a for loop to print every key and its value <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sout"><div class="slbl">Expected output</div>
+      <pre class="srun"><span class="out2">name: Ali</span>
+<span class="out2">age: 17</span>
+<span class="out2">score: 85</span>
+<span class="out2">grade: A</span></pre></div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('hd1')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('ad1')">Show answer</button>
+      </div>
+      <div class="hint-box" id="hd1"><span class="hlbl">Hint</span>Create with <code>student = {"name":"Ali", "age":17, ...}</code>. To loop: <code>for key in student:</code> then <code>student[key]</code> gives you the value.</div>
+      <div class="ans-box" id="ad1">student = {
+    <span style="color:#e8c878">"name"</span> : <span style="color:#e8c878">"Ali"</span>,
+    <span style="color:#e8c878">"age"</span>  : <span style="color:#c8a8f0">17</span>,
+    <span style="color:#e8c878">"score"</span>: <span style="color:#c8a8f0">85</span>,
+    <span style="color:#e8c878">"grade"</span>: <span style="color:#e8c878">"A"</span>
+}
+
+<span style="color:#7eb8d4;font-weight:500">for</span> key <span style="color:#7eb8d4;font-weight:500">in</span> student:
+    <span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"{key}: {student[key]}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- D2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('d2')">
+      <div class="ex-hl"><span class="ex-num">D2</span><span class="ex-title">Phone book — add and search contacts</span></div>
+      <div class="ex-meta"><span class="b-mid">Intermediate</span><span class="b-marks">[5 marks]</span><span class="tlbl" id="d2-lbl">▼</span></div>
+    </div>
+    <div class="ex-body" id="d2" style="display:none">
+      <div class="scenario">A phone book stores names and numbers. Use a <strong>while loop</strong> to keep adding contacts. When the user types "done", stop and print all contacts.</div>
+      <ul class="task-list">
+        <li>Declare an empty dictionary <span class="pts">[1]</span></li>
+        <li>While loop — ask for name and number, stop when name is "done" <span class="pts">[2]</span></li>
+        <li>Add each contact to the dictionary <span class="pts">[1]</span></li>
+        <li>After the loop, print all contacts using a for loop <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sout"><div class="slbl">Sample run</div>
+      <pre class="srun"><span class="out2">Enter name (or done): </span>Ali
+<span class="out2">Enter number: </span>0555-1234
+<span class="out2">Enter name (or done): </span>Sara
+<span class="out2">Enter number: </span>0555-5678
+<span class="out2">Enter name (or done): </span>done
+<span class="out2">--- Contacts ---</span>
+<span class="out2">Ali → 0555-1234</span>
+<span class="out2">Sara → 0555-5678</span></pre></div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('hd2')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('ad2')">Show answer</button>
+      </div>
+      <div class="hint-box" id="hd2"><span class="hlbl">Hint</span>Read the name first, then check <code>while name != "done"</code>. Inside: read the number, store <code>book[name] = number</code>, then read the next name. After the loop, loop with <code>for name in book</code>.</div>
+      <div class="ans-box" id="ad2">book = {}
+name = <span style="color:#a8d8a0">input</span>(<span style="color:#e8c878">"Enter name (or done): "</span>)
+
+<span style="color:#7eb8d4;font-weight:500">while</span> name != <span style="color:#e8c878">"done"</span>:
+    number = <span style="color:#a8d8a0">input</span>(<span style="color:#e8c878">"Enter number: "</span>)
+    book[name] = number
+    name = <span style="color:#a8d8a0">input</span>(<span style="color:#e8c878">"Enter name (or done): "</span>)
+
+<span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">"--- Contacts ---"</span>)
+<span style="color:#7eb8d4;font-weight:500">for</span> name <span style="color:#7eb8d4;font-weight:500">in</span> book:
+    <span style="color:#a8d8a0">print</span>(<span style="color:#e8c878">f"{name} → {book[name]}"</span>)</div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<script>
+function tab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function tog(id){
+  const b=document.getElementById(id);
+  const l=document.getElementById(id+'-lbl');
+  if(!b)return;
+  const open=b.style.display!=='none';
+  b.style.display=open?'none':'block';
+  if(l)l.textContent=open?'▼':'▲';
+}
+function sh(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.toggle('on');
+}
+</script>
+</body>
+</html>

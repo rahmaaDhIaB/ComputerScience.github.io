@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble &amp; Insertion Sort · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#1a1f2e;color:#c8d4e8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(126,184,212,0.08);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,212,232,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#7eb8d4;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,212,232,0.55);max-width:560px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,212,232,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,212,232,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.arr-wrap{display:flex;flex-direction:column;gap:0.7rem;margin:1rem 0;overflow-x:auto;}
+.arr-row{display:flex;align-items:center;gap:0.5rem;}
+.arr-label{font-size:11.5px;font-family:'DM Mono',monospace;color:var(--ink3);min-width:155px;flex-shrink:0;line-height:1.4;}
+.arr-cells{display:flex;gap:3px;}
+.arr-idx{display:flex;gap:3px;margin-bottom:3px;}
+.arr-idx-cell{width:40px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);}
+.arr-cell{width:40px;height:40px;border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;border-radius:3px;background:#fff;flex-shrink:0;}
+.arr-cell.hi{border-color:var(--amber-bd);background:var(--amber-bg);color:var(--amber);}
+.arr-cell.swap{border-color:var(--red-bd);background:var(--red-bg);color:var(--red);}
+.arr-cell.sorted{border-color:var(--green-bd);background:var(--green-bg);color:var(--green);opacity:0.55;}
+.arr-cell.ins{border-color:var(--blue-bd);background:var(--blue-bg);color:var(--blue);}
+.arr-cell.blank{border-style:dashed;color:var(--ink3);opacity:0.5;}
+.arr-note{font-size:11.5px;color:var(--ink3);margin-left:0.5rem;font-style:italic;align-self:center;flex-shrink:0;}
+.arr-note.green{color:var(--green);font-weight:500;font-style:normal;}
+.arr-note.amber{color:var(--amber);}
+.arr-note.red{color:var(--red);}
+.trace-wrap{overflow-x:auto;margin:1rem 0;}
+.trace-table{border-collapse:collapse;font-size:12px;min-width:380px;}
+.trace-table th{background:var(--ink);color:#fff;padding:7px 12px;text-align:center;font-weight:500;font-size:11px;letter-spacing:0.05em;}
+.trace-table td{padding:6px 12px;border:1px solid var(--rule);text-align:center;font-family:'DM Mono',monospace;vertical-align:middle;font-size:12px;}
+.trace-table tr:nth-child(even) td{background:var(--paper2);}
+.cell-swap{background:#fdeaea!important;color:var(--red);font-weight:500;}
+.cell-sorted{background:var(--green-bg)!important;color:var(--green);font-weight:500;}
+.cell-comp{background:#fef3e2!important;color:var(--amber);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:160px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · File 3 of 4</div>
+  <h1>Bubble Sort &amp; <em>Insertion Sort</em></h1>
+  <div class="cover-sub">Two ways to sort a list — swap neighbours, or insert into the correct position. Learn both, understand both, choose wisely.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Bubble Sort</strong>Compare neighbours · swap · repeat</div>
+    <div class="cover-meta-item"><strong>Insertion Sort</strong>Pick one item · slide it into place</div>
+    <div class="cover-meta-item"><strong>Comparison</strong>When to use each one</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 Linear Search</a>
+  <a href="02_binary_search.html">⚡ Binary Search</a>
+  <a href="03_bubble_insertion_sort.html" class="active">🫧 Bubble &amp; Insertion Sort</a>
+  <a href="04_exercises.html">📝 Exercises</a>
+</nav>
+
+<div class="page-body">
+
+  <!-- ════════════════════════
+       BUBBLE SORT
+  ════════════════════════ -->
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">03a</div>
+    <div>
+      <div class="section-title">Bubble Sort</div>
+      <div class="section-desc">Compare neighbours — swap if out of order — the largest value bubbles to the end each pass</div>
+    </div>
+  </div>
+
+  <div class="box box-teal">
+    <strong>🧠 The analogy</strong>
+    Drop a heavy stone and a ping-pong ball in a bucket of water. The heavy stone sinks, the ping-pong ball floats to the top. Bubble sort does exactly this — the largest value "floats up" to the end of the array on each pass. After one full pass, the largest is in its final position. After two passes, the two largest are in place. Keep going until everything is sorted.
+  </div>
+
+  <!-- PASS BY PASS VISUAL -->
+  <div class="sec-title" style="margin-top:1.25rem;">Complete walkthrough — every pass 🫧</div>
+  <div class="sec-sub">Sorting [5, 3, 9, 1, 4] into ascending order &nbsp;·&nbsp; green = locked in correct position</div>
+
+  <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.25rem;">
+    <div class="arr-wrap">
+
+      <!-- Indices -->
+      <div class="arr-row" style="margin-left:155px;">
+        <div class="arr-idx">
+          <div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div><div class="arr-idx-cell">2</div>
+          <div class="arr-idx-cell">3</div><div class="arr-idx-cell">4</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);padding:0.25rem 0;">
+        ── Pass 1 (n = 3, comparing indices 0–3) ──
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Start of Pass 1:</div>
+        <div class="arr-cells">
+          <div class="arr-cell">5</div><div class="arr-cell">3</div><div class="arr-cell">9</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=0: 5&gt;3 → SWAP</div>
+        <div class="arr-cells">
+          <div class="arr-cell swap">3</div><div class="arr-cell swap">5</div><div class="arr-cell">9</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note red">↔ swap 5 and 3</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=1: 5&lt;9 → no swap</div>
+        <div class="arr-cells">
+          <div class="arr-cell">3</div><div class="arr-cell hi">5</div><div class="arr-cell hi">9</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note">5 &lt; 9 — already in order</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=2: 9&gt;1 → SWAP</div>
+        <div class="arr-cells">
+          <div class="arr-cell">3</div><div class="arr-cell">5</div><div class="arr-cell swap">1</div><div class="arr-cell swap">9</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note red">↔ swap 9 and 1</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=3: 9&gt;4 → SWAP</div>
+        <div class="arr-cells">
+          <div class="arr-cell">3</div><div class="arr-cell">5</div><div class="arr-cell">1</div><div class="arr-cell swap">4</div><div class="arr-cell sorted">9</div>
+        </div>
+        <span class="arr-note green">9 is now in final position ✅ · n becomes 2</span>
+      </div>
+
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);padding:0.5rem 0 0.25rem;">
+        ── Pass 2 (n = 2, comparing indices 0–2) ──
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">j=0: 3&lt;5 → no swap</div>
+        <div class="arr-cells">
+          <div class="arr-cell hi">3</div><div class="arr-cell hi">5</div><div class="arr-cell">1</div><div class="arr-cell">4</div><div class="arr-cell sorted">9</div>
+        </div>
+        <span class="arr-note">3 &lt; 5 — already in order</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=1: 5&gt;1 → SWAP</div>
+        <div class="arr-cells">
+          <div class="arr-cell">3</div><div class="arr-cell swap">1</div><div class="arr-cell swap">5</div><div class="arr-cell">4</div><div class="arr-cell sorted">9</div>
+        </div>
+        <span class="arr-note red">↔ swap 5 and 1</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=2: 5&gt;4 → SWAP</div>
+        <div class="arr-cells">
+          <div class="arr-cell">3</div><div class="arr-cell">1</div><div class="arr-cell swap">4</div><div class="arr-cell sorted">5</div><div class="arr-cell sorted">9</div>
+        </div>
+        <span class="arr-note green">5 is now in final position ✅ · n becomes 1</span>
+      </div>
+
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);padding:0.5rem 0 0.25rem;">
+        ── Pass 3 (n = 1, comparing indices 0–1) ──
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">j=0: 3&gt;1 → SWAP</div>
+        <div class="arr-cells">
+          <div class="arr-cell swap">1</div><div class="arr-cell sorted">3</div><div class="arr-cell sorted">4</div><div class="arr-cell sorted">5</div><div class="arr-cell sorted">9</div>
+        </div>
+        <span class="arr-note red">↔ swap 3 and 1</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j=1: 3&lt;4 → no swap</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">1</div><div class="arr-cell sorted">3</div><div class="arr-cell sorted">4</div><div class="arr-cell sorted">5</div><div class="arr-cell sorted">9</div>
+        </div>
+        <span class="arr-note green">All sorted! [1, 3, 4, 5, 9] ✅</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- THE CODE -->
+  <div class="divider"></div>
+  <div class="sec-title">The Python Code — Bubble Sort 🐍</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">bubble_sort</span>(my_list):
+
+    max_index = <span class="fn">len</span>(my_list) - <span class="nm">1</span>
+    n         = max_index - <span class="nm">1</span>    <span class="cm"># n shrinks each pass — avoids re-checking sorted end</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(max_index):    <span class="cm"># outer: controls how many passes</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n + <span class="nm">1</span>):    <span class="cm"># inner: compares pairs up to position n</span>
+            <span class="kw">if</span> my_list[j] > my_list[j + <span class="nm">1</span>]:
+                temp           = my_list[j]       <span class="cm"># step 1: save j</span>
+                my_list[j]     = my_list[j + <span class="nm">1</span>]  <span class="cm"># step 2: overwrite j</span>
+                my_list[j + <span class="nm">1</span>] = temp            <span class="cm"># step 3: restore from temp</span>
+        n -= <span class="nm">1</span>                    <span class="cm"># last element is now sorted — shrink window</span></pre>
+
+  <div class="box box-teal">
+    <strong>🔎 The three-step swap — why you need temp</strong>
+    <div class="arrow-row">
+      <div class="arrow-label">temp = my_list[j]</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Save a copy of the value before we overwrite it. Without this, it would be lost forever.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">my_list[j] = my_list[j+1]</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Copy the right value into the left position. The original left value is now gone — but we saved it in temp.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">my_list[j+1] = temp</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Place the saved left value into the right position. Swap complete.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">n -= 1</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">After each full pass, the last element is in its correct final place. We don't need to compare it again — so we shrink n by 1.</div>
+    </div>
+  </div>
+
+  <!-- TRACE TABLE -->
+  <div class="sec-title" style="margin-top:1.25rem;">Bubble Sort Trace Table 📋</div>
+  <div class="sec-sub">List = [4, 1, 3] — full trace of all passes</div>
+  <div class="trace-wrap">
+    <table class="trace-table">
+      <tr><th>Pass (i)</th><th>j</th><th>list[j]</th><th>list[j+1]</th><th>Swap?</th><th>Array after</th></tr>
+      <tr><td>0</td><td>0</td><td class="cell-comp">4</td><td class="cell-comp">1</td><td class="cell-swap">YES ↔</td><td>[1, 4, 3]</td></tr>
+      <tr><td>0</td><td>1</td><td class="cell-comp">4</td><td class="cell-comp">3</td><td class="cell-swap">YES ↔</td><td>[1, 3, 4]</td></tr>
+      <tr><td>1</td><td>0</td><td class="cell-comp">1</td><td class="cell-comp">3</td><td>No</td><td>[1, 3, 4]</td></tr>
+      <tr><td colspan="5" class="cell-sorted">All sorted — no more passes needed</td><td class="cell-sorted">[1, 3, 4] ✅</td></tr>
+    </table>
+  </div>
+
+  <!-- ════════════════════════
+       INSERTION SORT
+  ════════════════════════ -->
+  <div class="divider"></div>
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">03b</div>
+    <div>
+      <div class="section-title">Insertion Sort</div>
+      <div class="section-desc">Pick one item at a time — slide it into the correct position on the sorted left side</div>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <strong>🧠 The analogy</strong>
+    You're sorting a hand of playing cards. You pick up the second card and check if it should go before or after the first — if before, slide the first one right to make room and drop the second card in. Then pick up the third card — find its correct place among the already-sorted cards, slide everything to the right, insert it. The left side is always sorted. The right side shrinks one card at a time.
+  </div>
+
+  <!-- PASS BY PASS VISUAL -->
+  <div class="sec-title" style="margin-top:1.25rem;">Complete walkthrough — every insertion 📥</div>
+  <div class="sec-sub">Sorting [5, 3, 1, 4] into ascending order &nbsp;·&nbsp; blue = item being inserted &nbsp;·&nbsp; green = sorted section</div>
+
+  <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.25rem;">
+    <div class="arr-wrap">
+
+      <div class="arr-row" style="margin-left:155px;">
+        <div class="arr-idx">
+          <div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div>
+          <div class="arr-idx-cell">2</div><div class="arr-idx-cell">3</div>
+        </div>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Start:</div>
+        <div class="arr-cells">
+          <div class="arr-cell">5</div><div class="arr-cell">3</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note">index 0 alone = already "sorted"</span>
+      </div>
+
+           <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);padding:0.4rem 0 0.2rem;">
+        ── i = 1 · pick up value 3 ──
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">value = 3:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">5</div><div class="arr-cell ins">3</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note blue">Save 3. Look left.</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">5 &gt; 3 → shift 5 right:</div>
+        <div class="arr-cells">
+          <div class="arr-cell blank">_</div><div class="arr-cell swap">5</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note amber">slide 5 one step right</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j = -1 → insert 3 at j+1 = 0:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">3</div><div class="arr-cell sorted">5</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note green">[3,5] sorted ✅</span>
+      </div>
+
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);padding:0.4rem 0 0.2rem;">
+        ── i = 2 · pick up value 1 ──
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">value = 1:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">3</div><div class="arr-cell sorted">5</div><div class="arr-cell ins">1</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note blue">Save 1. Look left.</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">5 &gt; 1 → shift 5 right:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">3</div><div class="arr-cell blank">_</div><div class="arr-cell swap">5</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note amber">slide 5 right</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">3 &gt; 1 → shift 3 right:</div>
+        <div class="arr-cells">
+          <div class="arr-cell blank">_</div><div class="arr-cell swap">3</div><div class="arr-cell swap">5</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note amber">slide 3 right</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">j = -1 → insert 1 at j+1 = 0:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">1</div><div class="arr-cell sorted">3</div><div class="arr-cell sorted">5</div><div class="arr-cell">4</div>
+        </div>
+        <span class="arr-note green">[1,3,5] sorted ✅</span>
+      </div>
+
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);padding:0.4rem 0 0.2rem;">
+        ── i = 3 · pick up value 4 ──
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">value = 4:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">1</div><div class="arr-cell sorted">3</div><div class="arr-cell sorted">5</div><div class="arr-cell ins">4</div>
+        </div>
+        <span class="arr-note blue">Save 4. Look left.</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">5 &gt; 4 → shift 5 right:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">1</div><div class="arr-cell sorted">3</div><div class="arr-cell blank">_</div><div class="arr-cell swap">5</div>
+        </div>
+        <span class="arr-note amber">slide 5 right</span>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">3 &lt; 4 → stop. Insert 4 at j+1 = 2:</div>
+        <div class="arr-cells">
+          <div class="arr-cell sorted">1</div><div class="arr-cell sorted">3</div><div class="arr-cell sorted">4</div><div class="arr-cell sorted">5</div>
+        </div>
+        <span class="arr-note green">[1,3,4,5] — DONE! ✅</span>
+      </div>
+    </div>
+  </div>
+
+    <!-- THE CODE -->
+  <div class="divider"></div>
+  <div class="sec-title">The Python Code — Insertion Sort 🐍</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">insertion_sort</span>(my_list):
+
+    n = <span class="fn">len</span>(my_list)
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, n):    <span class="cm"># i = current element we're inserting</span>
+
+        value = my_list[i]       <span class="cm"># save the value we're inserting</span>
+        j = i - <span class="nm">1</span>               <span class="cm"># j = index we're comparing with (starts one left)</span>
+
+        <span class="kw">while</span> j >= <span class="nm">0</span> <span class="kw">and</span> my_list[j] > value:
+            my_list[j + <span class="nm">1</span>] = my_list[j]  <span class="cm"># shift right</span>
+            j -= <span class="nm">1</span>                       <span class="cm"># move left</span>
+
+        my_list[j + <span class="nm">1</span>] = value          <span class="cm"># insert into gap</span></pre>
+ 
+<div class="box box-green">
+  <strong>🔎 Every line explained — in plain English</strong>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>n = len(my_list)</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      How many items are in the list? We save that number as <code>n</code>. 
+      If the list is <code>[5, 3, 1]</code>, then <code>n = 3</code>. 
+      We'll use <code>n</code> to control our loops — so we know where the list ends and don't go past it.
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>for i in range(1, n):</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      This is the <strong>outer loop</strong> — it picks one element at a time to insert into the sorted section.<br><br>
+      Why start at <strong>1</strong> and not 0? Because index 0 (the first element) is already alone — a single element is trivially sorted. There's nothing to compare it with. So we start at the <strong>second</strong> element and ask: "where does this one belong?"<br><br>
+      <strong>Think of it like sorting cards in your hand.</strong> You pick up the second card and decide where it goes relative to the first. Then the third card relative to the first two. And so on.
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>value = my_list[i]</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      We <strong>save a copy</strong> of the element we're about to insert.<br><br>
+      Why? Because in the next step, we're going to shift elements to the right — and that will <strong>overwrite</strong> position <code>i</code>. If we didn't save the value first, it would be gone forever and we'd have nothing to insert.<br><br>
+      <strong>Imagine you pick up a card from the table. You hold it in your hand while you make room for it. If you put it down before making room, it gets buried.</strong>
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>j = i - 1</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      <code>j</code> is our <strong>scanner</strong> — it looks at the sorted section (everything to the left of <code>i</code>) to find where our value belongs.<br><br>
+      We start it at <code>i - 1</code> because that's the element <strong>immediately to the left</strong> of the one we picked up — the last element of the already-sorted section. That's where we begin comparing.
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>while j >= 0</code><br><code>and my_list[j] > value:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      This loop has <strong>two guards</strong> — both must be true to keep going. If either one fails, we stop.<br><br>
+      <strong>Guard 1 : <code>j >= 0</code>:</strong> Don't walk off the left edge of the array. Index -1 doesn't exist. If <code>j</code> reaches -1, it means our value is smaller than <em>everything</em> in the sorted section — it belongs at the very beginning.<br><br>
+      <strong>Guard 2 : <code>my_list[j] > value</code>:</strong> Is the element we're looking at bigger than our value? If yes, it needs to move right to make room. If no — it's smaller than or equal to our value, meaning our value belongs <em>right after it</em>. Stop here.
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>my_list[j + 1] = my_list[j]</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      The element at position <code>j</code> is too big — it needs to move <strong>one step to the right</strong> to make a gap for our value.<br><br>
+      We write it into position <code>j + 1</code> (one step right). This creates an empty slot at position <code>j</code>.<br><br>
+      <strong>Think of it like sliding a book one spot to the right on a shelf to make room for a new one.</strong><br><br>
+      ⚠️ Notice we're NOT using a <code>temp</code> variable here like in bubble sort. We don't need to — our value is already safely saved in <code>value</code>. We're just shifting, not swapping.
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>j -= 1</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      We just shifted the element at position <code>j</code>. Now we need to look at the <strong>next element to the left</strong> — is that one also too big? Does it also need to move?<br><br>
+      <code>j -= 1</code> moves our scanner one step left. Then the while loop checks again. We keep going until we find an element that's small enough — or until we fall off the left edge.
+    </div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-label"><code>my_list[j + 1] = value</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">
+      The while loop stopped. That means one of two things happened:<br><br>
+      <strong>Case 1:</strong> <code>j</code> hit -1 — our value is the smallest thing seen so far. Insert at <code>j + 1 = 0</code> — the very beginning. ✅<br><br>
+      <strong>Case 2:</strong> <code>my_list[j]</code> is NOT bigger than our value — it's the "guardian". Our value goes <em>right after the guardian</em>, which is position <code>j + 1</code>. ✅<br><br>
+      Either way, <code>j + 1</code> is always the correct spot. We drop our saved value in.
+    </div>
+  </div>
+
+  <!-- QUICK EXAMPLE -->
+  <div style="margin-top:1rem; background:var(--paper2); padding:0.85rem 1rem; border-radius:6px;">
+    <p style="font-weight:500; margin-bottom:0.5rem;">📋 Watch it happen: inserting <code>2</code> into <code>[5, 8, 2]</code></p>
+    <div style="font-family:'DM Mono',monospace; font-size:12.5px; line-height:2;">
+      <div><strong>i=2 · value = 2 · j = 1</strong> (pointing at 8)</div>
+      <div style="padding-left:1rem;">8 &gt; 2? YES → shift 8 right → [5, 8, 8] → j = 0</div>
+      <div style="padding-left:1rem;">5 &gt; 2? YES → shift 5 right → [5, 5, 8] → j = -1</div>
+      <div style="padding-left:1rem;">j &lt; 0 → loop stops → insert 2 at j+1 = 0</div>
+      <div><strong>Result: [2, 5, 8] ✅</strong></div>
+    </div>
+  </div>
+
+  <div style="margin-top:1rem; background:var(--paper2); padding:0.85rem 1rem; border-radius:6px;">
+    <p style="font-weight:500; margin-bottom:0.5rem;">📋 Watch it happen: inserting <code>4</code> into <code>[1, 3, 5, 4]</code></p>
+    <div style="font-family:'DM Mono',monospace; font-size:12.5px; line-height:2;">
+      <div><strong>i=3 · value = 4 · j = 2</strong> (pointing at 5)</div>
+      <div style="padding-left:1rem;">5 &gt; 4? YES → shift 5 right → [1, 3, 5, 5] → j = 1</div>
+      <div style="padding-left:1rem;">3 &gt; 4? NO → loop stops → j stays at 1</div>
+      <div style="padding-left:1rem;">Insert 4 at j+1 = 2</div>
+      <div><strong>Result: [1, 3, 4, 5] ✅</strong></div>
+    </div>
+  </div>
+
+</div>
+
+  <!-- TRACE TABLE - INSERTION -->
+  <!-- TRACE TABLE - INSERTION -->
+  <div class="sec-title" style="margin-top:1.25rem;">Insertion Sort Trace Table 📋</div>
+  <div class="sec-sub">List = [5, 3, 1] — full trace</div>
+  <div class="trace-wrap">
+    <table class="trace-table">
+      <tr>
+        <th>i</th>
+        <th>value</th>
+        <th>j (start)</th>
+        <th>list[j] &gt; value?</th>
+        <th>Action</th>
+        <th>Array after</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td class="cell-comp">3</td>
+        <td>0</td>
+        <td class="cell-comp">5 &gt; 3? YES</td>
+        <td class="cell-swap">shift 5 right → j = -1</td>
+        <td>[5, 5, 1]</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td class="cell-comp">3</td>
+        <td>-1</td>
+        <td>—</td>
+        <td class="cell-sorted">insert 3 at j+1 = 0</td>
+        <td>[3, 5, 1]</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td class="cell-comp">1</td>
+        <td>1</td>
+        <td class="cell-comp">5 &gt; 1? YES</td>
+        <td class="cell-swap">shift 5 right → j = 0</td>
+        <td>[3, 5, 5]</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td class="cell-comp">1</td>
+        <td>0</td>
+        <td class="cell-comp">3 &gt; 1? YES</td>
+        <td class="cell-swap">shift 3 right → j = -1</td>
+        <td>[3, 3, 5]</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td class="cell-comp">1</td>
+        <td>-1</td>
+        <td>—</td>
+        <td class="cell-sorted">insert 1 at j+1 = 0</td>
+        <td class="cell-sorted">[1, 3, 5] ✅</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- DEEP DIVE: WHY -1 AND +1? -->
+<div class="box box-blue">
+  <strong>🤔 Deep Dive: Why <code>j -= 1</code> then <code>j + 1</code>?</strong>
+
+  <!-- ─── THE CORE QUESTION ─── -->
+  <div style="margin-top:1rem;">
+    <p style="font-weight:500; margin-bottom:0.5rem;">❓ Wait — if we subtract 1 from j, then add 1 back… aren't we just going back to where we started? Isn't that pointless?</p>
+    <div style="background:var(--paper2); border-radius:6px; padding:0.75rem 1rem; font-size:13px; line-height:1.7;">
+      <strong>No — and here's exactly why.</strong><br>
+      The <code>j -= 1</code> happens <em>inside the loop</em>, over and over again, while things are shifting.<br>
+      The <code>j + 1</code> happens <em>after the loop ends</em>, once, to drop the value in the right spot.<br><br>
+      They're not cancelling each other — they happen at <strong>completely different moments</strong>, for <strong>completely different reasons</strong>.
+    </div>
+  </div>
+
+  <!-- ─── WHY j -= 1 ─── -->
+  <div style="margin-top:1.25rem;">
+    <p style="font-weight:500; margin-bottom:0.4rem;">🔍 So what is <code>j -= 1</code> actually doing?</p>
+    <div style="background:var(--paper2); border-radius:6px; padding:0.75rem 1rem; font-size:13px; line-height:1.7;">
+      After we shift one element to the right, we need to <strong>look at the next element to the left</strong> to see if it also needs shifting. That's it. <code>j -= 1</code> just moves our gaze one step left.<br><br>
+      Think of it like scanning a bookshelf from right to left — after you move one book, you look at the next one. You don't stop; you keep going until you find a book that's already in the right place.
+    </div>
+  </div>
+
+  <!-- ─── WHY j + 1 ─── -->
+  <div style="margin-top:1.25rem;">
+    <p style="font-weight:500; margin-bottom:0.4rem;">🔍 And why insert at <code>j + 1</code> and not just <code>j</code>?</p>
+    <div style="background:var(--paper2); border-radius:6px; padding:0.75rem 1rem; font-size:13px; line-height:1.7;">
+      Because when the while loop <strong>stops</strong>, <code>j</code> is pointing at an element that is <strong>smaller than or equal to our value</strong>. That element stays where it is — it belongs there. Our value goes <strong>right after it</strong>, which is <code>j + 1</code>.<br><br>
+      <strong>The loop stopped because j found a "guardian" — a number that says "you don't go before me." Our value goes immediately after the guardian.</strong>
+    </div>
+  </div>
+
+  <!-- ─── WHAT IF j HITS -1? ─── -->
+  <div style="margin-top:1.25rem;">
+    <p style="font-weight:500; margin-bottom:0.4rem;">🔍 But what if <code>j</code> goes all the way to <code>-1</code>? That's not even a real index!</p>
+    <div style="background:var(--paper2); border-radius:6px; padding:0.75rem 1rem; font-size:13px; line-height:1.7;">
+      It means our value is <strong>smaller than everything</strong> in the sorted section — it needs to go at index <strong>0</strong>, the very beginning.<br><br>
+      And <code>j + 1</code> gives us exactly that: <code>-1 + 1 = 0</code>. The formula handles it perfectly without any special case. ✅
+    </div>
+  </div>
+
+  <!-- ─── WORKED EXAMPLE 1: j goes to -1 ─── -->
+  <div style="margin-top:1.25rem; background:var(--paper2); border-radius:6px; padding:0.9rem 1rem;">
+    <p style="font-weight:500; margin-bottom:0.5rem;">🎬 Example 1 — value ends up at the start: inserting <code>2</code> into <code>[5, 8, _]</code></p>
+    <div style="font-family:'DM Mono',monospace; font-size:12.5px; line-height:2;">
+      <div>Start: <strong>value = 2</strong>, j = 1 (pointing at 8)</div>
+      <div>—— Loop iteration 1 ——</div>
+      <div style="padding-left:1rem;">Is 8 &gt; 2? YES → shift 8 right &nbsp;→&nbsp; array becomes <strong>[5, 8, 8]</strong></div>
+      <div style="padding-left:1rem;">j -= 1 &nbsp;→&nbsp; j is now <strong>0</strong> (looking at 5)</div>
+      <div>—— Loop iteration 2 ——</div>
+      <div style="padding-left:1rem;">Is 5 &gt; 2? YES → shift 5 right &nbsp;→&nbsp; array becomes <strong>[5, 5, 8]</strong></div>
+      <div style="padding-left:1rem;">j -= 1 &nbsp;→&nbsp; j is now <strong>-1</strong></div>
+      <div>—— Loop ends (j &lt; 0) ——</div>
+      <div style="padding-left:1rem;">Insert at j + 1 = <strong>0</strong> &nbsp;→&nbsp; array becomes <strong>[2, 5, 8] ✅</strong></div>
+    </div>
+    <div style="background:var(--mono-bg); color:var(--mono-text); padding:0.5rem 0.75rem; border-radius:4px; font-size:12px; margin-top:0.5rem;">
+      💡 j went: 1 → 0 → -1. It overshot past the beginning. j + 1 = 0 corrects it back to index 0.
+    </div>
+  </div>
+
+  <!-- ─── WORKED EXAMPLE 2: j stops in the middle ─── -->
+  <div style="margin-top:1rem; background:var(--paper2); border-radius:6px; padding:0.9rem 1rem;">
+    <p style="font-weight:500; margin-bottom:0.5rem;">🎬 Example 2 — value ends up in the middle: inserting <code>4</code> into <code>[1, 3, 5, 7, _]</code></p>
+    <div style="font-family:'DM Mono',monospace; font-size:12.5px; line-height:2;">
+      <div>Start: <strong>value = 4</strong>, j = 3 (pointing at 7)</div>
+      <div>—— Loop iteration 1 ——</div>
+      <div style="padding-left:1rem;">Is 7 &gt; 4? YES → shift 7 right &nbsp;→&nbsp; array becomes <strong>[1, 3, 5, 7, 7]</strong></div>
+      <div style="padding-left:1rem;">j -= 1 &nbsp;→&nbsp; j is now <strong>2</strong> (looking at 5)</div>
+      <div>—— Loop iteration 2 ——</div>
+      <div style="padding-left:1rem;">Is 5 &gt; 4? YES → shift 5 right &nbsp;→&nbsp; array becomes <strong>[1, 3, 5, 5, 7]</strong></div>
+      <div style="padding-left:1rem;">j -= 1 &nbsp;→&nbsp; j is now <strong>1</strong> (looking at 3)</div>
+      <div>—— Loop iteration 3 ——</div>
+      <div style="padding-left:1rem;">Is 3 &gt; 4? NO → <strong>loop stops here</strong>. j stays at <strong>1</strong>.</div>
+      <div>—— Insert ——</div>
+      <div style="padding-left:1rem;">Insert at j + 1 = <strong>2</strong> &nbsp;→&nbsp; array becomes <strong>[1, 3, 4, 5, 7] ✅</strong></div>
+    </div>
+    <div style="background:var(--mono-bg); color:var(--mono-text); padding:0.5rem 0.75rem; border-radius:4px; font-size:12px; margin-top:0.5rem;">
+      💡 j stopped at 1 (pointing at 3). 3 is the "guardian" — it's smaller than 4, so 4 goes after it → index 2 = j + 1.
+    </div>
+  </div>
+
+  <!-- ─── THE ONE-LINE RULE ─── -->
+  <div style="margin-top:1.25rem; background:var(--blue-bg); border:1px solid var(--blue-bd); border-radius:6px; padding:0.85rem 1rem;">
+    <p style="font-weight:500; margin-bottom:0.4rem; color:var(--blue);">📌 The one rule to remember</p>
+    <p style="font-size:13px; color:var(--blue); line-height:1.7;">
+      When the while loop ends, <code>j</code> is <strong>one step to the left</strong> of where our value belongs — either because it found a smaller element (the guardian), or because it fell off the edge (<code>-1</code>). So <code>j + 1</code> is always exactly the right insertion spot. Every single time.
+    </p>
+  </div>
+
+</div>
+  <!-- COMPARISON TABLE -->
+  <div class="divider"></div>
+  <div class="sec-title">Bubble vs Insertion — What's the difference? ⚖️</div>
+  <div class="sec-sub">Cambridge Paper 2 frequently asks you to compare these two algorithms</div>
+
+  <table class="diff-table">
+    <tr><th>Feature</th><th>Bubble Sort</th><th>Insertion Sort</th></tr>
+    <tr>
+      <td>Strategy</td>
+      <td>Compare neighbours, swap if wrong order</td>
+      <td>Pick one item, insert it into correct position in sorted section</td>
+    </tr>
+    <tr>
+      <td>Direction of movement</td>
+      <td>Large values bubble rightward each pass</td>
+      <td>Left side grows sorted, right side shrinks</td>
+    </tr>
+    <tr>
+      <td>Swap needed?</td>
+      <td>Yes — 3-step swap using temp</td>
+      <td>No — shifting (overwriting), then one final insert</td>
+    </tr>
+    <tr>
+      <td>Nearly sorted data</td>
+      <td>Still does all passes regardless</td>
+      <td>Much faster — inner while loop exits quickly</td>
+    </tr>
+    <tr>
+      <td>Worst-case comparisons</td>
+      <td>O(n²)</td>
+      <td>O(n²)</td>
+    </tr>
+    <tr>
+      <td>Best case (already sorted)</td>
+      <td>O(n²) unless improved with flag</td>
+      <td>O(n) — inner while never executes</td>
+    </tr>
+    <tr>
+      <td>Temp variable needed?</td>
+      <td>Yes (for swap)</td>
+      <td>Yes (saves item_to_be_inserted before shifting)</td>
+    </tr>
+  </table>
+
+  <!-- EXERCISES -->
+  <div class="divider"></div>
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">Ex</div>
+    <div>
+      <div class="section-title">Sorting Exercises</div>
+      <div class="section-desc">Draw the array, trace each step, then write the code</div>
+    </div>
+  </div>
+
+  <!-- S1 -->
+<!-- ================================================================
+       REPLACEMENT EXERCISES  —  drop these in place of S1 / S2 / S3
+       ================================================================ -->
+
+  <!-- S1  ─────────────────────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('s1')">
+      <div class="ex-head-left">
+        <span class="ex-num">S1</span>
+        <span class="ex-title">Trace bubble sort — show all passes</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[6 marks]</span>
+        <span class="toggle-lbl" id="s1-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="s1" style="display:none;">
+
+      <div class="scenario">
+        A program stores integer data in the 1D array <code>DataStored</code>.<br><br>
+        <code>DataStored</code> currently contains the following values:
+        <div style="margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:13px;">
+          Index:&nbsp;&nbsp;&nbsp;&nbsp;0 &nbsp;&nbsp; 1 &nbsp;&nbsp; 2 &nbsp;&nbsp; 3 &nbsp;&nbsp; 4<br>
+          DataStored: &nbsp;7 &nbsp;&nbsp; 2 &nbsp;&nbsp; 9 &nbsp;&nbsp; 4 &nbsp;&nbsp; 1
+        </div>
+      </div>
+
+      <ul class="task-list">
+        <li>
+          Complete the trace table below to show the state of <code>DataStored</code> after each <strong>complete pass</strong> of the bubble sort algorithm.
+          <span class="pts">[4]</span>
+        </li>
+        <li>
+          State how many swaps were made in total across all passes.
+          <span class="pts">[1]</span>
+        </li>
+        <li>
+          State which element is guaranteed to be in its final correct position after Pass 1.
+          <span class="pts">[1]</span>
+        </li>
+      </ul>
+
+      <div class="trace-wrap">
+        <table class="trace-table">
+          <tr>
+            <th>After Pass</th>
+            <th>Index 0</th>
+            <th>Index 1</th>
+            <th>Index 2</th>
+            <th>Index 3</th>
+            <th>Index 4</th>
+            <th>Swaps this pass</th>
+          </tr>
+          <tr>
+            <td>Start</td>
+            <td>7</td><td>2</td><td>9</td><td>4</td><td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+            <td style="color:#bbb;">...</td><td style="color:#bbb;">...</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('s1')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('s1')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="s1-hint">
+        Pass 1: compare each pair (j=0 to j=3). Swap if left &gt; right. The largest value will end up at index 4 after Pass 1. Pass 2: only compare up to index 3 (the last element is already sorted). Keep going — each pass locks one more element at the end.
+      </div>
+
+<pre class="answer-pre" id="s1-ans">
+<span class="cm"># Starting array: [7, 2, 9, 4, 1]</span>
+
+<span class="cm"># ── Pass 1 (compare indices 0–3) ──────────────────────────────</span>
+<span class="cm"># j=0: 7 > 2? YES  → swap → [2, 7, 9, 4, 1]</span>
+<span class="cm"># j=1: 7 > 9? NO   → keep → [2, 7, 9, 4, 1]</span>
+<span class="cm"># j=2: 9 > 4? YES  → swap → [2, 7, 4, 9, 1]</span>
+<span class="cm"># j=3: 9 > 1? YES  → swap → [2, 7, 4, 1, 9]   ← 9 locked ✅</span>
+<span class="cm"># Swaps this pass: 3</span>
+
+<span class="cm"># ── Pass 2 (compare indices 0–2) ──────────────────────────────</span>
+<span class="cm"># j=0: 2 > 7? NO   → keep → [2, 7, 4, 1, 9]</span>
+<span class="cm"># j=1: 7 > 4? YES  → swap → [2, 4, 7, 1, 9]</span>
+<span class="cm"># j=2: 7 > 1? YES  → swap → [2, 4, 1, 7, 9]   ← 7 locked ✅</span>
+<span class="cm"># Swaps this pass: 2</span>
+
+<span class="cm"># ── Pass 3 (compare indices 0–1) ──────────────────────────────</span>
+<span class="cm"># j=0: 2 > 4? NO   → keep → [2, 4, 1, 7, 9]</span>
+<span class="cm"># j=1: 4 > 1? YES  → swap → [2, 1, 4, 7, 9]   ← 4 locked ✅</span>
+<span class="cm"># Swaps this pass: 1</span>
+
+<span class="cm"># ── Pass 4 (compare index 0 only) ─────────────────────────────</span>
+<span class="cm"># j=0: 2 > 1? YES  → swap → [1, 2, 4, 7, 9]   ← fully sorted ✅</span>
+<span class="cm"># Swaps this pass: 1</span>
+
+After Pass | Index 0 | Index 1 | Index 2 | Index 3 | Index 4 | Swaps
+-----------+---------+---------+---------+---------+---------+------
+   Start   |    7    |    2    |    9    |    4    |    1    |  —
+     1      |    2    |    7    |    4    |    1    |    9    |  3
+     2      |    2    |    4    |    1    |    7    |    9    |  2
+     3      |    2    |    1    |    4    |    7    |    9    |  1
+     4      |    1    |    2    |    4    |    7    |    9    |  1
+
+<span class="cm"># Total swaps across all passes: 3 + 2 + 1 + 1 = 7</span>
+
+<span class="cm"># Element guaranteed in final position after Pass 1: 9 (index 4)</span>
+<span class="cm"># The largest value always bubbles to the very end on the first pass.</span>
+
+<span class="cm"># Mark scheme (6 marks):</span>
+<span class="cm"># [1] Pass 1 correct: [2, 7, 4, 1, 9]</span>
+<span class="cm"># [1] Pass 2 correct: [2, 4, 1, 7, 9]</span>
+<span class="cm"># [1] Pass 3 correct: [2, 1, 4, 7, 9]</span>
+<span class="cm"># [1] Pass 4 correct: [1, 2, 4, 7, 9]</span>
+<span class="cm"># [1] Total swaps = 7</span>
+<span class="cm"># [1] Element 9 (value 9 / index 4) stated as final after Pass 1</span>
+</pre>
+    </div>
+  </div>
+
+
+  <!-- S2  ─────────────────────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('s2')">
+      <div class="ex-head-left">
+        <span class="ex-num">S2</span>
+        <span class="ex-title">Write BubbleSort() and InsertionSort() — global array style</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[8 marks]</span>
+        <span class="toggle-lbl" id="s2-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="s2" style="display:none;">
+
+      <div class="scenario">
+        A program stores integer numbers in the global 1D array <code>DataStored</code>.<br>
+        The global variable <code>NumberItems</code> stores how many elements are in the array.<br><br>
+        The program contains two sorting procedures: <code>BubbleSort()</code> and <code>InsertionSort()</code>. Both sort <code>DataStored</code> into <strong>ascending</strong> order.
+      </div>
+
+      <div class="tip-box">
+        <strong>Cambridge Paper 4 style — adapted from 9618/41/M/J/24 Q1(d) and 9618/41/O/N/23 Q2.</strong><br>
+        In the exam you will write one sorting procedure. Here you practice both so you are ready for either.
+      </div>
+
+      <ul class="task-list">
+        <li>Write program code for the procedure <code>BubbleSort()</code>. <span class="pts">[4]</span></li>
+        <li>Write program code for the procedure <code>InsertionSort()</code>. <span class="pts">[4]</span></li>
+      </ul>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('s2')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('s2')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="s2-hint">
+        <strong>BubbleSort hint:</strong> declare global DataStored, NumberItems. max_index = NumberItems − 1. n = max_index − 1. Outer loop: range(max_index). Inner loop: range(n + 1). If DataStored[j] &gt; DataStored[j+1] → 3-step swap using temp. After inner loop: n -= 1.<br><br>
+        <strong>InsertionSort hint:</strong> declare global DataStored, NumberItems. Outer loop: range(1, NumberItems). Save value = DataStored[i]. Set current = i − 1. While current &gt;= 0 AND DataStored[current] &gt; value: shift right, current -= 1. After while: DataStored[current + 1] = value.
+      </div>
+
+<pre class="answer-pre" id="s2-ans">
+<span class="cm"># ── BubbleSort ──────────────────────────────────────────────────</span>
+
+<span class="kw">def</span> <span class="fn">BubbleSort</span>():
+    <span class="kw">global</span> DataStored, NumberItems
+
+    max_index = NumberItems - <span class="nm">1</span>
+    n         = max_index - <span class="nm">1</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(max_index):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n + <span class="nm">1</span>):
+            <span class="kw">if</span> DataStored[j] > DataStored[j + <span class="nm">1</span>]:
+                temp                 = DataStored[j]
+                DataStored[j]        = DataStored[j + <span class="nm">1</span>]
+                DataStored[j + <span class="nm">1</span>]  = temp
+        n -= <span class="nm">1</span>
+
+
+<span class="cm"># Mark scheme BubbleSort (4 marks):</span>
+<span class="cm"># [1] outer loop — correct range (max_index passes)</span>
+<span class="cm"># [1] inner loop — compares up to n, not the full array</span>
+<span class="cm"># [1] correct 3-step swap using a temp variable</span>
+<span class="cm"># [1] n decremented after each pass</span>
+
+
+<span class="cm"># ── InsertionSort ───────────────────────────────────────────────</span>
+
+<span class="kw">def</span> <span class="fn">InsertionSort</span>():
+    <span class="kw">global</span> DataStored, NumberItems
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, NumberItems):
+        value   = DataStored[i]
+        current = i - <span class="nm">1</span>
+
+        <span class="kw">while</span> current >= <span class="nm">0</span> <span class="kw">and</span> DataStored[current] > value:
+            DataStored[current + <span class="nm">1</span>] = DataStored[current]
+            current -= <span class="nm">1</span>
+
+        DataStored[current + <span class="nm">1</span>] = value
+
+
+<span class="cm"># Mark scheme InsertionSort (4 marks):</span>
+<span class="cm"># [1] outer loop starting from index 1</span>
+<span class="cm"># [1] value saved before shifting begins</span>
+<span class="cm"># [1] while loop with both conditions (current >= 0 AND comparison)</span>
+<span class="cm"># [1] correct shift and final insertion at current + 1</span>
+</pre>
+    </div>
+  </div>
+
+
+  <!-- S3  ─────────────────────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('s3')">
+      <div class="ex-head-left">
+        <span class="ex-num">S3</span>
+        <span class="ex-title">Write Bubble() — function that takes and returns an array</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[7 marks]</span>
+        <span class="toggle-lbl" id="s3-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="s3" style="display:none;">
+
+      <div class="scenario">
+        A program sorts string data using different sorting methods.<br><br>
+        The function <code>CompareStrings()</code> takes two strings as parameters. It compares each string one character at a time to identify which string comes first alphabetically.<br><br>
+        The function:<br>
+        &nbsp;&nbsp;• returns <code>1</code> if the first parameter comes before the second alphabetically<br>
+        &nbsp;&nbsp;• returns <code>2</code> if the second parameter comes before the first alphabetically<br><br>
+        Assume all strings are lower case and a difference will always be found before the end of a string is reached. Do <strong>not</strong> use a built-in string comparison function — compare one character at a time.
+      </div>
+
+      <div class="tip-box">
+        <strong>Cambridge Paper 4 style — directly from 9618/41/O/N/24 Q1(c) and Q1(d).</strong><br>
+        This is the hardest sorting question Cambridge has set. It tests two things at once: writing a character-by-character comparator, then using it inside bubble sort.
+      </div>
+
+      <ul class="task-list">
+        <li>
+          Write program code for <code>CompareStrings()</code>. The strings must be compared one character at a time. Do not use any built-in string comparison.
+          <span class="pts">[4]</span>
+        </li>
+        <li>
+          The function <code>Bubble()</code> takes an array of strings as a parameter, sorts the data into ascending alphabetical order using bubble sort, and returns the sorted array. The bubble sort must use <code>CompareStrings()</code> to compare each pair of strings.<br>
+          Write program code for <code>Bubble()</code>.
+          <span class="pts">[3]</span>
+        </li>
+      </ul>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('s3')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('s3')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="s3-hint">
+        <strong>CompareStrings hint:</strong> Use a loop with index starting at 0. Each iteration get the character at that index from both strings using indexing (string[i]). Compare using ord() or directly with &lt; / &gt;. As soon as the characters differ, return 1 or 2. Keep going while the characters are equal.<br><br>
+        <strong>Bubble hint:</strong> The structure is almost identical to a normal bubble sort, but instead of <code>if my_list[j] &gt; my_list[j+1]</code>, you write <code>if CompareStrings(my_list[j], my_list[j+1]) == 2</code>. This means "the second string comes first alphabetically — so swap them." Still use a 3-step swap with temp. Return the array at the end.
+      </div>
+
+<pre class="answer-pre" id="s3-ans">
+<span class="cm"># ── CompareStrings ──────────────────────────────────────────────</span>
+
+<span class="kw">def</span> <span class="fn">CompareStrings</span>(str1, str2):
+    index = <span class="nm">0</span>
+    <span class="kw">while</span> str1[index] == str2[index]:
+        index += <span class="nm">1</span>
+    <span class="kw">if</span> str1[index] < str2[index]:
+        <span class="kw">return</span> <span class="nm">1</span>    <span class="cm"># str1 comes first alphabetically</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="nm">2</span>    <span class="cm"># str2 comes first alphabetically</span>
+
+
+<span class="cm"># Mark scheme CompareStrings (4 marks):</span>
+<span class="cm"># [1] loop that iterates character by character (not using built-in compare)</span>
+<span class="cm"># [1] correct character access: str1[index], str2[index]</span>
+<span class="cm"># [1] loop condition: continues while characters are equal</span>
+<span class="cm"># [1] correct return values: 1 if str1 first, 2 if str2 first</span>
+
+
+<span class="cm"># ── Bubble ──────────────────────────────────────────────────────</span>
+
+<span class="kw">def</span> <span class="fn">Bubble</span>(my_list):
+    max_index = <span class="fn">len</span>(my_list) - <span class="nm">1</span>
+    n         = max_index - <span class="nm">1</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(max_index):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n + <span class="nm">1</span>):
+            <span class="kw">if</span> <span class="fn">CompareStrings</span>(my_list[j], my_list[j + <span class="nm">1</span>]) == <span class="nm">2</span>:
+                temp           = my_list[j]
+                my_list[j]     = my_list[j + <span class="nm">1</span>]
+                my_list[j + <span class="nm">1</span>] = temp
+        n -= <span class="nm">1</span>
+
+    <span class="kw">return</span> my_list
+
+
+<span class="cm"># Mark scheme Bubble (3 marks):</span>
+<span class="cm"># [1] correct use of CompareStrings() as the comparison (== 2 means swap)</span>
+<span class="cm"># [1] correct 3-step swap using temp</span>
+<span class="cm"># [1] returns the sorted array</span>
+
+
+<span class="cm"># ── Quick test ──────────────────────────────────────────────────</span>
+<span class="cm"># words = ["mango", "apple", "cherry", "banana"]</span>
+<span class="cm"># print(Bubble(words))</span>
+<span class="cm"># → ['apple', 'banana', 'cherry', 'mango']</span>
+
+<span class="cm"># Why CompareStrings(a, b) == 2 means SWAP?</span>
+<span class="cm"># CompareStrings returns 2 when b comes BEFORE a alphabetically.</span>
+<span class="cm"># That means a and b are in the WRONG order → we swap them.</span>
+</pre>
+    </div>
+  </div>
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Tutor Pack · File 3 of 4</span>
+  <span>Bubble Sort &amp; Insertion Sort</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const body = document.getElementById(id);
+  const lbl  = document.getElementById(id + '-lbl');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if (lbl) lbl.textContent = open ? '▼ expand' : '▲ collapse';
+}
+function showHint(id) { document.getElementById(id + '-hint').classList.toggle('visible'); }
+function showAnswer(id) { document.getElementById(id + '-ans').classList.toggle('visible'); }
+</script>
+</body>
+</html>

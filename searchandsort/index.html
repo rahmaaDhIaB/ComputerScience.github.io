@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Searching &amp; Sorting — Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1916; --ink2:#4a4845; --ink3:#8a8785;
+  --paper:#faf9f6; --paper2:#f2f0eb; --paper3:#e8e5de; --rule:#d8d5ce;
+  --blue:#185FA5; --blue-bg:#E6F1FB; --blue-bd:#85B7EB;
+  --green:#3B6D11; --green-bg:#EAF3DE; --green-bd:#97C459;
+  --amber:#633806; --amber-bg:#FAEEDA; --amber-bd:#EF9F27;
+  --red:#791F1F; --red-bg:#FCEBEB; --red-bd:#F09595;
+  --purple:#3C3489; --purple-bg:#EEEDFE; --purple-bd:#AFA9EC;
+  --teal:#085041; --teal-bg:#E1F5EE; --teal-bd:#5DCAA5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.7; }
+
+/* COVER */
+.cover {
+  background: #1a1f2e;
+  color: #c8d4e8;
+  padding: 4rem 2.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.cover::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 320px; height: 320px;
+  border: 40px solid rgba(126,184,212,0.07);
+  border-radius: 50%;
+}
+.cover::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 200px; height: 200px;
+  border: 30px solid rgba(168,216,160,0.05);
+  border-radius: 50%;
+}
+.cover-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(200,212,232,0.4);
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+.cover h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
+}
+.cover h1 em { font-style: italic; color: #7eb8d4; }
+.cover-sub {
+  margin-top: 1rem;
+  font-size: 13.5px;
+  color: rgba(200,212,232,0.55);
+  max-width: 540px;
+  line-height: 1.65;
+  position: relative;
+  z-index: 1;
+}
+.cover-chips {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.chip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.chip-blue   { background: rgba(126,184,212,0.15); color: #7eb8d4; border: 1px solid rgba(126,184,212,0.3); }
+.chip-green  { background: rgba(168,216,160,0.15); color: #a8d8a0; border: 1px solid rgba(168,216,160,0.3); }
+.chip-amber  { background: rgba(232,200,120,0.15); color: #e8c878; border: 1px solid rgba(232,200,120,0.3); }
+.chip-purple { background: rgba(200,168,240,0.15); color: #c8a8f0; border: 1px solid rgba(200,168,240,0.3); }
+
+/* PAGE BODY */
+.page-body { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+/* INTRO */
+.intro {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2.5rem;
+  font-size: 13.5px;
+  color: var(--ink2);
+  line-height: 1.7;
+}
+.intro strong { color: var(--ink); }
+
+/* FILE CARDS GRID */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  border-radius: 10px;
+  border: 1.5px solid var(--rule);
+  background: #fff;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+}
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-color: var(--ink3);
+  transform: translateY(-2px);
+}
+
+.card-top {
+  padding: 1.25rem 1.4rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.card-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.card-sub {
+  font-size: 12.5px;
+  color: var(--ink3);
+  line-height: 1.5;
+}
+
+.card-body { padding: 0 1.4rem 1.2rem; flex: 1; }
+
+.card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.85rem;
+}
+.topic-tag {
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2px 9px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tag-blue   { background: var(--blue-bg);   color: var(--blue);   border: 1px solid var(--blue-bd); }
+.tag-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green-bd); }
+.tag-amber  { background: var(--amber-bg);  color: var(--amber);  border: 1px solid var(--amber-bd); }
+.tag-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red-bd); }
+.tag-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-bd); }
+.tag-teal   { background: var(--teal-bg);   color: var(--teal);   border: 1px solid var(--teal-bd); }
+
+.card-checklist {
+  list-style: none;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+.card-checklist li { padding: 1px 0 1px 1.3rem; position: relative; }
+.card-checklist li::before { content: '—'; position: absolute; left: 0; color: var(--ink3); }
+
+.card-footer {
+  padding: 0.75rem 1.4rem;
+  background: var(--paper2);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-footer-label { font-size: 11.5px; color: var(--ink3); }
+.card-arrow {
+  font-size: 13px;
+  color: var(--ink3);
+  transition: transform 0.15s;
+}
+.card:hover .card-arrow { transform: translateX(4px); }
+
+/* COLOUR ACCENTS per card */
+.card.card-blue  { border-color: var(--blue-bd); }
+.card.card-blue .card-footer  { background: var(--blue-bg); border-color: var(--blue-bd); }
+.card.card-green { border-color: var(--green-bd); }
+.card.card-green .card-footer { background: var(--green-bg); border-color: var(--green-bd); }
+.card.card-teal  { border-color: var(--teal-bd); }
+.card.card-teal .card-footer  { background: var(--teal-bg); border-color: var(--teal-bd); }
+.card.card-red   { border-color: var(--hard-bd, var(--red-bd)); }
+.card.card-red .card-footer   { background: var(--red-bg); border-color: var(--red-bd); }
+
+/* QUICK REF TABLE */
+.qr-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.75rem;
+}
+.qr-sub { font-size: 12.5px; color: var(--ink3); margin-bottom: 1rem; }
+.diff-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.diff-table th { background: var(--paper2); padding: 8px 12px; text-align: left; font-weight: 500; border: 1px solid var(--rule); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); }
+.diff-table td { padding: 7px 12px; border: 1px solid var(--rule); vertical-align: top; line-height: 1.5; }
+.diff-table tr:nth-child(even) td { background: var(--paper2); }
+.diff-table td code { font-family: 'DM Mono', monospace; font-size: 11px; background: var(--paper3); padding: 1px 5px; border-radius: 3px; }
+
+footer { background: var(--paper2); border-top: 1px solid var(--rule); padding: 1.5rem 2rem; font-size: 12px; color: var(--ink3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Tutor Pack</div>
+  <h1>Searching &amp; Sorting<br><em>Algorithms</em></h1>
+  <div class="cover-sub">
+    Four algorithms explained visually — every step, every trace table, every flowchart.
+    Cambridge Paper 4 style exercises from easy to hard, with hints and clean model answers.
+  </div>
+  <div class="cover-chips">
+    <span class="chip chip-blue">🔍 Linear Search</span>
+    <span class="chip chip-blue">⚡ Binary Search</span>
+    <span class="chip chip-green">🫧 Bubble Sort</span>
+    <span class="chip chip-green">📥 Insertion Sort</span>
+    <span class="chip chip-purple">📝 Exercises</span>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <!-- CARDS -->
+  <div class="cards">
+
+    <!-- File 1 — Linear Search -->
+    <a class="card card-blue" href="01_linear_search.html">
+      <div class="card-top">
+        <div class="card-icon">🔍</div>
+        <div>
+          <div class="card-num">File 01</div>
+          <div class="card-title">Linear Search</div>
+          <div class="card-sub">The simplest search — check every element one by one</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-topics">
+          <span class="topic-tag tag-blue">Value found</span>
+          <span class="topic-tag tag-red">Value not found</span>
+          <span class="topic-tag tag-amber">Trace table</span>
+          <span class="topic-tag tag-blue">Flowchart</span>
+          <span class="topic-tag tag-green">3 exercises</span>
+        </div>
+        <ul class="card-checklist">
+          <li>Visual walkthrough — pointer moving right step by step</li>
+          <li>Both cases: found at index 3, and not found at all</li>
+          <li>Annotated Python code — every variable explained</li>
+          <li>Full trace table with all columns</li>
+          <li>Complete flowchart with Cambridge shape guide</li>
+          <li>Exercises: trace, not-found trace, write the function</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Works on: sorted OR unsorted lists</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- File 2 — Binary Search -->
+    <a class="card card-blue" href="02_binary_search.html">
+      <div class="card-top">
+        <div class="card-icon">⚡</div>
+        <div>
+          <div class="card-num">File 02</div>
+          <div class="card-title">Binary Search</div>
+          <div class="card-sub">Halve the search space every step — 4 worked examples</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-topics">
+          <span class="topic-tag tag-blue">Found at middle</span>
+          <span class="topic-tag tag-blue">Found at end</span>
+          <span class="topic-tag tag-blue">Found at start</span>
+          <span class="topic-tag tag-red">Not found</span>
+          <span class="topic-tag tag-amber">2 trace tables</span>
+          <span class="topic-tag tag-green">4 exercises</span>
+        </div>
+        <ul class="card-checklist">
+          <li>Colour-coded arrays: purple=First · teal=Last · blue=Middle</li>
+          <li>Example 1: found immediately at midpoint (1 step)</li>
+          <li>Example 2: found at the far right end (4 steps)</li>
+          <li>Example 3: found at the far left end (3 steps)</li>
+          <li>Example 4: value not in list — SearchFailed explained</li>
+          <li>Why the ELIF order matters — Cambridge exam trap</li>
+          <li>Exercises: trace found, trace not-found, write the function, compare</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Requires: sorted list · log₂(n) comparisons</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- File 3 — Bubble + Insertion Sort -->
+    <a class="card card-teal" href="03_bubble_insertion_sort.html">
+      <div class="card-top">
+        <div class="card-icon">🫧</div>
+        <div>
+          <div class="card-num">File 03</div>
+          <div class="card-title">Bubble &amp; Insertion Sort</div>
+          <div class="card-sub">Two sorting methods — visualised pass by pass</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-topics">
+          <span class="topic-tag tag-teal">Bubble sort</span>
+          <span class="topic-tag tag-green">Insertion sort</span>
+          <span class="topic-tag tag-amber">Trace tables</span>
+          <span class="topic-tag tag-purple">Comparison</span>
+          <span class="topic-tag tag-green">3 exercises</span>
+        </div>
+        <ul class="card-checklist">
+          <li>Bubble sort: every pass shown — red = swap, green = locked</li>
+          <li>The 3-step swap — why temp is essential</li>
+          <li>Insertion sort: blue = picked up, sliding into correct gap</li>
+          <li>Why item_to_be_inserted must be saved before shifting</li>
+          <li>Full trace tables for both algorithms</li>
+          <li>Comparison table: when to use each one</li>
+          <li>Exercises: trace pass 1, write BubbleSort(), write InsertionSort()</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Both sort in-place · O(n²) worst case</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- File 4 — Hard Exercises -->
+    <a class="card card-red" href="04_exercises.html">
+      <div class="card-top">
+        <div class="card-icon">📝</div>
+        <div>
+          <div class="card-num">File 04</div>
+          <div class="card-title">Hard Exercises</div>
+          <div class="card-sub">Modify · extend · combine · explain — Cambridge Paper 4 style</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-topics">
+          <span class="topic-tag tag-red">Hard</span>
+          <span class="topic-tag tag-amber">Beginner guide</span>
+          <span class="topic-tag tag-blue">Full program</span>
+          <span class="topic-tag tag-purple">Efficiency</span>
+          <span class="topic-tag tag-green">7 exercises</span>
+        </div>
+        <ul class="card-checklist">
+          <li>5-step beginner guide — how to approach every question</li>
+          <li>H1: Improved bubble sort with early-exit swap_made flag</li>
+          <li>H2: Full sort-then-search program (adapted from 9618/41/M/J/24)</li>
+          <li>H3: Efficiency comparison essay — binary vs linear, bubble vs insertion</li>
+          <li>H4: Draw a complete binary search flowchart</li>
+          <li>H5: Insertion sort on a string array (alphabetical)</li>
+          <li>H6: Linear search returning ALL matching indices</li>
+          <li>H7: Full program — sort once, search repeatedly until −1</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label">Hints + mark-scheme answers included</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+
+
+
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge International AS &amp; A Level · Computer Science 9618 · Tutor Pack</span>
+  <span>4 files · Linear Search · Binary Search · Bubble Sort · Insertion Sort</span>
+</footer>
+
+</body>
+</html>

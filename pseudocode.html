@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pseudocode → Python · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1916;
+  --ink2: #4a4845;
+  --ink3: #8a8785;
+  --paper: #faf9f6;
+  --paper2: #f2f0eb;
+  --paper3: #e8e5de;
+  --rule: #d8d5ce;
+  --pseudo-bg: #1a1f2e;
+  --pseudo-text: #c8d4e8;
+  --pseudo-kw: #7eb8d4;
+  --pseudo-fn: #a8c8f0;
+  --pseudo-str: #e8d878;
+  --pseudo-cm: #5a6878;
+  --pseudo-num: #c8f0c8;
+  --py-bg: #1e1c18;
+  --py-text: #d4d0c4;
+  --py-kw: #7eb8d4;
+  --py-fn: #a8d8a0;
+  --py-str: #e8c878;
+  --py-cm: #6a6860;
+  --py-num: #c8a8f0;
+  --easy: #1a5c38; --easy-bg: #e8f5ee; --easy-rule: #a8d5b8;
+  --mid:  #7a4a00; --mid-bg:  #fef3e2; --mid-rule:  #f0c878;
+  --hard: #6b1a1a; --hard-bg: #fdeaea; --hard-rule: #e8a0a0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.7; }
+
+.cover {
+  background: #1a1f2e;
+  color: #c8d4e8;
+  padding: 3rem 2.5rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute; top: -50px; right: -50px;
+  width: 260px; height: 260px;
+  border: 35px solid rgba(126,184,212,0.08);
+  border-radius: 50%;
+}
+.cover-label {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(200,212,232,0.45); margin-bottom: 1rem; font-weight: 500;
+}
+.cover h1 { font-family: 'DM Serif Display', serif; font-size: 2.1rem; line-height: 1.2; font-weight: 400; }
+.cover h1 em { font-style: italic; color: var(--pseudo-kw); }
+.cover-sub { margin-top: 0.75rem; font-size: 13px; color: rgba(200,212,232,0.55); max-width: 520px; line-height: 1.6; }
+.cover-meta { margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+.cover-meta-item { font-size: 12px; color: rgba(200,212,232,0.45); }
+.cover-meta-item strong { display: block; color: rgba(200,212,232,0.85); font-size: 13px; font-weight: 500; }
+
+.legend {
+  display: flex; gap: 1rem; padding: 0.85rem 2rem;
+  background: var(--paper2); border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap; align-items: center;
+}
+.legend-label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 0.5rem; }
+.badge { font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em; text-transform: uppercase; }
+.badge-easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-rule); }
+.badge-mid  { background: var(--mid-bg);  color: var(--mid);  border: 1px solid var(--mid-rule); }
+.badge-hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-rule); }
+.badge-marks { background: var(--paper3); color: var(--ink2); border: 1px solid var(--rule); }
+
+.section { margin: 2.5rem 2rem 0; }
+.section-rule { border: none; border-top: 3px solid var(--ink); margin-bottom: 1.4rem; }
+.section-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+.section-num { font-family: 'DM Serif Display', serif; font-size: 2.8rem; color: var(--rule); line-height: 1; font-weight: 400; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; font-weight: 400; }
+.section-desc { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+
+/* exercise card */
+.ex { border: 1px solid var(--rule); border-radius: 6px; margin-bottom: 1.8rem; overflow: hidden; background: #fff; }
+.ex-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--rule);
+  gap: 1rem; flex-wrap: wrap; cursor: pointer; user-select: none;
+}
+.ex-head:hover { background: var(--paper2); }
+.ex-head-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.ex-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); font-weight: 500; }
+.ex-title { font-weight: 500; font-size: 14px; }
+.ex-meta { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.toggle-lbl { font-size: 11px; color: var(--ink3); font-style: italic; }
+
+.ex-body { padding: 1.25rem; }
+
+.scenario {
+  background: var(--paper2); border-left: 3px solid var(--rule);
+  padding: 0.75rem 1rem; border-radius: 0 4px 4px 0;
+  font-size: 13.5px; margin-bottom: 1.2rem; color: var(--ink2); line-height: 1.6;
+}
+
+/* two-column pseudocode + python layout */
+.code-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 680px) { .code-columns { grid-template-columns: 1fr; } }
+
+.code-panel { border-radius: 6px; overflow: hidden; }
+.code-panel-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 500; padding: 6px 12px; font-family: 'DM Sans', sans-serif;
+}
+.pseudo-label { background: #0f1420; color: var(--pseudo-cm); }
+.py-label     { background: #111108; color: var(--py-cm); }
+
+pre.pseudo, pre.pycode {
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px; line-height: 1.8;
+  padding: 0.85rem 1rem;
+  overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+}
+pre.pseudo { background: var(--pseudo-bg); color: var(--pseudo-text); }
+pre.pycode { background: var(--py-bg);     color: var(--py-text); }
+pre.pycode.blank { min-height: 120px; }
+
+.pkw  { color: var(--pseudo-kw); font-weight: 500; }
+.pfn  { color: var(--pseudo-fn); }
+.pstr { color: var(--pseudo-str); }
+.pcm  { color: var(--pseudo-cm); font-style: italic; }
+.pnum { color: var(--pseudo-num); }
+.kw   { color: var(--py-kw);  font-weight: 500; }
+.fn   { color: var(--py-fn); }
+.str  { color: var(--py-str); }
+.cm   { color: var(--py-cm); font-style: italic; }
+.num  { color: var(--py-num); }
+.out  { color: #e8a878; }
+
+.blank-line {
+  display: inline-block;
+  width: 120px; height: 14px;
+  border-bottom: 1px solid #555;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.task-list { list-style: none; padding: 0; margin-bottom: 1rem; }
+.task-list li {
+  padding: 0.3rem 0 0.3rem 1.4rem; position: relative;
+  font-size: 13.5px; border-bottom: 1px solid var(--paper2);
+}
+.task-list li:last-child { border-bottom: none; }
+.task-list li::before { content: '•'; position: absolute; left: 0.4rem; color: var(--ink3); }
+.task-list li .pts { float: right; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); background: var(--paper2); padding: 1px 6px; border-radius: 3px; }
+
+.tip-box {
+  background: #fef8e8; border: 1px solid #f0d878;
+  border-radius: 4px; padding: 0.6rem 0.9rem;
+  font-size: 12.5px; color: #5a4400; margin: 0.75rem 0;
+  line-height: 1.5;
+}
+.tip-box strong { font-weight: 500; }
+
+.answer-box {
+  display: none;
+  background: var(--py-bg); border-radius: 6px;
+  padding: 1rem 1.2rem; margin-top: 0.75rem;
+  font-family: 'DM Mono', monospace; font-size: 12.5px;
+  line-height: 1.8; color: var(--py-text); overflow-x: auto;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.answer-box.visible { display: block; }
+.btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.hint-btn, .answer-btn {
+  font-family: 'DM Sans', sans-serif; font-size: 12px; border-radius: 4px;
+  padding: 5px 14px; cursor: pointer;
+}
+.hint-btn   { background: none; border: 1px solid var(--rule); color: var(--ink3); }
+.hint-btn:hover { background: var(--paper2); color: var(--ink2); }
+.answer-btn { background: var(--ink); border: none; color: var(--paper2); }
+.answer-btn:hover { background: var(--ink2); }
+
+.diff-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 0.75rem; }
+.diff-table th { background: var(--paper2); padding: 6px 10px; text-align: left; font-weight: 500; border: 1px solid var(--rule); }
+.diff-table td { padding: 6px 10px; border: 1px solid var(--rule); font-family: 'DM Mono', monospace; font-size: 12px; vertical-align: top; }
+.diff-table tr:nth-child(even) td { background: var(--paper2); }
+
+.divider { height: 1px; background: var(--rule); margin: 2.5rem 2rem; }
+
+footer {
+  background: var(--paper2); border-top: 1px solid var(--rule);
+  padding: 1.5rem 2rem; font-size: 12px; color: var(--ink3);
+  margin-top: 3rem; display: flex; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.5rem;
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Tutor Pack</div>
+  <h1>Pseudocode <em>→</em> Python<br>Translation Exercises</h1>
+  <div class="cover-sub">Each exercise gives you Cambridge pseudocode on the left. Your job is to write the equivalent Python on the right — same logic, correct Python syntax.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>8 Exercises</strong>Easy → Intermediate → Hard</div>
+    <div class="cover-meta-item"><strong>Skill trained</strong>Reading pseudocode, writing Python</div>
+    <div class="cover-meta-item"><strong>Format</strong>Cambridge Paper 4 pseudocode standard</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="legend-label">Difficulty</span>
+  <span class="badge badge-easy">Easy</span>
+  <span class="badge badge-mid">Intermediate</span>
+  <span class="badge badge-hard">Hard</span>
+  <span style="margin-left:auto;font-size:12px;color:var(--ink3)">Pseudocode on left · Write Python on right · Click header to expand</span>
+</div>
+
+<!-- quick reference diff table -->
+<div class="section" style="margin-top:1.5rem">
+  <div class="tip-box">
+    <strong>Quick reference — Cambridge pseudocode vs Python</strong><br>
+    Keep this in mind as you translate each exercise.
+  </div>
+  <table class="diff-table">
+    <tr><th>Cambridge Pseudocode</th><th>Python equivalent</th></tr>
+    <tr><td>← (assignment)</td><td>= </td></tr>
+    <tr><td>OUTPUT "text"</td><td>print("text")</td></tr>
+    <tr><td>INPUT / USERINPUT</td><td>input("prompt")</td></tr>
+    <tr><td>DIV (integer division)</td><td>//</td></tr>
+    <tr><td>MOD (remainder)</td><td>%</td></tr>
+    <tr><td>IF ... THEN / ENDIF</td><td>if ...: (indentation closes block)</td></tr>
+    <tr><td>ELSE IF</td><td>elif</td></tr>
+    <tr><td>FOR i ← 1 TO n</td><td>for i in range(1, n+1):</td></tr>
+    <tr><td>WHILE ... DO / ENDWHILE</td><td>while ...:</td></tr>
+    <tr><td>FUNCTION / ENDFUNCTION</td><td>def name(): ... return</td></tr>
+    <tr><td>PROCEDURE / ENDPROCEDURE</td><td>def name(): (no return)</td></tr>
+    <tr><td>DECLARE x : INTEGER</td><td>x = 0  (Python infers type)</td></tr>
+    <tr><td>TRUE / FALSE</td><td>True / False</td></tr>
+    <tr><td>AND / OR / NOT</td><td>and / or / not</td></tr>
+    <tr><td>LEN(s)</td><td>len(s)</td></tr>
+    <tr><td>SUBSTRING(s, start, len)</td><td>s[start : start+len]</td></tr>
+  </table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════
+     SECTION A — EASY
+════════════════════════════════════════ -->
+<div class="section">
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">A</div>
+    <div>
+      <div class="section-title">Basic Constructs</div>
+      <div class="section-desc">Variables · conditions · loops · simple functions</div>
+    </div>
+  </div>
+
+  <!-- P1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p1')">
+      <div class="ex-head-left">
+        <span class="ex-num">P1</span>
+        <span class="ex-title">Temperature Converter</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[4 marks]</span>
+        <span class="toggle-lbl" id="p1-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p1" style="display:none">
+      <div class="scenario">Translate the pseudocode exactly into Python. The program converts Celsius to Fahrenheit.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pkw">DECLARE</span> celsius : <span class="pkw">REAL</span>
+<span class="pkw">DECLARE</span> fahrenheit : <span class="pkw">REAL</span>
+
+<span class="pkw">OUTPUT</span> <span class="pstr">"Enter temperature in Celsius:"</span>
+celsius ← <span class="pkw">USERINPUT</span>
+
+fahrenheit ← (celsius * <span class="pnum">9</span> / <span class="pnum">5</span>) + <span class="pnum">32</span>
+
+<span class="pkw">OUTPUT</span> <span class="pstr">"Fahrenheit: "</span> &amp; fahrenheit</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <ul class="task-list">
+        <li>Declare variables correctly for Python (no type declarations needed) <span class="pts">[1]</span></li>
+        <li>Use <code>float(input(...))</code> to read a real number <span class="pts">[1]</span></li>
+        <li>Translate the formula correctly <span class="pts">[1]</span></li>
+        <li>Output the result using an f-string <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p1-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p1-ans">
+celsius     = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Enter temperature in Celsius: "</span>))
+fahrenheit  = (celsius * <span class="num">9</span> / <span class="num">5</span>) + <span class="num">32</span>
+<span class="fn">print</span>(<span class="str">f"Fahrenheit: {fahrenheit}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- P2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p2')">
+      <div class="ex-head-left">
+        <span class="ex-num">P2</span>
+        <span class="ex-title">Ticket Pricing</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="p2-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p2" style="display:none">
+      <div class="scenario">A cinema charges different prices depending on the customer's age. Translate this decision logic to Python.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pkw">DECLARE</span> age : <span class="pkw">INTEGER</span>
+<span class="pkw">DECLARE</span> price : <span class="pkw">REAL</span>
+
+<span class="pkw">OUTPUT</span> <span class="pstr">"Enter age:"</span>
+age ← <span class="pkw">USERINPUT</span>
+
+<span class="pkw">IF</span> age &lt; <span class="pnum">12</span> <span class="pkw">THEN</span>
+    price ← <span class="pnum">5.00</span>
+<span class="pkw">ELSE IF</span> age &gt;= <span class="pnum">65</span> <span class="pkw">THEN</span>
+    price ← <span class="pnum">6.50</span>
+<span class="pkw">ELSE</span>
+    price ← <span class="pnum">10.00</span>
+<span class="pkw">ENDIF</span>
+
+<span class="pkw">OUTPUT</span> <span class="pstr">"Ticket price: $"</span> &amp; price</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box"><strong>Cambridge note:</strong> <code>ELSE IF</code> in pseudocode becomes <code>elif</code> in Python. The <code>ENDIF</code> is replaced by dedenting.</div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p2-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p2-ans">
+age = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter age: "</span>))
+
+<span class="kw">if</span> age < <span class="num">12</span>:
+    price = <span class="num">5.00</span>
+<span class="kw">elif</span> age >= <span class="num">65</span>:
+    price = <span class="num">6.50</span>
+<span class="kw">else</span>:
+    price = <span class="num">10.00</span>
+
+<span class="fn">print</span>(<span class="str">f"Ticket price: ${price}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- P3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p3')">
+      <div class="ex-head-left">
+        <span class="ex-num">P3</span>
+        <span class="ex-title">Countdown Loop</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="p3-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p3" style="display:none">
+      <div class="scenario">A program uses both a FOR loop and a WHILE loop. Translate both correctly — pay attention to how the loops end.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pcm">// Part 1: FOR loop</span>
+<span class="pkw">FOR</span> i ← <span class="pnum">10</span> <span class="pkw">TO</span> <span class="pnum">1</span> <span class="pkw">STEP</span> -<span class="pnum">1</span>
+    <span class="pkw">OUTPUT</span> i
+<span class="pkw">NEXT</span> i
+<span class="pkw">OUTPUT</span> <span class="pstr">"Liftoff!"</span>
+
+<span class="pcm">// Part 2: WHILE loop</span>
+<span class="pkw">DECLARE</span> total : <span class="pkw">INTEGER</span>
+total ← <span class="pnum">0</span>
+<span class="pkw">DECLARE</span> n : <span class="pkw">INTEGER</span>
+n ← <span class="pnum">1</span>
+<span class="pkw">WHILE</span> n &lt;= <span class="pnum">5</span> <span class="pkw">DO</span>
+    total ← total + n
+    n ← n + <span class="pnum">1</span>
+<span class="pkw">ENDWHILE</span>
+<span class="pkw">OUTPUT</span> <span class="pstr">"Sum 1 to 5: "</span> &amp; total</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box"><strong>Tricky bit:</strong> <code>FOR i ← 10 TO 1 STEP -1</code> in pseudocode counts <em>down</em>. In Python: <code>range(10, 0, -1)</code> — the step is the third argument.</div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p3-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p3-ans">
+<span class="cm"># Part 1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>, <span class="num">0</span>, <span class="num">-1</span>):
+    <span class="fn">print</span>(i)
+<span class="fn">print</span>(<span class="str">"Liftoff!"</span>)
+
+<span class="cm"># Part 2</span>
+total = <span class="num">0</span>
+n     = <span class="num">1</span>
+<span class="kw">while</span> n <= <span class="num">5</span>:
+    total += n
+    n += <span class="num">1</span>
+<span class="fn">print</span>(<span class="str">f"Sum 1 to 5: {total}"</span>)</div>
+    </div>
+  </div>
+
+</div><!-- /section A -->
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════
+     SECTION B — INTERMEDIATE
+════════════════════════════════════════ -->
+<div class="section">
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">B</div>
+    <div>
+      <div class="section-title">Functions &amp; Arrays</div>
+      <div class="section-desc">Procedures · functions with return · 1D arrays · string operations</div>
+    </div>
+  </div>
+
+  <!-- P4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p4')">
+      <div class="ex-head-left">
+        <span class="ex-num">P4</span>
+        <span class="ex-title">Number Classifier Procedure</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[6 marks]</span>
+        <span class="toggle-lbl" id="p4-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p4" style="display:none">
+      <div class="scenario">A procedure (no return value) classifies a number as positive, negative or zero. Translate the full program including the procedure call.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pkw">PROCEDURE</span> <span class="pfn">Classify</span>(num : <span class="pkw">INTEGER</span>)
+    <span class="pkw">IF</span> num > <span class="pnum">0</span> <span class="pkw">THEN</span>
+        <span class="pkw">OUTPUT</span> num &amp; <span class="pstr">" is positive"</span>
+    <span class="pkw">ELSE IF</span> num < <span class="pnum">0</span> <span class="pkw">THEN</span>
+        <span class="pkw">OUTPUT</span> num &amp; <span class="pstr">" is negative"</span>
+    <span class="pkw">ELSE</span>
+        <span class="pkw">OUTPUT</span> <span class="pstr">"zero"</span>
+    <span class="pkw">ENDIF</span>
+<span class="pkw">ENDPROCEDURE</span>
+
+<span class="pcm">// Main program</span>
+<span class="pkw">DECLARE</span> x : <span class="pkw">INTEGER</span>
+<span class="pkw">FOR</span> i ← <span class="pnum">1</span> <span class="pkw">TO</span> <span class="pnum">3</span>
+    <span class="pkw">OUTPUT</span> <span class="pstr">"Enter a number:"</span>
+    x ← <span class="pkw">USERINPUT</span>
+    <span class="pkw">CALL</span> <span class="pfn">Classify</span>(x)
+<span class="pkw">NEXT</span> i</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box"><strong>Cambridge note:</strong> <code>CALL Classify(x)</code> in pseudocode simply becomes <code>Classify(x)</code> in Python — no <code>CALL</code> keyword needed. A procedure has no <code>return</code> statement.</div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p4-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p4-ans">
+<span class="kw">def</span> <span class="fn">Classify</span>(num):
+    <span class="kw">if</span> num > <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f"{num} is positive"</span>)
+    <span class="kw">elif</span> num < <span class="num">0</span>:
+        <span class="fn">print</span>(<span class="str">f"{num} is negative"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"zero"</span>)
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
+    x = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number: "</span>))
+    <span class="fn">Classify</span>(x)</div>
+    </div>
+  </div>
+
+  <!-- P5 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p5')">
+      <div class="ex-head-left">
+        <span class="ex-num">P5</span>
+        <span class="ex-title">Array Search Function</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[8 marks]</span>
+        <span class="toggle-lbl" id="p5-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p5" style="display:none">
+      <div class="scenario">A function performs a linear search on a 1D array and returns the index of the target, or -1 if not found.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pkw">FUNCTION</span> <span class="pfn">LinearSearch</span>(
+    arr : <span class="pkw">ARRAY</span>, 
+    target : <span class="pkw">INTEGER</span>) 
+    : <span class="pkw">INTEGER</span>
+
+    <span class="pkw">DECLARE</span> i : <span class="pkw">INTEGER</span>
+    <span class="pkw">FOR</span> i ← <span class="pnum">0</span> <span class="pkw">TO</span> <span class="pfn">LEN</span>(arr) - <span class="pnum">1</span>
+        <span class="pkw">IF</span> arr[i] = target <span class="pkw">THEN</span>
+            <span class="pkw">RETURN</span> i
+        <span class="pkw">ENDIF</span>
+    <span class="pkw">NEXT</span> i
+    <span class="pkw">RETURN</span> -<span class="pnum">1</span>
+<span class="pkw">ENDFUNCTION</span>
+
+<span class="pcm">// Main program</span>
+<span class="pkw">DECLARE</span> nums : <span class="pkw">ARRAY</span>[<span class="pnum">0</span>:<span class="pnum">5</span>] <span class="pkw">OF</span> <span class="pkw">INTEGER</span>
+nums ← [<span class="pnum">14</span>, <span class="pnum">7</span>, <span class="pnum">33</span>, <span class="pnum">9</span>, <span class="pnum">21</span>, <span class="pnum">5</span>]
+
+<span class="pkw">OUTPUT</span> <span class="pfn">LinearSearch</span>(nums, <span class="pnum">9</span>)
+<span class="pkw">OUTPUT</span> <span class="pfn">LinearSearch</span>(nums, <span class="pnum">99</span>)</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box"><strong>Cambridge note:</strong> <code>arr[i] = target</code> in pseudocode is <em>comparison</em>, not assignment. In Python, comparison is <code>==</code> not <code>=</code>. This is a very common exam mistake!</div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p5-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p5-ans">
+<span class="kw">def</span> <span class="fn">LinearSearch</span>(arr, target):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(arr)):
+        <span class="kw">if</span> arr[i] == target:   <span class="cm"># == not =</span>
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="num">-1</span>
+
+nums = [<span class="num">14</span>, <span class="num">7</span>, <span class="num">33</span>, <span class="num">9</span>, <span class="num">21</span>, <span class="num">5</span>]
+<span class="fn">print</span>(<span class="fn">LinearSearch</span>(nums, <span class="num">9</span>))   <span class="cm"># → 3</span>
+<span class="fn">print</span>(<span class="fn">LinearSearch</span>(nums, <span class="num">99</span>))  <span class="cm"># → -1</span></div>
+    </div>
+  </div>
+
+  <!-- P6 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p6')">
+      <div class="ex-head-left">
+        <span class="ex-num">P6</span>
+        <span class="ex-title">String Processing — Username Generator</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[8 marks]</span>
+        <span class="toggle-lbl" id="p6-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p6" style="display:none">
+      <div class="scenario">A school generates usernames from a student's first name, last name, and year of birth. Translate the string manipulation logic carefully.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pkw">FUNCTION</span> <span class="pfn">MakeUsername</span>(
+    first   : <span class="pkw">STRING</span>,
+    last    : <span class="pkw">STRING</span>,
+    year    : <span class="pkw">INTEGER</span>) : <span class="pkw">STRING</span>
+
+    <span class="pkw">DECLARE</span> username : <span class="pkw">STRING</span>
+    username ← <span class="pfn">LCASE</span>(
+        <span class="pfn">SUBSTRING</span>(first, <span class="pnum">0</span>, <span class="pnum">1</span>) &amp;
+        <span class="pfn">SUBSTRING</span>(last,  <span class="pnum">0</span>, <span class="pnum">3</span>) &amp;
+        <span class="pfn">STRING</span>(year <span class="pkw">MOD</span> <span class="pnum">100</span>)
+    )
+    <span class="pkw">RETURN</span> username
+<span class="pkw">ENDFUNCTION</span>
+
+<span class="pcm">// Main program</span>
+<span class="pkw">DECLARE</span> f, l : <span class="pkw">STRING</span>
+<span class="pkw">DECLARE</span> y : <span class="pkw">INTEGER</span>
+<span class="pkw">OUTPUT</span> <span class="pstr">"First name:"</span>
+f ← <span class="pkw">USERINPUT</span>
+<span class="pkw">OUTPUT</span> <span class="pstr">"Last name:"</span>
+l ← <span class="pkw">USERINPUT</span>
+<span class="pkw">OUTPUT</span> <span class="pstr">"Year of birth:"</span>
+y ← <span class="pkw">USERINPUT</span>
+<span class="pkw">OUTPUT</span> <span class="pfn">MakeUsername</span>(f, l, y)</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box">
+        <strong>Key translations:</strong><br>
+        • <code>SUBSTRING(s, 0, 1)</code> → <code>s[0:1]</code> (first 1 char)<br>
+        • <code>SUBSTRING(s, 0, 3)</code> → <code>s[0:3]</code> (first 3 chars)<br>
+        • <code>LCASE(s)</code> → <code>s.lower()</code><br>
+        • <code>STRING(n)</code> → <code>str(n)</code><br>
+        • String concatenation <code>&amp;</code> → <code>+</code> in Python
+      </div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p6-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p6-ans">
+<span class="kw">def</span> <span class="fn">MakeUsername</span>(first, last, year):
+    username = (first[<span class="num">0</span>:<span class="num">1</span>] + last[<span class="num">0</span>:<span class="num">3</span>] + <span class="fn">str</span>(year % <span class="num">100</span>)).<span class="fn">lower</span>()
+    <span class="kw">return</span> username
+
+f = <span class="fn">input</span>(<span class="str">"First name: "</span>)
+l = <span class="fn">input</span>(<span class="str">"Last name: "</span>)
+y = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Year of birth: "</span>))
+<span class="fn">print</span>(<span class="fn">MakeUsername</span>(f, l, y))
+
+<span class="cm"># e.g. "Ali", "Hassan", 2007 → "ahas07"</span></div>
+    </div>
+  </div>
+
+</div><!-- /section B -->
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════
+     SECTION C — HARD (Exam-Style)
+════════════════════════════════════════ -->
+<div class="section">
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">C</div>
+    <div>
+      <div class="section-title">Exam-Level Pseudocode Translation</div>
+      <div class="section-desc">Multi-part programs · file handling · recursion · OOP — same complexity as Paper 4</div>
+    </div>
+  </div>
+
+  <!-- P7 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p7')">
+      <div class="ex-head-left">
+        <span class="ex-num">P7</span>
+        <span class="ex-title">File Reading with Exception Handling</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[10 marks]</span>
+        <span class="toggle-lbl" id="p7-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p7" style="display:none">
+      <div class="scenario">Directly based on Question 2 of the exam you uploaded. A procedure reads lines from a file, counts them, and handles errors. Translate precisely.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pkw">PROCEDURE</span> <span class="pfn">ReadFile</span>(filename : <span class="pkw">STRING</span>)
+    <span class="pkw">DECLARE</span> line : <span class="pkw">STRING</span>
+    <span class="pkw">DECLARE</span> count : <span class="pkw">INTEGER</span>
+    count ← <span class="pnum">0</span>
+
+    <span class="pkw">TRY</span>
+        <span class="pkw">OPEN</span> filename <span class="pkw">FOR</span> READ
+        <span class="pkw">WHILE NOT</span> EOF(filename) <span class="pkw">DO</span>
+            line ← READLINE(filename)
+            count ← count + <span class="pnum">1</span>
+            <span class="pkw">OUTPUT</span> count &amp; <span class="pstr">": "</span> &amp; line
+        <span class="pkw">ENDWHILE</span>
+        <span class="pkw">CLOSE</span> filename
+    <span class="pkw">EXCEPT</span>
+        <span class="pkw">OUTPUT</span> <span class="pstr">"Error: could not read file"</span>
+    <span class="pkw">ENDTRY</span>
+
+    <span class="pkw">OUTPUT</span> <span class="pstr">"Lines read: "</span> &amp; count
+<span class="pkw">ENDPROCEDURE</span>
+
+<span class="pcm">// Main program</span>
+<span class="pkw">DECLARE</span> fname : <span class="pkw">STRING</span>
+<span class="pkw">OUTPUT</span> <span class="pstr">"Enter filename:"</span>
+fname ← <span class="pkw">USERINPUT</span>
+<span class="pkw">CALL</span> <span class="pfn">ReadFile</span>(fname)</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box">
+        <strong>Key translations:</strong><br>
+        • <code>OPEN / CLOSE / READLINE</code> → use <code>with open(..., "r") as f:</code> (auto-closes)<br>
+        • <code>WHILE NOT EOF</code> → <code>for line in f:</code> (Python handles EOF automatically)<br>
+        • <code>TRY / EXCEPT / ENDTRY</code> → <code>try: / except: </code><br>
+        • Use <code>line.strip()</code> to remove newline characters
+      </div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p7-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p7-ans">
+<span class="kw">def</span> <span class="fn">ReadFile</span>(filename):
+    count = <span class="num">0</span>
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(filename, <span class="str">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                count += <span class="num">1</span>
+                <span class="fn">print</span>(<span class="str">f"{count}: {line.strip()}"</span>)
+    <span class="kw">except</span>:
+        <span class="fn">print</span>(<span class="str">"Error: could not read file"</span>)
+    <span class="fn">print</span>(<span class="str">f"Lines read: {count}"</span>)
+
+fname = <span class="fn">input</span>(<span class="str">"Enter filename: "</span>)
+<span class="fn">ReadFile</span>(fname)</div>
+    </div>
+  </div>
+
+  <!-- P8 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('p8')">
+      <div class="ex-head-left">
+        <span class="ex-num">P8</span>
+        <span class="ex-title">Recursive Power Function + OOP Class</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[12 marks]</span>
+        <span class="toggle-lbl" id="p8-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="p8" style="display:none">
+      <div class="scenario">Two parts: a recursive function AND a class declaration. Both appear regularly in Paper 4. Translate each part independently then combine them in the main program.</div>
+      <div class="code-columns">
+        <div class="code-panel">
+          <div class="code-panel-label pseudo-label">Cambridge Pseudocode</div>
+          <pre class="pseudo"><span class="pcm">// Part 1: recursive function</span>
+<span class="pkw">FUNCTION</span> <span class="pfn">Power</span>(base : <span class="pkw">INTEGER</span>,
+               exp  : <span class="pkw">INTEGER</span>) : <span class="pkw">INTEGER</span>
+    <span class="pkw">IF</span> exp = <span class="pnum">0</span> <span class="pkw">THEN</span>
+        <span class="pkw">RETURN</span> <span class="pnum">1</span>
+    <span class="pkw">ELSE</span>
+        <span class="pkw">RETURN</span> base * <span class="pfn">Power</span>(base, exp - <span class="pnum">1</span>)
+    <span class="pkw">ENDIF</span>
+<span class="pkw">ENDFUNCTION</span>
+
+<span class="pcm">// Part 2: class</span>
+<span class="pkw">CLASS</span> Calculator
+    <span class="pkw">PRIVATE</span> memory : <span class="pkw">REAL</span>
+
+    <span class="pkw">PUBLIC PROCEDURE</span> <span class="pfn">NEW</span>()
+        memory ← <span class="pnum">0.0</span>
+    <span class="pkw">ENDPROCEDURE</span>
+
+    <span class="pkw">PUBLIC PROCEDURE</span> <span class="pfn">Store</span>(val : <span class="pkw">REAL</span>)
+        memory ← val
+    <span class="pkw">ENDPROCEDURE</span>
+
+    <span class="pkw">PUBLIC FUNCTION</span> <span class="pfn">Recall</span>() : <span class="pkw">REAL</span>
+        <span class="pkw">RETURN</span> memory
+    <span class="pkw">ENDFUNCTION</span>
+<span class="pkw">ENDCLASS</span>
+
+<span class="pcm">// Main program</span>
+calc ← <span class="pkw">NEW</span> Calculator()
+<span class="pkw">CALL</span> calc.<span class="pfn">Store</span>(<span class="pfn">Power</span>(<span class="pnum">2</span>, <span class="pnum">8</span>))
+<span class="pkw">OUTPUT</span> calc.<span class="pfn">Recall</span>()</pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-label py-label">Your Python</div>
+          <pre class="pycode blank"><span class="cm"># Write your Python here</span>
+
+
+
+
+</pre>
+        </div>
+      </div>
+      <div class="tip-box">
+        <strong>Key translations:</strong><br>
+        • <code>CLASS ... ENDCLASS</code> → <code>class Name:</code> with indentation<br>
+        • <code>PUBLIC PROCEDURE NEW()</code> → <code>def __init__(self):</code><br>
+        • <code>PRIVATE memory</code> → <code>self.memory</code> (Python uses <code>self.</code> — no true private, but use <code>self.__memory</code> for convention)<br>
+        • <code>calc ← NEW Calculator()</code> → <code>calc = Calculator()</code><br>
+        • Recursive base case: <code>if exp == 0: return 1</code>
+      </div>
+      <div class="btn-row">
+        <button class="answer-btn" onclick="showAnswer('p8-ans')">Show answer</button>
+      </div>
+      <div class="answer-box" id="p8-ans">
+<span class="cm"># Part 1 — recursive function</span>
+<span class="kw">def</span> <span class="fn">Power</span>(base, exp):
+    <span class="kw">if</span> exp == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> base * <span class="fn">Power</span>(base, exp - <span class="num">1</span>)
+
+<span class="cm"># Part 2 — class</span>
+<span class="kw">class</span> <span class="fn">Calculator</span>:
+    <span class="cm"># memory : Real</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.memory = <span class="num">0.0</span>
+
+    <span class="kw">def</span> <span class="fn">Store</span>(self, val):
+        self.memory = val
+
+    <span class="kw">def</span> <span class="fn">Recall</span>(self):
+        <span class="kw">return</span> self.memory
+
+<span class="cm"># Main program</span>
+calc = <span class="fn">Calculator</span>()
+calc.<span class="fn">Store</span>(<span class="fn">Power</span>(<span class="num">2</span>, <span class="num">8</span>))
+<span class="fn">print</span>(calc.<span class="fn">Recall</span>())   <span class="cm"># → 256.0</span></div>
+    </div>
+  </div>
+
+</div><!-- /section C -->
+
+<footer>
+  <span>Cambridge International AS &amp; A Level Computer Science 9618 — Pseudocode → Python Exercises</span>
+  <span>All pseudocode follows the Cambridge 9618 pseudocode standard</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const el = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    if (arrow) arrow.textContent = '▲ collapse';
+  } else {
+    el.style.display = 'none';
+    if (arrow) arrow.textContent = '▼ expand';
+  }
+}
+function showAnswer(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible');
+}
+</script>
+</body>
+</html>

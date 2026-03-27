@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowcharts &amp; Algorithms — Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;
+  --paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;
+  --mono-bg:#1e1c18;--mono-text:#d4d0c4;
+  --kw:#7eb8d4;--fn:#a8d8a0;--st:#e8c878;--cm:#6a6860;--nm:#c8a8f0;--pk:#7eb8d4;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;
+  --green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;
+  --amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;
+  --red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;
+  --purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;
+  --teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+
+/* NAV */
+.nav{display:flex;overflow-x:auto;border-bottom:2px solid var(--ink);background:var(--ink);}
+.nav-btn{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  padding:12px 20px;border:none;background:none;color:rgba(255,255,255,0.45);
+  cursor:pointer;white-space:nowrap;transition:all 0.15s;border-bottom:3px solid transparent;
+}
+.nav-btn:hover{color:rgba(255,255,255,0.75);}
+.nav-btn.active{color:#fff;border-bottom-color:#fff;}
+
+/* PANELS */
+.panel{display:none;padding:1.5rem 1.75rem;}
+.panel.active{display:block;}
+
+/* SECTION HEADS */
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.25rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.5rem;line-height:1.5;}
+
+/* CODE */
+pre.py,pre.ps{
+  font-family:'DM Mono',monospace;font-size:12px;
+  padding:0.85rem 1rem;border-radius:7px;line-height:1.8;
+  white-space:pre-wrap;word-break:break-word;margin:0;
+}
+pre.py{background:var(--mono-bg);color:var(--mono-text);}
+pre.ps{background:#0f1420;color:#c8d4e8;}
+.kw{color:#7eb8d4;font-weight:500;}
+.fn{color:#a8d8a0;}
+.st{color:#e8c878;}
+.cm{color:#6a6860;font-style:italic;}
+.nm{color:#c8a8f0;}
+.pk{color:#7eb8d4;font-weight:500;}
+.hi{color:#f0c878;font-weight:500;}
+.out{color:#e8a878;}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:0.75rem 0;}
+@media(max-width:600px){.two{grid-template-columns:1fr;}}
+.col-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;margin-bottom:5px;}
+.lbl-ps{color:var(--blue);}
+.lbl-py{color:var(--green);}
+
+/* BOXES */
+.box{border-radius:7px;padding:0.75rem 1rem;font-size:13px;line-height:1.55;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:3px;}
+.box-blue  {background:var(--blue-bg);  border:1px solid var(--blue-bd);  color:var(--blue);}
+.box-green {background:var(--green-bg); border:1px solid var(--green-bd); color:var(--green);}
+.box-amber {background:var(--amber-bg); border:1px solid var(--amber-bd); color:var(--amber);}
+.box-red   {background:var(--red-bg);   border:1px solid var(--red-bd);   color:var(--red);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+.box-teal  {background:var(--teal-bg);  border:1px solid var(--teal-bd);  color:var(--teal);}
+
+/* ARROW ANNOTATION ROWS */
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:130px;font-family:'DM Mono',monospace;color:var(--ink2);}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--rule);margin:1.5rem 0;}
+
+/* EXERCISES */
+.ex{border:1px solid var(--rule);border-radius:8px;margin-bottom:1.25rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--paper2);border-bottom:1px solid var(--rule);flex-wrap:wrap;gap:0.5rem;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper3);}
+.ex-head-l{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);}
+.ex-title{font-weight:500;font-size:13.5px;}
+.ex-meta{display:flex;gap:0.4rem;align-items:center;}
+.badge{font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.b-easy{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);}
+.b-mid {background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.b-hard{background:var(--red-bg);  color:var(--red);  border:1px solid var(--red-bd);}
+.b-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+
+.ex-body{padding:1rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.65rem 0.9rem;border-radius:0 5px 5px 0;font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:0.85rem;}
+
+.task-list{list-style:none;padding:0;margin-bottom:0.85rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.3rem;position:relative;font-size:13px;border-bottom:0.5px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.3rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:10px;background:var(--paper3);padding:1px 6px;border-radius:10px;color:var(--ink3);}
+
+.hint-btn,.ans-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);}
+.ans-btn{background:var(--ink);border:none;color:#fff;}
+.ans-btn:hover{background:var(--ink2);}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;}
+
+.hint-box{display:none;background:var(--paper2);border:1px dashed var(--rule);border-radius:5px;padding:0.65rem 0.9rem;font-size:13px;color:var(--ink2);margin-top:0.65rem;line-height:1.55;}
+.hint-box.on{display:block;}
+.hint-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);display:block;margin-bottom:3px;}
+
+.ans-box{display:none;background:var(--mono-bg);border-radius:6px;padding:0.85rem 1rem;margin-top:0.65rem;font-family:'DM Mono',monospace;font-size:12px;line-height:1.8;color:var(--mono-text);overflow-x:auto;border:1px solid rgba(255,255,255,0.06);white-space:pre-wrap;word-break:break-word;}
+.ans-box.on{display:block;}
+
+.sample-out{margin-top:0.75rem;}
+.sample-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);font-weight:500;margin-bottom:4px;}
+pre.sample{font-family:'DM Mono',monospace;font-size:12px;background:var(--paper2);border:1px solid var(--rule);border-radius:5px;padding:0.6rem 0.85rem;line-height:1.7;white-space:pre-wrap;color:var(--ink2);}
+
+/* FLOWCHART SHAPES */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:0;padding:1rem 0;position:relative;}
+.fc-terminal{
+  background:var(--ink);color:#fff;
+  border-radius:50px;padding:7px 28px;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  text-align:center;min-width:140px;
+}
+.fc-process{
+  background:#fff;border:1.5px solid var(--ink2);
+  border-radius:4px;padding:8px 22px;
+  font-family:'DM Mono',monospace;font-size:12px;
+  text-align:center;min-width:200px;color:var(--ink);
+}
+.fc-decision{
+  background:var(--amber-bg);border:1.5px solid var(--amber-bd);
+  padding:8px 18px;
+  font-family:'DM Mono',monospace;font-size:12px;
+  text-align:center;min-width:200px;color:var(--amber);
+  position:relative;
+  clip-path: polygon(18px 0%, calc(100% - 18px) 0%, 100% 50%, calc(100% - 18px) 100%, 18px 100%, 0% 50%);
+  padding:10px 36px;
+}
+.fc-io{
+  background:var(--blue-bg);border:1.5px solid var(--blue-bd);
+  padding:8px 22px;
+  font-family:'DM Mono',monospace;font-size:12px;
+  text-align:center;min-width:200px;color:var(--blue);
+  clip-path:polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  padding:8px 34px;
+}
+.fc-arrow{
+  display:flex;flex-direction:column;align-items:center;
+  color:var(--ink3);font-size:11px;margin:1px 0;line-height:1.3;
+}
+.fc-arrow-line{width:1.5px;height:18px;background:var(--ink3);margin:0 auto;}
+.fc-arrow-head{font-size:14px;color:var(--ink3);margin-top:-4px;line-height:1;}
+.fc-arrow-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--amber);font-weight:500;}
+.fc-branch-row{display:flex;align-items:flex-start;gap:2rem;margin:0;}
+.fc-branch{display:flex;flex-direction:column;align-items:center;}
+.fc-branch-lbl{font-size:10px;font-family:'DM Mono',monospace;margin-bottom:4px;}
+.fc-yes{color:var(--green);}
+.fc-no{color:var(--red);}
+.fc-loop-arrow{font-size:10px;font-family:'DM Mono',monospace;color:var(--purple);text-align:center;margin:2px 0;font-style:italic;}
+
+/* ARRAY VISUAL */
+.arr-wrap{display:flex;flex-direction:column;gap:4px;margin:0.75rem 0;}
+.arr-row{display:flex;align-items:center;gap:3px;}
+.arr-lbl{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);min-width:80px;}
+.arr-cell{
+  width:36px;height:36px;border:1px solid var(--rule);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  background:#fff;color:var(--ink);
+}
+.arr-cell.hi  {background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber);}
+.arr-cell.mid {background:var(--blue-bg); border-color:var(--blue-bd); color:var(--blue);}
+.arr-cell.done{background:var(--green-bg);border-color:var(--green-bd);color:var(--green);}
+.arr-cell.gone{background:var(--paper3); border-color:var(--rule);     color:var(--ink3);}
+.arr-idx-row{display:flex;align-items:center;gap:3px;margin-left:83px;}
+.arr-idx{width:36px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--ink3);}
+.arr-ptr{font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);font-weight:500;width:36px;text-align:center;}
+
+/* TRACE TABLE */
+.trace{width:100%;border-collapse:collapse;font-size:12px;margin:0.75rem 0;}
+.trace th{text-align:center;padding:7px 12px;background:var(--paper3);border:1px solid var(--rule);font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink3);font-weight:500;font-family:'DM Mono',monospace;}
+.trace td{padding:6px 12px;border:1px solid var(--rule);text-align:center;font-family:'DM Mono',monospace;font-size:12px;vertical-align:middle;}
+.trace tr:nth-child(even) td{background:var(--paper2);}
+.trace td.chg{color:var(--amber);font-weight:500;}
+.trace td.ok {color:var(--green);font-weight:500;}
+.trace td.bad{color:var(--red);font-weight:500;}
+
+/* MAP */
+.map-root{padding:0.5rem 0;}
+.map-node{border:1.5px solid var(--rule);border-radius:8px;padding:0.5rem 0.9rem;font-size:13px;font-weight:500;display:inline-block;margin-bottom:0.25rem;background:#fff;}
+.map-node.root{background:var(--ink);color:#fff;border-color:var(--ink);font-size:14px;}
+.map-node.cat {background:var(--paper3);color:var(--ink);border-color:var(--rule);}
+.map-node.blue  {background:var(--blue-bg);  color:var(--blue);  border-color:var(--blue-bd);}
+.map-node.green {background:var(--green-bg); color:var(--green); border-color:var(--green-bd);}
+.map-node.amber {background:var(--amber-bg); color:var(--amber); border-color:var(--amber-bd);}
+.map-node.teal  {background:var(--teal-bg);  color:var(--teal);  border-color:var(--teal-bd);}
+.map-node.red   {background:var(--red-bg);   color:var(--red);   border-color:var(--red-bd);}
+.map-node.purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd);}
+.map-row{display:flex;align-items:flex-start;gap:0;}
+.map-branch{display:flex;flex-direction:column;margin-left:1.5rem;}
+.map-line{display:flex;align-items:center;gap:0.5rem;margin:3px 0;}
+.map-connector{color:var(--ink3);font-size:13px;font-family:'DM Mono',monospace;flex-shrink:0;}
+.map-note{font-size:11px;color:var(--ink3);margin-left:0.4rem;font-style:italic;}
+
+/* STEP LIST */
+.step-list{list-style:none;padding:0;margin:0.75rem 0;}
+.step-list li{display:flex;gap:0.75rem;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);font-size:13px;align-items:flex-start;}
+.step-list li:last-child{border-bottom:none;}
+.step-num{font-family:'DM Mono',monospace;font-size:10px;background:var(--ink);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-body{flex:1;line-height:1.55;}
+.step-body strong{font-weight:500;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn active" onclick="tab('t1',this)">① Flowchart shapes</button>
+
+  <!-- <button class="nav-btn"        onclick="tab('t5',this)">⑤ Exercises</button> -->
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 1 — FLOWCHART SHAPES & HOW TO READ
+══════════════════════════════════════ -->
+<div class="panel active" id="t1">
+  <div class="sec-title">Flowcharts — shapes, rules, and how to draw one</div>
+  <div class="sec-sub">A flowchart is a picture of an algorithm. Every shape has a fixed meaning. Cambridge Paper 2 asks you to complete or draw one almost every year.</div>
+
+  <div class="box box-blue"><strong>What is a flowchart?</strong>
+    A flowchart turns your algorithm into a diagram so anyone can follow the logic without reading code. You draw boxes and arrows. Each box shape tells the reader exactly what kind of action is happening. Arrows show which box comes next — and arrows that loop back create a repetition.
+  </div>
+
+  <!-- SHAPE TABLE -->
+  <div style="font-size:13px;font-weight:500;margin:1rem 0 0.5rem;">The 5 shapes you must know — every single one:</div>
+
+  <div class="arrow-row">
+    <span class="arrow-label">
+      <span style="display:inline-block;background:var(--ink);color:#fff;border-radius:50px;padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace;">OVAL</span>
+    </span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc"><strong style="font-weight:500;">Terminal — START or END.</strong> Every flowchart has exactly one START oval at the top and one END oval at the bottom. Nothing goes before START or after END. If you forget to draw them, you lose marks.</span>
+  </div>
+
+  <div class="arrow-row">
+    <span class="arrow-label">
+      <span style="display:inline-block;background:#fff;border:1.5px solid var(--ink2);border-radius:4px;padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink);">RECTANGLE</span>
+    </span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc"><strong style="font-weight:500;">Process — an action or assignment.</strong> Any instruction that does something goes here: <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">count ← 0</code>, <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">index ← index + 1</code>, <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">temp ← A[j]</code>. It has one arrow in and one arrow out.</span>
+  </div>
+
+  <div class="arrow-row">
+    <span class="arrow-label">
+      <span style="display:inline-block;background:var(--amber-bg);border:1.5px solid var(--amber-bd);padding:3px 12px;font-size:11px;font-family:'DM Mono',monospace;color:var(--amber);clip-path:polygon(10px 0%,calc(100% - 10px) 0%,100% 50%,calc(100% - 10px) 100%,10px 100%,0% 50%);padding:4px 22px;">DIAMOND</span>
+    </span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc"><strong style="font-weight:500;">Decision — a YES / NO question.</strong> Always a condition that is either true or false: <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">index &lt; 20?</code>, <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">found = TRUE?</code>. It always has TWO arrows leaving it — one labelled YES, one labelled NO. Never more, never fewer.</span>
+  </div>
+
+  <div class="arrow-row">
+    <span class="arrow-label">
+      <span style="display:inline-block;background:var(--blue-bg);border:1.5px solid var(--blue-bd);font-size:11px;font-family:'DM Mono',monospace;color:var(--blue);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);padding:4px 22px;">PARALLELOGRAM</span>
+    </span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc"><strong style="font-weight:500;">Input / Output — reading in or printing out.</strong> Use this for: <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">INPUT x</code>, <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">OUTPUT result</code>, <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">OUTPUT count</code>. Never put a calculation inside a parallelogram — that goes in a rectangle.</span>
+  </div>
+
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:var(--ink3);font-size:18px;line-height:1.2;">→ ↓ ↑</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc"><strong style="font-weight:500;">Flow lines — direction of execution.</strong> Arrows must always have a direction. An arrow pointing DOWN or RIGHT moves forward through the algorithm. An arrow pointing UP or LEFT creates a loop — it takes you back to repeat something. Always label YES / NO on decision arrows.</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- HOW TO READ -->
+  <div style="font-size:13px;font-weight:500;margin-bottom:0.5rem;">How to read a flowchart — step by step for beginners:</div>
+  <ul class="step-list">
+    <li>
+      <span class="step-num">1</span>
+      <span class="step-body"><strong>Always start at the START oval.</strong> Find it — it's the only rounded oval at the very top. Follow the arrow leaving it downwards.</span>
+    </li>
+    <li>
+      <span class="step-num">2</span>
+      <span class="step-body"><strong>When you hit a rectangle,</strong> do the action written inside it (assign the variable, do the calculation) then follow the single arrow out.</span>
+    </li>
+    <li>
+      <span class="step-num">3</span>
+      <span class="step-body"><strong>When you hit a diamond,</strong> ask yourself: is the condition TRUE or FALSE right now? Follow the YES arrow if true, the NO arrow if false.</span>
+    </li>
+    <li>
+      <span class="step-num">4</span>
+      <span class="step-body"><strong>When an arrow points upwards,</strong> you are going back around a loop. Follow it up to whatever box it points to and continue from there.</span>
+    </li>
+    <li>
+      <span class="step-num">5</span>
+      <span class="step-body"><strong>When you reach the END oval,</strong> stop. The algorithm is finished.</span>
+    </li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <!-- WORKED FLOWCHART EXAMPLE: count non-blank -->
+  <div style="font-size:13px;font-weight:500;margin-bottom:0.25rem;">Worked example — count non-blank elements in a 30-element array:</div>
+  <div class="sec-sub">This is the exact type of question asked in Cambridge Paper 2 Q2. Study every shape and label carefully.</div>
+
+  <div class="two">
+    <div>
+      <!-- FLOWCHART SVG -->
+      <div style="background:var(--paper2);border:1px solid var(--rule);border-radius:7px;padding:1.25rem;overflow-x:auto;">
+        <div class="fc-wrap">
+          <div class="fc-terminal">START</div>
+          <div class="fc-arrow"><div class="fc-arrow-line"></div><div class="fc-arrow-head">▾</div></div>
+
+          <div class="fc-process">count ← 0<br>index ← 0</div>
+          <div class="fc-arrow"><div class="fc-arrow-line"></div><div class="fc-arrow-head">▾</div></div>
+
+          <div class="fc-decision">index &lt; 30 ?</div>
+
+          <div style="display:flex;align-items:flex-start;gap:2.5rem;width:100%;justify-content:center;margin-top:0;">
+            <!-- YES branch -->
+            <div class="fc-branch" style="align-items:center;">
+              <div class="fc-arrow"><div class="fc-arrow-line"></div><div class="fc-arrow-head" style="color:var(--green);">▾</div></div>
+              <div class="fc-branch-lbl fc-yes">YES</div>
+              <div class="fc-decision">Data[index] ≠ "" ?</div>
+              <div style="display:flex;gap:1.5rem;">
+                <div class="fc-branch" style="align-items:center;">
+                  <div class="fc-arrow"><div class="fc-arrow-line"></div><div class="fc-arrow-head" style="color:var(--green);">▾</div></div>
+                  <div class="fc-branch-lbl fc-yes">YES</div>
+                  <div class="fc-process">count ← count + 1</div>
+                </div>
+                <div class="fc-branch" style="align-items:center;margin-top:36px;">
+                  <div class="fc-branch-lbl fc-no">NO</div>
+                  <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);padding:4px 8px;">(skip)</div>
+                </div>
+              </div>
+              <div class="fc-arrow" style="margin-top:6px;"><div class="fc-arrow-line"></div><div class="fc-arrow-head">▾</div></div>
+              <div class="fc-process">index ← index + 1</div>
+              <div class="fc-loop-arrow" style="margin-top:4px;">↑ loop back to diamond ↑</div>
+            </div>
+            <!-- NO branch -->
+            <div class="fc-branch" style="align-items:center;margin-top:16px;">
+              <div class="fc-branch-lbl fc-no" style="margin-bottom:8px;">NO →</div>
+              <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);">exit loop</div>
+            </div>
+          </div>
+
+          <div class="fc-arrow" style="margin-top:8px;"><div class="fc-arrow-line"></div><div class="fc-arrow-head">▾</div></div>
+          <div class="fc-io">OUTPUT count</div>
+          <div class="fc-arrow"><div class="fc-arrow-line"></div><div class="fc-arrow-head">▾</div></div>
+          <div class="fc-terminal">END</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOTATION PANEL -->
+    <div>
+      <div class="box box-blue"><strong>Why count ← 0 and index ← 0 first?</strong>
+        These are called initialisations. You must set every variable to a starting value before the loop begins. If you forget, the variable could contain garbage data and give a wrong answer.
+      </div>
+      <div class="box box-amber"><strong>Why is the diamond index &lt; 30 and not index &lt;= 30?</strong>
+        The array has indices 0 to 29. When index reaches 30, there is no Data[30] — it doesn't exist. So the condition must be index &lt; 30. When it becomes false, we exit the loop safely.
+      </div>
+      <div class="box box-green"><strong>Why is index ← index + 1 inside the YES branch?</strong>
+        We only move to the next element if we are still inside the loop (index &lt; 30 is true). The increment goes after the inner check so every valid element gets examined before we advance.
+      </div>
+      <div class="box box-teal"><strong>The loop back arrow — this is the loop!</strong>
+        After incrementing index, the arrow goes back UP to the first diamond (index &lt; 30?). This creates the repetition. Without this arrow going back, the algorithm only runs once.
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- HOW TO DRAW -->
+  <div style="font-size:13px;font-weight:500;margin-bottom:0.5rem;">How a beginner should tackle any "complete the flowchart" question:</div>
+  <ul class="step-list">
+    <li>
+      <span class="step-num">1</span>
+      <span class="step-body"><strong>Read the question and list: what are the initialisations?</strong> Look for variables that need a starting value (usually 0 or FALSE or –1). Draw each one as a rectangle right after START.</span>
+    </li>
+    <li>
+      <span class="step-num">2</span>
+      <span class="step-body"><strong>Find the loop condition.</strong> Ask: what keeps the loop going? This becomes the diamond. It is almost always something like <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">index &lt; n</code> or <code style="font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 4px;border-radius:3px;">NOT found</code>.</span>
+    </li>
+    <li>
+      <span class="step-num">3</span>
+      <span class="step-body"><strong>Find any inner check inside the loop.</strong> If the question says "only do X when condition Y is true", that's another diamond inside the YES branch of the loop diamond.</span>
+    </li>
+    <li>
+      <span class="step-num">4</span>
+      <span class="step-body"><strong>Add the counter or action.</strong> Whatever the question asks the algorithm to DO goes in a rectangle on the YES branch of the inner diamond.</span>
+    </li>
+    <li>
+      <span class="step-num">5</span>
+      <span class="step-body"><strong>Increment the index</strong> at the bottom of the loop body (rectangle), then draw the arrow going back UP to the loop diamond. This is the most commonly forgotten step.</span>
+    </li>
+    <li>
+      <span class="step-num">6</span>
+      <span class="step-body"><strong>When the loop exits</strong> (NO branch of the loop diamond), draw the output parallelogram and then the END oval.</span>
+    </li>
+  </ul>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB 5 — EXERCISES
+══════════════════════════════════════ -->
+<div class="panel" id="t5">
+  <div class="sec-title">Past-paper style exercises — searching, sorting &amp; flowcharts</div>
+  <div class="sec-sub">Questions follow Cambridge 9618 Paper 2 style exactly. Expand each question to see the task list, hint and model answer.</div>
+
+
+  <!-- ── E1 EASY ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e1')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q1</span>
+        <span class="ex-title">Linear search — trace table</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-easy">Easy</span>
+        <span class="badge b-marks">[3 marks]</span>
+        <span class="toggle-lbl" id="e1-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e1" style="display:none">
+      <div class="scenario">
+        The 1D array <code style="font-family:'DM Mono',monospace">Scores</code> contains the following values stored at indices 0 to 5:<br>
+        &nbsp;&nbsp;[15, 42, 7, 31, 19, 5]<br><br>
+        A linear search is performed for the value <strong>31</strong> using the algorithm shown in Tab 2.
+      </div>
+      <ul class="task-list">
+        <li>Complete the trace table below, showing each iteration of the WHILE loop. <span class="pts">[2]</span></li>
+        <li>State the value returned by the function. <span class="pts">[1]</span></li>
+      </ul>
+      <table class="trace" style="margin-bottom:0.75rem;">
+        <tr><th>index</th><th>my_list[index]</th><th>== 31 ?</th><th>found</th></tr>
+        <tr><td>–1 (start)</td><td>—</td><td>—</td><td>False</td></tr>
+        <tr><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+      </table>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h1')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a1')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h1"><span class="hint-lbl">Hint</span>Remember: index starts at –1 and the first thing the loop body does is index += 1, making it 0. Write one row per iteration until found = True stops the loop. The function returns the index where the match was found.</div>
+      <div class="ans-box" id="a1">Trace table:
+index | my_list[index] | == 31? | found
+ -1   |      —         |   —    | False
+  0   |      15        |   No   | False
+  1   |      42        |   No   | False
+  2   |       7        |   No   | False
+  3   |      31        |  YES   | True  ← loop exits here
+
+Value returned: 3
+
+(4 comparisons were made before the match was found)</div>
+    </div>
+  </div>
+
+
+  <!-- ── E2 EASY ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e2')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q2</span>
+        <span class="ex-title">Bubble sort — one pass trace</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-easy">Easy</span>
+        <span class="badge b-marks">[4 marks]</span>
+        <span class="toggle-lbl" id="e2-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e2" style="display:none">
+      <div class="scenario">
+        The array <code style="font-family:'DM Mono',monospace">Data</code> contains: [6, 2, 8, 3, 5]
+      </div>
+      <ul class="task-list">
+        <li>Complete the trace table to show every comparison and swap during <strong>one complete pass</strong> (pass 1) of a bubble sort. <span class="pts">[3]</span></li>
+        <li>State which element is now guaranteed to be in its correct final position after pass 1, and explain why. <span class="pts">[1]</span></li>
+      </ul>
+      <table class="trace" style="margin-bottom:0.75rem;">
+        <tr><th>j</th><th>Compare</th><th>Swap?</th><th>Array state after</th></tr>
+        <tr><td>0</td><td>6 vs 2</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>1</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>2</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>3</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+      </table>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h2')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a2')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h2"><span class="hint-lbl">Hint</span>j goes from 0 to n–2 (so 0 to 3 for a 5-element list). At each step compare Data[j] with Data[j+1]. If left > right, swap them using a temp variable. After one full pass, the largest value will have bubbled all the way to the last position.</div>
+      <div class="ans-box" id="a2">j=0: 6 vs 2 → YES swap → [2, 6, 8, 3, 5]
+j=1: 6 vs 8 → No swap → [2, 6, 8, 3, 5]
+j=2: 8 vs 3 → YES swap → [2, 6, 3, 8, 5]
+j=3: 8 vs 5 → YES swap → [2, 6, 3, 5, 8]
+
+Element 8 (index 4) is now in its correct final position.
+Reason: the bubble sort guarantees the largest unsorted value
+reaches the end of the list after each complete pass.</div>
+    </div>
+  </div>
+
+
+  <!-- ── E3 EASY ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e3')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q3</span>
+        <span class="ex-title">Binary search — prerequisite and trace</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-easy">Easy</span>
+        <span class="badge b-marks">[4 marks]</span>
+        <span class="toggle-lbl" id="e3-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e3" style="display:none">
+      <div class="scenario">
+        A student wants to perform a binary search for the value <strong>19</strong> on the array:<br>
+        &nbsp;&nbsp;[4, 9, 15, 19, 23, 30, 45]
+      </div>
+      <ul class="task-list">
+        <li>State one condition that must be true about the array before a binary search can be performed. <span class="pts">[1]</span></li>
+        <li>Complete the trace table showing every pass until the item is found or the search fails. <span class="pts">[3]</span></li>
+      </ul>
+      <table class="trace" style="margin-bottom:0.75rem;">
+        <tr><th>Pass</th><th>First</th><th>Last</th><th>Middle</th><th>List[Middle]</th><th>Action</th></tr>
+        <tr><td>1</td><td>0</td><td>6</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>2</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+      </table>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h3')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a3')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h3"><span class="hint-lbl">Hint</span>Middle = (First + Last) DIV 2. Always integer division — round down. After comparing, if the middle value is too big, Last = Middle – 1. If too small, First = Middle + 1. If equal, you found it.</div>
+      <div class="ans-box" id="a3">Condition: the array must be sorted in ascending order.
+
+Pass 1: First=0, Last=6, Middle=(0+6)÷2=3, List[3]=19
+        19 = search item → FOUND at index 3
+
+Only 1 pass needed.
+Value 19 is returned (index 3).</div>
+    </div>
+  </div>
+
+
+  <!-- ── E4 MEDIUM ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e4')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q4</span>
+        <span class="ex-title">Insertion sort — full trace table</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="e4-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e4" style="display:none">
+      <div class="scenario">
+        The array <code style="font-family:'DM Mono',monospace">Values</code> contains: [8, 3, 10, 1, 6]<br>
+        An insertion sort is performed to sort the array into ascending order.
+      </div>
+      <ul class="task-list">
+        <li>Show the state of the array after each iteration of the outer FOR loop. <span class="pts">[4]</span></li>
+        <li>State how many times a shift (rightward copy) was performed in total across all passes. <span class="pts">[1]</span></li>
+      </ul>
+      <table class="trace" style="margin-bottom:0.75rem;">
+        <tr><th>pointer</th><th>item_to_be_inserted</th><th>Array after insertion</th></tr>
+        <tr><td>—</td><td>—</td><td>[8, 3, 10, 1, 6]</td></tr>
+        <tr><td>1</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>2</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>3</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>4</td><td style="color:var(--ink3);">...</td><td style="color:var(--ink3);">...</td></tr>
+      </table>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h4')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a4')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h4"><span class="hint-lbl">Hint</span>Save the item at position pointer. Walk backwards through positions 0 to pointer–1. Shift every element that is bigger than your saved item one position to the right. When you find one that is not bigger (or you reach index –1), drop the saved item into the gap. Count every shift operation separately.</div>
+      <div class="ans-box" id="a4">pointer=1: item=3, shifts: 8→right → [3, 8, 10, 1, 6]
+pointer=2: item=10, no shifts (8 < 10) → [3, 8, 10, 1, 6]
+pointer=3: item=1, shifts: 10,8,3→right → [1, 3, 8, 10, 6]
+pointer=4: item=6, shifts: 10,8→right → [1, 3, 6, 8, 10]
+
+Total shifts: 1 + 0 + 3 + 2 = 6 shift operations</div>
+    </div>
+  </div>
+
+
+  <!-- ── E5 MEDIUM ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e5')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q5</span>
+        <span class="ex-title">Flowchart — complete the diagram (find maximum)</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="e5-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e5" style="display:none">
+      <div class="scenario">
+        <code style="font-family:'DM Mono',monospace">Data</code> is a global 1D array containing 20 elements of type INTEGER.<br><br>
+        An algorithm must find and output the maximum value stored in the array and the index at which it is found.
+      </div>
+      <ul class="task-list">
+        <li>State the correct shape for each of the following steps. <span class="pts">[2]</span></li>
+        <li>Draw a complete flowchart for this algorithm using correct symbols. Your answer must include: all initialisations, the loop and its exit condition, the inner decision to update the maximum, the increment of index, and the final output. <span class="pts">[3]</span></li>
+      </ul>
+      <table class="trace" style="margin-bottom:0.75rem;">
+        <tr><th>Step</th><th>Correct flowchart shape</th></tr>
+        <tr><td>max ← Data[0]</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>OUTPUT max, max_index</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>index &lt; 20?</td><td style="color:var(--ink3);">...</td></tr>
+        <tr><td>START</td><td style="color:var(--ink3);">...</td></tr>
+      </table>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h5')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a5')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h5"><span class="hint-lbl">Hint</span>Initialisations: max ← Data[0] (assume first element is the max to start), max_index ← 0, index ← 1 (start loop from 1, since index 0 is already our assumed max). Loop condition: index &lt; 20. Inner decision: Data[index] > max? If YES → update max and max_index. Then always increment index and loop back.</div>
+      <div class="ans-box" id="a5">Shape answers:
+  max ← Data[0]         → RECTANGLE (process / assignment)
+  OUTPUT max, max_index → PARALLELOGRAM (output)
+  index < 20?           → DIAMOND (decision)
+  START                 → OVAL (terminal)
+
+Flowchart structure (top to bottom):
+
+  [START]
+     ↓
+  [max ← Data[0]]       ← rectangle
+  [max_index ← 0]       ← rectangle
+  [index ← 1]           ← rectangle
+     ↓
+  ◇ index < 20? ◇
+  YES ↓           NO → [OUTPUT max, max_index] → [END]
+  ◇ Data[index] > max? ◇
+  YES ↓           NO ↓
+  [max ← Data[index]]   (both paths merge below)
+  [max_index ← index]
+        ↓ (merge)
+  [index ← index + 1]
+     ↑ loop back to "index < 20?" diamond ↑</div>
+    </div>
+  </div>
+
+
+  <!-- ── E6 MEDIUM ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e6')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q6</span>
+        <span class="ex-title">Write pseudocode — linear search function</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-marks">[4 marks]</span>
+        <span class="toggle-lbl" id="e6-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e6" style="display:none">
+      <div class="scenario">
+        <code style="font-family:'DM Mono',monospace">Items</code> is a global 1D array of type STRING containing 50 elements.<br><br>
+        Write pseudocode for a function <code style="font-family:'DM Mono',monospace">FindItem()</code> that takes a STRING parameter <code style="font-family:'DM Mono',monospace">Target</code>, performs a linear search on <code style="font-family:'DM Mono',monospace">Items</code>, and returns the index where <code style="font-family:'DM Mono',monospace">Target</code> is found, or –1 if it is not found.
+      </div>
+      <ul class="task-list">
+        <li>Correct function header with parameter and return type <span class="pts">[1]</span></li>
+        <li>Variables declared with correct data types <span class="pts">[1]</span></li>
+        <li>WHILE loop with correct two-part condition using Found and index <span class="pts">[1]</span></li>
+        <li>Correct RETURN values for found and not-found cases <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h6')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a6')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h6"><span class="hint-lbl">Hint</span>Declare: Found as BOOLEAN, Index as INTEGER. Set Found ← FALSE, Index ← -1. WHILE NOT Found AND Index &lt; 49. Inside: Index ← Index + 1, then check if Items[Index] = Target → Found ← TRUE. After loop: IF Found THEN RETURN Index ELSE RETURN -1.</div>
+      <div class="ans-box" id="a6"><span class="pk">FUNCTION</span> FindItem(Target : <span class="pk">STRING</span>) <span class="pk">RETURNS INTEGER</span>
+    <span class="pk">DECLARE</span> Found : <span class="pk">BOOLEAN</span>
+    <span class="pk">DECLARE</span> Index : <span class="pk">INTEGER</span>
+    Found ← FALSE
+    Index ← -1
+    <span class="pk">WHILE NOT</span> Found <span class="pk">AND</span> Index &lt; 49 <span class="pk">DO</span>
+        Index ← Index + 1
+        <span class="pk">IF</span> Items[Index] = Target <span class="pk">THEN</span>
+            Found ← TRUE
+        <span class="pk">ENDIF</span>
+    <span class="pk">ENDWHILE</span>
+    <span class="pk">IF</span> Found = TRUE <span class="pk">THEN</span>
+        <span class="pk">RETURN</span> Index
+    <span class="pk">ELSE</span>
+        <span class="pk">RETURN</span> -1
+    <span class="pk">ENDIF</span>
+<span class="pk">ENDFUNCTION</span></div>
+    </div>
+  </div>
+
+
+  <!-- ── E7 HARD ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e7')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q7</span>
+        <span class="ex-title">Write pseudocode — binary search function</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[6 marks]</span>
+        <span class="toggle-lbl" id="e7-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e7" style="display:none">
+      <div class="scenario">
+        <code style="font-family:'DM Mono',monospace">StudentList</code> is a global 1D array of type STRING containing 200 elements, sorted in ascending alphabetical order. The global variable <code style="font-family:'DM Mono',monospace">ListSize</code> stores the number of valid entries.<br><br>
+        Write pseudocode for a function <code style="font-family:'DM Mono',monospace">BinarySearch()</code> that takes a STRING parameter <code style="font-family:'DM Mono',monospace">SearchName</code>, performs an iterative binary search, and returns the index if found or –1 if not found. Use <code style="font-family:'DM Mono',monospace">Found</code> and <code style="font-family:'DM Mono',monospace">SearchFailed</code> flags.
+      </div>
+      <ul class="task-list">
+        <li>Correct function header, parameter, and RETURNS type <span class="pts">[1]</span></li>
+        <li>All four variables declared with correct types: Found, SearchFailed, First, Last, Middle <span class="pts">[1]</span></li>
+        <li>Correct initialisations of all five variables <span class="pts">[1]</span></li>
+        <li>WHILE condition uses both NOT Found AND NOT SearchFailed <span class="pts">[1]</span></li>
+        <li>Middle calculated with DIV; all three ELSE IF branches correct <span class="pts">[1]</span></li>
+        <li>Correct RETURN values: Middle when found, –1 when not found <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h7')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a7')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h7"><span class="hint-lbl">Hint</span>Declare Found, SearchFailed as BOOLEAN. Declare First, Last, Middle as INTEGER. Initialise Found ← FALSE, SearchFailed ← FALSE, First ← 0, Last ← ListSize – 1. Inside WHILE: calculate Middle ← (First+Last) DIV 2. Then IF equal → Found; ELSE IF First>=Last → SearchFailed; ELSE IF middle too big → Last←Middle–1; ELSE First←Middle+1.</div>
+      <div class="ans-box" id="a7"><span class="pk">FUNCTION</span> BinarySearch(SearchName : <span class="pk">STRING</span>) <span class="pk">RETURNS INTEGER</span>
+    <span class="pk">DECLARE</span> Found, SearchFailed : <span class="pk">BOOLEAN</span>
+    <span class="pk">DECLARE</span> First, Last, Middle  : <span class="pk">INTEGER</span>
+    Found        ← FALSE
+    SearchFailed ← FALSE
+    First        ← 0
+    Last         ← ListSize - 1
+    <span class="pk">WHILE NOT</span> Found <span class="pk">AND NOT</span> SearchFailed <span class="pk">DO</span>
+        Middle ← (First + Last) <span class="pk">DIV</span> 2
+        <span class="pk">IF</span> StudentList[Middle] = SearchName <span class="pk">THEN</span>
+            Found ← TRUE
+        <span class="pk">ELSE IF</span> First >= Last <span class="pk">THEN</span>
+            SearchFailed ← TRUE
+        <span class="pk">ELSE IF</span> StudentList[Middle] > SearchName <span class="pk">THEN</span>
+            Last ← Middle - 1
+        <span class="pk">ELSE</span>
+            First ← Middle + 1
+        <span class="pk">ENDIF</span>
+    <span class="pk">ENDWHILE</span>
+    <span class="pk">IF</span> Found = TRUE <span class="pk">THEN</span>
+        <span class="pk">RETURN</span> Middle
+    <span class="pk">ELSE</span>
+        <span class="pk">RETURN</span> -1
+    <span class="pk">ENDIF</span>
+<span class="pk">ENDFUNCTION</span></div>
+    </div>
+  </div>
+
+
+  <!-- ── E8 HARD ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e8')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q8</span>
+        <span class="ex-title">Evaluate — choose the right algorithm</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[6 marks]</span>
+        <span class="toggle-lbl" id="e8-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e8" style="display:none">
+      <div class="scenario">
+        A program stores 1000 student names in a 1D array. Names are added regularly. The array is kept sorted in ascending alphabetical order at all times. A teacher searches for a student name approximately 80 times per day.
+      </div>
+      <ul class="task-list">
+        <li>(a) Explain, with reference to the number of comparisons, why binary search is more efficient than linear search for this use case. <span class="pts">[2]</span></li>
+        <li>(b) The programmer currently uses insertion sort to maintain the sorted order when a new name is added. A colleague suggests using bubble sort instead. Give one advantage and one disadvantage of using bubble sort compared to insertion sort in this context. <span class="pts">[2]</span></li>
+        <li>(c) State one situation where a linear search would be more appropriate than a binary search. <span class="pts">[1]</span></li>
+        <li>(d) State what must be done to the array before a binary search can be used, and name an algorithm that achieves this. <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h8')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a8')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h8"><span class="hint-lbl">Hint</span>For (a): linear search checks up to n elements in the worst case; binary search checks at most log₂(n). For n=1000 that is about 1000 vs 10 comparisons. For (b): both are O(n²) but insertion sort makes fewer comparisons and shifts when the list is already nearly sorted — which is the case here since the list is maintained in order. For (c): think about when the data is NOT sorted.</span></div>
+      <div class="ans-box" id="a8">(a) Linear search: worst case checks all 1000 elements per search.
+    Binary search: worst case checks only ≈ 10 elements (log₂1000 ≈ 10).
+    With 80 searches per day, binary search requires far fewer total
+    comparisons — making it significantly more efficient here.
+
+(b) Advantage of bubble sort: simple to understand and implement.
+    Disadvantage: when a new name is added the list is nearly sorted —
+    insertion sort is more efficient in this case because it stops
+    the inner loop early when no more shifts are needed, whereas
+    bubble sort always completes all n–1 passes.
+
+(c) Linear search is more appropriate when the array is unsorted
+    (binary search requires a sorted array), or when the array is
+    very small (the overhead of sorting is not worth it).
+
+(d) The array must be sorted in ascending order.
+    Algorithm: bubble sort or insertion sort.</div>
+    </div>
+  </div>
+
+
+  <!-- ── E9 HARD ── -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e9')">
+      <div class="ex-head-l">
+        <span class="ex-num">Q9</span>
+        <span class="ex-title">Flowchart — complete the diagram (linear search)</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="e9-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e9" style="display:none">
+      <div class="scenario">
+        <code style="font-family:'DM Mono',monospace">Nums</code> is a global 1D array of 10 INTEGER elements (indices 0–9).<br><br>
+        A flowchart is being drawn to represent a linear search for a value <code style="font-family:'DM Mono',monospace">Target</code> entered by the user. The flowchart must output either the index where <code style="font-family:'DM Mono',monospace">Target</code> is found or the message "Not found".<br><br>
+        The START oval and END oval are already drawn. Complete everything in between.
+      </div>
+      <ul class="task-list">
+        <li>Correct initialisations drawn as rectangle(s) immediately after START <span class="pts">[1]</span></li>
+        <li>Input of Target shown as a parallelogram <span class="pts">[1]</span></li>
+        <li>Correct loop condition diamond with YES / NO labels <span class="pts">[1]</span></li>
+        <li>Inner match-check diamond with correct branches; Found set to TRUE on YES path <span class="pts">[1]</span></li>
+        <li>Index incremented in a rectangle; loop-back arrow correctly drawn; output section with correct branching <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h9')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a9')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h9"><span class="hint-lbl">Hint</span>Work through the 6 beginner steps from Tab 1. Initialisations: Found ← FALSE, Index ← –1. Input: Target (parallelogram). Loop diamond: NOT Found AND Index &lt; 9. Inside YES: Index ← Index+1 (rectangle), then Nums[Index] = Target? diamond. YES → Found ← TRUE. Merge both branches → loop back. When loop exits (NO from outer diamond): Found = TRUE? diamond → YES: output Index, NO: output "Not found".</div>
+      <div class="ans-box" id="a9">Complete flowchart structure:
+
+[START]
+  ↓
+[Found ← FALSE]   ← rectangle
+[Index ← −1]      ← rectangle
+  ↓
+⟨ INPUT Target ⟩   ← parallelogram
+  ↓
+◇ NOT Found AND Index < 9 ? ◇
+YES ↓                         NO → ◇ Found = TRUE ? ◇
+[Index ← Index + 1]                YES → ⟨OUTPUT Index⟩   → [END]
+◇ Nums[Index] = Target ? ◇         NO  → ⟨OUTPUT "Not found"⟩ → [END]
+YES → [Found ← TRUE]
+NO  → (skip)
+  ↓ (both YES and NO merge here)
+↑ arrow loops back up to outer diamond ↑
+
+Mark allocation:
+[1] Found ← FALSE and Index ← −1 drawn as rectangle after START
+[1] INPUT Target drawn as parallelogram
+[1] Outer loop diamond with correct two-part condition + YES/NO labels
+[1] Inner Nums[Index]=Target? diamond; Found←TRUE on YES branch
+[1] Index increment rectangle + loop-back arrow + output section</div>
+    </div>
+  </div>
+
+</div><!-- /panel t5 -->
+
+
+<script>
+function tab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function tog(id){
+  const b=document.getElementById(id);
+  const l=document.getElementById(id+'-lbl');
+  if(!b)return;
+  const open=b.style.display!=='none';
+  b.style.display=open?'none':'block';
+  if(l)l.textContent=open?'▼ expand':'▲ collapse';
+}
+function sh(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.toggle('on');
+}
+</script>
+</body>
+</html>

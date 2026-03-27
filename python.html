@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Core Concepts — Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1916; --ink2: #4a4845; --ink3: #8a8785;
+    --paper: #faf9f6; --paper2: #f2f0eb; --paper3: #e8e5de; --rule: #d8d5ce;
+    --mono-bg: #1e1c18; --mono-text: #d4d0c4;
+    --mono-kw: #7eb8d4; --mono-fn: #a8d8a0; --mono-str: #e8c878;
+    --mono-cm: #6a6860; --mono-num: #c8a8f0; --mono-pkw: #7eb8d4;
+    --c-basics:  #185FA5; --c-basics-bg:  #E6F1FB; --c-basics-bd:  #85B7EB;
+    --c-control: #854F0B; --c-control-bg: #FAEEDA; --c-control-bd: #EF9F27;
+    --c-loops:   #3B6D11; --c-loops-bg:   #EAF3DE; --c-loops-bd:   #97C459;
+    --c-funcs:   #3C3489; --c-funcs-bg:   #EEEDFE; --c-funcs-bd:   #AFA9EC;
+    --c-data:    #085041; --c-data-bg:    #E1F5EE; --c-data-bd:    #5DCAA5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.7; }
+
+  /* COVER */
+  .cover { background: var(--ink); color: var(--paper); padding: 2.5rem 2rem 2rem; position: relative; overflow: hidden; }
+  .cover::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; border: 40px solid rgba(255,255,255,0.04); border-radius: 50%; }
+  .cover-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.75rem; }
+  .cover h1 { font-family: 'DM Serif Display', serif; font-size: 2rem; font-weight: 400; line-height: 1.2; margin-bottom: 0.4rem; }
+  .cover h1 em { font-style: italic; color: rgba(255,255,255,0.45); }
+  .cover-sub { font-size: 12.5px; color: rgba(255,255,255,0.45); max-width: 500px; line-height: 1.6; }
+  .cover-meta { margin-top: 1.25rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .cover-meta-item { font-size: 11px; color: rgba(255,255,255,0.4); }
+  .cover-meta-item strong { display: block; color: rgba(255,255,255,0.8); font-size: 12px; font-weight: 500; }
+
+  /* FILTER BAR */
+  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 0.75rem 1.5rem; background: var(--paper2); border-bottom: 1px solid var(--rule); align-items: center; }
+  .filter-label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; }
+  .pill { font-size: 10px; padding: 3px 11px; border-radius: 20px; cursor: pointer; border: 1px solid var(--rule); background: transparent; color: var(--ink3); font-family: 'DM Sans', sans-serif; transition: all 0.12s; font-weight: 500; }
+  .pill:hover { background: var(--paper3); color: var(--ink2); }
+  .pill.active-all    { background: var(--ink);         color: var(--paper);         border-color: var(--ink); }
+  .pill.active-basics { background: var(--c-basics-bg); color: var(--c-basics);      border-color: var(--c-basics-bd); }
+  .pill.active-control{ background: var(--c-control-bg);color: var(--c-control);     border-color: var(--c-control-bd); }
+  .pill.active-loops  { background: var(--c-loops-bg);  color: var(--c-loops);       border-color: var(--c-loops-bd); }
+  .pill.active-funcs  { background: var(--c-funcs-bg);  color: var(--c-funcs);       border-color: var(--c-funcs-bd); }
+  .pill.active-data   { background: var(--c-data-bg);   color: var(--c-data);        border-color: var(--c-data-bd); }
+  .count-bar { font-size: 11px; color: var(--ink3); padding: 5px 1.5rem; background: var(--paper2); border-bottom: 1px solid var(--rule); }
+
+  /* CONCEPT CARDS */
+  .card { border: 1px solid var(--rule); border-radius: 8px; margin: 1.25rem 1.5rem; overflow: hidden; background: #fff; }
+  .card.hidden { display: none; }
+
+  .card-head { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1.1rem; border-bottom: 1px solid var(--rule); background: var(--paper2); flex-wrap: wrap; gap: 0.5rem; cursor: pointer; user-select: none; }
+  .card-head:hover { background: var(--paper3); }
+  .card-head-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .card-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); font-weight: 500; }
+  .card-title { font-weight: 500; font-size: 14px; }
+  .card-meta { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+  .toggle-lbl { font-size: 11px; color: var(--ink3); font-style: italic; }
+
+  .cat-badge { font-size: 9.5px; padding: 2px 8px; border-radius: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .cat-basics  { background: var(--c-basics-bg);  color: var(--c-basics);  border: 1px solid var(--c-basics-bd); }
+  .cat-control { background: var(--c-control-bg); color: var(--c-control); border: 1px solid var(--c-control-bd); }
+  .cat-loops   { background: var(--c-loops-bg);   color: var(--c-loops);   border: 1px solid var(--c-loops-bd); }
+  .cat-funcs   { background: var(--c-funcs-bg);   color: var(--c-funcs);   border: 1px solid var(--c-funcs-bd); }
+  .cat-data    { background: var(--c-data-bg);     color: var(--c-data);   border: 1px solid var(--c-data-bd); }
+  .badge-marks { background: var(--paper3); color: var(--ink2); border: 1px solid var(--rule); font-size: 9.5px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+  .badge-trap  { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; font-size: 9.5px; padding: 2px 8px; border-radius: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge-new   { background: #E1F5EE; color: #085041; border: 1px solid #5DCAA5; font-size: 9.5px; padding: 2px 8px; border-radius: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .card-body { padding: 1.1rem; }
+
+  /* description */
+  .desc { font-size: 13.5px; color: var(--ink2); line-height: 1.6; margin-bottom: 1rem; border-left: 3px solid var(--rule); padding-left: 0.85rem; background: var(--paper2); padding: 0.65rem 0.9rem; border-radius: 0 5px 5px 0; }
+
+  /* code grid */
+  .code-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem; }
+  @media (max-width: 600px) { .code-grid { grid-template-columns: 1fr; } }
+  .code-col {}
+  .code-col-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 500; margin-bottom: 4px; }
+  .lbl-pseudo { color: var(--c-basics); }
+  .lbl-python { color: var(--c-loops); }
+  pre.pseudo, pre.pycode {
+    font-family: 'DM Mono', monospace; font-size: 11.5px;
+    padding: 0.75rem 0.9rem; border-radius: 6px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-word; margin: 0;
+  }
+  pre.pseudo { background: #0f1420; color: #c8d4e8; }
+  pre.pycode { background: var(--mono-bg); color: var(--mono-text); }
+  .pkw  { color: var(--mono-pkw); font-weight: 500; }
+  .kw   { color: var(--mono-kw);  font-weight: 500; }
+  .fn   { color: var(--mono-fn); }
+  .str  { color: var(--mono-str); }
+  .cm   { color: var(--mono-cm); font-style: italic; }
+  .num  { color: var(--mono-num); }
+  .out  { color: #e8a878; }
+
+  /* tip / trap / note boxes */
+  .box { border-radius: 5px; padding: 0.6rem 0.85rem; font-size: 12.5px; line-height: 1.55; margin-top: 0.65rem; }
+  .box strong { font-weight: 500; display: block; margin-bottom: 2px; }
+  .box-tip  { background: #FAEEDA; border: 1px solid #EF9F27; color: #633806; }
+  .box-trap { background: #FCEBEB; border: 1px solid #F09595; color: #791F1F; }
+  .box-info { background: #E6F1FB; border: 1px solid #85B7EB; color: #0C447C; }
+  .box-green{ background: #EAF3DE; border: 1px solid #97C459; color: #3B6D11; }
+
+  /* hint / answer toggles */
+  .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.85rem; }
+  .hint-btn, .answer-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; border-radius: 4px; padding: 5px 14px; cursor: pointer; }
+  .hint-btn   { background: none; border: 1px solid var(--rule); color: var(--ink3); }
+  .hint-btn:hover { background: var(--paper2); color: var(--ink2); }
+  .answer-btn { background: var(--ink); border: none; color: var(--paper2); }
+  .answer-btn:hover { background: var(--ink2); }
+
+  .hint-box { display: none; background: var(--paper2); border: 1px dashed var(--rule); border-radius: 5px; padding: 0.7rem 0.9rem; font-size: 13px; color: var(--ink2); margin-top: 0.65rem; line-height: 1.55; }
+  .hint-box.visible { display: block; }
+  .hint-box .hint-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 500; color: var(--ink3); display: block; margin-bottom: 3px; }
+
+  .answer-box { display: none; background: var(--mono-bg); border-radius: 6px; padding: 0.85rem 1rem; margin-top: 0.65rem; font-family: 'DM Mono', monospace; font-size: 11.5px; line-height: 1.75; color: var(--mono-text); overflow-x: auto; border: 1px solid rgba(255,255,255,0.06); white-space: pre-wrap; word-break: break-word; }
+  .answer-box.visible { display: block; }
+
+  .sample-out { margin-top: 0.85rem; }
+  .sample-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 500; color: var(--ink3); margin-bottom: 4px; }
+
+  footer { background: var(--paper2); border-top: 1px solid var(--rule); padding: 1.25rem 1.5rem; font-size: 11px; color: var(--ink3); margin-top: 2rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS & A Level · Computer Science 9618 · Session 1</div>
+  <h1>Python Core Concepts<br><em>Complete Reference with Examples</em></h1>
+  <div class="cover-sub">Every concept shown side-by-side with Cambridge pseudocode. Includes description, full code examples, exam tips, hints and worked answers.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>17 Concepts</strong>Basics → Functions</div>
+    <div class="cover-meta-item"><strong>No OOP / Files</strong>Session 1 scope only</div>
+    <div class="cover-meta-item"><strong>Fixed</strong>range(), NULL, global, arithmetic columns</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter by</span>
+  <button class="pill active-all" id="pill-all"     onclick="filter('all')">All (17)</button>
+  <button class="pill"            id="pill-basics"  onclick="filter('basics')">Basics (7)</button>
+  <button class="pill"            id="pill-control" onclick="filter('control')">Conditions (2)</button>
+  <button class="pill"            id="pill-loops"   onclick="filter('loops')">Loops (4)</button>
+  <button class="pill"            id="pill-funcs"   onclick="filter('funcs')">Functions (3)</button>
+  <button class="pill"            id="pill-data"    onclick="filter('data')">Data (1)</button>
+</div>
+<div class="count-bar" id="count-bar">Showing all 17 concepts · click any card header to expand</div>
+
+
+<!-- ═══════════════════ BASICS ═══════════════════ -->
+
+<!-- 1. Variable assignment -->
+<div class="card" data-cat="basics" id="c1">
+  <div class="card-head" onclick="toggle('b1')">
+    <div class="card-head-left">
+      <span class="card-num">01</span>
+      <span class="card-title">Variable Assignment</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="toggle-lbl" id="b1-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b1" style="display:none">
+    <div class="desc">
+      A variable is a named box in memory that holds a value. You give it a name and store something inside it using the assignment operator. Cambridge pseudocode uses the arrow <strong>←</strong> for assignment. Python uses <strong>=</strong>. There are no type declarations in Python — you just write the name and give it a value directly.
+    </div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">DECLARE</span> name : <span class="pkw">STRING</span>
+<span class="pkw">DECLARE</span> age  : <span class="pkw">INTEGER</span>
+<span class="pkw">DECLARE</span> gpa  : <span class="pkw">REAL</span>
+name ← <span class="str">"Ali"</span>
+age  ← 17
+gpa  ← 3.85</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="cm"># No DECLARE needed — just assign</span>
+name = <span class="str">"Ali"</span>
+age  = <span class="num">17</span>
+gpa  = <span class="num">3.85</span>
+
+<span class="cm"># Python figures out the type itself:</span>
+<span class="cm"># "Ali" → string, 17 → int, 3.85 → float</span></pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>Critical rule — = is NOT equals</strong> In Python, = means "store this value into this variable". It does NOT mean "these two things are equal" like in maths. For comparison you use == (two equals signs). This confuses almost every beginner.</div>
+    <div class="box box-info"><strong>Why no DECLARE?</strong> Python is a dynamically typed language — it reads the value you give it and automatically decides the type. If you write age = 17, Python sees a whole number and makes it an integer. If you write gpa = 3.85, Python sees a decimal and makes it a float. You never need to tell it.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h1')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a1')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h1"><span class="hint-lbl">Hint</span>Every time you see DECLARE in pseudocode — delete it in Python. Every time you see ← replace it with =. That's the whole translation.</div>
+    <div class="answer-box" id="a1"><span class="cm"># Pseudocode said:</span>
+<span class="cm"># DECLARE city : STRING</span>
+<span class="cm"># DECLARE population : INTEGER</span>
+<span class="cm"># city ← "Tunis"</span>
+<span class="cm"># population ← 1000000</span>
+
+<span class="cm"># Python translation:</span>
+city       = <span class="str">"Tunis"</span>
+population = <span class="num">1000000</span>
+<span class="fn">print</span>(<span class="str">f"{city} has {population} people"</span>)</div>
+  </div>
+</div>
+
+<!-- 2. Data types -->
+<div class="card" data-cat="basics" id="c2">
+  <div class="card-head" onclick="toggle('b2')">
+    <div class="card-head-left">
+      <span class="card-num">02</span>
+      <span class="card-title">Data Types</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="badge-trap">Exam trap</span>
+      <span class="toggle-lbl" id="b2-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b2" style="display:none">
+    <div class="desc">Python has four basic types you need for Cambridge. <strong>Integer</strong> — whole numbers with no decimal point. <strong>Float</strong> — decimal numbers (Cambridge calls these REAL). <strong>String</strong> — text inside quotes. <strong>Boolean</strong> — either True or False. The key difference from pseudocode is that Cambridge writes TRUE/FALSE in all capitals, while Python uses Title Case: True and False.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">INTEGER</span>: 42
+<span class="pkw">REAL</span>:    3.14
+<span class="pkw">STRING</span>:  <span class="str">"hello"</span>
+<span class="pkw">BOOLEAN</span>: <span class="pkw">TRUE</span>
+<span class="pkw">BOOLEAN</span>: <span class="pkw">FALSE</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">x = <span class="num">42</span>           <span class="cm"># int</span>
+y = <span class="num">3.14</span>         <span class="cm"># float  (REAL)</span>
+s = <span class="str">"hello"</span>      <span class="cm"># str</span>
+b = <span class="kw">True</span>         <span class="cm"># bool  ← capital T</span>
+c = <span class="kw">False</span>        <span class="cm"># bool  ← capital F</span></pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>TRUE / FALSE capitalisation trap</strong> Writing true or TRUE in Python causes a NameError — Python doesn't know what that word means. It must be exactly True and False — capital first letter, lowercase rest. This mistake costs marks every year.</div>
+    <div class="box box-tip"><strong>Check the type of any variable</strong> If you're unsure what type something is, use type(). For example: type(42) gives &lt;class 'int'&gt;, type(3.14) gives &lt;class 'float'&gt;, type("hi") gives &lt;class 'str'&gt;.</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a2')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a2">score  = <span class="num">95</span>         <span class="cm"># INTEGER in pseudocode</span>
+average = <span class="num">72.4</span>      <span class="cm"># REAL in pseudocode</span>
+name   = <span class="str">"Sara"</span>    <span class="cm"># STRING in pseudocode</span>
+passed = <span class="kw">True</span>      <span class="cm"># BOOLEAN TRUE in pseudocode</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(score))   <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(average)) <span class="cm"># &lt;class 'float'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(name))    <span class="cm"># &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(passed))  <span class="cm"># &lt;class 'bool'&gt;</span></div>
+  </div>
+</div>
+
+<!-- 3. Input / Output -->
+<div class="card" data-cat="basics" id="c3">
+  <div class="card-head" onclick="toggle('b3')">
+    <div class="card-head-left">
+      <span class="card-num">03</span>
+      <span class="card-title">Input / Output</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="badge-trap">Exam trap</span>
+      <span class="toggle-lbl" id="b3-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b3" style="display:none">
+    <div class="desc">OUTPUT in Cambridge pseudocode becomes print() in Python. USERINPUT becomes input(). The most important rule: <strong>input() in Python always gives you a string</strong> — even if the user types a number. Cambridge pseudocode hides this because the type is declared. In Python, you must convert the input yourself using int() or float().</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">OUTPUT</span> <span class="str">"Enter your name:"</span>
+name ← <span class="pkw">USERINPUT</span>
+<span class="pkw">OUTPUT</span> <span class="str">"Hello "</span> & name
+
+<span class="pkw">OUTPUT</span> <span class="str">"Enter your age:"</span>
+age ← <span class="pkw">USERINPUT</span>   <span class="cm">← already INTEGER</span>
+<span class="pkw">OUTPUT</span> <span class="str">"Age: "</span> & age</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">name = <span class="fn">input</span>(<span class="str">"Enter your name: "</span>)
+<span class="fn">print</span>(<span class="str">f"Hello {name}"</span>)
+
+<span class="cm"># age must be converted!</span>
+age = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter your age: "</span>))
+<span class="fn">print</span>(<span class="str">f"Age: {age}"</span>)</pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>The #1 beginner mistake</strong> If you write age = input("Age: ") then try to do age + 1, Python crashes with TypeError: can only concatenate str (not "int") to str. This is because input() gave you text "17", not the number 17. Always wrap with int() for integers, float() for decimals.</div>
+    <div class="box box-info"><strong>The rule of thumb</strong> Is the variable a name, a word, a sentence? → just input(). Is it a whole number you'll do maths with? → int(input()). Is it a decimal number? → float(input()).</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h3')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a3')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h3"><span class="hint-lbl">Hint</span>Think of input() as a post box — everything that comes out is wrapped in a string envelope. If you want a number, you have to unwrap it with int() or float().</div>
+    <div class="answer-box" id="a3"><span class="cm"># A program that reads name and score, then prints both</span>
+name  = <span class="fn">input</span>(<span class="str">"Student name: "</span>)           <span class="cm"># STRING — no conversion</span>
+score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Score (0-100): "</span>))    <span class="cm"># INTEGER — needs int()</span>
+avg   = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Class average: "</span>))  <span class="cm"># REAL — needs float()</span>
+
+<span class="fn">print</span>(<span class="str">f"{name} scored {score}"</span>)
+<span class="fn">print</span>(<span class="str">f"That is {score - avg:.1f} above average"</span>)</div>
+  </div>
+</div>
+
+<!-- 4. Type casting -->
+<div class="card" data-cat="basics" id="c4">
+  <div class="card-head" onclick="toggle('b4')">
+    <div class="card-head-left">
+      <span class="card-num">04</span>
+      <span class="card-title">Type Casting</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="toggle-lbl" id="b4-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b4" style="display:none">
+    <div class="desc">Type casting means converting a value from one type to another. You need this constantly in Python — especially after reading input, which always gives a string. Cambridge pseudocode functions INT(), REAL(), STRING() become int(), float(), str() in Python.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo">x ← <span class="pkw">INT</span>(<span class="str">"42"</span>)
+y ← <span class="pkw">REAL</span>(<span class="str">"3.14"</span>)
+s ← <span class="pkw">STRING</span>(99)
+n ← <span class="pkw">INT</span>(3.9)  <span class="cm">→ 3 (truncates)</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">x = <span class="fn">int</span>(<span class="str">"42"</span>)       <span class="cm"># → 42</span>
+y = <span class="fn">float</span>(<span class="str">"3.14"</span>)  <span class="cm"># → 3.14</span>
+s = <span class="fn">str</span>(<span class="num">99</span>)         <span class="cm"># → "99"</span>
+n = <span class="fn">int</span>(<span class="num">3.9</span>)       <span class="cm"># → 3 (truncates)</span></pre>
+      </div>
+    </div>
+    <div class="box box-tip"><strong>Most common use in Cambridge exams</strong> You'll almost always use int(input()) or float(input()) to read a number from the user. Then at the end you might use str() to join a number into a text string — though f-strings make that unnecessary most of the time.</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a4')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a4"><span class="cm"># Typical exam pattern: read two numbers, do arithmetic</span>
+num1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"First number: "</span>))
+num2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Second number: "</span>))
+total = num1 + num2
+<span class="fn">print</span>(<span class="str">f"Total: {total}"</span>)
+
+<span class="cm"># Without int(), "5" + "3" = "53" (joins strings!)</span>
+<span class="cm"># With    int(),  5  +  3  = 8   (correct maths)</span></div>
+  </div>
+</div>
+
+<!-- 5. Arithmetic operators -->
+<div class="card" data-cat="basics" id="c5">
+  <div class="card-head" onclick="toggle('b5')">
+    <div class="card-head-left">
+      <span class="card-num">05</span>
+      <span class="card-title">Arithmetic Operators</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="badge-trap">Exam tip</span>
+      <span class="toggle-lbl" id="b5-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b5" style="display:none">
+    <div class="desc">Python has all the standard maths operators plus two special ones that Cambridge tests heavily: DIV (integer division — gives the whole number part only) and MOD (modulus — gives the remainder). These appear in almost every data structure question because circular queues use MOD to wrap around.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo">result ← a + b
+result ← a - b
+result ← a * b
+result ← a / b      <span class="cm">real division</span>
+result ← a <span class="pkw">DIV</span> b   <span class="cm">integer div</span>
+result ← a <span class="pkw">MOD</span> b   <span class="cm">remainder</span>
+result ← a ^ b      <span class="cm">power</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">result = a + b
+result = a - b
+result = a * b
+result = a / b      <span class="cm"># real division → float</span>
+result = a <span class="kw">//</span> b   <span class="cm"># integer div  → int</span>
+result = a <span class="kw">%</span>  b   <span class="cm"># modulus/remainder</span>
+result = a <span class="kw">**</span> b   <span class="cm"># power</span></pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>DIV vs / — they are different</strong> 17 / 5 = 3.4 (real division, gives a float). 17 // 5 = 3 (integer division, drops the decimal). 17 % 5 = 2 (the remainder after dividing). The exam uses DIV and MOD constantly — know which Python symbol is which.</div>
+    <div class="box box-info"><strong>Why MOD matters for the exam</strong> The circular queue question (Q1 in your exam) uses MOD to wrap the pointer around. When the pointer reaches the end of the array, (pointer + 1) MOD size brings it back to 0. In Python: (pointer + 1) % size.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h5')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a5')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h5"><span class="hint-lbl">Hint</span>Memory trick: // has two slashes = it divides AND throws away the decimal. % looks like a fraction but gives the leftover (remainder). So 17 // 5 asks "how many full 5s fit in 17?" → 3. And 17 % 5 asks "what's left over?" → 2.</div>
+    <div class="answer-box" id="a5"><span class="cm"># Practical examples of all operators</span>
+a, b = <span class="num">17</span>, <span class="num">5</span>
+<span class="fn">print</span>(a + b)    <span class="cm"># 22</span>
+<span class="fn">print</span>(a - b)    <span class="cm"># 12</span>
+<span class="fn">print</span>(a * b)    <span class="cm"># 85</span>
+<span class="fn">print</span>(a / b)    <span class="cm"># 3.4  (real division)</span>
+<span class="fn">print</span>(a <span class="kw">//</span> b)  <span class="cm"># 3    (DIV — whole part only)</span>
+<span class="fn">print</span>(a <span class="kw">%</span> b)   <span class="cm"># 2    (MOD — remainder)</span>
+<span class="fn">print</span>(a <span class="kw">**</span> b)  <span class="cm"># 1419857 (17 to the power of 5)</span>
+
+<span class="cm"># Circular queue wrap-around example:</span>
+size    = <span class="num">20</span>
+pointer = <span class="num">19</span>   <span class="cm"># last position</span>
+pointer = (pointer + <span class="num">1</span>) <span class="kw">%</span> size
+<span class="fn">print</span>(pointer)  <span class="cm"># 0  — wraps back to start!</span></div>
+  </div>
+</div>
+
+<!-- 6. String operations -->
+<div class="card" data-cat="basics" id="c6">
+  <div class="card-head" onclick="toggle('b6')">
+    <div class="card-head-left">
+      <span class="card-num">06</span>
+      <span class="card-title">String Operations</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="toggle-lbl" id="b6-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b6" style="display:none">
+    <div class="desc">Strings are sequences of characters. Python has powerful built-in tools for working with them. The most important for Cambridge are: length (LEN), slicing to get part of a string (SUBSTRING), changing case (UCASE/LCASE), and getting the ASCII number of a character (ASC/CHR). Strings in Python are 0-indexed — the first character is at position 0, not 1.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">LEN</span>(s)
+<span class="pkw">SUBSTRING</span>(s, 0, 3)
+s ← s & <span class="str">"!"</span>
+<span class="pkw">UCASE</span>(s)
+<span class="pkw">LCASE</span>(s)
+<span class="pkw">ASC</span>(<span class="str">"A"</span>)    <span class="cm">→ 65</span>
+<span class="pkw">CHR</span>(65)     <span class="cm">→ "A"</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="fn">len</span>(s)
+s[<span class="num">0</span>:<span class="num">3</span>]         <span class="cm"># first 3 chars</span>
+s = s + <span class="str">"!"</span>   <span class="cm"># concatenate</span>
+s.<span class="fn">upper</span>()
+s.<span class="fn">lower</span>()
+<span class="fn">ord</span>(<span class="str">"A"</span>)      <span class="cm"># → 65</span>
+<span class="fn">chr</span>(<span class="num">65</span>)       <span class="cm"># → "A"</span></pre>
+      </div>
+    </div>
+    <div class="box box-tip"><strong>Slicing explained</strong> s[0:3] means "start at index 0, stop BEFORE index 3". So for s = "Hello", s[0:3] gives "Hel" — three characters. The stop number is always exclusive. SUBSTRING(s, 0, 3) in pseudocode also means "start at 0, take 3 characters" — same result.</div>
+    <div class="box box-info"><strong>f-strings for output</strong> Instead of joining strings with &, use f-strings: f"Hello {name}, you are {age}" is much cleaner. To format decimals: f"{value:.2f}" gives exactly 2 decimal places.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h6')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a6')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h6"><span class="hint-lbl">Hint</span>Think of a string as a list of characters where the first one is numbered 0. "Hello" → H=0, e=1, l=2, l=3, o=4. So s[1:4] gives "ell" — starts at e (index 1), stops before l (index 4).</div>
+    <div class="answer-box" id="a6">s = <span class="str">"Cambridge"</span>
+<span class="fn">print</span>(<span class="fn">len</span>(s))       <span class="cm"># 9</span>
+<span class="fn">print</span>(s[<span class="num">0</span>:<span class="num">3</span>])      <span class="cm"># "Cam"</span>
+<span class="fn">print</span>(s.<span class="fn">upper</span>())   <span class="cm"># "CAMBRIDGE"</span>
+<span class="fn">print</span>(s.<span class="fn">lower</span>())   <span class="cm"># "cambridge"</span>
+<span class="fn">print</span>(<span class="fn">ord</span>(<span class="str">"C"</span>))    <span class="cm"># 67  (ASCII value)</span>
+<span class="fn">print</span>(<span class="fn">chr</span>(<span class="num">67</span>))     <span class="cm"># "C"</span>
+
+<span class="cm"># Username generator: first letter + first 3 of last name + year</span>
+first = <span class="str">"Ali"</span>
+last  = <span class="str">"Hassan"</span>
+year  = <span class="num">2007</span>
+username = (first[<span class="num">0</span>:<span class="num">1</span>] + last[<span class="num">0</span>:<span class="num">3</span>] + <span class="fn">str</span>(year % <span class="num">100</span>)).<span class="fn">lower</span>()
+<span class="fn">print</span>(username)   <span class="cm"># "ahas07"</span></div>
+  </div>
+</div>
+
+<!-- 7. NULL / None -->
+<div class="card" data-cat="basics" id="c7">
+  <div class="card-head" onclick="toggle('b7')">
+    <div class="card-head-left">
+      <span class="card-num">07</span>
+      <span class="card-title">NULL / None</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-basics">Basics</span>
+      <span class="badge-new">Added</span>
+      <span class="toggle-lbl" id="b7-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b7" style="display:none">
+    <div class="desc">NULL in Cambridge pseudocode means "nothing" or "empty". It's used when a variable exists but has no value yet — most commonly in data structures like linked lists and binary trees where a node has no left or right child. In Python, NULL becomes None. It must be written with a capital N.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo">LeftNode  ← <span class="pkw">NULL</span>
+RightNode ← <span class="pkw">NULL</span>
+
+<span class="pkw">IF</span> node = <span class="pkw">NULL</span> <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"Empty"</span>
+<span class="pkw">ENDIF</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">self.left  = <span class="kw">None</span>
+self.right = <span class="kw">None</span>
+
+<span class="kw">if</span> node <span class="kw">is</span> <span class="kw">None</span>:
+    <span class="fn">print</span>(<span class="str">"Empty"</span>)</pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>Use "is None" not "== None"</strong> In Python, the correct way to check for None is if x is None — not if x == None. Both can work but "is None" is the proper Python style and what Cambridge expects. Think of "is" as asking "is this literally nothing?"</div>
+    <div class="box box-info"><strong>Why this matters for your exam</strong> Question 3 (binary tree) initialises every new node with LeftNode = NULL and RightNode = NULL. When inserting, the algorithm checks if the left or right is NULL to know where to place the new node. Without None, this question is impossible to write.</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a7')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a7"><span class="cm"># Node class from Q3 of your exam — uses None for empty children</span>
+<span class="kw">class</span> <span class="fn">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, data):
+        self.data  = data
+        self.left  = <span class="kw">None</span>   <span class="cm"># NULL in pseudocode</span>
+        self.right = <span class="kw">None</span>   <span class="cm"># NULL in pseudocode</span>
+
+node = <span class="fn">Node</span>(<span class="num">10</span>)
+
+<span class="kw">if</span> node.left <span class="kw">is</span> <span class="kw">None</span>:   <span class="cm"># checks if no left child</span>
+    <span class="fn">print</span>(<span class="str">"No left child"</span>)</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CONDITIONS ═══════════════════ -->
+
+<!-- 8. IF / ELIF / ELSE -->
+<div class="card" data-cat="control" id="c8">
+  <div class="card-head" onclick="toggle('b8')">
+    <div class="card-head-left">
+      <span class="card-num">08</span>
+      <span class="card-title">IF / ELIF / ELSE Conditions</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-control">Conditions</span>
+      <span class="badge-trap">Exam trap</span>
+      <span class="toggle-lbl" id="b8-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b8" style="display:none">
+    <div class="desc">Conditions let your program make decisions — run one block of code if something is true, a different block if it's false. Cambridge uses IF / ELSE IF / ENDIF. Python uses if / elif / else — and instead of ENDIF, the block closes automatically when you stop indenting. The colon at the end of each line is mandatory.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">IF</span> score >= 70 <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"A"</span>
+<span class="pkw">ELSE IF</span> score >= 60 <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"B"</span>
+<span class="pkw">ELSE IF</span> score >= 50 <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"C"</span>
+<span class="pkw">ELSE</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"Fail"</span>
+<span class="pkw">ENDIF</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="kw">if</span> score >= <span class="num">70</span>:
+    <span class="fn">print</span>(<span class="str">"A"</span>)
+<span class="kw">elif</span> score >= <span class="num">60</span>:
+    <span class="fn">print</span>(<span class="str">"B"</span>)
+<span class="kw">elif</span> score >= <span class="num">50</span>:
+    <span class="fn">print</span>(<span class="str">"C"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Fail"</span>)
+<span class="cm"># no ENDIF — indentation closes it</span></pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>= vs == — the most common exam mistake</strong> In pseudocode, IF score = 100 uses = for comparison. In Python, = means assignment (store a value). For comparison in Python you MUST use == (two equals signs). Writing if score = 100: causes a SyntaxError. Always double-equals in conditions.</div>
+    <div class="box box-tip"><strong>How indentation works</strong> Python uses 4 spaces of indentation to show what's inside a block. Everything indented under if belongs to that if. When you go back to the left margin, the block is over. There is no ENDIF, no curly braces — the spaces do the job.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h8')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a8')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h8"><span class="hint-lbl">Hint</span>Python checks conditions from top to bottom and stops at the first one that is True. So always put the most specific (highest) condition first. If you put score >= 50 before score >= 70, everything above 50 will match the first condition and never reach the A grade.</div>
+    <div class="answer-box" id="a8">score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter score (0-100): "</span>))
+
+<span class="kw">if</span> score < <span class="num">0</span> <span class="kw">or</span> score > <span class="num">100</span>:
+    <span class="fn">print</span>(<span class="str">"Invalid score"</span>)
+<span class="kw">elif</span> score >= <span class="num">90</span>:
+    <span class="fn">print</span>(<span class="str">f"Score: {score} — Grade: A*"</span>)
+<span class="kw">elif</span> score >= <span class="num">80</span>:
+    <span class="fn">print</span>(<span class="str">f"Score: {score} — Grade: A"</span>)
+<span class="kw">elif</span> score >= <span class="num">70</span>:
+    <span class="fn">print</span>(<span class="str">f"Score: {score} — Grade: B"</span>)
+<span class="kw">elif</span> score >= <span class="num">60</span>:
+    <span class="fn">print</span>(<span class="str">f"Score: {score} — Grade: C"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"Score: {score} — Fail"</span>)</div>
+  </div>
+</div>
+
+<!-- 9. Boolean operators -->
+<div class="card" data-cat="control" id="c9">
+  <div class="card-head" onclick="toggle('b9')">
+    <div class="card-head-left">
+      <span class="card-num">09</span>
+      <span class="card-title">Boolean Operators — AND / OR / NOT</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-control">Conditions</span>
+      <span class="toggle-lbl" id="b9-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b9" style="display:none">
+    <div class="desc">Boolean operators let you combine multiple conditions. AND means both must be true. OR means at least one must be true. NOT reverses true to false and false to true. Cambridge writes them in capitals (AND, OR, NOT). Python writes them in lowercase (and, or, not). Simple as that.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">IF</span> x > 0 <span class="pkw">AND</span> x < 10 <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"in range"</span>
+
+<span class="pkw">IF</span> a = 1 <span class="pkw">OR</span> b = 1 <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"one is 1"</span>
+
+<span class="pkw">IF NOT</span> done <span class="pkw">THEN</span>
+    <span class="pkw">OUTPUT</span> <span class="str">"still going"</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="kw">if</span> x > <span class="num">0</span> <span class="kw">and</span> x < <span class="num">10</span>:
+    <span class="fn">print</span>(<span class="str">"in range"</span>)
+
+<span class="kw">if</span> a == <span class="num">1</span> <span class="kw">or</span> b == <span class="num">1</span>:
+    <span class="fn">print</span>(<span class="str">"one is 1"</span>)
+
+<span class="kw">if</span> <span class="kw">not</span> done:
+    <span class="fn">print</span>(<span class="str">"still going"</span>)</pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>AND vs OR — easy to mix up</strong> AND = both conditions must be true. So "age >= 18 and age <= 65" means between 18 and 65. OR = just one needs to be true. So "age < 0 or age > 150" catches invalid ages. Getting these backwards produces silent logic bugs — no error, just wrong answers.</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a9')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a9">age = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter age: "</span>))
+
+<span class="cm"># AND: both must be true</span>
+<span class="kw">if</span> age >= <span class="num">18</span> <span class="kw">and</span> age <= <span class="num">65</span>:
+    <span class="fn">print</span>(<span class="str">"Working age"</span>)
+
+<span class="cm"># OR: at least one must be true</span>
+<span class="kw">if</span> age < <span class="num">0</span> <span class="kw">or</span> age > <span class="num">150</span>:
+    <span class="fn">print</span>(<span class="str">"Invalid age"</span>)
+
+<span class="cm"># NOT: reverses the condition</span>
+logged_in = <span class="kw">False</span>
+<span class="kw">if</span> <span class="kw">not</span> logged_in:
+    <span class="fn">print</span>(<span class="str">"Please log in"</span>)</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ LOOPS ═══════════════════ -->
+
+<!-- 10. FOR loop -->
+<div class="card" data-cat="loops" id="c10">
+  <div class="card-head" onclick="toggle('b10')">
+    <div class="card-head-left">
+      <span class="card-num">10</span>
+      <span class="card-title">FOR Loop — counting</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-loops">Loops</span>
+      <span class="badge-trap">Exam trap</span>
+      <span class="toggle-lbl" id="b10-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b10" style="display:none">
+    <div class="desc">A FOR loop repeats a block of code a fixed number of times. Cambridge uses FOR i ← 1 TO 5 which includes 5. Python uses range() which does NOT include the end number. This off-by-one difference is the most tested trap in Paper 4. The rule: always add 1 to the Cambridge end number when writing range().</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="cm">// prints 1 2 3 4 5</span>
+<span class="pkw">FOR</span> i ← 1 <span class="pkw">TO</span> 5
+    <span class="pkw">OUTPUT</span> i
+<span class="pkw">NEXT</span> i
+
+<span class="cm">// counts down: 10 9 8 ... 1</span>
+<span class="pkw">FOR</span> i ← 10 <span class="pkw">TO</span> 1 <span class="pkw">STEP</span> -1
+    <span class="pkw">OUTPUT</span> i
+<span class="pkw">NEXT</span> i</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="cm"># prints 1 2 3 4 5</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):  <span class="cm"># NOT range(1,5)!</span>
+    <span class="fn">print</span>(i)
+<span class="cm"># no NEXT — indentation closes it</span>
+
+<span class="cm"># counts down: 10 9 8 ... 1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>, <span class="num">0</span>, <span class="num">-1</span>):
+    <span class="fn">print</span>(i)</pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>The off-by-one rule — memorise this</strong> Cambridge "FOR i ← 1 TO 5" → Python range(1, 6). Cambridge "FOR i ← 0 TO 9" → Python range(0, 10). The end number in range() is EXCLUDED. Always add 1 to the Cambridge end number. This mistake appears in student code every single exam season.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h10')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a10')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h10"><span class="hint-lbl">Hint</span>A good way to remember: range(1, 5) counts "1, 2, 3, 4 — stop before 5". Like a number line where the right bracket is open: [1, 5). To include 5 you need [1, 6) which is range(1, 6).</div>
+    <div class="answer-box" id="a10"><span class="cm"># Print multiplication table for 7</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">13</span>):  <span class="cm"># 1 to 12 inclusive</span>
+    <span class="fn">print</span>(<span class="str">f"7 x {i} = {7 * i}"</span>)
+
+<span class="cm"># Sum of all numbers from 1 to 100</span>
+total = <span class="num">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">101</span>):  <span class="cm"># 1 to 100 inclusive</span>
+    total += i
+<span class="fn">print</span>(<span class="str">f"Sum: {total}"</span>)   <span class="cm"># 5050</span></div>
+  </div>
+</div>
+
+<!-- 11. range() all forms -->
+<div class="card" data-cat="loops" id="c11">
+  <div class="card-head" onclick="toggle('b11')">
+    <div class="card-head-left">
+      <span class="card-num">11</span>
+      <span class="card-title">range() — All Three Forms</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-loops">Loops</span>
+      <span class="badge-new">Added</span>
+      <span class="toggle-lbl" id="b11-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b11" style="display:none">
+    <div class="desc">range() is the engine of Python's FOR loop. It has three different forms depending on how many arguments you give it. One argument: starts from 0. Two arguments: start and stop (stop is excluded). Three arguments: start, stop, and step (how much to count by each time — can be negative for counting down).</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode equivalent</div>
+        <pre class="pseudo"><span class="pkw">FOR</span> i ← 0 <span class="pkw">TO</span> 4
+<span class="cm">// gives 0,1,2,3,4</span>
+
+<span class="pkw">FOR</span> i ← 1 <span class="pkw">TO</span> 5
+<span class="cm">// gives 1,2,3,4,5</span>
+
+<span class="pkw">FOR</span> i ← 0 <span class="pkw">TO</span> 8 <span class="pkw">STEP</span> 2
+<span class="cm">// gives 0,2,4,6,8</span>
+
+<span class="pkw">FOR</span> i ← 10 <span class="pkw">TO</span> 1 <span class="pkw">STEP</span> -1
+<span class="cm">// gives 10,9,8...1</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="fn">range</span>(<span class="num">5</span>)
+<span class="cm"># → 0, 1, 2, 3, 4</span>
+
+<span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>)
+<span class="cm"># → 1, 2, 3, 4, 5</span>
+
+<span class="fn">range</span>(<span class="num">0</span>, <span class="num">9</span>, <span class="num">2</span>)
+<span class="cm"># → 0, 2, 4, 6, 8</span>
+
+<span class="fn">range</span>(<span class="num">10</span>, <span class="num">0</span>, <span class="num">-1</span>)
+<span class="cm"># → 10, 9, 8 ... 1</span></pre>
+      </div>
+    </div>
+    <div class="box box-info"><strong>Quick summary of range()</strong><br>range(n) → 0 to n-1 (n items total)<br>range(a, b) → a to b-1<br>range(a, b, step) → a to b-1, counting by step<br>range(a, 0, -1) → counts down from a to 1</div>
+    <div class="box box-trap"><strong>Counting down trap</strong> For range(10, 0, -1) — the stop is 0, which means it stops BEFORE 0, so the last number printed is 1. If you want to include 0, write range(10, -1, -1).</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a11')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a11"><span class="cm"># Form 1: range(n) — starts from 0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+    <span class="fn">print</span>(i, end=<span class="str">" "</span>)   <span class="cm"># 0 1 2 3 4</span>
+
+<span class="cm"># Form 2: range(start, stop)</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(i, end=<span class="str">" "</span>)   <span class="cm"># 1 2 3 4 5</span>
+
+<span class="cm"># Form 3: range(start, stop, step) — even numbers</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">11</span>, <span class="num">2</span>):
+    <span class="fn">print</span>(i, end=<span class="str">" "</span>)   <span class="cm"># 0 2 4 6 8 10</span>
+
+<span class="cm"># Countdown: 10 down to 1</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>, <span class="num">0</span>, <span class="num">-1</span>):
+    <span class="fn">print</span>(i, end=<span class="str">" "</span>)   <span class="cm"># 10 9 8 7 6 5 4 3 2 1</span></div>
+  </div>
+</div>
+
+<!-- 12. FOR EACH -->
+<div class="card" data-cat="loops" id="c12">
+  <div class="card-head" onclick="toggle('b12')">
+    <div class="card-head-left">
+      <span class="card-num">12</span>
+      <span class="card-title">FOR EACH — Iterating a List</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-loops">Loops</span>
+      <span class="toggle-lbl" id="b12-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b12" style="display:none">
+    <div class="desc">FOR EACH loops through every item in a collection without needing an index number. You don't need to know how many items are in the list — Python handles that automatically. This is the most natural way to process every element in a list, string, or any collection.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">FOR EACH</span> item <span class="pkw">IN</span> myList
+    <span class="pkw">OUTPUT</span> item
+<span class="pkw">NEXT</span> item
+
+<span class="pkw">FOR EACH</span> score <span class="pkw">IN</span> scores
+    total ← total + score
+<span class="pkw">NEXT</span> score</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="kw">for</span> item <span class="kw">in</span> my_list:
+    <span class="fn">print</span>(item)
+<span class="cm"># no NEXT — indent closes it</span>
+
+<span class="kw">for</span> score <span class="kw">in</span> scores:
+    total += score</pre>
+      </div>
+    </div>
+    <div class="box box-info"><strong>FOR EACH vs FOR i in range()</strong> Use FOR EACH when you want every item and don't care about the index number. Use FOR i in range() when you need the position number — for example when filling an array by index, or when you need to compare adjacent items.</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a12')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a12">scores = [<span class="num">85</span>, <span class="num">72</span>, <span class="num">91</span>, <span class="num">60</span>, <span class="num">78</span>]
+
+<span class="cm"># Print every score</span>
+<span class="kw">for</span> score <span class="kw">in</span> scores:
+    <span class="fn">print</span>(score)
+
+<span class="cm"># Count how many passed (>=60)</span>
+passed = <span class="num">0</span>
+<span class="kw">for</span> score <span class="kw">in</span> scores:
+    <span class="kw">if</span> score >= <span class="num">60</span>:
+        passed += <span class="num">1</span>
+<span class="fn">print</span>(<span class="str">f"{passed} students passed"</span>)
+
+<span class="cm"># Works on strings too — loop each character</span>
+<span class="kw">for</span> ch <span class="kw">in</span> <span class="str">"hello"</span>:
+    <span class="fn">print</span>(ch)   <span class="cm"># h e l l o</span></div>
+  </div>
+</div>
+
+<!-- 13. WHILE loop -->
+<div class="card" data-cat="loops" id="c13">
+  <div class="card-head" onclick="toggle('b13')">
+    <div class="card-head-left">
+      <span class="card-num">13</span>
+      <span class="card-title">WHILE Loop</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-loops">Loops</span>
+      <span class="toggle-lbl" id="b13-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b13" style="display:none">
+    <div class="desc">A WHILE loop repeats as long as a condition is true — you don't know in advance how many times it will run. It checks the condition BEFORE each iteration. If the condition is false from the start, the loop body never runs. Cambridge uses WHILE...DO...ENDWHILE. Python uses while: with indentation closing the block.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo">count ← 0
+<span class="pkw">WHILE</span> count < 5 <span class="pkw">DO</span>
+    <span class="pkw">OUTPUT</span> count
+    count ← count + 1
+<span class="pkw">ENDWHILE</span>
+
+<span class="cm">// Input validation loop</span>
+<span class="pkw">WHILE</span> num < 1 <span class="pkw">OR</span> num > 10 <span class="pkw">DO</span>
+    num ← <span class="pkw">USERINPUT</span>
+<span class="pkw">ENDWHILE</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">count = <span class="num">0</span>
+<span class="kw">while</span> count < <span class="num">5</span>:
+    <span class="fn">print</span>(count)
+    count += <span class="num">1</span>
+<span class="cm"># ENDWHILE disappears</span>
+
+<span class="cm"># Input validation loop</span>
+num = <span class="num">-1</span>
+<span class="kw">while</span> num < <span class="num">1</span> <span class="kw">or</span> num > <span class="num">10</span>:
+    num = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter 1-10: "</span>))</pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>Infinite loop danger</strong> If the condition never becomes False, the loop runs forever and your program freezes. Always make sure something inside the loop changes the variable that the condition checks. For example, if you check while count &lt; 5, you must increment count inside the loop.</div>
+    <div class="box box-tip"><strong>Input validation pattern</strong> The WHILE loop is perfect for making a user re-enter data until it's valid. Initialise the variable to a value that fails the condition (like -1 for a 1–10 range), then loop until the user enters something valid. This pattern appears in almost every Cambridge exam.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h13')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a13')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h13"><span class="hint-lbl">Hint</span>Before writing a WHILE loop, ask yourself: "What must be true for the loop to keep running?" That's your condition. Then ask: "What changes each time that will eventually make the condition false?" That's what you put inside the loop.</div>
+    <div class="answer-box" id="a13"><span class="cm"># Validation: keep asking until valid input received</span>
+num = <span class="num">-1</span>   <span class="cm"># initialise to a value that fails the condition</span>
+<span class="kw">while</span> num < <span class="num">1</span> <span class="kw">or</span> num > <span class="num">10</span>:
+    num = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number between 1 and 10: "</span>))
+    <span class="kw">if</span> num < <span class="num">1</span> <span class="kw">or</span> num > <span class="num">10</span>:
+        <span class="fn">print</span>(<span class="str">"Invalid. Try again."</span>)
+<span class="fn">print</span>(<span class="str">f"Valid input: {num}"</span>)</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ FUNCTIONS ═══════════════════ -->
+
+<!-- 14. Procedure -->
+<div class="card" data-cat="funcs" id="c14">
+  <div class="card-head" onclick="toggle('b14')">
+    <div class="card-head-left">
+      <span class="card-num">14</span>
+      <span class="card-title">Procedure — no return value</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-funcs">Functions</span>
+      <span class="toggle-lbl" id="b14-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b14" style="display:none">
+    <div class="desc">A procedure is a named, reusable block of code that performs a task but does NOT give back a value. You use it to avoid repeating the same code. Cambridge uses PROCEDURE / ENDPROCEDURE and calls it with CALL. In Python everything is def — and CALL disappears entirely.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">PROCEDURE</span> PrintLine(char, n)
+    <span class="pkw">DECLARE</span> i : <span class="pkw">INTEGER</span>
+    <span class="pkw">FOR</span> i ← 1 <span class="pkw">TO</span> n
+        <span class="pkw">OUTPUT</span> char
+    <span class="pkw">NEXT</span> i
+<span class="pkw">ENDPROCEDURE</span>
+
+<span class="pkw">CALL</span> PrintLine(<span class="str">"*"</span>, 5)</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="kw">def</span> <span class="fn">PrintLine</span>(char, n):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n + <span class="num">1</span>):
+        <span class="fn">print</span>(char, end=<span class="str">""</span>)
+    <span class="fn">print</span>()   <span class="cm"># new line at end</span>
+<span class="cm"># ENDPROCEDURE disappears</span>
+
+<span class="fn">PrintLine</span>(<span class="str">"*"</span>, <span class="num">5</span>)  <span class="cm"># no CALL</span></pre>
+      </div>
+    </div>
+    <div class="box box-info"><strong>Cambridge distinction</strong> Cambridge Paper 4 marks sometimes specifically say "write a procedure" or "write a function". A procedure = def with no return statement. A function = def with a return statement. Make sure you use the right one — if the question says procedure, don't write return.</div>
+    <div class="btn-row">
+      <button class="answer-btn" onclick="sh('a14')">Show worked example</button>
+    </div>
+    <div class="answer-box" id="a14"><span class="cm"># A procedure that displays a student's details</span>
+<span class="cm"># No return value — it just prints</span>
+<span class="kw">def</span> <span class="fn">DisplayStudent</span>(name, score):
+    <span class="fn">print</span>(<span class="str">f"Name:  {name}"</span>)
+    <span class="fn">print</span>(<span class="str">f"Score: {score}"</span>)
+    <span class="kw">if</span> score >= <span class="num">50</span>:
+        <span class="fn">print</span>(<span class="str">"Result: Pass"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"Result: Fail"</span>)
+    <span class="fn">print</span>(<span class="str">"-" * 20</span>)
+
+<span class="cm"># Call it multiple times — no CALL keyword</span>
+<span class="fn">DisplayStudent</span>(<span class="str">"Ali"</span>,  <span class="num">78</span>)
+<span class="fn">DisplayStudent</span>(<span class="str">"Sara"</span>, <span class="num">45</span>)
+<span class="fn">DisplayStudent</span>(<span class="str">"Omar"</span>, <span class="num">62</span>)</div>
+  </div>
+</div>
+
+<!-- 15. Function with return -->
+<div class="card" data-cat="funcs" id="c15">
+  <div class="card-head" onclick="toggle('b15')">
+    <div class="card-head-left">
+      <span class="card-num">15</span>
+      <span class="card-title">Function — with return value</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-funcs">Functions</span>
+      <span class="toggle-lbl" id="b15-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b15" style="display:none">
+    <div class="desc">A function is like a procedure but it gives you back a result. You call it, it does a calculation, and it hands you the answer using return. The caller can then store that answer in a variable or use it directly. Cambridge declares the return type after the colon (e.g. : INTEGER) — this disappears in Python.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">FUNCTION</span> Max(a, b : <span class="pkw">INTEGER</span>)
+         : <span class="pkw">INTEGER</span>
+    <span class="pkw">IF</span> a > b <span class="pkw">THEN</span>
+        <span class="pkw">RETURN</span> a
+    <span class="pkw">ELSE</span>
+        <span class="pkw">RETURN</span> b
+    <span class="pkw">ENDIF</span>
+<span class="pkw">ENDFUNCTION</span>
+
+result ← Max(10, 25)</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="kw">def</span> <span class="fn">Max</span>(a, b):
+    <span class="cm"># : INTEGER disappears</span>
+    <span class="kw">if</span> a > b:
+        <span class="kw">return</span> a
+    <span class="kw">else</span>:
+        <span class="kw">return</span> b
+<span class="cm"># ENDFUNCTION disappears</span>
+
+result = <span class="fn">Max</span>(<span class="num">10</span>, <span class="num">25</span>)  <span class="cm"># → 25</span></pre>
+      </div>
+    </div>
+    <div class="box box-tip"><strong>return stops the function immediately</strong> The moment Python hits return, the function exits and gives back that value. Any code after return in the same block is never reached. This is useful for early exits — for example returning -1 immediately if a queue is empty.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h15')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a15')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h15"><span class="hint-lbl">Hint</span>Think of a function as a vending machine — you put in some coins (arguments), it does something, and it gives you back a snack (return value). A procedure is a bin — you put something in, it does something with it, but gives you nothing back.</div>
+    <div class="answer-box" id="a15"><span class="cm"># Function to calculate grade from score</span>
+<span class="kw">def</span> <span class="fn">GetGrade</span>(score):
+    <span class="kw">if</span> score >= <span class="num">90</span>:
+        <span class="kw">return</span> <span class="str">"A*"</span>
+    <span class="kw">elif</span> score >= <span class="num">80</span>:
+        <span class="kw">return</span> <span class="str">"A"</span>
+    <span class="kw">elif</span> score >= <span class="num">70</span>:
+        <span class="kw">return</span> <span class="str">"B"</span>
+    <span class="kw">elif</span> score >= <span class="num">60</span>:
+        <span class="kw">return</span> <span class="str">"C"</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="str">"Fail"</span>
+
+<span class="cm"># Using the function</span>
+mark = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter score: "</span>))
+grade = <span class="fn">GetGrade</span>(mark)
+<span class="fn">print</span>(<span class="str">f"Your grade is: {grade}"</span>)</div>
+  </div>
+</div>
+
+<!-- 16. Global -->
+<div class="card" data-cat="funcs" id="c16">
+  <div class="card-head" onclick="toggle('b16')">
+    <div class="card-head-left">
+      <span class="card-num">16</span>
+      <span class="card-title">Global Variables inside Functions</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-funcs">Functions</span>
+      <span class="badge-new">Added</span>
+      <span class="badge-trap">Silent bug</span>
+      <span class="toggle-lbl" id="b16-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b16" style="display:none">
+    <div class="desc">When a variable is defined outside a function, it's called a global variable. You can read it inside a function without any special keyword. BUT if you want to modify it (change its value) inside a function, you must declare it with the global keyword first. Without global, Python silently creates a new local variable with the same name — and the original never changes.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">GLOBAL</span> count ← 0
+
+<span class="pkw">PROCEDURE</span> Increment()
+    count ← count + 1
+<span class="pkw">ENDPROCEDURE</span>
+
+<span class="pkw">CALL</span> Increment()
+<span class="pkw">OUTPUT</span> count  <span class="cm">→ 1</span></pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode">count = <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">Increment</span>():
+    <span class="kw">global</span> count   <span class="cm"># MUST write this</span>
+    count += <span class="num">1</span>
+
+<span class="fn">Increment</span>()
+<span class="fn">print</span>(count)   <span class="cm"># 1 ✓</span></pre>
+      </div>
+    </div>
+    <div class="box box-trap"><strong>The silent bug — no error, wrong answer</strong> Without global: Python creates a LOCAL count inside the function. The real count outside never changes. No error message — just wrong output. This is the hardest type of bug to find because Python doesn't warn you. It's also exactly what Question 1 (queues) requires — HeadPointer, TailPointer and NumberItems are all global variables modified inside functions.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h16')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a16')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h16"><span class="hint-lbl">Hint</span>Rule: if a function needs to CHANGE a global variable (not just read it), write "global varname" at the top of the function before anything else. If you only need to read it, you don't need global — just use it directly.</div>
+    <div class="answer-box" id="a16"><span class="cm"># Direct from Q1 of your exam — circular queue</span>
+Queue       = [<span class="num">-1</span>] * <span class="num">20</span>
+HeadPointer = <span class="num">-1</span>
+TailPointer = <span class="num">-1</span>
+NumberItems = <span class="num">0</span>
+
+<span class="kw">def</span> <span class="fn">Enqueue</span>(item):
+    <span class="kw">global</span> HeadPointer, TailPointer, NumberItems
+    <span class="kw">if</span> NumberItems == <span class="num">20</span>:
+        <span class="kw">return</span> <span class="kw">False</span>   <span class="cm"># queue full</span>
+    <span class="kw">if</span> HeadPointer == <span class="num">-1</span>:
+        HeadPointer = <span class="num">0</span>
+    TailPointer = (TailPointer + <span class="num">1</span>) <span class="kw">%</span> <span class="num">20</span>
+    Queue[TailPointer] = item
+    NumberItems += <span class="num">1</span>
+    <span class="kw">return</span> <span class="kw">True</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ DATA ═══════════════════ -->
+
+<!-- 17. Arrays / Lists -->
+<div class="card" data-cat="data" id="c17">
+  <div class="card-head" onclick="toggle('b17')">
+    <div class="card-head-left">
+      <span class="card-num">17</span>
+      <span class="card-title">Arrays / Lists</span>
+    </div>
+    <div class="card-meta">
+      <span class="cat-badge cat-data">Data</span>
+      <span class="toggle-lbl" id="b17-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="card-body" id="b17" style="display:none">
+    <div class="desc">An array (Cambridge) or list (Python) is an ordered collection of items where each item has an index number starting from 0. You access items by their index. Cambridge declares arrays with a fixed size. Python lists are flexible — they can grow and shrink. For Cambridge exam questions that use fixed-size arrays, you initialise a Python list with a fixed size using [value] * size.</div>
+    <div class="code-grid">
+      <div class="code-col">
+        <div class="code-col-label lbl-pseudo">Cambridge Pseudocode</div>
+        <pre class="pseudo"><span class="pkw">DECLARE</span> arr[0:4] <span class="pkw">OF INTEGER</span>
+arr[0] ← 10
+arr[1] ← 20
+arr[2] ← 30
+
+<span class="pkw">OUTPUT</span> arr[0]
+<span class="pkw">OUTPUT</span> <span class="pkw">LEN</span>(arr)</pre>
+      </div>
+      <div class="code-col">
+        <div class="code-col-label lbl-python">Python</div>
+        <pre class="pycode"><span class="cm"># Fixed size (like Cambridge arrays):</span>
+arr = [<span class="num">0</span>] * <span class="num">5</span>    <span class="cm"># [0, 0, 0, 0, 0]</span>
+arr[<span class="num">0</span>] = <span class="num">10</span>
+arr[<span class="num">1</span>] = <span class="num">20</span>
+arr[<span class="num">2</span>] = <span class="num">30</span>
+
+<span class="fn">print</span>(arr[<span class="num">0</span>])    <span class="cm"># 10</span>
+<span class="fn">print</span>(<span class="fn">len</span>(arr))  <span class="cm"># 5</span></pre>
+      </div>
+    </div>
+    <div class="box box-info"><strong>Most used list operations for Cambridge</strong><br>arr[i] — access item at index i<br>arr[i] = x — store value at index i<br>arr.append(x) — add to the end (dynamic lists)<br>len(arr) — count of items<br>item in arr — True if item exists in the list</div>
+    <div class="box box-trap"><strong>0-indexed — first item is arr[0] not arr[1]</strong> If arr has 5 items, valid indices are 0, 1, 2, 3, 4. Trying to access arr[5] causes an IndexError. The last valid index is always len(arr) - 1.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="sh('h17')">💡 Hint</button>
+      <button class="answer-btn" onclick="sh('a17')">Show worked example</button>
+    </div>
+    <div class="hint-box" id="h17"><span class="hint-lbl">Hint</span>For Cambridge exam questions: if they say "1D array of 20 integers initialised to -1", write: Queue = [-1] * 20. If they say "1D array of 5 strings", write: names = [""] * 5. The pattern is always [initial_value] * size.</div>
+    <div class="answer-box" id="a17"><span class="cm"># Cambridge exam pattern: fixed-size array initialised to -1</span>
+Queue = [<span class="num">-1</span>] * <span class="num">20</span>   <span class="cm"># exactly as Q1 asks</span>
+
+<span class="cm"># Store some values</span>
+Queue[<span class="num">0</span>] = <span class="num">5</span>
+Queue[<span class="num">1</span>] = <span class="num">12</span>
+Queue[<span class="num">2</span>] = <span class="num">8</span>
+
+<span class="cm"># Print all items using a loop</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(Queue)):
+    <span class="fn">print</span>(<span class="str">f"Queue[{i}] = {Queue[i]}"</span>)
+
+<span class="cm"># Dynamic list — grows as you add items</span>
+scores = []
+scores.<span class="fn">append</span>(<span class="num">85</span>)
+scores.<span class="fn">append</span>(<span class="num">72</span>)
+scores.<span class="fn">append</span>(<span class="num">91</span>)
+<span class="fn">print</span>(<span class="fn">len</span>(scores))   <span class="cm"># 3</span>
+<span class="fn">print</span>(<span class="num">85</span> <span class="kw">in</span> scores)  <span class="cm"># True</span></div>
+  </div>
+</div>
+
+<footer>
+  <span>Cambridge International AS & A Level Computer Science 9618 · Python Core Concepts Reference · Session 1</span>
+  <span>17 concepts · Basics · Conditions · Loops · Functions · Data · No OOP/Files (covered later)</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const body = document.getElementById(id);
+  const lbl  = document.getElementById(id + '-lbl');
+  if (!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if (lbl) lbl.textContent = open ? '▼ expand' : '▲ collapse';
+}
+
+function sh(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible');
+}
+
+const catMap = {
+  all:     null,
+  basics:  'basics',
+  control: 'control',
+  loops:   'loops',
+  funcs:   'funcs',
+  data:    'data'
+};
+
+function filter(cat) {
+  const cards = document.querySelectorAll('.card');
+  let n = 0;
+  cards.forEach(c => {
+    const show = cat === 'all' || c.dataset.cat === cat;
+    c.classList.toggle('hidden', !show);
+    if (show) n++;
+  });
+  document.getElementById('count-bar').textContent =
+    `Showing ${n} of 17 concepts · click any card header to expand`;
+  document.querySelectorAll('.pill').forEach(p => {
+    const active = p.id === 'pill-' + cat;
+    p.className = 'pill' + (active ? ' active-' + cat : '');
+  });
+}
+</script>
+</body>
+</html>

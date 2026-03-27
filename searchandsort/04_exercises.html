@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercises · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1916; --ink2:#4a4845; --ink3:#8a8785;
+  --paper:#faf9f6; --paper2:#f2f0eb; --paper3:#e8e5de; --rule:#d8d5ce;
+  --mono-bg:#1e1c18; --mono-text:#d4d0c4;
+  --blue:#185FA5; --blue-bg:#E6F1FB; --blue-bd:#85B7EB;
+  --green:#3B6D11; --green-bg:#EAF3DE; --green-bd:#97C459;
+  --amber:#633806; --amber-bg:#FAEEDA; --amber-bd:#EF9F27;
+  --red:#791F1F; --red-bg:#FCEBEB; --red-bd:#F09595;
+  --purple:#3C3489; --purple-bg:#EEEDFE; --purple-bd:#AFA9EC;
+  --teal:#085041; --teal-bg:#E1F5EE; --teal-bd:#5DCAA5;
+  --easy:#1a5c38; --easy-bg:#e8f5ee; --easy-rule:#a8d5b8;
+  --mid:#7a4a00;  --mid-bg:#fef3e2;  --mid-rule:#f0c878;
+  --hard:#6b1a1a; --hard-bg:#fdeaea; --hard-rule:#e8a0a0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.7; }
+
+/* NAV */
+.nav { display: flex; overflow-x: auto; background: var(--ink); position: sticky; top: 0; z-index: 100; }
+.nav a { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 12px 17px; color: rgba(255,255,255,0.45); text-decoration: none; white-space: nowrap; border-bottom: 3px solid transparent; }
+.nav a:hover  { color: rgba(255,255,255,0.75); }
+.nav a.active { color: #fff; border-bottom-color: #fff; }
+
+/* COVER */
+.cover { background: #1a1f2e; color: #c8d4e8; padding: 3rem 2.5rem 2.5rem; position: relative; overflow: hidden; }
+.cover::before { content: ''; position: absolute; top: -50px; right: -50px; width: 260px; height: 260px; border: 35px solid rgba(126,184,212,0.08); border-radius: 50%; }
+.cover-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(200,212,232,0.45); margin-bottom: 1rem; font-weight: 500; }
+.cover h1 { font-family: 'DM Serif Display', serif; font-size: 2.1rem; line-height: 1.2; font-weight: 400; }
+.cover h1 em { font-style: italic; color: #7eb8d4; }
+.cover-sub { margin-top: 0.75rem; font-size: 13px; color: rgba(200,212,232,0.55); max-width: 560px; line-height: 1.6; }
+.cover-meta { margin-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+.cover-meta-item { font-size: 12px; color: rgba(200,212,232,0.45); }
+.cover-meta-item strong { display: block; color: rgba(200,212,232,0.85); font-size: 13px; font-weight: 500; }
+
+/* LEGEND */
+.legend { display: flex; gap: 1rem; padding: 0.85rem 2rem; background: var(--paper2); border-bottom: 1px solid var(--rule); flex-wrap: wrap; align-items: center; }
+.legend-label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 0.5rem; }
+
+/* BADGE */
+.badge { font-size: 9.5px; padding: 2px 9px; border-radius: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.badge-easy  { background: var(--easy-bg);  color: var(--easy);  border: 1px solid var(--easy-rule); }
+.badge-mid   { background: var(--mid-bg);   color: var(--mid);   border: 1px solid var(--mid-rule); }
+.badge-hard  { background: var(--hard-bg);  color: var(--hard);  border: 1px solid var(--hard-rule); }
+.badge-marks { background: var(--paper3);   color: var(--ink2);  border: 1px solid var(--rule); }
+
+/* LAYOUT */
+.page-body { padding: 1.75rem 2rem 4rem; max-width: 960px; margin: 0 auto; }
+.section-rule { border: none; border-top: 3px solid var(--ink); margin-bottom: 1.4rem; }
+.section-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.6rem; flex-wrap: wrap; }
+.section-num   { font-family: 'DM Serif Display', serif; font-size: 2.8rem; color: var(--rule); line-height: 1; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; font-weight: 400; }
+.section-desc  { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+
+/* EXERCISE CARDS */
+.ex { border: 1px solid var(--rule); border-radius: 6px; margin-bottom: 1.8rem; overflow: hidden; background: #fff; }
+.ex-head { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--rule); gap: 1rem; flex-wrap: wrap; cursor: pointer; user-select: none; }
+.ex-head:hover { background: var(--paper2); }
+.ex-head-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.ex-num   { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); font-weight: 500; }
+.ex-title { font-weight: 500; font-size: 14px; }
+.ex-meta  { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.toggle-lbl { font-size: 11px; color: var(--ink3); font-style: italic; }
+.ex-body { padding: 1.25rem; }
+
+.scenario { background: var(--paper2); border-left: 3px solid var(--rule); padding: 0.75rem 1rem; border-radius: 0 4px 4px 0; font-size: 13.5px; margin-bottom: 1.2rem; color: var(--ink2); line-height: 1.6; }
+
+.task-list { list-style: none; padding: 0; margin-bottom: 1rem; }
+.task-list li { padding: 0.3rem 0 0.3rem 1.4rem; position: relative; font-size: 13.5px; border-bottom: 1px solid var(--paper2); }
+.task-list li:last-child { border-bottom: none; }
+.task-list li::before { content: '•'; position: absolute; left: 0.4rem; color: var(--ink3); }
+.task-list li .pts { float: right; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink3); background: var(--paper2); padding: 1px 6px; border-radius: 3px; }
+
+.tip-box { background: #fef8e8; border: 1px solid #f0d878; border-radius: 4px; padding: 0.6rem 0.9rem; font-size: 12.5px; color: #5a4400; margin: 0.75rem 0; line-height: 1.5; }
+.tip-box strong { font-weight: 500; }
+
+.btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.85rem; }
+.hint-btn, .answer-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; border-radius: 4px; padding: 5px 14px; cursor: pointer; }
+.hint-btn   { background: none; border: 1px solid var(--rule); color: var(--ink3); }
+.hint-btn:hover { background: var(--paper2); color: var(--ink2); }
+.answer-btn { background: var(--ink); border: none; color: var(--paper2); }
+.answer-btn:hover { background: var(--ink2); }
+
+.hint-box { display: none; background: var(--amber-bg); border: 1px solid var(--amber-bd); border-radius: 6px; padding: 0.75rem 1rem; margin-top: 0.5rem; font-size: 13px; color: var(--amber); line-height: 1.6; }
+.hint-box.visible { display: block; }
+
+/* ANSWER SECTION */
+.answer-section { display: none; margin-top: 1rem; }
+.answer-section.visible { display: block; }
+.answer-part-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-bottom: none;
+  padding: 5px 12px;
+  border-radius: 4px 4px 0 0;
+  display: inline-block;
+  margin-top: 0.75rem;
+}
+.ms-note {
+  background: var(--green-bg);
+  border: 1px solid var(--green-bd);
+  border-radius: 4px;
+  padding: 0.6rem 0.9rem;
+  font-size: 12.5px;
+  color: var(--green);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+.ms-note strong { font-weight: 500; }
+
+/* CODE BLOCKS */
+pre.py {
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px;
+  padding: 1.1rem 1.3rem;
+  border-radius: 0 4px 4px 4px;
+  line-height: 2;
+  background: var(--mono-bg);
+  color: var(--mono-text);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.kw  { color: #7eb8d4; font-weight: 500; }
+.fn  { color: #a8d8a0; }
+.st  { color: #e8c878; }
+.cm  { color: #6a6860; font-style: italic; }
+.nm  { color: #c8a8f0; }
+
+/* SAVEBOX */
+.savebox { background: var(--paper2); border: 0.5px solid var(--rule); border-radius: 4px; padding: 8px 12px; margin: 8px 0; font-size: 12px; color: var(--ink2); line-height: 1.6; }
+.savebox b { color: var(--ink); }
+
+footer { background: var(--paper2); border-top: 1px solid var(--rule); padding: 1.5rem 2rem; font-size: 12px; color: var(--ink3); margin-top: 3rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+</style>
+</head>
+<body>
+
+
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Paper 4 · Python</div>
+  <h1>Practice <em>Exercises</em></h1>
+  <div class="cover-sub">Four full Cambridge Paper 4 style questions — Linear Search, Binary Search, Bubble Sort, Insertion Sort. Always attempt before reading the Answer.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Question 1</strong>Linear Search — count &amp; find</div>
+    <div class="cover-meta-item"><strong>Question 2</strong>Binary Search — sorted list</div>
+    <div class="cover-meta-item"><strong>Question 3</strong>Bubble Sort — sort &amp; modify</div>
+    <div class="cover-meta-item"><strong>Question 4</strong>Insertion Sort — full program</div>
+  </div>
+</div>
+
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 Linear Search</a>
+  <a href="02_binary_search.html">⚡ Binary Search</a>
+  <a href="03_bubble_insertion_sort.html">🫧 Bubble &amp; Insertion Sort</a>
+  <a href="04_exercises.html" class="active">📝 Exercises</a>
+</nav>
+
+<div class="legend">
+  <span class="legend-label">Difficulty</span>
+  <span class="badge badge-easy">Easy</span>
+  <span class="badge badge-mid">Intermediate</span>
+  <span class="badge badge-hard">Hard</span>
+  <span style="margin-left:auto;font-size:12px;color:var(--ink3)">Expand → Try → Hint if stuck → Show Answer</span>
+</div>
+
+<div class="page-body">
+
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">Q</div>
+    <div>
+      <div class="section-title">Cambridge Paper 4 — Python Exercises</div>
+      <div class="section-desc">Searching &amp; Sorting · Pure algorithm practice · Same format as past papers</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       QUESTION 1 — LINEAR SEARCH
+  ══════════════════════════════════════ -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('q1')">
+      <div class="ex-head-left">
+        <span class="ex-num">Q1</span>
+        <span class="ex-title">Linear Search — count occurrences &amp; find first</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[17 marks]</span>
+        <span class="toggle-lbl" id="q1-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="q1" style="display:none;">
+
+      <div class="scenario">
+        A shop sells products. Each product has a unique integer code.<br>
+        The following global variables are used by the program:<br><br>
+        <code>codes = [1042, 2081, 3017, 2081, 4055, 2081, 1042, 3300]</code><br>
+        <code>size = 8</code>
+      </div>
+
+      <ul class="task-list">
+        <li><strong>(a)(i)</strong> Write program code for the function <code>count_code()</code> that takes one integer parameter <code>target</code>, counts how many times <code>target</code> appears in <code>codes</code>, and returns the count. </li>
+        <li><strong>(a)(ii)</strong> Write program code for the main program to call <code>count_code()</code> with the value <code>2081</code> and output the result in the format: <code>Code 2081 appears 3 time(s).</code> </li>
+        <li><strong>(b)(i)</strong> Write program code for the function <code>find_first()</code> that takes one integer parameter <code>target</code>, returns the index of the first occurrence of <code>target</code>, and returns <code>–1</code> if not found. Use a <code>while</code> loop that stops as soon as the value is found. </li>
+        <li><strong>(b)(ii)</strong> Amend the main program to: prompt the user to enter a product code, validate the input (must be &gt; 0), call <code>find_first()</code>, and output <code>Code found at index X</code> or <code>Code not found</code>.</li>
+        <li><strong>(b)(iii)</strong> Test your program twice: Test 1 with code <code>3017</code>, Test 2 with code <code>9999</code>. Take a screenshot of both outputs. </li>
+      </ul>
+
+      <div class="savebox">
+        Save your program as <b>Question1_Practice</b>.<br>
+        Copy and paste program code and screenshots into the evidence document.
+      </div>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('q1')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('q1')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="q1-hint">
+        (a)(i) Use a FOR loop through all elements. Initialise <code>count = 0</code> before the loop. Add 1 each time you find a match. Return count after the loop.<br><br>
+        (b)(i) Use a WHILE loop with two conditions: <code>i &lt; size</code> AND <code>not found</code>. Set <code>found = True</code> on a match. Increment <code>i</code> only in the ELSE branch so you don't skip the index.<br><br>
+        (b)(ii) Validation: use a while loop to keep asking while the input is &lt;= 0.
+      </div>
+
+      <div class="answer-section" id="q1-ans">
+
+        <div class="answer-part-label">(a)(i) — count_code() &nbsp;[3 marks]</div>
+        <pre class="py">
+<span class="cm"># Global variables (declared at the top of the program)</span>
+codes = [<span class="nm">1042</span>, <span class="nm">2081</span>, <span class="nm">3017</span>, <span class="nm">2081</span>, <span class="nm">4055</span>, <span class="nm">2081</span>, <span class="nm">1042</span>, <span class="nm">3300</span>]
+size  = <span class="nm">8</span>
+
+
+<span class="kw">def</span> <span class="fn">count_code</span>(target):
+    <span class="cm"># Initialise counter to zero before starting the search</span>
+    count = <span class="nm">0</span>
+
+    <span class="cm"># Loop through every element in the array using its index</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(size):
+
+        <span class="cm"># Check if the current element matches what we are looking for</span>
+        <span class="kw">if</span> codes[i] == target:
+            count += <span class="nm">1</span>    <span class="cm"># increment counter each time a match is found</span>
+
+    <span class="cm"># Return the total count after checking all elements</span>
+    <span class="kw">return</span> count</pre>
+
+      
+
+        <div class="answer-part-label">(a)(ii) — main program &nbsp;[2 marks]</div>
+        <pre class="py">
+<span class="cm"># Call the function with the value we want to count</span>
+result = <span class="fn">count_code</span>(<span class="nm">2081</span>)
+
+<span class="cm"># Output the result in the exact format required</span>
+<span class="fn">print</span>(<span class="st">f"Code 2081 appears {result} time(s)."</span>)</pre>
+
+      
+
+        <div class="answer-part-label">(b)(i) — find_first() &nbsp;[5 marks]</div>
+        <pre class="py">
+<span class="kw">def</span> <span class="fn">find_first</span>(target):
+    <span class="cm"># Start at index 0 — the beginning of the array</span>
+    i = <span class="nm">0</span>
+
+    <span class="cm"># Flag to track whether we have found the target</span>
+    found = <span class="kw">False</span>
+
+    <span class="cm"># Continue searching while there are elements left AND we have not found it yet</span>
+    <span class="cm"># Using 'not found' allows the loop to exit early as soon as a match is found</span>
+    <span class="kw">while</span> i < size <span class="kw">and not</span> found:
+
+        <span class="kw">if</span> codes[i] == target:
+            <span class="cm"># Match found — set flag to True so the while loop exits</span>
+            found = <span class="kw">True</span>
+
+        <span class="kw">else</span>:
+            <span class="cm"># No match at this index — move to the next one</span>
+            <span class="cm"># Important: we only increment i in the ELSE branch</span>
+            <span class="cm"># so that 'i' still holds the correct index when we exit</span>
+            i += <span class="nm">1</span>
+
+    <span class="cm"># After the loop: check if we actually found it or ran out of elements</span>
+    <span class="kw">if</span> found:
+        <span class="kw">return</span> i       <span class="cm"># return the index where target was first found</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> -<span class="nm">1</span>     <span class="cm"># -1 signals "not found" — no valid index is ever -1</span></pre>
+
+       
+
+        <div class="answer-part-label">(b)(ii) — main program with validation &nbsp;[4 marks]</div>
+        <pre class="py">
+<span class="cm"># Prompt the user to enter a product code</span>
+code = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter product code: "</span>))
+
+<span class="cm"># Validation loop — keep asking until the user enters a positive integer</span>
+<span class="kw">while</span> code <= <span class="nm">0</span>:
+    <span class="fn">print</span>(<span class="st">"Invalid. The code must be greater than 0."</span>)
+    code = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter product code: "</span>))
+
+<span class="cm"># Call find_first() with the validated input</span>
+result = <span class="fn">find_first</span>(code)
+
+<span class="cm"># Output the correct message depending on whether the code was found</span>
+<span class="kw">if</span> result != -<span class="nm">1</span>:
+    <span class="fn">print</span>(<span class="st">f"Code found at index {result}."</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Code not found."</span>)</pre>
+
+      
+
+      </div><!-- end answer-section -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       QUESTION 2 — BINARY SEARCH
+  ══════════════════════════════════════ -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('q2')">
+      <div class="ex-head-left">
+        <span class="ex-num">Q2</span>
+        <span class="ex-title">Binary Search — sorted list</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[16 marks]</span>
+        <span class="toggle-lbl" id="q2-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="q2" style="display:none;">
+
+      <div class="scenario">
+        A program stores exam marks in a global list already sorted in ascending order.<br><br>
+        <code>marks = [5, 12, 18, 24, 31, 47, 58, 63, 79, 91]</code><br>
+        <code>size = 10</code><br><br>
+        <strong>Note:</strong> Binary search only works on sorted data. Python list indices start at 0.
+      </div>
+
+      <ul class="task-list">
+        <li><strong>(a)(i)</strong> Write program code for the function <code>binary_search()</code> that takes one integer parameter <code>target</code>, searches <code>marks</code> using binary search, returns the index of <code>target</code> if found, and returns <code>–1</code> if not found. </li>
+        <li><strong>(a)(ii)</strong> Write program code for the main program to: prompt the user to enter a mark to search for, validate the input (must be between 0 and 100 inclusive), call <code>binary_search()</code>, and output <code>Mark found at position X</code> or <code>Mark not found</code>.</li>
+        <li><strong>(a)(iii)</strong> Test your program twice: Test 1 with mark <code>47</code>, Test 2 with mark <code>50</code>. Take a screenshot of both outputs. </li>
+        <li><strong>(b)(i)</strong> Write program code for the function <code>find_all()</code> that takes one integer parameter <code>target</code>, searches <code>marks</code> and returns a list of all indices where <code>target</code> appears. Returns an empty list if not found. </li>
+        <li><strong>(b)(ii)</strong> Amend the main program to also call <code>find_all()</code> and output the returned list.</li>
+      </ul>
+
+      <div class="savebox">
+        Save your program as <b>Question2_Practice</b>.<br>
+        Copy and paste program code and screenshots into the evidence document.
+      </div>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('q2')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('q2')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="q2-hint">
+        Binary search: set <code>low = 0</code> and <code>high = size - 1</code>. In each iteration calculate <code>mid = (low + high) // 2</code>. If <code>marks[mid]</code> equals the target — found. If target is greater, move <code>low</code> up. If target is smaller, move <code>high</code> down. The loop condition must be <code>low &lt;= high</code> — using just <code>&lt;</code> misses the last element.<br><br>
+        (b)(i) <code>find_all()</code> must use a FOR loop — never a while with early exit — because it needs to check every single element to find all matches.
+      </div>
+
+      <div class="answer-section" id="q2-ans">
+
+        <div class="answer-part-label">(a)(i) — binary_search() &nbsp;[6 marks]</div>
+        <pre class="py">
+<span class="cm"># Global variables</span>
+marks = [<span class="nm">5</span>, <span class="nm">12</span>, <span class="nm">18</span>, <span class="nm">24</span>, <span class="nm">31</span>, <span class="nm">47</span>, <span class="nm">58</span>, <span class="nm">63</span>, <span class="nm">79</span>, <span class="nm">91</span>]
+size  = <span class="nm">10</span>
+
+
+<span class="kw">def</span> <span class="fn">binary_search</span>(target):
+    <span class="cm"># Set the initial boundaries of the search region</span>
+    low  = <span class="nm">0</span>            <span class="cm"># start of the region we are searching</span>
+    high = size - <span class="nm">1</span>    <span class="cm"># end of the region we are searching</span>
+
+    <span class="cm"># Keep searching while the region is valid (low must not pass high)</span>
+    <span class="cm"># IMPORTANT: use <= not < so we don't skip the last remaining element</span>
+    <span class="kw">while</span> low <= high:
+
+        <span class="cm"># Calculate the middle index of the current region</span>
+        mid = (low + high) // <span class="nm">2</span>
+
+        <span class="kw">if</span> marks[mid] == target:
+            <span class="cm"># Exact match — return the index immediately</span>
+            <span class="kw">return</span> mid
+
+        <span class="kw">elif</span> marks[mid] < target:
+            <span class="cm"># Target is in the RIGHT half — discard the left half</span>
+            low = mid + <span class="nm">1</span>
+
+        <span class="kw">else</span>:
+            <span class="cm"># Target is in the LEFT half — discard the right half</span>
+            high = mid - <span class="nm">1</span>
+
+    <span class="cm"># If we exit the loop without returning, the target was not found</span>
+    <span class="kw">return</span> -<span class="nm">1</span></pre>
+
+        
+
+        <div class="answer-part-label">(a)(ii) — main program with validation &nbsp;[4 marks]</div>
+        <pre class="py">
+<span class="cm"># Prompt the user to enter a mark</span>
+mark = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter mark to search for: "</span>))
+
+<span class="cm"># Validation — the mark must be between 0 and 100 inclusive</span>
+<span class="kw">while</span> mark < <span class="nm">0</span> <span class="kw">or</span> mark > <span class="nm">100</span>:
+    <span class="fn">print</span>(<span class="st">"Invalid. Enter a mark between 0 and 100."</span>)
+    mark = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter mark to search for: "</span>))
+
+<span class="cm"># Call binary_search() with the validated input</span>
+result = <span class="fn">binary_search</span>(mark)
+
+<span class="cm"># Output the result with the correct message</span>
+<span class="kw">if</span> result != -<span class="nm">1</span>:
+    <span class="fn">print</span>(<span class="st">f"Mark found at position {result}."</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Mark not found."</span>)</pre>
+
+       
+
+        <div class="answer-part-label">(b)(i) — find_all() &nbsp;[3 marks]</div>
+        <pre class="py">
+<span class="kw">def</span> <span class="fn">find_all</span>(target):
+    <span class="cm"># Start with an empty list — we will add indices to it as we find matches</span>
+    found_list = []
+
+    <span class="cm"># Use a FOR loop — we MUST check every element to find ALL occurrences</span>
+    <span class="cm"># We cannot use a while with early exit here, unlike find_first()</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(size):
+
+        <span class="kw">if</span> marks[i] == target:
+            <span class="cm"># Match found — record this index in the list</span>
+            found_list.append(i)
+
+    <span class="cm"># Return the list of all matching indices (may be empty if no match)</span>
+    <span class="kw">return</span> found_list</pre>
+
+      
+
+        <div class="answer-part-label">(b)(ii) — amend main program &nbsp;[1 mark]</div>
+        <pre class="py">
+<span class="cm"># Call find_all() with the same validated input and output the result</span>
+<span class="fn">print</span>(<span class="fn">find_all</span>(mark))</pre>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       QUESTION 3 — BUBBLE SORT
+  ══════════════════════════════════════ -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('q3')">
+      <div class="ex-head-left">
+        <span class="ex-num">Q3</span>
+        <span class="ex-title">Bubble Sort — sort, print, modify</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[16 marks]</span>
+        <span class="toggle-lbl" id="q3-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="q3" style="display:none;">
+
+      <div class="scenario">
+        A program stores student scores. The following global variables are used:<br><br>
+        <code>scores = [64, 12, 45, 8, 99, 33]</code><br>
+        <code>size = 6</code>
+      </div>
+
+      <ul class="task-list">
+        <li><strong>(a)(i)</strong> Write program code for the procedure <code>print_scores()</code> that outputs all elements in <code>scores</code> on one line separated by spaces. </li>
+        <li><strong>(a)(ii)</strong> Write program code for the procedure <code>bubble_sort()</code> that sorts the global list <code>scores</code> into ascending order. The procedure uses a boolean variable <code>swapped</code> — if no swap is made during a pass the sort stops early. </li>
+        <li><strong>(a)(iii)</strong> Write program code for the main program to: call <code>print_scores()</code> before sorting, call <code>bubble_sort()</code>, call <code>print_scores()</code> after sorting.</li>
+        <li><strong>(a)(iv)</strong> Test your program. Take a screenshot showing both the unsorted and sorted output. </li>
+        <li><strong>(b)</strong> Amend <code>bubble_sort()</code> so the list is sorted into <strong>descending</strong> order. State which line changes and what it changes to. </li>
+      </ul>
+
+      <div class="savebox">
+        Save your program as <b>Question3_Practice</b>.<br>
+        Copy and paste program code and screenshots into the evidence document.
+      </div>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('q3')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('q3')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="q3-hint">
+        <strong>swapped flag pattern:</strong><br>
+        — Set <code>swapped = True</code> once BEFORE the outer loop so you enter it at least once.<br>
+        — At the START of every pass, reset <code>swapped = False</code>.<br>
+        — Inside the swap block, set <code>swapped = True</code>.<br>
+        — Use <code>if not swapped: break</code> after the inner loop to exit early.<br><br>
+        <strong>Swap — always use a temporary variable:</strong><br>
+        <code>temp = scores[j]</code> → <code>scores[j] = scores[j+1]</code> → <code>scores[j+1] = temp</code><br><br>
+        <strong>Inner loop upper bound:</strong> After each pass the largest element is in its final place, so the inner loop can be <code>range(size - 1 - i)</code>.
+      </div>
+
+      <div class="answer-section" id="q3-ans">
+
+        <div class="answer-part-label">(a)(i) — print_scores() &nbsp;[2 marks]</div>
+        <pre class="py">
+<span class="cm"># Global variables</span>
+scores = [<span class="nm">64</span>, <span class="nm">12</span>, <span class="nm">45</span>, <span class="nm">8</span>, <span class="nm">99</span>, <span class="nm">33</span>]
+size   = <span class="nm">6</span>
+
+
+<span class="kw">def</span> <span class="fn">print_scores</span>():
+    <span class="cm"># Loop through all elements and print each on the same line</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(size):
+        <span class="cm"># end=" " prevents the default newline so all values stay on one line</span>
+        <span class="fn">print</span>(scores[i], end=<span class="st">" "</span>)
+
+    <span class="cm"># Print a newline at the end so the next output starts on a new line</span>
+    <span class="fn">print</span>()</pre>
+
+
+        <div class="answer-part-label">(a)(ii) — bubble_sort() with swapped flag &nbsp;[6 marks]</div>
+        <pre class="py">
+<span class="kw">def</span> <span class="fn">bubble_sort</span>():
+    <span class="cm"># Outer loop controls the number of passes through the array</span>
+    <span class="cm"># After each pass, the largest unsorted element is in its correct place</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(size - <span class="nm">1</span>):
+
+        <span class="cm"># Assume no swaps will be made during this pass</span>
+        swapped = <span class="kw">False</span>
+
+        <span class="cm"># Inner loop compares adjacent pairs</span>
+        <span class="cm"># Upper bound reduces by i each pass — last i elements are already sorted</span>
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(size - <span class="nm">1</span> - i):
+
+            <span class="kw">if</span> scores[j] > scores[j + <span class="nm">1</span>]:
+                <span class="cm"># These two elements are in the wrong order — swap them</span>
+
+                <span class="cm"># Step 1: save the left element before overwriting it</span>
+                temp = scores[j]
+
+                <span class="cm"># Step 2: move the right element to the left position</span>
+                scores[j] = scores[j + <span class="nm">1</span>]
+
+                <span class="cm"># Step 3: place the saved value into the right position</span>
+                scores[j + <span class="nm">1</span>] = temp
+
+                <span class="cm"># A swap was made — we cannot stop yet</span>
+                swapped = <span class="kw">True</span>
+
+        <span class="cm"># If no swap happened during the entire pass, the array is already sorted</span>
+        <span class="cm"># We can exit the outer loop early — no more passes needed</span>
+        <span class="kw">if not</span> swapped:
+            <span class="kw">break</span></pre>
+
+
+        <div class="answer-part-label">(a)(iii) — main program &nbsp;[4 marks]</div>
+        <pre class="py">
+<span class="cm"># Show the array BEFORE sorting so the student can compare</span>
+<span class="fn">print</span>(<span class="st">"Before: "</span>, end=<span class="st">""</span>)
+<span class="fn">print_scores</span>()
+
+<span class="cm"># Sort the array using bubble sort</span>
+<span class="fn">bubble_sort</span>()
+
+<span class="cm"># Show the array AFTER sorting to confirm it worked</span>
+<span class="fn">print</span>(<span class="st">"After:  "</span>, end=<span class="st">""</span>)
+<span class="fn">print_scores</span>()</pre>
+
+        <div class="answer-part-label">(b) — descending order &nbsp;[2 marks]</div>
+        <pre class="py">
+<span class="cm"># To sort in DESCENDING order, change ONE line in bubble_sort():</span>
+<span class="cm">#</span>
+<span class="cm"># Change:  if scores[j] > scores[j + 1]:</span>
+<span class="cm"># To:      if scores[j] < scores[j + 1]:</span>
+<span class="cm">#</span>
+<span class="cm"># Reason: we now swap when the LEFT element is SMALLER than the right,</span>
+<span class="cm"># which moves larger values to the left instead of the right.</span></pre>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       QUESTION 4 — INSERTION SORT
+  ══════════════════════════════════════ -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('q4')">
+      <div class="ex-head-left">
+        <span class="ex-num">Q4</span>
+        <span class="ex-title">Insertion Sort — full program with min/max</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[15 marks]</span>
+        <span class="toggle-lbl" id="q4-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="q4" style="display:none;">
+
+      <div class="scenario">
+        A program stores temperature readings. The following global variables are used:<br><br>
+        <code>temps = [29, 4, 15, 8, 22, 37, 11]</code><br>
+        <code>size = 7</code>
+      </div>
+
+      <ul class="task-list">
+        <li><strong>(a)(i)</strong> Write program code for the procedure <code>insertion_sort()</code> that sorts the global list <code>temps</code> into ascending order using the insertion sort algorithm. </li>
+        <li><strong>(a)(ii)</strong> Write program code for the main program to: output <code>temps</code> before sorting, call <code>insertion_sort()</code>, output <code>temps</code> after sorting.</li>
+        <li><strong>(b)(i)</strong> Write program code for the procedure <code>find_min_max()</code> that takes no parameters and outputs both the smallest and largest values in <code>temps</code> with appropriate messages. </li>
+        <li><strong>(b)(ii)</strong> Amend the main program to call <code>find_min_max()</code> after sorting.</li>
+      </ul>
+
+      <div class="savebox">
+        Save your program as <b>Question4_Practice</b>.<br>
+        Copy and paste program code and screenshots into the evidence document.
+      </div>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('q4')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('q4')">Show Answer</button>
+      </div>
+
+      <div class="hint-box" id="q4-hint">
+        <strong>Insertion sort — the three key steps per iteration:</strong><br>
+        1. Save <code>key = temps[i]</code> — this is the element we are going to insert.<br>
+        2. Set <code>j = i - 1</code> — start scanning left from the position before i.<br>
+        3. WHILE <code>j &gt;= 0</code> AND <code>temps[j] &gt; key</code>: shift <code>temps[j]</code> one place right, then move j left.<br>
+        4. After the while loop: place key at <code>temps[j + 1]</code>.<br><br>
+        <strong>find_min_max():</strong> After insertion_sort() has been called, the list is already sorted. So <code>temps[0]</code> is the minimum and <code>temps[size - 1]</code> is the maximum — no loop needed.
+      </div>
+
+      <div class="answer-section" id="q4-ans">
+
+        <div class="answer-part-label">(a)(i) — insertion_sort() &nbsp;[6 marks]</div>
+        <pre class="py">
+<span class="cm"># Global variables</span>
+temps = [<span class="nm">29</span>, <span class="nm">4</span>, <span class="nm">15</span>, <span class="nm">8</span>, <span class="nm">22</span>, <span class="nm">37</span>, <span class="nm">11</span>]
+size  = <span class="nm">7</span>
+
+
+<span class="kw">def</span> <span class="fn">insertion_sort</span>():
+    <span class="cm"># Start from index 1 — the element at index 0 is already "sorted" on its own</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, size):
+
+        <span class="cm"># Save the current element — this is the one we need to insert correctly</span>
+        key = temps[i]
+
+        <span class="cm"># Start comparing with the element just to the left of i</span>
+        j = i - <span class="nm">1</span>
+
+        <span class="cm"># Shift elements that are larger than key one position to the right</span>
+        <span class="cm"># This creates the gap where we will insert key</span>
+        <span class="cm"># Condition 1: j >= 0 — don't go past the beginning of the array</span>
+        <span class="cm"># Condition 2: temps[j] > key — only shift if the element is larger</span>
+        <span class="kw">while</span> j >= <span class="nm">0</span> <span class="kw">and</span> temps[j] > key:
+
+            <span class="cm"># Move this element one place to the right</span>
+            temps[j + <span class="nm">1</span>] = temps[j]
+
+            <span class="cm"># Move one step further to the left</span>
+            j -= <span class="nm">1</span>
+
+        <span class="cm"># The while loop stopped — j+1 is now the correct position for key</span>
+        <span class="cm"># (either we reached the beginning, or we found a smaller element)</span>
+        temps[j + <span class="nm">1</span>] = key</pre>
+
+        <div class="answer-part-label">(a)(ii) — main program &nbsp;[4 marks]</div>
+        <pre class="py">
+<span class="cm"># Show the array BEFORE sorting</span>
+<span class="fn">print</span>(<span class="st">"Before:"</span>, temps)
+
+<span class="cm"># Sort using insertion sort</span>
+<span class="fn">insertion_sort</span>()
+
+<span class="cm"># Show the array AFTER sorting to confirm it worked</span>
+<span class="fn">print</span>(<span class="st">"After: "</span>, temps)</pre>
+
+
+        <div class="answer-part-label">(b)(i) — find_min_max() &nbsp;[3 marks]</div>
+        <pre class="py">
+<span class="kw">def</span> <span class="fn">find_min_max</span>():
+    <span class="cm"># After insertion_sort() has been called, temps is sorted in ascending order</span>
+    <span class="cm"># So the minimum is always at index 0 and the maximum at the last index</span>
+    <span class="cm"># No loop is needed — we can read them directly</span>
+
+    <span class="fn">print</span>(<span class="st">f"Smallest value: {temps[0]}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Largest value:  {temps[size - 1]}"</span>)</pre>
+
+        <div class="answer-part-label">(b)(ii) — amend main program &nbsp;[1 mark]</div>
+        <pre class="py">
+<span class="cm"># Full main program — sort first, then find min and max</span>
+<span class="fn">print</span>(<span class="st">"Before:"</span>, temps)
+
+<span class="fn">insertion_sort</span>()
+
+<span class="fn">print</span>(<span class="st">"After: "</span>, temps)
+
+<span class="cm"># Call find_min_max() AFTER sorting — it relies on the sorted order</span>
+<span class="fn">find_min_max</span>()</pre>
+
+       
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Tutor Pack · Exercises</span>
+  <span>Linear Search · Binary Search · Bubble Sort · Insertion Sort · Python</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const body = document.getElementById(id);
+  const lbl  = document.getElementById(id + '-lbl');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if (lbl) lbl.textContent = open ? '▼ expand' : '▲ collapse';
+}
+function showHint(id) {
+  document.getElementById(id + '-hint').classList.toggle('visible');
+}
+function showAnswer(id) {
+  document.getElementById(id + '-ans').classList.toggle('visible');
+}
+</script>
+</body>
+</html>

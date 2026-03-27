@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Visual Guide — Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;
+  --paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;
+  --mono-bg:#1e1c18;--mono-text:#d4d0c4;
+  --kw:#7eb8d4;--fn:#a8d8a0;--st:#e8c878;--cm:#6a6860;--nm:#c8a8f0;--pk:#7eb8d4;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;
+  --green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;
+  --amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;
+  --red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;
+  --purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;
+  --teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+
+/* NAV TABS */
+.nav{display:flex;overflow-x:auto;border-bottom:2px solid var(--ink);background:var(--ink);}
+.nav-btn{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  padding:12px 20px;border:none;background:none;color:rgba(255,255,255,0.45);
+  cursor:pointer;white-space:nowrap;transition:all 0.15s;border-bottom:3px solid transparent;
+}
+.nav-btn:hover{color:rgba(255,255,255,0.75);}
+.nav-btn.active{color:#fff;border-bottom-color:#fff;}
+
+/* PANELS */
+.panel{display:none;padding:1.5rem 1.75rem;}
+.panel.active{display:block;}
+
+/* SECTION HEADS */
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.25rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.5rem;line-height:1.5;}
+
+/* CODE */
+pre.py,pre.ps{
+  font-family:'DM Mono',monospace;font-size:12px;
+  padding:0.85rem 1rem;border-radius:7px;line-height:1.8;
+  white-space:pre-wrap;word-break:break-word;margin:0;
+}
+pre.py{background:var(--mono-bg);color:var(--mono-text);}
+pre.ps{background:#0f1420;color:#c8d4e8;}
+.kw{color:#7eb8d4;font-weight:500;}
+.fn{color:#a8d8a0;}
+.st{color:#e8c878;}
+.cm{color:#6a6860;font-style:italic;}
+.nm{color:#c8a8f0;}
+.pk{color:#7eb8d4;font-weight:500;}
+.hi{color:#f0c878;font-weight:500;}
+.out{color:#e8a878;}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:0.75rem 0;}
+@media(max-width:600px){.two{grid-template-columns:1fr;}}
+.col-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;margin-bottom:5px;}
+.lbl-ps{color:var(--blue);}
+.lbl-py{color:var(--green);}
+
+/* BOXES */
+.box{border-radius:7px;padding:0.75rem 1rem;font-size:13px;line-height:1.55;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:3px;}
+.box-blue  {background:var(--blue-bg);  border:1px solid var(--blue-bd);  color:var(--blue);}
+.box-green {background:var(--green-bg); border:1px solid var(--green-bd); color:var(--green);}
+.box-amber {background:var(--amber-bg); border:1px solid var(--amber-bd); color:var(--amber);}
+.box-red   {background:var(--red-bg);   border:1px solid var(--red-bd);   color:var(--red);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+.box-teal  {background:var(--teal-bg);  border:1px solid var(--teal-bd);  color:var(--teal);}
+
+/* ANNOTATION — f-string explainer */
+.fstring-wrap{background:var(--mono-bg);border-radius:8px;padding:1.25rem;margin:1rem 0;font-family:'DM Mono',monospace;font-size:13px;color:var(--mono-text);line-height:1.9;}
+.fstring-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:0;}
+.part{display:inline;padding:2px 0;}
+.p-f    {color:#f0c878;font-weight:700;}
+.p-q    {color:#e8c878;}
+.p-text {color:#d4d0c4;}
+.p-brace{color:#e8a878;font-weight:700;}
+.p-var  {color:#a8d8a0;font-weight:500;}
+.p-fmt  {color:#c8a8f0;}
+.p-end  {color:#e8c878;}
+
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:120px;font-family:'DM Mono',monospace;color:var(--ink2);}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+.arrow-color{font-size:11px;font-weight:500;padding:1px 7px;border-radius:10px;margin-left:6px;}
+
+/* MAP — data structures */
+.map-root{padding:0.5rem 0;}
+.map-node{
+  border:1.5px solid var(--rule);border-radius:8px;
+  padding:0.6rem 1rem;font-size:13px;font-weight:500;
+  display:inline-block;margin-bottom:0.25rem;
+  background:#fff;
+}
+.map-node.root{background:var(--ink);color:#fff;border-color:var(--ink);font-size:14px;}
+.map-node.cat {background:var(--paper3);color:var(--ink);border-color:var(--rule);}
+.map-node.blue  {background:var(--blue-bg);  color:var(--blue);  border-color:var(--blue-bd);}
+.map-node.green {background:var(--green-bg); color:var(--green); border-color:var(--green-bd);}
+.map-node.amber {background:var(--amber-bg); color:var(--amber); border-color:var(--amber-bd);}
+.map-node.purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd);}
+.map-node.teal  {background:var(--teal-bg);  color:var(--teal);  border-color:var(--teal-bd);}
+.map-node.red   {background:var(--red-bg);   color:var(--red);   border-color:var(--red-bd);}
+
+.map-row{display:flex;align-items:flex-start;gap:0;}
+.map-branch{display:flex;flex-direction:column;margin-left:1.5rem;}
+.map-line{display:flex;align-items:center;gap:0.5rem;margin:3px 0;}
+.map-connector{color:var(--ink3);font-size:13px;font-family:'DM Mono',monospace;flex-shrink:0;}
+.map-note{font-size:11px;color:var(--ink3);margin-left:0.4rem;font-style:italic;}
+
+/* SUBSTRING TABLE */
+.substr-table{width:100%;border-collapse:collapse;font-size:13px;margin:0.75rem 0;}
+.substr-table th{text-align:left;padding:8px 12px;background:var(--paper3);border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;}
+.substr-table td{padding:8px 12px;border:1px solid var(--rule);vertical-align:top;line-height:1.55;}
+.substr-table tr:nth-child(even) td{background:var(--paper2);}
+.substr-table td code{font-family:'DM Mono',monospace;font-size:11.5px;background:var(--paper3);padding:1px 5px;border-radius:3px;}
+.substr-table td.result{font-family:'DM Mono',monospace;font-size:12px;color:var(--green);font-weight:500;}
+
+/* EXERCISES */
+.ex{border:1px solid var(--rule);border-radius:8px;margin-bottom:1.25rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.65rem 1rem;background:var(--paper2);border-bottom:1px solid var(--rule);flex-wrap:wrap;gap:0.5rem;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper3);}
+.ex-head-l{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);}
+.ex-title{font-weight:500;font-size:13.5px;}
+.ex-meta{display:flex;gap:0.4rem;align-items:center;}
+.badge{font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.b-mid {background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.b-hard{background:var(--red-bg);  color:var(--red);  border:1px solid var(--red-bd);}
+.b-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+
+.ex-body{padding:1rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.65rem 0.9rem;border-radius:0 5px 5px 0;font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:0.85rem;}
+
+.task-list{list-style:none;padding:0;margin-bottom:0.85rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.3rem;position:relative;font-size:13px;border-bottom:0.5px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.3rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:10px;background:var(--paper3);padding:1px 6px;border-radius:10px;color:var(--ink3);}
+
+.hint-btn,.ans-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);}
+.ans-btn{background:var(--ink);border:none;color:#fff;}
+.ans-btn:hover{background:var(--ink2);}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;}
+
+.hint-box{display:none;background:var(--paper2);border:1px dashed var(--rule);border-radius:5px;padding:0.65rem 0.9rem;font-size:13px;color:var(--ink2);margin-top:0.65rem;line-height:1.55;}
+.hint-box.on{display:block;}
+.hint-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);display:block;margin-bottom:3px;}
+
+.ans-box{display:none;background:var(--mono-bg);border-radius:6px;padding:0.85rem 1rem;margin-top:0.65rem;font-family:'DM Mono',monospace;font-size:12px;line-height:1.8;color:var(--mono-text);overflow-x:auto;border:1px solid rgba(255,255,255,0.06);white-space:pre-wrap;word-break:break-word;}
+.ans-box.on{display:block;}
+
+.sample-out{margin-top:0.75rem;}
+.sample-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);font-weight:500;margin-bottom:4px;}
+pre.sample{font-family:'DM Mono',monospace;font-size:12px;background:var(--paper2);border:1px solid var(--rule);border-radius:5px;padding:0.6rem 0.85rem;line-height:1.7;white-space:pre-wrap;color:var(--ink2);}
+
+.divider{height:1px;background:var(--rule);margin:1.5rem 0;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn active" onclick="tab('t1',this)">① Printing &amp; f-strings</button>
+  <button class="nav-btn"        onclick="tab('t3',this)">② Substring &amp; slicing</button>
+  <button class="nav-btn"        onclick="tab('t4',this)">③ Pseudocode exercises</button>
+</div>
+
+
+<!-- ════════════════════════════════════
+     TAB 1 — PRINTING & F-STRINGS
+════════════════════════════════════ -->
+<div class="panel active" id="t1">
+  <div class="sec-title">Printing variables — f-strings explained</div>
+  <div class="sec-sub">How to insert variables into text, format decimals, and what every symbol means.</div>
+
+  <!-- WHAT IS AN F-STRING -->
+  <div class="box box-blue"><strong>What is an f-string?</strong>
+    An f-string is a string that can hold variables inside it. You put the letter <code>f</code> before the opening quote, and then put variable names inside curly braces <code>{ }</code>. Python replaces the curly braces with the actual value of the variable when the program runs.
+  </div>
+
+  <!-- ANATOMY -->
+  <div style="font-size:13px;font-weight:500;margin:1rem 0 0.5rem;">Anatomy of an f-string — what every part does:</div>
+  <div class="fstring-wrap">
+    <div style="margin-bottom:0.5rem;"><span class="p-f">f</span><span class="p-q">"</span><span class="p-text">Hello, my name is </span><span class="p-brace">{</span><span class="p-var">name</span><span class="p-brace">}</span><span class="p-text"> and I am </span><span class="p-brace">{</span><span class="p-var">age</span><span class="p-brace">}</span><span class="p-text"> years old.</span><span class="p-q">"</span></div>
+  </div>
+
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#f0c878">f</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">This single letter before the quote tells Python: "this string contains variables". Without the f, Python treats everything as plain text and the curly braces print literally.</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#e8c878">" "</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">The quotes wrap the whole string. You can use single quotes ' or double quotes " — both work. Everything inside the quotes is your text, except what's inside { }.</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#e8a878">{ }</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">Curly braces are placeholders. Python looks up the variable name inside the braces and replaces the whole {variable} with its value. You can put any variable here — string, integer, float, boolean.</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#a8d8a0">name</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">The variable name. No quotes around it — it's not a string, it's a reference to a variable that already exists. Python goes and finds what's stored in that variable.</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FORMATTING DECIMALS -->
+  <div style="font-size:13px;font-weight:500;margin-bottom:0.5rem;">Formatting decimal numbers — the :.2f syntax:</div>
+
+  <div class="fstring-wrap">
+    <div style="margin-bottom:0.4rem;"><span class="p-f">f</span><span class="p-q">"</span><span class="p-text">Area: </span><span class="p-brace">{</span><span class="p-var">area</span><span class="p-fmt">:.2f</span><span class="p-brace">}</span><span class="p-q">"</span></div>
+  </div>
+
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#a8d8a0">area</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">The variable whose value you want to display.</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#c8a8f0">:</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">The colon separates the variable name from the formatting instructions. Think of it as saying "now tell me HOW to display it".</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#c8a8f0">.</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">The dot means "I want to control the decimal places".</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#c8a8f0">2</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">The number of decimal places you want. Change this to 0, 1, 3 — whatever you need. Cambridge exams usually ask for 2 decimal places.</span>
+  </div>
+  <div class="arrow-row">
+    <span class="arrow-label" style="color:#c8a8f0">f</span>
+    <span class="arrow-arrow">→</span>
+    <span class="arrow-desc">Stands for "float". It tells Python: this is a decimal number, display it with the number of decimal places I specified. Always write f at the end.</span>
+  </div>
+
+  <div class="box box-amber" style="margin-top:0.75rem;"><strong>The full pattern to memorise</strong>
+    <code style="font-family:'DM Mono',monospace">{variable:.Xf}</code> where X is how many decimal places you want.<br>
+    <code style="font-family:'DM Mono',monospace">{area:.2f}</code> → 2 decimal places<br>
+    <code style="font-family:'DM Mono',monospace">{area:.0f}</code> → 0 decimal places (rounds to whole number)<br>
+    <code style="font-family:'DM Mono',monospace">{area:.4f}</code> → 4 decimal places
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ALL EXAMPLES SIDE BY SIDE -->
+  <div style="font-size:13px;font-weight:500;margin-bottom:0.75rem;">All forms — every way to print a variable:</div>
+
+  <pre class="py">name  = <span class="st">"Ali"</span>
+age   = <span class="nm">17</span>
+score = <span class="nm">3.14159</span>
+done  = <span class="kw">True</span>
+
+<span class="cm"># 1. Plain variable — no formatting</span>
+<span class="fn">print</span>(<span class="st">f"Name: {name}"</span>)          <span class="cm"># Name: Ali</span>
+<span class="fn">print</span>(<span class="st">f"Age: {age}"</span>)           <span class="cm"># Age: 17</span>
+
+<span class="cm"># 2. Decimal formatting</span>
+<span class="fn">print</span>(<span class="st">f"Score: {score}"</span>)        <span class="cm"># Score: 3.14159  (no control)</span>
+<span class="fn">print</span>(<span class="st">f"Score: {score:.2f}"</span>)   <span class="cm"># Score: 3.14     (2 d.p.)</span>
+<span class="fn">print</span>(<span class="st">f"Score: {score:.0f}"</span>)   <span class="cm"># Score: 3        (0 d.p. — rounds)</span>
+<span class="fn">print</span>(<span class="st">f"Score: {score:.4f}"</span>)   <span class="cm"># Score: 3.1416   (4 d.p.)</span>
+
+<span class="cm"># 3. Multiple variables in one line</span>
+<span class="fn">print</span>(<span class="st">f"Hello {name}, you are {age} years old"</span>)
+
+<span class="cm"># 4. Expression inside { } — Python calculates it</span>
+<span class="fn">print</span>(<span class="st">f"In 5 years: {age + 5}"</span>)  <span class="cm"># In 5 years: 22</span>
+<span class="fn">print</span>(<span class="st">f"Double: {age * 2}"</span>)      <span class="cm"># Double: 34</span>
+
+<span class="cm"># 5. Without f-string (old way — harder to read)</span>
+<span class="fn">print</span>(<span class="st">"Name: "</span> + name)           <span class="cm"># works but messy</span>
+<span class="fn">print</span>(<span class="st">"Age: "</span>  + <span class="fn">str</span>(age))        <span class="cm"># must convert int to str first</span></pre>
+
+  <div class="box box-red" style="margin-top:0.75rem;"><strong>Common mistake — forgetting the f</strong>
+    If you write <code>print("Hello {name}")</code> without the f, Python prints literally: <code>Hello {name}</code>. The curly braces do nothing without the f in front of the quote. Always check that f is there.
+  </div>
+
+  <div class="box box-green"><strong>Cambridge exam rule</strong>
+    Whenever the question says "output to 2 decimal places" — use <code>:.2f</code> inside your f-string. This comes up in almost every calculation question: areas, averages, percentages.
+  </div>
+</div>
+
+
+
+
+
+<!-- ════════════════════════════════════
+     TAB 3 — SUBSTRING & SLICING
+════════════════════════════════════ -->
+<div class="panel" id="t3">
+  <div class="sec-title">Substring &amp; string slicing — all cases</div>
+  <div class="sec-sub">Cambridge uses SUBSTRING(s, start, length). Python uses slicing: s[start:stop]. They work slightly differently — know both.</div>
+
+  <!-- THE KEY DIFFERENCE -->
+  <div class="box box-red"><strong>Critical difference between Cambridge and Python</strong>
+    Cambridge SUBSTRING(s, 0, 3) means: start at index 0, take 3 characters.<br>
+    Python s[0:3] means: start at index 0, stop BEFORE index 3.<br>
+    Both give the same result — but the second number means different things. Cambridge = how many characters. Python = where to stop.
+  </div>
+
+  <!-- THE STRING WE USE -->
+  <pre class="py"><span class="cm"># Our example string for all cases below:</span>
+s = <span class="st">"Cambridge"</span>
+<span class="cm">#   C a m b r i d g e</span>
+<span class="cm">#   0 1 2 3 4 5 6 7 8   ← index numbers</span></pre>
+
+  <!-- TABLE OF ALL CASES -->
+  <table class="substr-table" style="margin-top:1rem;">
+    <thead>
+      <tr>
+        <th>What you want</th>
+        <th>Cambridge pseudocode</th>
+        <th>Python slicing</th>
+        <th>Result</th>
+        <th>Explanation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>First 3 characters</td>
+        <td><code>SUBSTRING(s, 0, 3)</code></td>
+        <td><code>s[0:3]</code></td>
+        <td class="result">"Cam"</td>
+        <td>Start at 0, stop before index 3</td>
+      </tr>
+      <tr>
+        <td>First character only</td>
+        <td><code>SUBSTRING(s, 0, 1)</code></td>
+        <td><code>s[0:1]</code> or <code>s[0]</code></td>
+        <td class="result">"C"</td>
+        <td>Index 0 only. s[0] is shorthand for one character</td>
+      </tr>
+      <tr>
+        <td>Last character only</td>
+        <td><code>SUBSTRING(s, 8, 1)</code></td>
+        <td><code>s[-1]</code></td>
+        <td class="result">"e"</td>
+        <td>-1 always means the last character — counts from the end</td>
+      </tr>
+      <tr>
+        <td>Last 3 characters</td>
+        <td><code>SUBSTRING(s, 6, 3)</code></td>
+        <td><code>s[-3:]</code></td>
+        <td class="result">"dge"</td>
+        <td>Start 3 from the end, take everything to the finish</td>
+      </tr>
+      <tr>
+        <td>Middle section</td>
+        <td><code>SUBSTRING(s, 2, 4)</code></td>
+        <td><code>s[2:6]</code></td>
+        <td class="result">"mbri"</td>
+        <td>Start at index 2, stop before index 6 (= 4 chars)</td>
+      </tr>
+      <tr>
+        <td>Everything from index 3</td>
+        <td><code>SUBSTRING(s, 3, LEN(s)-3)</code></td>
+        <td><code>s[3:]</code></td>
+        <td class="result">"bridge"</td>
+        <td>No stop number = go all the way to the end</td>
+      </tr>
+      <tr>
+        <td>Everything up to index 5</td>
+        <td><code>SUBSTRING(s, 0, 5)</code></td>
+        <td><code>s[:5]</code></td>
+        <td class="result">"Cambr"</td>
+        <td>No start number = begin from index 0 automatically</td>
+      </tr>
+      <tr>
+        <td>Whole string</td>
+        <td><code>s</code></td>
+        <td><code>s[:]</code></td>
+        <td class="result">"Cambridge"</td>
+        <td>No start, no stop = copy entire string</td>
+      </tr>
+     
+     
+      <tr>
+        <td>Length of string</td>
+        <td><code>LEN(s)</code></td>
+        <td><code>len(s)</code></td>
+        <td class="result">9</td>
+        <td>Counts all characters including spaces</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- FORMULA -->
+  <div class="box box-blue" style="margin-top:1rem;"><strong>The formula to convert Cambridge → Python slicing</strong>
+    Cambridge: SUBSTRING(s, start, length)<br>
+    Python: s[start : start + length]<br><br>
+    Example: SUBSTRING(s, 2, 4) → s[2 : 2+4] → s[2:6] → "mbri"<br>
+    Just add the start and the length together to get the stop number.
+  </div>
+
+  <!-- MORE EXAMPLES -->
+  <pre class="py" style="margin-top:1rem;"><span class="cm"># Practical string examples you'll see in Cambridge exams</span>
+
+name = <span class="st">"Alexandria"</span>
+
+<span class="cm"># Get initials (first letter)</span>
+initial = name[<span class="nm">0</span>]              <span class="cm"># "A"</span>
+
+<span class="cm"># Check if name starts with A</span>
+<span class="kw">if</span> name[<span class="nm">0</span>] == <span class="st">"A"</span>:
+    <span class="fn">print</span>(<span class="st">"Starts with A"</span>)
+
+<span class="cm"># Username: first letter + first 3 of surname</span>
+first   = <span class="st">"Ali"</span>
+surname = <span class="st">"Hassan"</span>
+username = (first[<span class="nm">0</span>] + surname[<span class="nm">0</span>:<span class="nm">3</span>]).<span class="fn">lower</span>()
+<span class="fn">print</span>(username)                <span class="cm"># "ahas"</span>
+
+<span class="cm"># Split a line like "10,red" into number and colour</span>
+line   = <span class="st">"10,red"</span>
+parts  = line.<span class="fn">split</span>(<span class="st">","</span>)       <span class="cm"># ["10", "red"]</span>
+number = <span class="fn">int</span>(parts[<span class="nm">0</span>])         <span class="cm"># 10</span>
+colour = parts[<span class="nm">1</span>]               <span class="cm"># "red"</span>
+
+<span class="cm"># Strip whitespace from a line read from a file</span>
+line = <span class="st">"  hello  \n"</span>
+clean = line.<span class="fn">strip</span>()            <span class="cm"># "hello"</span></pre>
+</div>
+
+
+<!-- ════════════════════════════════════
+     TAB 4 — PSEUDOCODE EXERCISES
+════════════════════════════════════ -->
+<div class="panel" id="t4">
+  <div class="sec-title">Pseudocode → Python exercises</div>
+  <div class="sec-sub">Intermediate and hard. Translate every line exactly. No queues, no trees — pure fundamentals.</div>
+
+  <!-- EX 1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e1')">
+      <div class="ex-head-l">
+        <span class="ex-num">P1</span>
+        <span class="ex-title">Temperature Converter with Validation</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-marks">[7 marks]</span>
+        <span class="toggle-lbl" id="e1-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e1" style="display:none">
+      <div class="scenario">A program reads a temperature in Celsius from the user and converts it. If the temperature is below absolute zero (–273), the program must reject the input and ask again.</div>
+      <pre class="ps"><span class="pk">DECLARE</span> celsius     : <span class="pk">REAL</span>
+<span class="pk">DECLARE</span> fahrenheit  : <span class="pk">REAL</span>
+<span class="pk">DECLARE</span> kelvin      : <span class="pk">REAL</span>
+
+celsius ← <span class="pk">USERINPUT</span>
+<span class="pk">WHILE</span> celsius < -273 <span class="pk">DO</span>
+    <span class="pk">OUTPUT</span> <span class="st">"Invalid. Enter again:"</span>
+    celsius ← <span class="pk">USERINPUT</span>
+<span class="pk">ENDWHILE</span>
+
+fahrenheit ← (celsius * 9 / 5) + 32
+kelvin     ← celsius + 273.15
+
+<span class="pk">OUTPUT</span> <span class="st">"Fahrenheit: "</span> &amp; fahrenheit
+<span class="pk">OUTPUT</span> <span class="st">"Kelvin: "</span>     &amp; kelvin</pre>
+      <ul class="task-list">
+        <li>No DECLARE lines in Python <span class="pts">[1]</span></li>
+        <li>Input with float() conversion <span class="pts">[1]</span></li>
+        <li>WHILE loop with correct condition <span class="pts">[2]</span></li>
+        <li>Both formulas translated correctly <span class="pts">[2]</span></li>
+        <li>Both outputs using f-strings with :.2f <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h1')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a1')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h1"><span class="hint-lbl">Hint</span>The WHILE loop needs the input both before the loop (to check the first time) and inside the loop (to ask again). The condition celsius &lt; -273 stays the same — just translate WHILE ... DO to while ...: and remove ENDWHILE.</div>
+      <div class="ans-box" id="a1">celsius = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Enter temperature in Celsius: "</span>))
+<span class="kw">while</span> celsius < <span class="nm">-273</span>:
+    <span class="fn">print</span>(<span class="st">"Invalid. Enter again:"</span>)
+    celsius = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Enter temperature in Celsius: "</span>))
+
+fahrenheit = (celsius * <span class="nm">9</span> / <span class="nm">5</span>) + <span class="nm">32</span>
+kelvin     = celsius + <span class="nm">273.15</span>
+
+<span class="fn">print</span>(<span class="st">f"Fahrenheit: {fahrenheit:.2f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Kelvin: {kelvin:.2f}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e2')">
+      <div class="ex-head-l">
+        <span class="ex-num">P2</span>
+        <span class="ex-title">Times Table with Running Total</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-marks">[7 marks]</span>
+        <span class="toggle-lbl" id="e2-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e2" style="display:none">
+      <div class="scenario">A program generates a times table and keeps a running total of all results.</div>
+      <pre class="ps"><span class="pk">DECLARE</span> n     : <span class="pk">INTEGER</span>
+<span class="pk">DECLARE</span> i     : <span class="pk">INTEGER</span>
+<span class="pk">DECLARE</span> total : <span class="pk">INTEGER</span>
+total ← 0
+
+<span class="pk">OUTPUT</span> <span class="st">"Enter a number:"</span>
+n ← <span class="pk">USERINPUT</span>
+
+<span class="pk">FOR</span> i ← 1 <span class="pk">TO</span> 12
+    <span class="pk">OUTPUT</span> n &amp; <span class="st">" x "</span> &amp; i &amp; <span class="st">" = "</span> &amp; (n * i)
+    total ← total + (n * i)
+<span class="pk">NEXT</span> i
+
+<span class="pk">OUTPUT</span> <span class="st">"Total of all results: "</span> &amp; total</pre>
+      <ul class="task-list">
+        <li>Correct int() input <span class="pts">[1]</span></li>
+        <li>range(1, 13) — includes 12 <span class="pts">[2]</span></li>
+        <li>Output inside loop using f-string <span class="pts">[2]</span></li>
+        <li>Running total updated each iteration <span class="pts">[1]</span></li>
+        <li>Final total output after the loop <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h2')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a2')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h2"><span class="hint-lbl">Hint</span>FOR i ← 1 TO 12 means i goes 1, 2, 3 ... 12. In Python: range(1, 13). The total must be defined before the loop and printed after the loop — check your indentation carefully.</div>
+      <div class="ans-box" id="a2">total = <span class="nm">0</span>
+n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter a number: "</span>))
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">13</span>):
+    <span class="fn">print</span>(<span class="st">f"{n} x {i} = {n * i}"</span>)
+    total += n * i
+
+<span class="fn">print</span>(<span class="st">f"Total of all results: {total}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e3')">
+      <div class="ex-head-l">
+        <span class="ex-num">P3</span>
+        <span class="ex-title">Array Processing — Min, Max, Average</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-marks">[9 marks]</span>
+        <span class="toggle-lbl" id="e3-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e3" style="display:none">
+      <div class="scenario">A program fills an array with 5 scores entered by the user, then finds the minimum, maximum, and average.</div>
+      <pre class="ps"><span class="pk">DECLARE</span> scores[0:4] <span class="pk">OF INTEGER</span>
+<span class="pk">DECLARE</span> i, total, minVal, maxVal : <span class="pk">INTEGER</span>
+total ← 0
+
+<span class="pk">FOR</span> i ← 0 <span class="pk">TO</span> 4
+    <span class="pk">OUTPUT</span> <span class="st">"Enter score "</span> &amp; (i+1) &amp; <span class="st">":"</span>
+    scores[i] ← <span class="pk">USERINPUT</span>
+    total ← total + scores[i]
+<span class="pk">NEXT</span> i
+
+minVal ← scores[0]
+maxVal ← scores[0]
+
+<span class="pk">FOR</span> i ← 1 <span class="pk">TO</span> 4
+    <span class="pk">IF</span> scores[i] < minVal <span class="pk">THEN</span>
+        minVal ← scores[i]
+    <span class="pk">ENDIF</span>
+    <span class="pk">IF</span> scores[i] > maxVal <span class="pk">THEN</span>
+        maxVal ← scores[i]
+    <span class="pk">ENDIF</span>
+<span class="pk">NEXT</span> i
+
+<span class="pk">OUTPUT</span> <span class="st">"Minimum: "</span> &amp; minVal
+<span class="pk">OUTPUT</span> <span class="st">"Maximum: "</span> &amp; maxVal
+<span class="pk">OUTPUT</span> <span class="st">"Average: "</span> &amp; (total / 5)</pre>
+      <ul class="task-list">
+        <li>Initialise scores as a list of 5 zeros <span class="pts">[1]</span></li>
+        <li>First FOR loop: range(0,5), int() input, running total <span class="pts">[3]</span></li>
+        <li>Initialise minVal and maxVal from scores[0] <span class="pts">[1]</span></li>
+        <li>Second FOR loop: range(1,5), update min and max <span class="pts">[2]</span></li>
+        <li>Output min, max, average to 2 decimal places <span class="pts">[2]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h3')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a3')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h3"><span class="hint-lbl">Hint</span>FOR i ← 0 TO 4 → range(0, 5). FOR i ← 1 TO 4 → range(1, 5). Declare the list as scores = [0] * 5. The average is total / 5 — use :.2f to format it.</div>
+      <div class="ans-box" id="a3">scores = [<span class="nm">0</span>] * <span class="nm">5</span>
+total  = <span class="nm">0</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">5</span>):
+    scores[i] = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">f"Enter score {i+1}: "</span>))
+    total += scores[i]
+
+min_val = scores[<span class="nm">0</span>]
+max_val = scores[<span class="nm">0</span>]
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">5</span>):
+    <span class="kw">if</span> scores[i] < min_val:
+        min_val = scores[i]
+    <span class="kw">if</span> scores[i] > max_val:
+        max_val = scores[i]
+
+<span class="fn">print</span>(<span class="st">f"Minimum: {min_val}"</span>)
+<span class="fn">print</span>(<span class="st">f"Maximum: {max_val}"</span>)
+<span class="fn">print</span>(<span class="st">f"Average: {total / 5:.2f}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e4')">
+      <div class="ex-head-l">
+        <span class="ex-num">P4</span>
+        <span class="ex-title">String Analysis Function</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[10 marks]</span>
+        <span class="toggle-lbl" id="e4-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e4" style="display:none">
+      <div class="scenario">A function analyses a string and counts vowels, consonants and spaces separately.</div>
+      <pre class="ps"><span class="pk">FUNCTION</span> AnalyseString(text : <span class="pk">STRING</span>)
+    <span class="pk">DECLARE</span> vowels, consonants, spaces : <span class="pk">INTEGER</span>
+    <span class="pk">DECLARE</span> i : <span class="pk">INTEGER</span>
+    <span class="pk">DECLARE</span> ch : <span class="pk">STRING</span>
+    vowels     ← 0
+    consonants ← 0
+    spaces     ← 0
+
+    <span class="pk">FOR</span> i ← 0 <span class="pk">TO</span> LEN(text) - 1
+        ch ← LCASE(SUBSTRING(text, i, 1))
+        <span class="pk">IF</span> ch = <span class="st">" "</span> <span class="pk">THEN</span>
+            spaces ← spaces + 1
+        <span class="pk">ELSE IF</span> ch = <span class="st">"a"</span> <span class="pk">OR</span> ch = <span class="st">"e"</span> <span class="pk">OR</span> ch = <span class="st">"i"</span>
+                <span class="pk">OR</span> ch = <span class="st">"o"</span> <span class="pk">OR</span> ch = <span class="st">"u"</span> <span class="pk">THEN</span>
+            vowels ← vowels + 1
+        <span class="pk">ELSE</span>
+            consonants ← consonants + 1
+        <span class="pk">ENDIF</span>
+    <span class="pk">NEXT</span> i
+
+    <span class="pk">OUTPUT</span> <span class="st">"Vowels: "</span>     &amp; vowels
+    <span class="pk">OUTPUT</span> <span class="st">"Consonants: "</span> &amp; consonants
+    <span class="pk">OUTPUT</span> <span class="st">"Spaces: "</span>     &amp; spaces
+<span class="pk">ENDFUNCTION</span>
+
+<span class="pk">DECLARE</span> sentence : <span class="pk">STRING</span>
+<span class="pk">OUTPUT</span> <span class="st">"Enter a sentence:"</span>
+sentence ← <span class="pk">USERINPUT</span>
+<span class="pk">CALL</span> AnalyseString(sentence)</pre>
+      <ul class="task-list">
+        <li>Correct def syntax, no type annotations <span class="pts">[1]</span></li>
+        <li>Initialise three counters to 0 <span class="pts">[1]</span></li>
+        <li>range(len(text)) for the loop <span class="pts">[1]</span></li>
+        <li>SUBSTRING(text, i, 1) → text[i] or text[i:i+1] <span class="pts">[1]</span></li>
+        <li>LCASE → .lower() <span class="pts">[1]</span></li>
+        <li>Correct if/elif/else with == and or <span class="pts">[2]</span></li>
+        <li>Three counters updated correctly <span class="pts">[1]</span></li>
+        <li>Three print statements <span class="pts">[1]</span></li>
+        <li>Correct function call without CALL <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h4')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a4')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h4"><span class="hint-lbl">Hint</span>FOR i ← 0 TO LEN(text) - 1 → range(len(text)). SUBSTRING(text, i, 1) gets one character — in Python that's text[i]. LCASE → .lower(). The ELSE IF with multiple OR conditions → elif ch == "a" or ch == "e" or ch == "i" or ch == "o" or ch == "u".</div>
+      <div class="ans-box" id="a4"><span class="kw">def</span> <span class="fn">AnalyseString</span>(text):
+    vowels     = <span class="nm">0</span>
+    consonants = <span class="nm">0</span>
+    spaces     = <span class="nm">0</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(text)):
+        ch = text[i].<span class="fn">lower</span>()
+        <span class="kw">if</span> ch == <span class="st">" "</span>:
+            spaces += <span class="nm">1</span>
+        <span class="kw">elif</span> ch <span class="kw">in</span> <span class="st">"aeiou"</span>:   <span class="cm"># cleaner than 5 OR conditions</span>
+            vowels += <span class="nm">1</span>
+        <span class="kw">else</span>:
+            consonants += <span class="nm">1</span>
+
+    <span class="fn">print</span>(<span class="st">f"Vowels: {vowels}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Consonants: {consonants}"</span>)
+    <span class="fn">print</span>(<span class="st">f"Spaces: {spaces}"</span>)
+
+sentence = <span class="fn">input</span>(<span class="st">"Enter a sentence: "</span>)
+<span class="fn">AnalyseString</span>(sentence)</div>
+    </div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e5')">
+      <div class="ex-head-l">
+        <span class="ex-num">P5</span>
+        <span class="ex-title">2D Array — Seating Plan</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[11 marks]</span>
+        <span class="toggle-lbl" id="e5-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e5" style="display:none">
+      <div class="scenario">A cinema has 3 rows and 4 seats per row. The program fills all seats with student names and then displays the full seating plan.</div>
+      <pre class="ps"><span class="pk">DECLARE</span> seats[3][4] <span class="pk">OF STRING</span>
+<span class="pk">DECLARE</span> row, col : <span class="pk">INTEGER</span>
+
+<span class="pk">FOR</span> row ← 0 <span class="pk">TO</span> 2
+    <span class="pk">FOR</span> col ← 0 <span class="pk">TO</span> 3
+        <span class="pk">OUTPUT</span> <span class="st">"Enter name for row "</span> &amp; row &amp; <span class="st">", seat "</span> &amp; col &amp; <span class="st">":"</span>
+        seats[row][col] ← <span class="pk">USERINPUT</span>
+    <span class="pk">NEXT</span> col
+<span class="pk">NEXT</span> row
+
+<span class="pk">OUTPUT</span> <span class="st">"--- Seating Plan ---"</span>
+<span class="pk">FOR</span> row ← 0 <span class="pk">TO</span> 2
+    <span class="pk">FOR</span> col ← 0 <span class="pk">TO</span> 3
+        <span class="pk">OUTPUT</span> <span class="st">"Row "</span> &amp; row &amp; <span class="st">" Seat "</span> &amp; col &amp; <span class="st">": "</span> &amp; seats[row][col]
+    <span class="pk">NEXT</span> col
+<span class="pk">NEXT</span> row</pre>
+      <ul class="task-list">
+        <li>Declare 2D list correctly: 3 rows × 4 columns <span class="pts">[2]</span></li>
+        <li>Outer loop: range(0,3) — rows <span class="pts">[1]</span></li>
+        <li>Inner loop: range(0,4) — seats <span class="pts">[1]</span></li>
+        <li>Correct input and storage in seats[row][col] <span class="pts">[2]</span></li>
+        <li>Second nested loop to print the plan <span class="pts">[2]</span></li>
+        <li>Output formatted correctly using f-string <span class="pts">[2]</span></li>
+        <li>Header line printed before the plan <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h5')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a5')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h5"><span class="hint-lbl">Hint</span>Create the 2D list with: seats = [[""] * 4 for _ in range(3)]. This gives 3 rows each with 4 empty strings. Access with seats[row][col]. FOR row ← 0 TO 2 → range(0,3). FOR col ← 0 TO 3 → range(0,4).</div>
+      <div class="ans-box" id="a5">seats = [[<span class="st">""</span>] * <span class="nm">4</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">3</span>)]
+
+<span class="kw">for</span> row <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">3</span>):
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">4</span>):
+        seats[row][col] = <span class="fn">input</span>(<span class="st">f"Enter name for row {row}, seat {col}: "</span>)
+
+<span class="fn">print</span>(<span class="st">"--- Seating Plan ---"</span>)
+<span class="kw">for</span> row <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">3</span>):
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">4</span>):
+        <span class="fn">print</span>(<span class="st">f"Row {row} Seat {col}: {seats[row][col]}"</span>)</div>
+    </div>
+  </div>
+
+  <!-- EX 6 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e6')">
+      <div class="ex-head-l">
+        <span class="ex-num">P6</span>
+        <span class="ex-title">Recursive Factorial + Function Calls</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[10 marks]</span>
+        <span class="toggle-lbl" id="e6-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e6" style="display:none">
+      <div class="scenario">A program contains a recursive factorial function and a procedure that prints a table of factorials from 1 to n.</div>
+      <pre class="ps"><span class="pk">FUNCTION</span> Factorial(n : <span class="pk">INTEGER</span>) : <span class="pk">INTEGER</span>
+    <span class="pk">IF</span> n <= 1 <span class="pk">THEN</span>
+        <span class="pk">RETURN</span> 1
+    <span class="pk">ELSE</span>
+        <span class="pk">RETURN</span> n * Factorial(n - 1)
+    <span class="pk">ENDIF</span>
+<span class="pk">ENDFUNCTION</span>
+
+<span class="pk">PROCEDURE</span> PrintTable(limit : <span class="pk">INTEGER</span>)
+    <span class="pk">DECLARE</span> i : <span class="pk">INTEGER</span>
+    <span class="pk">FOR</span> i ← 1 <span class="pk">TO</span> limit
+        <span class="pk">OUTPUT</span> i &amp; <span class="st">"! = "</span> &amp; Factorial(i)
+    <span class="pk">NEXT</span> i
+<span class="pk">ENDPROCEDURE</span>
+
+<span class="pk">DECLARE</span> n : <span class="pk">INTEGER</span>
+<span class="pk">OUTPUT</span> <span class="st">"How many factorials to show?"</span>
+n ← <span class="pk">USERINPUT</span>
+<span class="pk">CALL</span> PrintTable(n)</pre>
+      <ul class="task-list">
+        <li>Recursive function: correct def, base case, recursive case <span class="pts">[3]</span></li>
+        <li>RETURN → return (lowercase) <span class="pts">[1]</span></li>
+        <li>Procedure: correct def, no return statement <span class="pts">[2]</span></li>
+        <li>range(1, limit+1) — includes limit <span class="pts">[1]</span></li>
+        <li>Factorial(i) called inside the loop <span class="pts">[1]</span></li>
+        <li>Main: int() input, PrintTable(n) without CALL <span class="pts">[2]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h6')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a6')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h6"><span class="hint-lbl">Hint</span>The recursive function calls itself: Factorial(n-1). The base case stops it: if n &lt;= 1 return 1. The procedure has no return — it just prints. FOR i ← 1 TO limit → range(1, limit+1). No CALL keyword when calling PrintTable.</div>
+      <div class="ans-box" id="a6"><span class="kw">def</span> <span class="fn">Factorial</span>(n):
+    <span class="kw">if</span> n <= <span class="nm">1</span>:
+        <span class="kw">return</span> <span class="nm">1</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> n * <span class="fn">Factorial</span>(n - <span class="nm">1</span>)
+
+<span class="kw">def</span> <span class="fn">PrintTable</span>(limit):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, limit + <span class="nm">1</span>):
+        <span class="fn">print</span>(<span class="st">f"{i}! = {Factorial(i)}"</span>)
+
+n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"How many factorials to show? "</span>))
+<span class="fn">PrintTable</span>(n)</div>
+    </div>
+  </div>
+
+  <!-- EX 7 -->
+  <div class="ex">
+    <div class="ex-head" onclick="tog('e7')">
+      <div class="ex-head-l">
+        <span class="ex-num">P7</span>
+        <span class="ex-title">Global Variable — Score Counter</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-marks">[9 marks]</span>
+        <span class="toggle-lbl" id="e7-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="e7" style="display:none">
+      <div class="scenario">A quiz game uses a global score counter that is updated by a procedure each time the player answers correctly.</div>
+      <pre class="ps"><span class="pk">GLOBAL</span> score ← 0
+<span class="pk">GLOBAL</span> highScore ← 0
+
+<span class="pk">PROCEDURE</span> AddPoints(points : <span class="pk">INTEGER</span>)
+    score ← score + points
+    <span class="pk">IF</span> score > highScore <span class="pk">THEN</span>
+        highScore ← score
+    <span class="pk">ENDIF</span>
+<span class="pk">ENDPROCEDURE</span>
+
+<span class="pk">PROCEDURE</span> ResetScore()
+    score ← 0
+<span class="pk">ENDPROCEDURE</span>
+
+<span class="pk">CALL</span> AddPoints(10)
+<span class="pk">CALL</span> AddPoints(25)
+<span class="pk">OUTPUT</span> <span class="st">"Score: "</span> &amp; score
+<span class="pk">OUTPUT</span> <span class="st">"High score: "</span> &amp; highScore
+<span class="pk">CALL</span> ResetScore()
+<span class="pk">OUTPUT</span> <span class="st">"After reset: "</span> &amp; score</pre>
+      <ul class="task-list">
+        <li>Both global variables declared at module level <span class="pts">[1]</span></li>
+        <li>AddPoints: global score, global highScore declared inside <span class="pts">[2]</span></li>
+        <li>score updated correctly <span class="pts">[1]</span></li>
+        <li>highScore updated with correct condition <span class="pts">[1]</span></li>
+        <li>ResetScore: global score declared, score set to 0 <span class="pts">[2]</span></li>
+        <li>All calls without CALL keyword <span class="pts">[1]</span></li>
+        <li>All three print statements correct <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="sh('h7')">💡 Hint</button>
+        <button class="ans-btn"  onclick="sh('a7')">Show answer</button>
+      </div>
+      <div class="hint-box" id="h7"><span class="hint-lbl">Hint</span>Any function that CHANGES a global variable needs "global varname" at the top. AddPoints changes both score and highScore — so it needs global score, global highScore. ResetScore changes score — so it needs global score. Functions that only READ a global don't need the global keyword.</div>
+      <div class="ans-box" id="a7">score     = <span class="nm">0</span>
+highScore = <span class="nm">0</span>
+
+<span class="kw">def</span> <span class="fn">AddPoints</span>(points):
+    <span class="kw">global</span> score, highScore
+    score += points
+    <span class="kw">if</span> score > highScore:
+        highScore = score
+
+<span class="kw">def</span> <span class="fn">ResetScore</span>():
+    <span class="kw">global</span> score
+    score = <span class="nm">0</span>
+
+<span class="fn">AddPoints</span>(<span class="nm">10</span>)
+<span class="fn">AddPoints</span>(<span class="nm">25</span>)
+<span class="fn">print</span>(<span class="st">f"Score: {score}"</span>)
+<span class="fn">print</span>(<span class="st">f"High score: {highScore}"</span>)
+<span class="fn">ResetScore</span>()
+<span class="fn">print</span>(<span class="st">f"After reset: {score}"</span>)</div>
+    </div>
+  </div>
+
+</div><!-- /panel 4 -->
+
+<script>
+function tab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function tog(id){
+  const b=document.getElementById(id);
+  const l=document.getElementById(id+'-lbl');
+  if(!b)return;
+  const open=b.style.display!=='none';
+  b.style.display=open?'none':'block';
+  if(l)l.textContent=open?'▼ expand':'▲ collapse';
+}
+function sh(id){
+  const el=document.getElementById(id);
+  if(el)el.classList.toggle('on');
+}
+</script>
+</body>
+</html>

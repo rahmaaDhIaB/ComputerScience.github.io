@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Lessons — Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #18181b;
+  --ink2: #52525b;
+  --ink3: #a1a1aa;
+  --paper: #fafaf9;
+  --paper2: #f4f4f5;
+  --rule: #e4e4e7;
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --accent-border: #bfdbfe;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  padding: 3rem 2rem 2.5rem;
+  border-bottom: 1px solid var(--rule);
+  background: #fff;
+}
+.header-inner { max-width: 800px; margin: 0 auto; }
+
+.header-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.header-tag::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.header-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.header-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.header-sub {
+  font-size: 13px;
+  color: var(--ink3);
+  font-weight: 300;
+}
+
+/* SEARCH */
+.search-wrap {
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.85rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.search-wrap-inner { max-width: 800px; margin: 0 auto; position: relative; }
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink3);
+  font-size: 13px;
+  pointer-events: none;
+  font-family: 'DM Mono', monospace;
+}
+
+.search-input {
+  width: 100%;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 8px 14px 8px 34px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.search-input:focus {
+  border-color: var(--accent-border);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.06);
+}
+.search-input::placeholder { color: var(--ink3); }
+
+/* MAIN */
+.main { max-width: 800px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+/* CARD */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  text-decoration: none;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: #fff;
+  padding: 1rem 1.1rem;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  border-color: #c7d2fe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.07);
+}
+.card:hover::after { transform: scaleX(1); }
+
+.card-icon {
+  width: 30px;
+  height: 30px;
+  background: var(--accent-light);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.card-arrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink3);
+  transition: color 0.15s, transform 0.15s;
+  align-self: flex-end;
+}
+.card:hover .card-arrow {
+  color: var(--accent);
+  transform: translateX(2px);
+}
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--ink3);
+  font-size: 13px;
+  display: none;
+}
+.empty-glyph {
+  font-family: 'DM Mono', monospace;
+  font-size: 28px;
+  margin-bottom: 0.75rem;
+  opacity: 0.4;
+}
+
+/* SECTION LABEL */
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink3);
+  margin-bottom: 0.75rem;
+}
+
+/* FOOTER */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding: 1.25rem 2rem;
+  text-align: center;
+}
+.footer-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink3);
+}
+
+@media(max-width: 500px) {
+  .header { padding: 2rem 1rem 1.5rem; }
+  .main { padding: 1.5rem 1rem 3rem; }
+  .search-wrap { padding: 0.75rem 1rem; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-tag">Cambridge AS & A Level · 9618</div>
+    <h1 class="header-title">Computer <em>Science</em></h1>
+    <p class="header-sub">Select a lesson below to get started.</p>
+  </div>
+</div>
+
+<div class="search-wrap">
+  <div class="search-wrap-inner">
+    <span class="search-icon">/</span>
+    <input class="search-input" type="text" id="searchInput"
+      placeholder="Search lessons… e.g. binary search, loops, dictionary"
+      oninput="search(this.value)">
+  </div>
+</div>
+
+<div class="main">
+  <div class="section-label" id="sectionLabel">All lessons</div>
+  <div class="grid" id="grid">
+
+    <a class="card" href="python.html">
+      <div class="card-icon">🐍</div>
+      <div class="card-title">Python Core Concepts</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="pseudocode.html">
+      <div class="card-icon">🔁</div>
+      <div class="card-title">Pseudocode → Python Translation exercices</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="exercices.html">
+      <div class="card-icon">✏️</div>
+      <div class="card-title">Python Exercises</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="stringsandsubstring.html">
+      <div class="card-icon">✂️</div>
+      <div class="card-title">Substring &amp; Slicing</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="list.html">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Lists &amp; Dictionaries Exercises</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="searchandsort/index.html">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Search &amp; Sort</div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="empty" id="emptyMsg">
+    <div class="empty-glyph">{ }</div>
+    No lessons match your search.
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-inner" id="footerCount"></div>
+</div>
+
+<script>
+const allCards = document.querySelectorAll('.card');
+document.getElementById('footerCount').textContent =
+  allCards.length + ' lesson' + (allCards.length !== 1 ? 's' : '');
+
+function search(q) {
+  q = q.trim().toLowerCase();
+  let visible = 0;
+
+  allCards.forEach(card => {
+    const match = !q || card.textContent.toLowerCase().includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+
+  const label = document.getElementById('sectionLabel');
+  label.textContent = q
+    ? (visible + ' result' + (visible !== 1 ? 's' : '') + ' for "' + q + '"')
+    : 'All lessons';
+
+  document.getElementById('emptyMsg').style.display =
+    (visible === 0 && q) ? 'block' : 'none';
+}
+</script>
+</body>
+</html>

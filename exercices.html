@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Exercises — Cambridge A Level 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1916;
+    --ink2: #4a4845;
+    --ink3: #8a8785;
+    --paper: #faf9f6;
+    --paper2: #f2f0eb;
+    --paper3: #e8e5de;
+    --rule: #d8d5ce;
+    --easy: #1a5c38;
+    --easy-bg: #e8f5ee;
+    --easy-rule: #a8d5b8;
+    --mid: #7a4a00;
+    --mid-bg: #fef3e2;
+    --mid-rule: #f0c878;
+    --hard: #6b1a1a;
+    --hard-bg: #fdeaea;
+    --hard-rule: #e8a0a0;
+    --accent: #2a4a8a;
+    --mono-bg: #1e1c18;
+    --mono-text: #d4d0c4;
+    --mono-kw: #7eb8d4;
+    --mono-fn: #a8d8a0;
+    --mono-str: #e8c878;
+    --mono-cm: #6a6860;
+    --mono-num: #c8a8f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border: 40px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 40px;
+    width: 180px; height: 180px;
+    border: 25px solid rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+  .cover-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  .cover h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+  .cover h1 em {
+    font-style: italic;
+    color: rgba(255,255,255,0.55);
+  }
+  .cover-meta {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .cover-meta-item strong { display: block; color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 500; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    background: var(--paper2);
+    border-bottom: 1px solid var(--rule);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend-label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 0.5rem; }
+  .badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .badge-easy  { background: var(--easy-bg);  color: var(--easy);  border: 1px solid var(--easy-rule); }
+  .badge-mid   { background: var(--mid-bg);   color: var(--mid);   border: 1px solid var(--mid-rule); }
+  .badge-hard  { background: var(--hard-bg);  color: var(--hard);  border: 1px solid var(--hard-rule); }
+  .badge-marks { background: var(--paper3); color: var(--ink2); border: 1px solid var(--rule); }
+
+  /* ── SECTIONS ── */
+  .section {
+    border-top: 3px solid var(--ink);
+    margin: 2.5rem 2rem 0;
+    padding-top: 1.2rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+    flex-wrap: wrap;
+  }
+  .section-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.8rem;
+    color: var(--rule);
+    line-height: 1;
+    font-weight: 400;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+  }
+  .section-desc {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-top: 2px;
+  }
+
+  /* ── EXERCISE CARD ── */
+  .ex {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    background: #fff;
+  }
+  .ex-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    gap: 1rem;
+    flex-wrap: wrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ex-head:hover { background: var(--paper2); }
+  .ex-head-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .ex-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    font-weight: 500;
+  }
+  .ex-title {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .ex-meta { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .toggle-hint {
+    font-size: 11px;
+    color: var(--ink3);
+    font-style: italic;
+  }
+
+  .ex-body { padding: 1.25rem; }
+
+  .scenario {
+    background: var(--paper2);
+    border-left: 3px solid var(--rule);
+    padding: 0.75rem 1rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 13.5px;
+    margin-bottom: 1rem;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+  .scenario strong { color: var(--ink); font-weight: 500; }
+
+  .task-list { list-style: none; padding: 0; margin-bottom: 1rem; }
+  .task-list li {
+    padding: 0.35rem 0 0.35rem 1.4rem;
+    position: relative;
+    font-size: 14px;
+    border-bottom: 1px solid var(--paper2);
+  }
+  .task-list li:last-child { border-bottom: none; }
+  .task-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0.4rem;
+    color: var(--ink3);
+  }
+  .task-list li .pts {
+    float: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    background: var(--paper2);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .example-block {
+    background: var(--mono-bg);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin: 0.75rem 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--mono-text);
+    overflow-x: auto;
+  }
+  .example-block .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mono-cm);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .kw  { color: var(--mono-kw); }
+  .fn  { color: var(--mono-fn); }
+  .str { color: var(--mono-str); }
+  .cm  { color: var(--mono-cm); font-style: italic; }
+  .num { color: var(--mono-num); }
+  .out { color: #e8a878; }
+
+  .hint-box {
+    display: none;
+    background: var(--paper2);
+    border: 1px dashed var(--rule);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-size: 13px;
+    color: var(--ink2);
+    margin-top: 0.75rem;
+  }
+  .hint-box.visible { display: block; }
+  .hint-box .hint-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink3);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .hint-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 4px 12px;
+    color: var(--ink3);
+    cursor: pointer;
+    margin-top: 0.75rem;
+  }
+  .hint-btn:hover { background: var(--paper2); color: var(--ink2); }
+
+  .answer-box {
+    display: none;
+    background: var(--mono-bg);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    margin-top: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: var(--mono-text);
+    overflow-x: auto;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .answer-box.visible { display: block; }
+  .answer-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    background: var(--ink);
+    border: none;
+    border-radius: 4px;
+    padding: 5px 14px;
+    color: var(--paper2);
+    cursor: pointer;
+    margin-top: 0.75rem;
+    margin-left: 0.5rem;
+  }
+  .answer-btn:hover { background: var(--ink2); }
+
+  .sample-output {
+    border-top: 1px solid var(--rule);
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+  }
+  .sample-output .label-sm {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink3);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--rule);
+    margin: 2.5rem 2rem;
+  }
+
+  footer {
+    background: var(--paper2);
+    border-top: 1px solid var(--rule);
+    padding: 1.5rem 2rem;
+    font-size: 12px;
+    color: var(--ink3);
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .cover { padding: 2rem 1.5rem; }
+    .section { margin: 2rem 1rem 0; }
+    .legend { padding: 1rem; }
+    footer { padding: 1.25rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618</div>
+  <h1>Python Programming<br><em>Introductory Exercise Set</em></h1>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Session 1</strong>Fundamentals to Intermediate</div>
+    <div class="cover-meta-item"><strong>15 Exercises</strong>Easy → Intermediate → Hard</div>
+    <div class="cover-meta-item"><strong>Language</strong>Python (console mode)</div>
+    <div class="cover-meta-item"><strong>Style</strong>Cambridge Practical Exam Format</div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="legend-label">Difficulty</span>
+  <span class="badge badge-easy">Easy</span>
+  <span class="badge badge-mid">Intermediate</span>
+  <span class="badge badge-hard">Hard</span>
+  <span style="margin-left:auto; font-size:12px; color:var(--ink3)">Click any exercise header to expand · Use hint / show answer buttons to self-check</span>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SECTION A — EASY
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">A</div>
+    <div>
+      <div class="section-title">Variables, Input / Output &amp; Arithmetic</div>
+      <div class="section-desc">Covers: assignment, input(), print(), type casting, arithmetic operators</div>
+    </div>
+  </div>
+
+  <!-- A1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('a1')">
+      <div class="ex-head-left">
+        <span class="ex-num">A1</span>
+        <span class="ex-title">Personal Information Printer</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[4 marks]</span>
+        <span class="toggle-hint" id="a1-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="a1" style="display:none">
+      <div class="scenario">
+        A school registration system needs to collect basic student information and display it in a formatted way.
+      </div>
+      <ul class="task-list">
+        <li>Prompt the user to enter their <strong>first name</strong> <span class="pts">[1]</span></li>
+        <li>Prompt the user to enter their <strong>age</strong> as an integer <span class="pts">[1]</span></li>
+        <li>Calculate the year the student was <strong>born</strong> (use 2025 as the current year) <span class="pts">[1]</span></li>
+        <li>Output a sentence: <code>Hello [name], you were born in [year].</code> <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter your first name: </span>Sara
+<span class="out">Enter your age: </span>17
+<span class="out">Hello Sara, you were born in 2008.</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('a1-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('a1-ans')">Show answer</button>
+      <div class="hint-box" id="a1-hint">
+        <span class="hint-label">Hint</span>
+        Remember: <code>input()</code> always returns a string. To do arithmetic with age, you need <code>int(input(...))</code>. Then <code>born = 2025 - age</code>.
+      </div>
+      <div class="answer-box" id="a1-ans">
+<span class="fn">name</span> = <span class="fn">input</span>(<span class="str">"Enter your first name: "</span>)
+<span class="fn">age</span>  = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter your age: "</span>))
+<span class="fn">born</span> = <span class="num">2025</span> - age
+<span class="fn">print</span>(<span class="str">f"Hello {name}, you were born in {born}."</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- A2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('a2')">
+      <div class="ex-head-left">
+        <span class="ex-num">A2</span>
+        <span class="ex-title">Rectangle Calculator</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-hint" id="a2-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="a2" style="display:none">
+      <div class="scenario">
+        A geometry program reads the dimensions of a rectangle and outputs its area and perimeter.
+      </div>
+      <ul class="task-list">
+        <li>Prompt the user to enter the <strong>length</strong> and <strong>width</strong> as real numbers <span class="pts">[2]</span></li>
+        <li>Calculate and output the <strong>area</strong> (length × width) <span class="pts">[1]</span></li>
+        <li>Calculate and output the <strong>perimeter</strong> (2 × (length + width)) <span class="pts">[1]</span></li>
+        <li>Output both values to <strong>2 decimal places</strong> <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter length: </span>5.5
+<span class="out">Enter width: </span>3.2
+<span class="out">Area: 17.60</span>
+<span class="out">Perimeter: 17.40</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('a2-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('a2-ans')">Show answer</button>
+      <div class="hint-box" id="a2-hint">
+        <span class="hint-label">Hint</span>
+        Use <code>float(input(...))</code> for real numbers. To show 2 decimal places use <code>f"{value:.2f}"</code> inside your f-string.
+      </div>
+      <div class="answer-box" id="a2-ans">
+length = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Enter length: "</span>))
+width  = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Enter width: "</span>))
+area   = length * width
+perim  = <span class="num">2</span> * (length + width)
+<span class="fn">print</span>(<span class="str">f"Area: {area:.2f}"</span>)
+<span class="fn">print</span>(<span class="str">f"Perimeter: {perim:.2f}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- A3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('a3')">
+      <div class="ex-head-left">
+        <span class="ex-num">A3</span>
+        <span class="ex-title">Odd or Even?</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[4 marks]</span>
+        <span class="toggle-hint" id="a3-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="a3" style="display:none">
+      <div class="scenario">
+        A program reads a positive integer and determines whether it is odd or even.
+      </div>
+      <ul class="task-list">
+        <li>Prompt the user to enter a <strong>positive integer</strong> <span class="pts">[1]</span></li>
+        <li>Use the <strong>modulus operator</strong> to test if the number is odd or even <span class="pts">[1]</span></li>
+        <li>Output <code>"[number] is even"</code> or <code>"[number] is odd"</code> accordingly <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample runs</div>
+        <div class="example-block">
+<span class="out">Enter a number: </span>8
+<span class="out">8 is even</span>
+
+<span class="out">Enter a number: </span>13
+<span class="out">13 is odd</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('a3-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('a3-ans')">Show answer</button>
+      <div class="hint-box" id="a3-hint">
+        <span class="hint-label">Hint</span>
+        <code>n % 2 == 0</code> is True when n is even. In Cambridge pseudocode this is <code>n MOD 2 = 0</code>.
+      </div>
+      <div class="answer-box" id="a3-ans">
+n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number: "</span>))
+<span class="kw">if</span> n % <span class="num">2</span> == <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">f"{n} is even"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"{n} is odd"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- A4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('a4')">
+      <div class="ex-head-left">
+        <span class="ex-num">A4</span>
+        <span class="ex-title">Grade Classifier</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[6 marks]</span>
+        <span class="toggle-hint" id="a4-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="a4" style="display:none">
+      <div class="scenario">
+        A school marks system reads a student's score (0–100) and outputs the corresponding grade.
+      </div>
+      <ul class="task-list">
+        <li>Prompt the user to enter a score as an integer <span class="pts">[1]</span></li>
+        <li>Use <code>if / elif / else</code> to classify:
+          <br>Score ≥ 90 → <strong>A*</strong> &nbsp;|&nbsp; ≥ 80 → <strong>A</strong> &nbsp;|&nbsp; ≥ 70 → <strong>B</strong> &nbsp;|&nbsp; ≥ 60 → <strong>C</strong> &nbsp;|&nbsp; &lt; 60 → <strong>Fail</strong> <span class="pts">[4]</span></li>
+        <li>Output: <code>"Score: [x] — Grade: [grade]"</code> <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter score: </span>85
+<span class="out">Score: 85 — Grade: A</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('a4-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('a4-ans')">Show answer</button>
+      <div class="hint-box" id="a4-hint">
+        <span class="hint-label">Hint</span>
+        Check from highest to lowest — once the first <code>elif</code> matches, Python stops checking the rest. Corresponds to Cambridge <code>IF / ELSE IF / ELSE / ENDIF</code>.
+      </div>
+      <div class="answer-box" id="a4-ans">
+score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter score: "</span>))
+<span class="kw">if</span> score >= <span class="num">90</span>:
+    grade = <span class="str">"A*"</span>
+<span class="kw">elif</span> score >= <span class="num">80</span>:
+    grade = <span class="str">"A"</span>
+<span class="kw">elif</span> score >= <span class="num">70</span>:
+    grade = <span class="str">"B"</span>
+<span class="kw">elif</span> score >= <span class="num">60</span>:
+    grade = <span class="str">"C"</span>
+<span class="kw">else</span>:
+    grade = <span class="str">"Fail"</span>
+<span class="fn">print</span>(<span class="str">f"Score: {score} — Grade: {grade}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- A5 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('a5')">
+      <div class="ex-head-left">
+        <span class="ex-num">A5</span>
+        <span class="ex-title">Times Table Generator</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-hint" id="a5-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="a5" style="display:none">
+      <div class="scenario">
+        A program generates and displays the times table for any number the user enters.
+      </div>
+      <ul class="task-list">
+        <li>Prompt the user to enter a number <span class="pts">[1]</span></li>
+        <li>Use a <strong>FOR loop</strong> to iterate from 1 to 12 inclusive <span class="pts">[2]</span></li>
+        <li>On each iteration, output: <code>[number] × [i] = [result]</code> <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample output (partial)</div>
+        <div class="example-block">
+<span class="out">Enter a number: </span>7
+<span class="out">7 x 1 = 7</span>
+<span class="out">7 x 2 = 14</span>
+<span class="out">7 x 3 = 21</span>
+<span class="out">...</span>
+<span class="out">7 x 12 = 84</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('a5-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('a5-ans')">Show answer</button>
+      <div class="hint-box" id="a5-hint">
+        <span class="hint-label">Hint</span>
+        <code>range(1, 13)</code> gives you 1 through 12. In Cambridge pseudocode this is <code>FOR i ← 1 TO 12</code>.
+      </div>
+      <div class="answer-box" id="a5-ans">
+n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number: "</span>))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">13</span>):
+    <span class="fn">print</span>(<span class="str">f"{n} x {i} = {n * i}"</span>)
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section A -->
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════
+     SECTION B — INTERMEDIATE
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">B</div>
+    <div>
+      <div class="section-title">Functions, Lists &amp; String Processing</div>
+      <div class="section-desc">Covers: def, return, lists, for-each loops, string methods, while loops, validation</div>
+    </div>
+  </div>
+
+  <!-- B1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b1')">
+      <div class="ex-head-left">
+        <span class="ex-num">B1</span>
+        <span class="ex-title">Number Validation Loop</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-hint" id="b1-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b1" style="display:none">
+      <div class="scenario">
+        A program must keep asking the user for a number until they enter one in the range 1–10.
+      </div>
+      <ul class="task-list">
+        <li>Use a <strong>WHILE loop</strong> to keep prompting the user for an integer <span class="pts">[2]</span></li>
+        <li>If the number is outside the range 1–10, output <code>"Invalid. Try again."</code> and repeat <span class="pts">[2]</span></li>
+        <li>Once valid, output <code>"Valid input: [number]"</code> <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter a number (1-10): </span>0
+<span class="out">Invalid. Try again.</span>
+<span class="out">Enter a number (1-10): </span>15
+<span class="out">Invalid. Try again.</span>
+<span class="out">Enter a number (1-10): </span>7
+<span class="out">Valid input: 7</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('b1-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('b1-ans')">Show answer</button>
+      <div class="hint-box" id="b1-hint">
+        <span class="hint-label">Hint</span>
+        Initialise the number to a value that will definitely fail the condition (e.g. <code>num = -1</code>) before the loop starts. The loop condition is <code>while num &lt; 1 or num &gt; 10</code>.
+      </div>
+      <div class="answer-box" id="b1-ans">
+num = <span class="num">-1</span>
+<span class="kw">while</span> num < <span class="num">1</span> <span class="kw">or</span> num > <span class="num">10</span>:
+    num = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter a number (1-10): "</span>))
+    <span class="kw">if</span> num < <span class="num">1</span> <span class="kw">or</span> num > <span class="num">10</span>:
+        <span class="fn">print</span>(<span class="str">"Invalid. Try again."</span>)
+<span class="fn">print</span>(<span class="str">f"Valid input: {num}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b2')">
+      <div class="ex-head-left">
+        <span class="ex-num">B2</span>
+        <span class="ex-title">Sum and Average Function</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[6 marks]</span>
+        <span class="toggle-hint" id="b2-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b2" style="display:none">
+      <div class="scenario">
+        A program stores a list of exam scores and uses a function to calculate the sum and average.
+      </div>
+      <ul class="task-list">
+        <li>Write a <strong>function</strong> <code>CalcAverage(scores)</code> that takes a list of numbers as a parameter <span class="pts">[1]</span></li>
+        <li>The function calculates and returns the <strong>average</strong> as a float (sum ÷ count) <span class="pts">[2]</span></li>
+        <li>In the main program, declare a list: <code>[72, 85, 61, 90, 78, 55, 83]</code> <span class="pts">[1]</span></li>
+        <li>Call <code>CalcAverage()</code> and output: <code>"Average score: [x]"</code> to 1 decimal place <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Expected output</div>
+        <div class="example-block">
+<span class="out">Average score: 74.9</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('b2-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('b2-ans')">Show answer</button>
+      <div class="hint-box" id="b2-hint">
+        <span class="hint-label">Hint</span>
+        Use <code>len(scores)</code> to get the count. Use a <code>for</code> loop or <code>sum()</code> built-in. Remember a function that returns a value uses <code>return</code>.
+      </div>
+      <div class="answer-box" id="b2-ans">
+<span class="kw">def</span> <span class="fn">CalcAverage</span>(scores):
+    total = <span class="num">0</span>
+    <span class="kw">for</span> s <span class="kw">in</span> scores:
+        total += s
+    <span class="kw">return</span> total / <span class="fn">len</span>(scores)
+
+scores = [<span class="num">72</span>, <span class="num">85</span>, <span class="num">61</span>, <span class="num">90</span>, <span class="num">78</span>, <span class="num">55</span>, <span class="num">83</span>]
+avg = <span class="fn">CalcAverage</span>(scores)
+<span class="fn">print</span>(<span class="str">f"Average score: {avg:.1f}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b3')">
+      <div class="ex-head-left">
+        <span class="ex-num">B3</span>
+        <span class="ex-title">String Reversal &amp; Palindrome Check</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[7 marks]</span>
+        <span class="toggle-hint" id="b3-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b3" style="display:none">
+      <div class="scenario">
+        A program checks whether a word entered by the user is a palindrome (reads the same forwards and backwards, e.g. "racecar").
+      </div>
+      <ul class="task-list">
+        <li>Write a <strong>function</strong> <code>IsPalindrome(word)</code> that takes a string parameter <span class="pts">[1]</span></li>
+        <li>Convert the word to <strong>lowercase</strong> inside the function <span class="pts">[1]</span></li>
+        <li>Build the <strong>reversed string</strong> using a loop (not slicing) <span class="pts">[2]</span></li>
+        <li>Return <code>True</code> if the word equals its reverse, otherwise return <code>False</code> <span class="pts">[1]</span></li>
+        <li>In the main program, prompt for a word and output whether it is a palindrome <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample runs</div>
+        <div class="example-block">
+<span class="out">Enter a word: </span>Racecar
+<span class="out">Racecar is a palindrome.</span>
+
+<span class="out">Enter a word: </span>hello
+<span class="out">hello is not a palindrome.</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('b3-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('b3-ans')">Show answer</button>
+      <div class="hint-box" id="b3-hint">
+        <span class="hint-label">Hint</span>
+        To build the reverse manually, start with <code>rev = ""</code>, then loop <code>for ch in word:</code> and prepend each character: <code>rev = ch + rev</code>. Compare <code>word == rev</code>.
+      </div>
+      <div class="answer-box" id="b3-ans">
+<span class="kw">def</span> <span class="fn">IsPalindrome</span>(word):
+    word = word.<span class="fn">lower</span>()
+    rev = <span class="str">""</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> word:
+        rev = ch + rev
+    <span class="kw">return</span> word == rev
+
+w = <span class="fn">input</span>(<span class="str">"Enter a word: "</span>)
+<span class="kw">if</span> <span class="fn">IsPalindrome</span>(w):
+    <span class="fn">print</span>(<span class="str">f"{w} is a palindrome."</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"{w} is not a palindrome."</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- B4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b4')">
+      <div class="ex-head-left">
+        <span class="ex-num">B4</span>
+        <span class="ex-title">Score Tracker with List</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[8 marks]</span>
+        <span class="toggle-hint" id="b4-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b4" style="display:none">
+      <div class="scenario">
+        A quiz game stores player scores. The program lets the user add scores one at a time and then reports statistics.
+      </div>
+      <ul class="task-list">
+        <li>Declare an empty list <code>scores</code> <span class="pts">[1]</span></li>
+        <li>Use a WHILE loop: keep asking the user for a score; stop when they type <code>-1</code> <span class="pts">[2]</span></li>
+        <li>Append each valid score to the list <span class="pts">[1]</span></li>
+        <li>Write a function <code>FindMax(lst)</code> that returns the highest value in the list <strong>without using the built-in max()</strong> <span class="pts">[2]</span></li>
+        <li>Output the <strong>total scores entered</strong>, the <strong>highest score</strong>, and the <strong>average</strong> to 1 d.p. <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter score (-1 to stop): </span>78
+<span class="out">Enter score (-1 to stop): </span>92
+<span class="out">Enter score (-1 to stop): </span>65
+<span class="out">Enter score (-1 to stop): </span>-1
+<span class="out">Scores entered: 3</span>
+<span class="out">Highest score: 92</span>
+<span class="out">Average: 78.3</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('b4-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('b4-ans')">Show answer</button>
+      <div class="hint-box" id="b4-hint">
+        <span class="hint-label">Hint</span>
+        For <code>FindMax</code>: set <code>highest = lst[0]</code>, loop through the rest, update <code>highest</code> whenever you find something larger. Handle the case where the list might be empty first.
+      </div>
+      <div class="answer-box" id="b4-ans">
+<span class="kw">def</span> <span class="fn">FindMax</span>(lst):
+    highest = lst[<span class="num">0</span>]
+    <span class="kw">for</span> val <span class="kw">in</span> lst:
+        <span class="kw">if</span> val > highest:
+            highest = val
+    <span class="kw">return</span> highest
+
+scores = []
+score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter score (-1 to stop): "</span>))
+<span class="kw">while</span> score != <span class="num">-1</span>:
+    scores.<span class="fn">append</span>(score)
+    score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter score (-1 to stop): "</span>))
+
+<span class="fn">print</span>(<span class="str">f"Scores entered: {len(scores)}"</span>)
+<span class="fn">print</span>(<span class="str">f"Highest score: {FindMax(scores)}"</span>)
+<span class="fn">print</span>(<span class="str">f"Average: {sum(scores)/len(scores):.1f}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- B5 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b5')">
+      <div class="ex-head-left">
+        <span class="ex-num">B5</span>
+        <span class="ex-title">Caesar Cipher Encoder</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[8 marks]</span>
+        <span class="toggle-hint" id="b5-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b5" style="display:none">
+      <div class="scenario">
+        A simple encryption program shifts each letter in a message by a fixed number of positions in the alphabet. Non-letter characters stay unchanged.
+      </div>
+      <ul class="task-list">
+        <li>Write a function <code>Encode(message, shift)</code> <span class="pts">[1]</span></li>
+        <li>Convert the message to <strong>lowercase</strong> inside the function <span class="pts">[1]</span></li>
+        <li>Loop through each character. If it is a letter, shift it by <code>shift</code> positions (wrap around using <strong>MOD 26</strong>); otherwise leave it unchanged <span class="pts">[4]</span></li>
+        <li>Return the encoded string <span class="pts">[1]</span></li>
+        <li>Main program: ask for a message and a shift value; output the encoded result <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter message: </span>Hello World!
+<span class="out">Enter shift: </span>3
+<span class="out">Encoded: khoor zruog!</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('b5-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('b5-ans')">Show answer</button>
+      <div class="hint-box" id="b5-hint">
+        <span class="hint-label">Hint</span>
+        Use <code>ord(ch)</code> to get the ASCII value of a character, and <code>chr(n)</code> to convert back. For lowercase letters, <code>ord('a') = 97</code>. So: <code>new_pos = (ord(ch) - 97 + shift) % 26</code>, then <code>chr(new_pos + 97)</code>.
+      </div>
+      <div class="answer-box" id="b5-ans">
+<span class="kw">def</span> <span class="fn">Encode</span>(message, shift):
+    message = message.<span class="fn">lower</span>()
+    result = <span class="str">""</span>
+    <span class="kw">for</span> ch <span class="kw">in</span> message:
+        <span class="kw">if</span> ch.<span class="fn">isalpha</span>():
+            new_pos = (<span class="fn">ord</span>(ch) - <span class="num">97</span> + shift) % <span class="num">26</span>
+            result += <span class="fn">chr</span>(new_pos + <span class="num">97</span>)
+        <span class="kw">else</span>:
+            result += ch
+    <span class="kw">return</span> result
+
+msg   = <span class="fn">input</span>(<span class="str">"Enter message: "</span>)
+shift = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter shift: "</span>))
+<span class="fn">print</span>(<span class="str">f"Encoded: {Encode(msg, shift)}"</span>)
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section B -->
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════
+     SECTION C — HARD (Cambridge Exam Style)
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">C</div>
+    <div>
+      <div class="section-title">Exam-Style Problems</div>
+      <div class="section-desc">Covers: 2D arrays, dictionaries, OOP basics, recursion, file I/O, data structures — mirrors Paper 4 difficulty</div>
+    </div>
+  </div>
+
+  <!-- C1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('c1')">
+      <div class="ex-head-left">
+        <span class="ex-num">C1</span>
+        <span class="ex-title">Student Mark Book (2D List)</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[10 marks]</span>
+        <span class="toggle-hint" id="c1-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="c1" style="display:none">
+      <div class="scenario">
+        A teacher stores the marks for 4 students across 3 subjects in a 2D list. Each row is a student; each column is a subject (Maths, Science, English).
+      </div>
+      <ul class="task-list">
+        <li>Declare a 2D list <code>marks</code> with 4 rows and 3 columns, pre-filled with these values:
+          <br><code>[[85,72,91],[60,55,70],[95,88,79],[40,62,58]]</code> <span class="pts">[2]</span></li>
+        <li>Write a function <code>RowAverage(marks, row)</code> that returns the average of a given row <span class="pts">[2]</span></li>
+        <li>Write a function <code>ColHighest(marks, col)</code> that returns the highest mark in a given column <span class="pts">[2]</span></li>
+        <li>In the main program, output each student's average (students numbered 1–4) <span class="pts">[2]</span></li>
+        <li>Output the highest mark in each subject <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Expected output</div>
+        <div class="example-block">
+<span class="out">Student 1 average: 82.7</span>
+<span class="out">Student 2 average: 61.7</span>
+<span class="out">Student 3 average: 87.3</span>
+<span class="out">Student 4 average: 53.3</span>
+<span class="out">Highest in Maths: 95</span>
+<span class="out">Highest in Science: 88</span>
+<span class="out">Highest in English: 91</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('c1-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('c1-ans')">Show answer</button>
+      <div class="hint-box" id="c1-hint">
+        <span class="hint-label">Hint</span>
+        <code>marks[row]</code> gives you a full row (a list). For a column, you need to loop: <code>for r in range(len(marks)): marks[r][col]</code>. Remember rows and columns are 0-indexed in Python.
+      </div>
+      <div class="answer-box" id="c1-ans">
+<span class="kw">def</span> <span class="fn">RowAverage</span>(marks, row):
+    <span class="kw">return</span> <span class="fn">sum</span>(marks[row]) / <span class="fn">len</span>(marks[row])
+
+<span class="kw">def</span> <span class="fn">ColHighest</span>(marks, col):
+    highest = marks[<span class="num">0</span>][col]
+    <span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(marks)):
+        <span class="kw">if</span> marks[r][col] > highest:
+            highest = marks[r][col]
+    <span class="kw">return</span> highest
+
+marks = [[<span class="num">85</span>,<span class="num">72</span>,<span class="num">91</span>],[<span class="num">60</span>,<span class="num">55</span>,<span class="num">70</span>],[<span class="num">95</span>,<span class="num">88</span>,<span class="num">79</span>],[<span class="num">40</span>,<span class="num">62</span>,<span class="num">58</span>]]
+subjects = [<span class="str">"Maths"</span>, <span class="str">"Science"</span>, <span class="str">"English"</span>]
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(marks)):
+    avg = <span class="fn">RowAverage</span>(marks, i)
+    <span class="fn">print</span>(<span class="str">f"Student {i+1} average: {avg:.1f}"</span>)
+
+<span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(subjects)):
+    <span class="fn">print</span>(<span class="str">f"Highest in {subjects[j]}: {ColHighest(marks, j)}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- C2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('c2')">
+      <div class="ex-head-left">
+        <span class="ex-num">C2</span>
+        <span class="ex-title">Phone Book with Dictionary</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[10 marks]</span>
+        <span class="toggle-hint" id="c2-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="c2" style="display:none">
+      <div class="scenario">
+        A simple phone book program stores names and phone numbers. The user can add, search, and delete contacts.
+      </div>
+      <ul class="task-list">
+        <li>Write a function <code>AddContact(book, name, number)</code> that adds or updates a contact <span class="pts">[2]</span></li>
+        <li>Write a function <code>SearchContact(book, name)</code> that returns the number or <code>"Not found"</code> <span class="pts">[2]</span></li>
+        <li>Write a function <code>DeleteContact(book, name)</code> that removes the contact if it exists, outputs a confirmation or error message <span class="pts">[2]</span></li>
+        <li>Main program: show a menu (Add / Search / Delete / Quit) in a loop; call the appropriate function based on input <span class="pts">[4]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run (partial)</div>
+        <div class="example-block">
+<span class="out">1. Add  2. Search  3. Delete  4. Quit</span>
+<span class="out">Choice: </span>1
+<span class="out">Name: </span>Ali
+<span class="out">Number: </span>0555-1234
+<span class="out">Contact added.</span>
+<span class="out">Choice: </span>2
+<span class="out">Name: </span>Ali
+<span class="out">Ali: 0555-1234</span>
+<span class="out">Choice: </span>4
+<span class="out">Goodbye.</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('c2-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('c2-ans')">Show answer</button>
+      <div class="hint-box" id="c2-hint">
+        <span class="hint-label">Hint</span>
+        A dictionary is perfect here: <code>book = {}</code>. Add with <code>book[name] = number</code>. Check existence with <code>if name in book</code>. Delete with <code>del book[name]</code>. The menu loop should be <code>while choice != "4"</code>.
+      </div>
+      <div class="answer-box" id="c2-ans">
+<span class="kw">def</span> <span class="fn">AddContact</span>(book, name, number):
+    book[name] = number
+    <span class="fn">print</span>(<span class="str">"Contact added."</span>)
+
+<span class="kw">def</span> <span class="fn">SearchContact</span>(book, name):
+    <span class="kw">if</span> name <span class="kw">in</span> book:
+        <span class="fn">print</span>(<span class="str">f"{name}: {book[name]}"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"Not found"</span>)
+
+<span class="kw">def</span> <span class="fn">DeleteContact</span>(book, name):
+    <span class="kw">if</span> name <span class="kw">in</span> book:
+        <span class="kw">del</span> book[name]
+        <span class="fn">print</span>(<span class="str">f"{name} deleted."</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"Contact not found."</span>)
+
+book = {}
+choice = <span class="str">""</span>
+<span class="kw">while</span> choice != <span class="str">"4"</span>:
+    <span class="fn">print</span>(<span class="str">"1. Add  2. Search  3. Delete  4. Quit"</span>)
+    choice = <span class="fn">input</span>(<span class="str">"Choice: "</span>)
+    <span class="kw">if</span> choice == <span class="str">"1"</span>:
+        n = <span class="fn">input</span>(<span class="str">"Name: "</span>)
+        num = <span class="fn">input</span>(<span class="str">"Number: "</span>)
+        <span class="fn">AddContact</span>(book, n, num)
+    <span class="kw">elif</span> choice == <span class="str">"2"</span>:
+        n = <span class="fn">input</span>(<span class="str">"Name: "</span>)
+        <span class="fn">SearchContact</span>(book, n)
+    <span class="kw">elif</span> choice == <span class="str">"3"</span>:
+        n = <span class="fn">input</span>(<span class="str">"Name: "</span>)
+        <span class="fn">DeleteContact</span>(book, n)
+<span class="fn">print</span>(<span class="str">"Goodbye."</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- C3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('c3')">
+      <div class="ex-head-left">
+        <span class="ex-num">C3</span>
+        <span class="ex-title">Recursive Fibonacci</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[7 marks]</span>
+        <span class="toggle-hint" id="c3-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="c3" style="display:none">
+      <div class="scenario">
+        The Fibonacci sequence is: 0, 1, 1, 2, 3, 5, 8, 13 … where each number is the sum of the two before it. Write a recursive solution.
+      </div>
+      <ul class="task-list">
+        <li>Write a <strong>recursive function</strong> <code>Fibonacci(n)</code> that returns the nth Fibonacci number <span class="pts">[4]</span></li>
+        <li>Base cases: <code>Fibonacci(0) = 0</code>, <code>Fibonacci(1) = 1</code> <span class="pts">[1]</span></li>
+        <li>Main program: ask user for <code>n</code>, call and output <code>Fibonacci(n)</code> <span class="pts">[1]</span></li>
+        <li>Also output the <strong>first 10 Fibonacci numbers</strong> using a loop <span class="pts">[1]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Enter n: </span>7
+<span class="out">Fibonacci(7) = 13</span>
+<span class="out">First 10: 0 1 1 2 3 5 8 13 21 34</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('c3-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('c3-ans')">Show answer</button>
+      <div class="hint-box" id="c3-hint">
+        <span class="hint-label">Hint</span>
+        A recursive function calls itself. The recursive case is <code>return Fibonacci(n-1) + Fibonacci(n-2)</code>. Without the base cases (<code>if n == 0</code>, <code>if n == 1</code>), it loops forever!
+      </div>
+      <div class="answer-box" id="c3-ans">
+<span class="kw">def</span> <span class="fn">Fibonacci</span>(n):
+    <span class="kw">if</span> n == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="num">0</span>
+    <span class="kw">elif</span> n == <span class="num">1</span>:
+        <span class="kw">return</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="fn">Fibonacci</span>(n - <span class="num">1</span>) + <span class="fn">Fibonacci</span>(n - <span class="num">2</span>)
+
+n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter n: "</span>))
+<span class="fn">print</span>(<span class="str">f"Fibonacci({n}) = {Fibonacci(n)}"</span>)
+
+first10 = <span class="str">" "</span>.<span class="fn">join</span>([<span class="fn">str</span>(<span class="fn">Fibonacci</span>(i)) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)])
+<span class="fn">print</span>(<span class="str">f"First 10: {first10}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- C4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('c4')">
+      <div class="ex-head-left">
+        <span class="ex-num">C4</span>
+        <span class="ex-title">OOP — BankAccount Class</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[12 marks]</span>
+        <span class="toggle-hint" id="c4-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="c4" style="display:none">
+      <div class="scenario">
+        Design a <code>BankAccount</code> class that models a real bank account with deposits, withdrawals, and balance enquiries.
+      </div>
+      <ul class="task-list">
+        <li>Declare the class <code>BankAccount</code> with attributes: <code>owner</code> (string) and <code>balance</code> (float, default 0.0) <span class="pts">[2]</span></li>
+        <li>Constructor: takes <code>owner</code> and optional <code>balance</code>; initialises both attributes <span class="pts">[2]</span></li>
+        <li>Method <code>Deposit(amount)</code>: adds amount to balance if > 0; outputs confirmation <span class="pts">[2]</span></li>
+        <li>Method <code>Withdraw(amount)</code>: deducts amount if funds are sufficient and amount > 0; otherwise outputs an error <span class="pts">[3]</span></li>
+        <li>Method <code>GetBalance()</code>: returns the current balance <span class="pts">[1]</span></li>
+        <li>Main program: create two accounts, perform several transactions, print balances <span class="pts">[2]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample run</div>
+        <div class="example-block">
+<span class="out">Deposited 500.00 → Balance: 500.00</span>
+<span class="out">Withdrew 120.00 → Balance: 380.00</span>
+<span class="out">Insufficient funds.</span>
+<span class="out">Ali's balance: 380.00</span>
+<span class="out">Sara's balance: 250.00</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('c4-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('c4-ans')">Show answer</button>
+      <div class="hint-box" id="c4-hint">
+        <span class="hint-label">Hint</span>
+        Use <code>def __init__(self, owner, balance=0.0)</code>. Every method takes <code>self</code> as its first parameter. Access attributes with <code>self.balance</code>. In the withdraw check: <code>if amount > self.balance or amount &lt;= 0</code>.
+      </div>
+      <div class="answer-box" id="c4-ans">
+<span class="kw">class</span> <span class="fn">BankAccount</span>:
+    <span class="cm"># owner : String</span>
+    <span class="cm"># balance : Float</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, owner, balance=<span class="num">0.0</span>):
+        self.owner   = owner
+        self.balance = balance
+
+    <span class="kw">def</span> <span class="fn">Deposit</span>(self, amount):
+        <span class="kw">if</span> amount > <span class="num">0</span>:
+            self.balance += amount
+            <span class="fn">print</span>(<span class="str">f"Deposited {amount:.2f} → Balance: {self.balance:.2f}"</span>)
+        <span class="kw">else</span>:
+            <span class="fn">print</span>(<span class="str">"Invalid deposit amount."</span>)
+
+    <span class="kw">def</span> <span class="fn">Withdraw</span>(self, amount):
+        <span class="kw">if</span> amount <= <span class="num">0</span> <span class="kw">or</span> amount > self.balance:
+            <span class="fn">print</span>(<span class="str">"Insufficient funds."</span>)
+        <span class="kw">else</span>:
+            self.balance -= amount
+            <span class="fn">print</span>(<span class="str">f"Withdrew {amount:.2f} → Balance: {self.balance:.2f}"</span>)
+
+    <span class="kw">def</span> <span class="fn">GetBalance</span>(self):
+        <span class="kw">return</span> self.balance
+
+<span class="cm"># Main program</span>
+acc1 = <span class="fn">BankAccount</span>(<span class="str">"Ali"</span>)
+acc2 = <span class="fn">BankAccount</span>(<span class="str">"Sara"</span>, <span class="num">250.0</span>)
+
+acc1.<span class="fn">Deposit</span>(<span class="num">500</span>)
+acc1.<span class="fn">Withdraw</span>(<span class="num">120</span>)
+acc1.<span class="fn">Withdraw</span>(<span class="num">500</span>)
+<span class="fn">print</span>(<span class="str">f"Ali's balance: {acc1.GetBalance():.2f}"</span>)
+<span class="fn">print</span>(<span class="str">f"Sara's balance: {acc2.GetBalance():.2f}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- C5 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('c5')">
+      <div class="ex-head-left">
+        <span class="ex-num">C5</span>
+        <span class="ex-title">Stack Implementation (Exam-Style)</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[14 marks]</span>
+        <span class="toggle-hint" id="c5-arrow">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="c5" style="display:none">
+      <div class="scenario">
+        Directly mirrors Cambridge Paper 4. A program stores integers in a stack using a 1D list of size 10 and a pointer. This is the same structure as Question 1 in the exam you saw.
+      </div>
+      <ul class="task-list">
+        <li>Declare a global list <code>Stack</code> of 10 elements, all initialised to <code>-1</code>, and global variable <code>TopPointer</code> initialised to <code>-1</code> <span class="pts">[2]</span></li>
+        <li>Write function <code>Push(item)</code>: returns <code>False</code> if full; adds item, updates <code>TopPointer</code>, returns <code>True</code> <span class="pts">[4]</span></li>
+        <li>Write function <code>Pop()</code>: returns <code>-1</code> if empty; removes and returns the top item, updates <code>TopPointer</code> <span class="pts">[4]</span></li>
+        <li>Main program: push integers 1–12, outputting "Successful" or "Unsuccessful"; then pop twice and output the values <span class="pts">[4]</span></li>
+      </ul>
+      <div class="sample-output">
+        <div class="label-sm">Sample output (partial)</div>
+        <div class="example-block">
+<span class="out">1 Successful</span>
+<span class="out">2 Successful</span>
+<span class="out">...</span>
+<span class="out">10 Successful</span>
+<span class="out">11 Unsuccessful</span>
+<span class="out">12 Unsuccessful</span>
+<span class="out">Popped: 10</span>
+<span class="out">Popped: 9</span>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('c5-hint')">💡 Show hint</button>
+      <button class="answer-btn" onclick="showAnswer('c5-ans')">Show answer</button>
+      <div class="hint-box" id="c5-hint">
+        <span class="hint-label">Hint</span>
+        Stack is full when <code>TopPointer == 9</code> (last index). Stack is empty when <code>TopPointer == -1</code>. For push: increment TopPointer first, then store. For pop: read the value, reset that slot to -1, then decrement TopPointer. Use <code>global TopPointer</code> inside each function.
+      </div>
+      <div class="answer-box" id="c5-ans">
+Stack = [<span class="num">-1</span>] * <span class="num">10</span>
+TopPointer = <span class="num">-1</span>
+
+<span class="kw">def</span> <span class="fn">Push</span>(item):
+    <span class="kw">global</span> TopPointer
+    <span class="kw">if</span> TopPointer == <span class="num">9</span>:
+        <span class="kw">return</span> <span class="kw">False</span>
+    TopPointer += <span class="num">1</span>
+    Stack[TopPointer] = item
+    <span class="kw">return</span> <span class="kw">True</span>
+
+<span class="kw">def</span> <span class="fn">Pop</span>():
+    <span class="kw">global</span> TopPointer
+    <span class="kw">if</span> TopPointer == <span class="num">-1</span>:
+        <span class="kw">return</span> <span class="num">-1</span>
+    value = Stack[TopPointer]
+    Stack[TopPointer] = <span class="num">-1</span>
+    TopPointer -= <span class="num">1</span>
+    <span class="kw">return</span> value
+
+<span class="cm"># Main program</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">13</span>):
+    <span class="kw">if</span> <span class="fn">Push</span>(i):
+        <span class="fn">print</span>(<span class="str">f"{i} Successful"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f"{i} Unsuccessful"</span>)
+
+<span class="fn">print</span>(<span class="str">f"Popped: {Pop()}"</span>)
+<span class="fn">print</span>(<span class="str">f"Popped: {Pop()}"</span>)
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section C -->
+
+<footer>
+  <span>Cambridge International AS &amp; A Level Computer Science 9618 — Tutor Exercise Pack</span>
+  <span>Python (console mode) · All exercises follow Cambridge pseudocode conventions</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const el = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    if (arrow) arrow.textContent = '▲ collapse';
+  } else {
+    el.style.display = 'none';
+    if (arrow) arrow.textContent = '▼ expand';
+  }
+}
+function showHint(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('visible');
+}
+function showAnswer(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('visible');
+}
+</script>
+</body>
+</html>

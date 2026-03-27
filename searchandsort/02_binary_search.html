@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Search · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#1a1f2e;color:#c8d4e8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(126,184,212,0.08);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,212,232,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#7eb8d4;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,212,232,0.55);max-width:560px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,212,232,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,212,232,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+/* array */
+.arr-wrap{display:flex;flex-direction:column;gap:0.7rem;margin:1rem 0;overflow-x:auto;}
+.arr-row{display:flex;align-items:center;gap:0.5rem;}
+.arr-label{font-size:11.5px;font-family:'DM Mono',monospace;color:var(--ink3);min-width:150px;flex-shrink:0;line-height:1.4;}
+.arr-cells{display:flex;gap:3px;}
+.arr-idx{display:flex;gap:3px;margin-bottom:3px;}
+.arr-idx-cell{width:40px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);}
+.arr-cell{width:40px;height:40px;border:1.5px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;border-radius:3px;background:#fff;flex-shrink:0;}
+.arr-cell.mid{border-color:var(--blue-bd);background:var(--blue-bg);color:var(--blue);}
+.arr-cell.first{border-color:var(--purple-bd);background:var(--purple-bg);color:var(--purple);}
+.arr-cell.last{border-color:var(--teal-bd);background:var(--teal-bg);color:var(--teal);}
+.arr-cell.found{border-color:var(--green-bd);background:var(--green-bg);color:var(--green);}
+.arr-cell.dead{opacity:0.18;}
+.arr-cell.hi{border-color:var(--amber-bd);background:var(--amber-bg);color:var(--amber);}
+.arr-note{font-size:11.5px;color:var(--ink3);margin-left:0.5rem;font-style:italic;align-self:center;flex-shrink:0;}
+.arr-note.green{color:var(--green);font-weight:500;font-style:normal;}
+.arr-note.amber{color:var(--amber);}
+.arr-note.red{color:var(--red);}
+.arr-note.blue{color:var(--blue);}
+/* legend row */
+.ptr-legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:11.5px;margin:0.5rem 0 1rem;}
+.ptr-swatch{display:inline-block;width:14px;height:14px;border-radius:2px;vertical-align:middle;margin-right:4px;}
+/* trace */
+.trace-wrap{overflow-x:auto;margin:1rem 0;}
+.trace-table{border-collapse:collapse;font-size:12px;min-width:420px;}
+.trace-table th{background:var(--ink);color:#fff;padding:7px 12px;text-align:center;font-weight:500;font-size:11px;letter-spacing:0.05em;}
+.trace-table td{padding:6px 12px;border:1px solid var(--rule);text-align:center;font-family:'DM Mono',monospace;vertical-align:middle;font-size:12px;}
+.trace-table tr:nth-child(even) td{background:var(--paper2);}
+.cell-hi{background:#fff8e0!important;}
+.cell-found{background:#e8f5ee!important;font-weight:600;color:var(--green);}
+.cell-fail{background:#fdeaea!important;font-weight:600;color:var(--red);}
+.cell-comp{background:#fef3e2!important;color:var(--amber);}
+/* exercises */
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:150px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+.case-card{border-radius:8px;padding:1rem 1.1rem;margin:0.75rem 0;border:1.5px solid var(--rule);background:#fff;}
+.case-card h4{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;font-weight:500;margin-bottom:0.5rem;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · File 2 of 4</div>
+  <h1>Binary <em>Search</em></h1>
+  <div class="cover-sub">Cut the search space in half every single step — but the list MUST be sorted first.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Precondition</strong>List MUST be sorted</div>
+    <div class="cover-meta-item"><strong>Worst case</strong>log₂(n) comparisons</div>
+    <div class="cover-meta-item"><strong>4 Examples</strong>Found early · Found at end · Found at start · Not found</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 Linear Search</a>
+  <a href="02_binary_search.html" class="active">⚡ Binary Search</a>
+  <a href="03_bubble_insertion_sort.html">🫧 Bubble &amp; Insertion Sort</a>
+  <a href="04_exercises.html">📝 Exercises</a>
+</nav>
+
+<div class="page-body">
+
+  <!-- ── BIG IDEA ── -->
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div>
+      <div class="section-title">What is Binary Search?</div>
+      <div class="section-desc">Divide and conquer — eliminate half the list every step</div>
+    </div>
+  </div>
+
+  <div class="box box-purple">
+    <strong>🧠 The analogy</strong>
+    You're looking up "penguin" in a printed dictionary. You don't start at page 1. You open the middle — land on "M". "Penguin" comes after M, so you throw away the ENTIRE left half. Open the middle of the right half — land on "S". "Penguin" comes before S, throw away the right half. A few more cuts and you're there. That is binary search — you halve the problem with each step.
+  </div>
+
+  <div class="box box-red">
+    <strong>⚠️ The golden rule — never forget this</strong>
+    Binary search ONLY works on a SORTED list. If the list is unsorted, binary search can give completely wrong answers. You must sort first, then search.
+  </div>
+
+  <!-- ── COLOUR LEGEND ── -->
+  <div class="ptr-legend">
+    <span><span class="ptr-swatch" style="background:var(--purple-bg);border:1.5px solid var(--purple-bd);"></span> First (left boundary)</span>
+    <span><span class="ptr-swatch" style="background:var(--teal-bg);border:1.5px solid var(--teal-bd);"></span> Last (right boundary)</span>
+    <span><span class="ptr-swatch" style="background:var(--blue-bg);border:1.5px solid var(--blue-bd);"></span> Middle (checked this step)</span>
+    <span><span class="ptr-swatch" style="background:var(--green-bg);border:1.5px solid var(--green-bd);"></span> Found!</span>
+    <span><span class="ptr-swatch" style="background:#ddd;opacity:0.4;border:1.5px solid #bbb;"></span> Eliminated (not searched)</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════
+       EXAMPLE 1 — FOUND QUICKLY (MIDDLE)
+  ══════════════════════════════ -->
+  <div class="sec-title">Example 1 — Value found at the midpoint 🎯</div>
+  <div class="sec-sub">Sorted list = [1, 3, 5, 7, 9, 11, 15] &nbsp;·&nbsp; searching for <strong>7</strong></div>
+
+  <div class="case-card">
+    <div class="arr-wrap">
+      <div class="arr-row" style="margin-left:150px;">
+        <div class="arr-idx">
+          <div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div><div class="arr-idx-cell">2</div>
+          <div class="arr-idx-cell">3</div><div class="arr-idx-cell">4</div><div class="arr-idx-cell">5</div>
+          <div class="arr-idx-cell">6</div>
+        </div>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">Array:</div>
+        <div class="arr-cells">
+          <div class="arr-cell">1</div><div class="arr-cell">3</div><div class="arr-cell">5</div>
+          <div class="arr-cell">7</div><div class="arr-cell">9</div><div class="arr-cell">11</div>
+          <div class="arr-cell">15</div>
+        </div>
+      </div>
+      <div class="arr-row">
+        <div class="arr-label">Pass 1:<br>F=0, L=6<br>Mid=(0+6)//2=3</div>
+        <div class="arr-cells">
+          <div class="arr-cell first">1</div><div class="arr-cell">3</div><div class="arr-cell">5</div>
+          <div class="arr-cell mid">7</div><div class="arr-cell">9</div><div class="arr-cell">11</div>
+          <div class="arr-cell last">15</div>
+        </div>
+        <span class="arr-note green">list[3] = 7 = 7 → FOUND at index 3! ✅</span>
+      </div>
+    </div>
+    <div class="box box-green" style="margin-top:0.5rem;">
+      Found in just <strong>1 comparison</strong>! Linear search would have needed 4.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       EXAMPLE 2 — FOUND AT THE END (RIGHT SIDE)
+  ══════════════════════════════ -->
+  <div class="sec-title" style="margin-top:1.5rem;">Example 2 — Value found at the far right end 🐢</div>
+  <div class="sec-sub">Sorted list = [2, 5, 8, 12, 16, 23, 30, 45] &nbsp;·&nbsp; searching for <strong>45</strong> (the last element)</div>
+
+  <div class="case-card">
+    <div class="arr-wrap">
+      <div class="arr-row" style="margin-left:150px;">
+        <div class="arr-idx">
+          <div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div><div class="arr-idx-cell">2</div><div class="arr-idx-cell">3</div>
+          <div class="arr-idx-cell">4</div><div class="arr-idx-cell">5</div><div class="arr-idx-cell">6</div><div class="arr-idx-cell">7</div>
+        </div>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Array:</div>
+        <div class="arr-cells">
+          <div class="arr-cell">2</div><div class="arr-cell">5</div><div class="arr-cell">8</div><div class="arr-cell">12</div>
+          <div class="arr-cell">16</div><div class="arr-cell">23</div><div class="arr-cell">30</div><div class="arr-cell">45</div>
+        </div>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 1:<br>F=0, L=7<br>Mid=3</div>
+        <div class="arr-cells">
+          <div class="arr-cell first">2</div><div class="arr-cell">5</div><div class="arr-cell">8</div><div class="arr-cell mid">12</div>
+          <div class="arr-cell">16</div><div class="arr-cell">23</div><div class="arr-cell">30</div><div class="arr-cell last">45</div>
+        </div>
+        <span class="arr-note amber">list[3]=12 &lt; 45 → First = 3+1 = 4. Throw away left half.</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 2:<br>F=4, L=7<br>Mid=(4+7)//2=5</div>
+        <div class="arr-cells">
+          <div class="arr-cell dead">2</div><div class="arr-cell dead">5</div><div class="arr-cell dead">8</div><div class="arr-cell dead">12</div>
+          <div class="arr-cell first">16</div><div class="arr-cell mid">23</div><div class="arr-cell">30</div><div class="arr-cell last">45</div>
+        </div>
+        <span class="arr-note amber">list[5]=23 &lt; 45 → First = 5+1 = 6. Throw away left again.</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 3:<br>F=6, L=7<br>Mid=(6+7)//2=6</div>
+        <div class="arr-cells">
+          <div class="arr-cell dead">2</div><div class="arr-cell dead">5</div><div class="arr-cell dead">8</div><div class="arr-cell dead">12</div>
+          <div class="arr-cell dead">16</div><div class="arr-cell dead">23</div><div class="arr-cell mid first">30</div><div class="arr-cell last">45</div>
+        </div>
+        <span class="arr-note amber">list[6]=30 &lt; 45 → First = 6+1 = 7. One element left.</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 4:<br>F=7, L=7<br>Mid=(7+7)//2=7</div>
+        <div class="arr-cells">
+          <div class="arr-cell dead">2</div><div class="arr-cell dead">5</div><div class="arr-cell dead">8</div><div class="arr-cell dead">12</div>
+          <div class="arr-cell dead">16</div><div class="arr-cell dead">23</div><div class="arr-cell dead">30</div>
+          <div class="arr-cell found">45</div>
+        </div>
+        <span class="arr-note green">list[7]=45 = 45 → FOUND at index 7! ✅</span>
+      </div>
+    </div>
+    <div class="box box-green" style="margin-top:0.5rem;">
+      Found in <strong>4 comparisons</strong>. Linear search would have needed 8 (checked every element first).
+      Binary search is still much faster — even in the worst case for a sorted list.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       EXAMPLE 3 — FOUND AT THE START (LEFT SIDE)
+  ══════════════════════════════ -->
+  <div class="sec-title" style="margin-top:1.5rem;">Example 3 — Value found at the far left end 🐌</div>
+  <div class="sec-sub">Sorted list = [2, 5, 8, 12, 16, 23, 30, 45] &nbsp;·&nbsp; searching for <strong>2</strong> (the first element)</div>
+
+  <div class="case-card">
+    <div class="arr-wrap">
+      <div class="arr-row" style="margin-left:150px;">
+        <div class="arr-idx">
+          <div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div><div class="arr-idx-cell">2</div><div class="arr-idx-cell">3</div>
+          <div class="arr-idx-cell">4</div><div class="arr-idx-cell">5</div><div class="arr-idx-cell">6</div><div class="arr-idx-cell">7</div>
+        </div>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 1:<br>F=0, L=7<br>Mid=3</div>
+        <div class="arr-cells">
+          <div class="arr-cell first">2</div><div class="arr-cell">5</div><div class="arr-cell">8</div><div class="arr-cell mid">12</div>
+          <div class="arr-cell">16</div><div class="arr-cell">23</div><div class="arr-cell">30</div><div class="arr-cell last">45</div>
+        </div>
+        <span class="arr-note amber">list[3]=12 &gt; 2 → Last = 3−1 = 2. Throw away right half.</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 2:<br>F=0, L=2<br>Mid=(0+2)//2=1</div>
+        <div class="arr-cells">
+          <div class="arr-cell first">2</div><div class="arr-cell mid">5</div><div class="arr-cell last">8</div>
+          <div class="arr-cell dead">12</div><div class="arr-cell dead">16</div><div class="arr-cell dead">23</div><div class="arr-cell dead">30</div><div class="arr-cell dead">45</div>
+        </div>
+        <span class="arr-note amber">list[1]=5 &gt; 2 → Last = 1−1 = 0. One element left.</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 3:<br>F=0, L=0<br>Mid=(0+0)//2=0</div>
+        <div class="arr-cells">
+          <div class="arr-cell found">2</div>
+          <div class="arr-cell dead">5</div><div class="arr-cell dead">8</div><div class="arr-cell dead">12</div>
+          <div class="arr-cell dead">16</div><div class="arr-cell dead">23</div><div class="arr-cell dead">30</div><div class="arr-cell dead">45</div>
+        </div>
+        <span class="arr-note green">list[0]=2 = 2 → FOUND at index 0! ✅</span>
+      </div>
+    </div>
+    <div class="box box-green" style="margin-top:0.5rem;">
+      Found in <strong>3 comparisons</strong> — even though it was the very first element. Linear search finds the first element in just 1 step, but binary search still handles it in at most log₂(n) steps.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       EXAMPLE 4 — NOT FOUND
+  ══════════════════════════════ -->
+  <div class="sec-title" style="margin-top:1.5rem;">Example 4 — Value is <span style="background:var(--red-bg);color:var(--red);padding:1px 7px;border-radius:4px;font-family:'DM Mono',monospace;">NOT FOUND</span> 🔴</div>
+  <div class="sec-sub">Sorted list = [1, 3, 5, 7, 9, 11, 15] &nbsp;·&nbsp; searching for <strong>6</strong> — which is NOT in the list</div>
+
+  <div class="case-card">
+    <div class="arr-wrap">
+      <div class="arr-row" style="margin-left:150px;">
+        <div class="arr-idx">
+          <div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div><div class="arr-idx-cell">2</div>
+          <div class="arr-idx-cell">3</div><div class="arr-idx-cell">4</div><div class="arr-idx-cell">5</div>
+          <div class="arr-idx-cell">6</div>
+        </div>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 1:<br>F=0, L=6<br>Mid=3</div>
+        <div class="arr-cells">
+          <div class="arr-cell first">1</div><div class="arr-cell">3</div><div class="arr-cell">5</div>
+          <div class="arr-cell mid">7</div><div class="arr-cell">9</div><div class="arr-cell">11</div>
+          <div class="arr-cell last">15</div>
+        </div>
+        <span class="arr-note amber">list[3]=7 ≠ 6. 7 &gt; 6 → Last = 3−1 = 2</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 2:<br>F=0, L=2<br>Mid=1</div>
+        <div class="arr-cells">
+          <div class="arr-cell first">1</div><div class="arr-cell mid">3</div><div class="arr-cell last">5</div>
+          <div class="arr-cell dead">7</div><div class="arr-cell dead">9</div><div class="arr-cell dead">11</div>
+          <div class="arr-cell dead">15</div>
+        </div>
+        <span class="arr-note amber">list[1]=3 ≠ 6. 3 &lt; 6 → First = 1+1 = 2</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Pass 3:<br>F=2, L=2<br>Mid=2</div>
+        <div class="arr-cells">
+          <div class="arr-cell dead">1</div><div class="arr-cell dead">3</div>
+          <div class="arr-cell hi">5</div>
+          <div class="arr-cell dead">7</div><div class="arr-cell dead">9</div><div class="arr-cell dead">11</div>
+          <div class="arr-cell dead">15</div>
+        </div>
+        <span class="arr-note amber">list[2]=5 ≠ 6. Now First(2) ≥ Last(2) → SearchFailed = TRUE</span>
+      </div>
+
+      <div class="arr-row">
+        <div class="arr-label">Loop exits:</div>
+        <div class="arr-cells">
+          <div class="arr-cell dead">1</div><div class="arr-cell dead">3</div><div class="arr-cell dead">5</div>
+          <div class="arr-cell dead">7</div><div class="arr-cell dead">9</div><div class="arr-cell dead">11</div>
+          <div class="arr-cell dead">15</div>
+        </div>
+        <span class="arr-note red">searchFailed=TRUE → Output "Item not present" ✗</span>
+      </div>
+    </div>
+
+    <div class="box box-red" style="margin-top:0.5rem;">
+      <strong>Why does the loop exit here?</strong>
+      When First ≥ Last, there is only one (or zero) elements left to consider.
+      We checked it and it wasn't a match. There is nowhere left to search.
+      The variable <code>search_failed</code> is set to TRUE, which makes the while condition FALSE, ending the loop.
+    </div>
+  </div>
+
+  <!-- ── THE CODE ── -->
+  <div class="divider"></div>
+  <div class="sec-title">The Python Code 🐍</div>
+  <div class="sec-sub">Every case from the four examples above is handled inside this single function</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">binary_search</span>(my_list, search_item):
+
+    found         = <span class="kw">False</span>
+    search_failed = <span class="kw">False</span>
+    first         = <span class="nm">0</span>
+    last          = <span class="fn">len</span>(my_list) - <span class="nm">1</span>
+
+    <span class="kw">while not</span> found <span class="kw">and not</span> search_failed:
+
+        middle = (first + last) // <span class="nm">2</span>             <span class="cm"># always the midpoint</span>
+
+        <span class="kw">if</span> my_list[middle] == search_item:
+            found = <span class="kw">True</span>                        <span class="cm"># exact match — done!</span>
+
+        <span class="kw">elif</span> first >= last:
+            search_failed = <span class="kw">True</span>               <span class="cm"># no more space to search</span>
+
+        <span class="kw">elif</span> my_list[middle] > search_item:
+            last = middle - <span class="nm">1</span>                  <span class="cm"># value is in LEFT half</span>
+
+        <span class="kw">else</span>:
+            first = middle + <span class="nm">1</span>                 <span class="cm"># value is in RIGHT half</span>
+
+    <span class="kw">if</span> found:
+        <span class="fn">print</span>(<span class="st">"Found at index:"</span>, middle)
+        <span class="kw">return</span> middle
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">"Item not present in array"</span>)
+        <span class="kw">return</span> -<span class="nm">1</span></pre>
+
+  <div class="box box-purple">
+    <strong>🔎 Every variable — what it does and why</strong>
+    <div class="arrow-row">
+      <div class="arrow-label">found</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Becomes TRUE when we find the exact match. Stops the loop.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">search_failed</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Becomes TRUE when first ≥ last AND no match found — the list has run out. Stops the loop.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">first</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Left boundary of the search zone. Starts at 0. Moves right when the answer is in the right half.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">last</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">Right boundary of the search zone. Starts at len−1. Moves left when the answer is in the left half.</div>
+    </div>
+    <div class="arrow-row">
+      <div class="arrow-label">middle</div>
+      <div class="arrow-arrow">→</div>
+      <div class="arrow-desc">(first + last) // 2 — always integer division. The element we check this step.</div>
+    </div>
+  </div>
+
+  <div class="box box-amber">
+    <strong>⚠️ Order of the elif branches — this matters!</strong>
+    Cambridge expects this exact order:
+    <br><br>
+    <strong>1st:</strong> Check if list[middle] == search_item (exact match)<br>
+    <strong>2nd:</strong> Check if first >= last (no space left — failed)<br>
+    <strong>3rd:</strong> Check if list[middle] > search_item (go left: last = middle − 1)<br>
+    <strong>4th (else):</strong> list[middle] must be less (go right: first = middle + 1)<br>
+    <br>
+    If you put the "first &gt;= last" check FIRST, you will fail to detect the final element before giving up.
+  </div>
+
+  <!-- ── TRACE TABLES ── -->
+  <div class="divider"></div>
+  <div class="sec-title">Trace Tables 📋</div>
+
+  <div class="sec-sub" style="margin-top:0.75rem;"><strong>Example 2 trace:</strong> list = [2, 5, 8, 12, 16, 23, 30, 45] &nbsp;·&nbsp; search_item = 45</div>
+  <div class="trace-wrap">
+    <table class="trace-table">
+      <tr><th>first</th><th>last</th><th>middle</th><th>list[middle]</th><th>== 45?</th><th>first≥last?</th><th>Action</th></tr>
+      <tr><td>0</td><td>7</td><td class="cell-hi">3</td><td>12</td><td>No</td><td>No</td><td class="cell-comp">12 &lt; 45 → first = 4</td></tr>
+      <tr><td>4</td><td>7</td><td class="cell-hi">5</td><td>23</td><td>No</td><td>No</td><td class="cell-comp">23 &lt; 45 → first = 6</td></tr>
+      <tr><td>6</td><td>7</td><td class="cell-hi">6</td><td>30</td><td>No</td><td>No</td><td class="cell-comp">30 &lt; 45 → first = 7</td></tr>
+      <tr class="cell-found"><td>7</td><td>7</td><td>7</td><td>45</td><td><strong>YES ✅</strong></td><td>—</td><td>found = TRUE</td></tr>
+    </table>
+  </div>
+
+  <div class="sec-sub" style="margin-top:1.25rem;"><strong>Example 4 trace:</strong> list = [1, 3, 5, 7, 9, 11, 15] &nbsp;·&nbsp; search_item = 6 (not in list)</div>
+  <div class="trace-wrap">
+    <table class="trace-table">
+      <tr><th>first</th><th>last</th><th>middle</th><th>list[middle]</th><th>== 6?</th><th>first≥last?</th><th>Action</th></tr>
+      <tr><td>0</td><td>6</td><td class="cell-hi">3</td><td>7</td><td>No</td><td>No</td><td class="cell-comp">7 &gt; 6 → last = 2</td></tr>
+      <tr><td>0</td><td>2</td><td class="cell-hi">1</td><td>3</td><td>No</td><td>No</td><td class="cell-comp">3 &lt; 6 → first = 2</td></tr>
+      <tr class="cell-fail"><td>2</td><td>2</td><td>2</td><td>5</td><td>No</td><td><strong>YES ← 2≥2</strong></td><td>search_failed = TRUE ✗</td></tr>
+    </table>
+  </div>
+
+  <!-- ── EXERCISES ── -->
+  <div class="divider"></div>
+  <hr class="section-rule">
+  <div class="section-header">
+    <div class="section-num">Ex</div>
+    <div>
+      <div class="section-title">Binary Search Exercises</div>
+      <div class="section-desc">Always draw the array on paper first — mark First, Last, Middle at each step</div>
+    </div>
+  </div>
+
+  <!-- B1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b1')">
+      <div class="ex-head-left">
+        <span class="ex-num">B1</span>
+        <span class="ex-title">Trace — Value Found Near End</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="b1-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b1" style="display:none;">
+      <div class="scenario">
+        The sorted array below is searched using a binary search algorithm.
+        Search value = <strong>18</strong>.
+        Variables: <code>found = FALSE</code>, <code>search_failed = FALSE</code>, <code>first = 0</code>, <code>last = 7</code>.
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--rule);border-radius:6px;padding:1rem;margin:0.75rem 0;">
+        <div class="arr-idx"><div class="arr-idx-cell">0</div><div class="arr-idx-cell">1</div><div class="arr-idx-cell">2</div><div class="arr-idx-cell">3</div><div class="arr-idx-cell">4</div><div class="arr-idx-cell">5</div><div class="arr-idx-cell">6</div><div class="arr-idx-cell">7</div></div>
+        <div class="arr-cells">
+          <div class="arr-cell">1</div><div class="arr-cell">3</div><div class="arr-cell">6</div><div class="arr-cell">9</div>
+          <div class="arr-cell">12</div><div class="arr-cell">15</div><div class="arr-cell">18</div><div class="arr-cell">22</div>
+        </div>
+      </div>
+
+      <ul class="task-list">
+        <li>Complete the trace table. Show every pass until found = TRUE. <span class="pts">[4]</span></li>
+        <li>State the value of <code>middle</code> when the search terminates. <span class="pts">[1]</span></li>
+      </ul>
+
+      <div class="trace-wrap">
+        <table class="trace-table">
+          <tr><th>first</th><th>last</th><th>middle</th><th>list[middle]</th><th>== 18?</th><th>Action</th></tr>
+          <tr><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td></tr>
+          <tr><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td></tr>
+          <tr><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td><td style="color:#bbb;">...</td></tr>
+        </table>
+      </div>
+
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('b1')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('b1')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="b1-hint">
+        Pass 1: first=0, last=7, middle = (0+7)//2 = 3. list[3] = 9. Is 9 == 18? No. Is 9 &gt; 18? No → so 18 must be in the RIGHT half → first = middle+1 = 4. Now repeat with the smaller window...
+      </div>
+<pre class="answer-pre" id="b1-ans">
+<span class="cm"># Binary search trace — search for 18</span>
+<span class="cm"># List = [1, 3, 6, 9, 12, 15, 18, 22]</span>
+
+first  |  last  |  middle  |  list[middle]  |  == 18?  |  Action
+-------+--------+----------+----------------+----------+------------------
+  0    |   7    |    3     |       9        |    No    |  9 < 18 → first = 4
+  4    |   7    |    5     |      15        |    No    |  15 < 18 → first = 6
+  6    |   7    |    6     |      18        |  YES ✅  |  found = TRUE
+
+<span class="cm"># middle when search terminates = 6</span>
+<span class="cm"># Output: "Found at index: 6"</span>
+
+<span class="cm"># Mark scheme:</span>
+<span class="cm"># [1] Pass 1: middle=3, list[3]=9, first moves to 4</span>
+<span class="cm"># [1] Pass 2: middle=5, list[5]=15, first moves to 6</span>
+<span class="cm"># [1] Pass 3: middle=6, list[6]=18 — match found</span>
+<span class="cm"># [1] found correctly set to TRUE in pass 3</span>
+<span class="cm"># [1] middle = 6 stated correctly</span>
+</pre>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b2')">
+      <div class="ex-head-left">
+        <span class="ex-num">B2</span>
+        <span class="ex-title">Trace — Value NOT Found (full trace)</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge badge-marks">[5 marks]</span>
+        <span class="toggle-lbl" id="b2-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b2" style="display:none;">
+      <div class="scenario">
+        The same sorted array is used. Search value = <strong>10</strong>, which is NOT in the list.
+        <br>Array = [1, 3, 6, 9, 12, 15, 18, 22]
+      </div>
+      <ul class="task-list">
+        <li>Complete the full trace table until the loop exits. <span class="pts">[3]</span></li>
+        <li>State the value of <code>search_failed</code> when the loop exits and explain why it became TRUE at that point. <span class="pts">[2]</span></li>
+      </ul>
+      <div class="trace-wrap">
+        <table class="trace-table">
+          <tr><th>first</th><th>last</th><th>middle</th><th>list[middle]</th><th>== 10?</th><th>first≥last?</th><th>Action</th></tr>
+          <tr><td style="color:#bbb;" colspan="7">... fill in all rows ...</td></tr>
+        </table>
+      </div>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('b2')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('b2')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="b2-hint">
+        10 sits between 9 (index 3) and 12 (index 4). So binary search will close in on that gap until first and last are equal (or cross), check that one element, see it doesn't match, and then find that first ≥ last. That triggers search_failed = TRUE.
+      </div>
+<pre class="answer-pre" id="b2-ans">
+<span class="cm"># Binary search trace — search for 10 (NOT in list)</span>
+<span class="cm"># List = [1, 3, 6, 9, 12, 15, 18, 22]</span>
+
+first  |  last  |  middle  |  list[mid]  |  ==10?  |  first≥last?  |  Action
+-------+--------+----------+-------------+---------+---------------+-------------------
+  0    |   7    |    3     |      9      |   No    |      No       |  9 < 10 → first = 4
+  4    |   7    |    5     |     15      |   No    |      No       |  15 > 10 → last = 4
+  4    |   4    |    4     |     12      |   No    |    YES ← 4≥4  |  search_failed = TRUE
+
+<span class="cm"># Loop exits because search_failed = TRUE</span>
+
+<span class="cm"># Why search_failed became TRUE:</span>
+<span class="cm">#   In pass 3: first = 4, last = 4 (one element remaining).</span>
+<span class="cm">#   middle = 4, list[4] = 12 which is NOT equal to 10.</span>
+<span class="cm">#   The check "first >= last" evaluates 4 >= 4 → TRUE.</span>
+<span class="cm">#   There are no more elements left to check.</span>
+<span class="cm">#   search_failed is set to TRUE and the loop ends.</span>
+
+<span class="cm"># Output: "Item not present in array"</span>
+
+<span class="cm"># Mark scheme:</span>
+<span class="cm"># [1] Pass 1 correct (middle=3, first→4)</span>
+<span class="cm"># [1] Pass 2 correct (middle=5, last→4)</span>
+<span class="cm"># [1] Pass 3 correct (middle=4, first≥last triggered)</span>
+<span class="cm"># [1] search_failed = TRUE stated</span>
+<span class="cm"># [1] clear explanation: list exhausted, first≥last</span>
+</pre>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b3')">
+      <div class="ex-head-left">
+        <span class="ex-num">B3</span>
+        <span class="ex-title">Write BinarySearch() — Cambridge Paper 4 style</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-mid">Intermediate</span>
+        <span class="badge badge-marks">[6 marks]</span>
+        <span class="toggle-lbl" id="b3-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b3" style="display:none;">
+      <div class="scenario">
+        A program stores sorted integers in the global 1D array <code>DataStored</code>.
+        The global variable <code>NumberItems</code> stores how many elements are in the array.
+        <br><br>
+        The function <code>BinarySearch()</code> takes the integer parameter <code>DataToFind</code>,
+        performs an iterative binary search on <code>DataStored</code>,
+        and returns the index where <code>DataToFind</code> is found.
+        If <code>DataToFind</code> is not found, the function returns <strong>−1</strong>.
+      </div>
+      <div class="tip-box"><strong>Cambridge Paper 4 style — adapted from 9618/41/M/J/24.</strong> This is worth 6 marks. Write your full answer before checking.</div>
+      <ul class="task-list">
+        <li>Write program code for the iterative function <code>BinarySearch()</code>. <span class="pts">[6]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('b3')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('b3')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="b3-hint">
+        Declare: found=False, search_failed=False, first=0, last=NumberItems−1.
+        Loop: while not found and not search_failed.
+        Inside loop: calculate middle = (first+last)//2, then four cases in order:
+        (1) exact match → found=True,
+        (2) first≥last → search_failed=True,
+        (3) list[middle] &gt; DataToFind → last=middle−1,
+        (4) else → first=middle+1.
+        After loop: return middle if found, else return −1.
+      </div>
+<pre class="answer-pre" id="b3-ans">
+<span class="kw">def</span> <span class="fn">BinarySearch</span>(DataToFind):
+    <span class="kw">global</span> DataStored, NumberItems
+
+    found         = <span class="kw">False</span>
+    search_failed = <span class="kw">False</span>
+    first         = <span class="nm">0</span>
+    last          = NumberItems - <span class="nm">1</span>
+
+    <span class="kw">while not</span> found <span class="kw">and not</span> search_failed:
+
+        middle = (first + last) // <span class="nm">2</span>
+
+        <span class="kw">if</span> DataStored[middle] == DataToFind:
+            found = <span class="kw">True</span>
+
+        <span class="kw">elif</span> first >= last:
+            search_failed = <span class="kw">True</span>
+
+        <span class="kw">elif</span> DataStored[middle] > DataToFind:
+            last = middle - <span class="nm">1</span>
+
+        <span class="kw">else</span>:
+            first = middle + <span class="nm">1</span>
+
+    <span class="kw">if</span> found:
+        <span class="kw">return</span> middle
+    <span class="kw">else</span>:
+        <span class="kw">return</span> -<span class="nm">1</span>
+
+
+<span class="cm"># Mark scheme (6 marks):</span>
+<span class="cm"># [1] found and search_failed declared and initialised correctly</span>
+<span class="cm"># [1] first = 0, last = NumberItems - 1</span>
+<span class="cm"># [1] while loop with both conditions (not found AND not search_failed)</span>
+<span class="cm"># [1] middle = (first + last) // 2</span>
+<span class="cm"># [1] all four cases handled in correct order</span>
+<span class="cm"># [1] return middle if found, return -1 if not found</span>
+</pre>
+    </div>
+  </div>
+
+  <!-- B4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('b4')">
+      <div class="ex-head-left">
+        <span class="ex-num">B4</span>
+        <span class="ex-title">Explain &amp; Compare — Binary vs Linear</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge badge-hard">Hard</span>
+        <span class="badge badge-marks">[4 marks]</span>
+        <span class="toggle-lbl" id="b4-lbl">▼ expand</span>
+      </div>
+    </div>
+    <div class="ex-body" id="b4" style="display:none;">
+      <div class="scenario">
+        A sorted array contains 1024 elements. A programmer needs to search the array repeatedly for different values throughout the program.
+      </div>
+      <ul class="task-list">
+        <li>State the maximum number of comparisons needed for a linear search and for a binary search on this array. <span class="pts">[2]</span></li>
+        <li>Explain why binary search is more suitable for this scenario. Include reference to the precondition that must be met. <span class="pts">[2]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('b4')">💡 Hint</button>
+        <button class="answer-btn" onclick="showAnswer('b4')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="b4-hint">
+        Binary search halves the list each step. How many times can you halve 1024 before you reach 1? That's log₂(1024). What is log₂(1024)?
+      </div>
+<pre class="answer-pre" id="b4-ans">
+<span class="cm"># Maximum comparisons:</span>
+
+<span class="cm">#   Linear search:  1024 comparisons</span>
+<span class="cm">#   (worst case: value not found, or at the very last position)</span>
+
+<span class="cm">#   Binary search:  log₂(1024) = 10 comparisons</span>
+<span class="cm">#   (each step halves the remaining search space)</span>
+
+
+<span class="cm"># Why binary search is more suitable:</span>
+
+<span class="cm">#   Binary search only needs at most 10 comparisons to</span>
+<span class="cm">#   search 1024 elements, compared to up to 1024 for</span>
+<span class="cm">#   linear search. Since the array is searched repeatedly,</span>
+<span class="cm">#   the time saving is significant.</span>
+
+<span class="cm">#   Precondition: the array must already be sorted.</span>
+<span class="cm">#   The question states the array IS sorted, so the</span>
+<span class="cm">#   precondition is met and binary search can be used.</span>
+
+
+<span class="cm"># Mark scheme:</span>
+<span class="cm"># [1] Linear: 1024</span>
+<span class="cm"># [1] Binary: 10 (or log₂(1024))</span>
+<span class="cm"># [1] Explanation of efficiency advantage</span>
+<span class="cm"># [1] Precondition: list must be sorted (stated)</span>
+</pre>
+    </div>
+  </div>
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Tutor Pack · File 2 of 4</span>
+  <span>Binary Search</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const body = document.getElementById(id);
+  const lbl  = document.getElementById(id + '-lbl');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if (lbl) lbl.textContent = open ? '▼ expand' : '▲ collapse';
+}
+function showHint(id) {
+  document.getElementById(id + '-hint').classList.toggle('visible');
+}
+function showAnswer(id) {
+  document.getElementById(id + '-ans').classList.toggle('visible');
+}
+</script>
+</body>
+</html>
