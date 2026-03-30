@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked List · Cambridge 9618 · Beginner Friendly</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0f0e0c;--ink2:#3a3835;--ink3:#7a7775;
+  --paper:#f7f5f0;--paper2:#edeae3;--paper3:#e2dfd6;--rule:#ccc9c0;
+  --accent:#c84b2f;
+  --code-bg:#17161a;--code-text:#d4cfc4;
+  --kw:#7eb8d4;--fn:#a8d890;--st:#e8c878;--cm:#5a6065;--nm:#c8a8f0;--cls:#f0a060;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Figtree',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.7;}
+
+/* COVER */
+.cover{background:var(--ink);color:#e8e4dc;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:0;right:0;width:300px;height:300px;background:radial-gradient(circle at top right,rgba(200,75,47,.15),transparent 70%);}
+.cover-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(232,228,220,.4);margin-bottom:1rem;}
+.cover h1{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;line-height:1.05;letter-spacing:-.02em;}
+.cover h1 span{color:var(--accent);}
+.cover-sub{margin-top:.75rem;font-size:14px;color:rgba(232,228,220,.5);max-width:480px;}
+.cover-tags{display:flex;gap:.6rem;margin-top:1.5rem;flex-wrap:wrap;}
+.cover-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(232,228,220,.15);padding:4px 12px;border-radius:20px;color:rgba(232,228,220,.45);}
+
+/* PROGRESS */
+.progress{display:flex;overflow-x:auto;background:var(--paper2);border-bottom:2px solid var(--rule);}
+.ps{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;color:var(--ink3);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.ps.active{color:var(--ink);border-bottom-color:var(--accent);}
+
+/* LAYOUT */
+.wrap{max-width:900px;margin:0 auto;padding:0 1.5rem;}
+.section{padding:2.5rem 0 0;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.sec-num{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:var(--rule);line-height:1;}
+.sec-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;}
+.sec-sub{font-size:12px;color:var(--ink3);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.divider{height:1px;background:var(--rule);margin:2.5rem 0;}
+p.body{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:1rem;}
+
+/* BOXES */
+.box{border-radius:6px;padding:.75rem 1rem;font-size:13.5px;line-height:1.65;margin:.85rem 0;}
+.box-info{background:var(--paper2);border-left:3px solid var(--rule);color:var(--ink2);}
+.box-tip{background:#fef8e8;border:1px solid #e8d060;color:#4a3800;}
+.box-key{background:#eef5ff;border:1px solid #aac4ee;color:#0f2a5a;}
+.box-stop{background:#fdecea;border:1px solid #e8a090;color:#5a1010;}
+.box-green{background:#e8f5ee;border:1px solid #a8d5b8;color:#1a4a2a;}
+.box strong{font-weight:600;}
+code.ic{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--paper3);padding:1px 6px;border-radius:3px;color:var(--ink);}
+
+/* CHAIN */
+.chain-wrap{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.25rem 1.5rem;margin:1rem 0;overflow-x:auto;}
+.chain{display:flex;align-items:center;flex-wrap:nowrap;min-width:max-content;}
+.cnode{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.clabel{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;}
+.cbox{display:flex;border-radius:6px;overflow:hidden;border:1.5px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;}
+.cdata{padding:9px 14px;background:var(--paper2);color:var(--ink);border-right:1.5px solid var(--rule);text-align:center;}
+.cptr{padding:9px 10px;background:var(--paper3);color:var(--ink3);text-align:center;font-size:10px;min-width:48px;}
+.cbox.head .cdata{background:#e8f5ee;color:#1a5c38;border-right-color:#a8d5b8;}
+.cbox.head{border-color:#a8d5b8;}
+.cbox.tail .cptr{background:#fdecea;color:#5a1010;font-weight:700;}
+.cbox.tail{border-color:#e8a090;}
+.caddr{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink3);background:var(--paper3);padding:1px 6px;border-radius:3px;margin-top:2px;}
+.carr{display:flex;align-items:center;padding:0 6px;margin-bottom:20px;color:var(--ink3);font-size:18px;font-weight:700;}
+.cnull{display:flex;align-items:center;padding:0 8px;margin-bottom:20px;}
+.cnull-box{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;background:#fdecea;border:1.5px solid #e8a090;color:#5a1010;padding:5px 10px;border-radius:5px;}
+
+/* COMP TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;margin:.75rem 0;}
+.comp-table th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--paper2);padding:8px 12px;border:1px solid var(--rule);color:var(--ink2);text-align:left;}
+.comp-table td{padding:7px 12px;border:1px solid var(--rule);color:var(--ink3);background:#fff;font-size:13px;}
+.comp-table tr:nth-child(even) td{background:var(--paper2);}
+.comp-table td:first-child{font-weight:500;color:var(--ink2);}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:1rem 0;}
+.card{border:1px solid var(--rule);border-radius:8px;padding:1rem;background:#fff;}
+.card-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.card-name{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--ink2);margin-bottom:.25rem;}
+.card-desc{font-size:12.5px;color:var(--ink3);line-height:1.5;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;margin:.75rem 0;}
+.tbl{border-collapse:collapse;font-size:13px;width:100%;}
+.tbl th{background:var(--paper2);color:var(--ink2);padding:8px 14px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;border:1px solid var(--rule);font-weight:500;}
+.tbl td{padding:7px 14px;border:1px solid var(--rule);text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);background:#fff;}
+.tbl tr:nth-child(even) td{background:var(--paper2);}
+.t-g{background:#e8f5ee!important;color:#1a5c38!important;font-weight:600;}
+.t-r{background:#fdecea!important;color:#5a1010!important;font-weight:700;}
+.t-blank{background:#f0f7ff!important;border-style:dashed!important;color:#bcd!important;}
+.tbl td.explain{text-align:left;font-family:'Figtree',sans-serif;font-size:12px;color:var(--ink2);}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:.45rem;margin:1rem 0;}
+.step{display:flex;gap:.75rem;align-items:flex-start;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:.6rem .9rem;}
+.step-n{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;background:var(--ink);color:var(--paper);border-radius:4px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-c{font-size:13px;color:var(--ink2);line-height:1.55;}
+
+/* CODE */
+pre.code{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;padding:1.1rem 1.3rem;border-radius:8px;overflow-x:auto;white-space:pre;background:var(--code-bg);color:var(--code-text);margin:.75rem 0;border:1px solid rgba(255,255,255,.05);}
+.kw{color:var(--kw);font-weight:500;}.fn{color:var(--fn);}.st{color:var(--st);}.cm{color:var(--cm);font-style:italic;}.nm{color:var(--nm);}.cls{color:var(--cls);}
+
+/* EXERCISES */
+.ex{border:1px solid var(--rule);border-radius:8px;margin-bottom:1.5rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;background:var(--paper2);transition:background .15s;}
+.ex-head:hover{background:var(--paper3);}
+.ex-left{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);}
+.ex-title{font-family:'Syne',sans-serif;font-weight:600;font-size:14px;}
+.ex-meta{display:flex;gap:.5rem;align-items:center;}
+.badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
+.b-easy{background:#e8f5ee;color:#1a5c38;border:1px solid #a8d5b8;}
+.b-mid{background:#fef3e2;color:#7a4a00;border:1px solid #f0c878;}
+.b-hard{background:#fdecea;color:#5a1010;border:1px solid #e8a090;}
+.b-mk{background:var(--paper2);color:var(--ink3);border:1px solid var(--rule);}
+.tog{font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:.75rem 1rem;border-radius:0 6px 6px 0;font-size:13.5px;margin-bottom:1.1rem;color:var(--ink2);line-height:1.65;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:.3rem 0 .3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);color:var(--ink2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:.4rem;color:var(--ink3);}
+.pts{float:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem;}
+.hint-btn,.ans-btn{font-family:'Figtree',sans-serif;font-size:12px;border-radius:5px;padding:5px 14px;cursor:pointer;font-weight:600;transition:all .15s;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.ans-btn{background:var(--ink);border:none;color:var(--paper);}
+.ans-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:#fef8e8;border:1px solid #e8d060;border-radius:6px;padding:.7rem .9rem;margin-top:.6rem;font-size:13px;color:#4a3800;line-height:1.65;}
+.hint-box.visible{display:block;}
+.ans-block{display:none;border-radius:6px;background:var(--code-bg);border:1px solid rgba(255,255,255,.06);margin-top:.75rem;overflow:hidden;}
+.ans-block.visible{display:block;}
+.ans-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--fn);padding:.6rem 1rem;background:rgba(168,216,144,.08);border-bottom:1px solid rgba(168,216,144,.15);}
+.ans-block pre.code{margin:0;border-radius:0;border:none;}
+
+/* EXAM BLOCK */
+.exam-block{border:2px solid #aac4ee;border-radius:10px;background:#fff;margin-bottom:1.75rem;overflow:hidden;}
+.exam-block-head{background:#eef5ff;padding:1rem 1.5rem;border-bottom:1px solid #aac4ee;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.exam-block-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:#0f2a5a;}
+.exam-block-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#3a5a8a;letter-spacing:.05em;}
+.exam-block-body{padding:1.5rem;}
+
+/* 2D ARRAY VISUAL */
+.twod-wrap{background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;}
+.twod-header{display:grid;grid-template-columns:60px 1fr 1fr 1fr;background:var(--paper2);border-bottom:1px solid var(--rule);}
+.twod-header div{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:8px 14px;border-right:1px solid var(--rule);text-align:center;}
+.twod-row{display:grid;grid-template-columns:60px 1fr 1fr 1fr;border-bottom:1px solid var(--paper3);}
+.twod-row:last-child{border-bottom:none;}
+.twod-row div{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);padding:7px 14px;border-right:1px solid var(--paper3);text-align:center;}
+.twod-row div:first-child{color:var(--ink2);font-weight:500;background:var(--paper2);}
+.twod-row div.g{background:#e8f5ee;color:#1a5c38;font-weight:600;}
+.twod-row div.r{background:#fdecea;color:#5a1010;font-weight:700;}
+.twod-row div.note{text-align:left;font-family:'Figtree',sans-serif;color:var(--ink3);}
+
+/* EXPLAIN TABLE */
+.explain-table{width:100%;border-collapse:collapse;font-size:13px;margin:.75rem 0;}
+.explain-table th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--paper2);padding:8px 12px;border:1px solid var(--rule);color:var(--ink2);text-align:left;}
+.explain-table td{padding:8px 12px;border:1px solid var(--rule);background:#fff;vertical-align:top;}
+.explain-table td:first-child{font-family:'JetBrains Mono',monospace;font-size:11px;color:#1a3a6a;background:#f0f6ff;font-weight:500;white-space:nowrap;}
+.explain-table td:last-child{font-size:13px;color:var(--ink2);line-height:1.6;}
+.explain-table tr:nth-child(even) td:last-child{background:var(--paper2);}
+
+/* FUNC SUMMARY */
+.func-summary{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:1rem 0;overflow:hidden;}
+.func-summary-head{background:var(--ink);color:#e8e4dc;padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;}
+.func-summary-body{padding:1rem;}
+.func-summary-body p{font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:.4rem;}
+.func-summary-body p:last-child{margin-bottom:0;}
+
+/* ANALOGY */
+.analogy-strip{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;margin:1rem 0;background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;}
+.a-block{padding:1rem;text-align:center;}
+.a-block.arr{background:var(--paper2);}
+.a-block.prob{background:#fdecea;}
+.a-block.sol{background:#e8f5ee;}
+.a-arrow{display:flex;align-items:center;justify-content:center;padding:0 .5rem;font-size:1.2rem;color:var(--ink3);background:var(--paper2);}
+.a-label{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem;color:var(--ink3);}
+.a-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:.25rem;}
+.a-desc{font-size:12px;color:var(--ink3);line-height:1.5;}
+
+/* ARR VISUAL */
+.arr-visual{display:flex;align-items:center;gap:0;margin:.75rem 0;flex-wrap:nowrap;overflow-x:auto;}
+.arr-cell{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;padding:10px 16px;background:var(--paper2);border:1.5px solid var(--rule);text-align:center;min-width:52px;}
+.arr-cell.av{background:#e8f5ee;color:#1a5c38;border-color:#a8d5b8;}
+.arr-cell.anew{background:#fef3e2;color:#7a4a00;border-color:#f0c878;font-weight:700;}
+
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-eyebrow">Cambridge AS &amp; A Level · Computer Science 9618 · Paper 4 · Beginner Friendly</div>
+  <h1>Linked <span>List</span></h1>
+  <div class="cover-sub">Simple words. Step by step. Every line explained. You can do this.</div>
+  <div class="cover-tags">
+    <span class="cover-tag">Simple names</span>
+    <span class="cover-tag">Every line explained</span>
+    <span class="cover-tag">5 extra exercises</span>
+    <span class="cover-tag">N24 Exam Q3</span>
+  </div>
+</div>
+
+<div class="progress">
+  <div class="ps active">01 · Big Idea</div>
+  <div class="ps">02 · Constants</div>
+  <div class="ps">03 · Node Class</div>
+  <div class="ps">04 · Initialise</div>
+  <div class="ps">05 · Operations</div>
+  <div class="ps">06 · 2D Arrays</div>
+  <div class="ps">07 · Exercises</div>
+  <div class="ps">08 · N24 Exam Q3</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 01 · BIG IDEA                                             -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">01</div>
+    <div><div class="sec-title">The Big Idea</div><div class="sec-sub">What is a linked list and why do we need it?</div></div>
+  </div>
+
+  <p class="body">Think of a treasure hunt. Each clue does not tell you where the treasure is directly — it tells you where the <strong>next clue</strong> is. A linked list works the same way. Each item says: "here is my data, and here is where the next item lives."</p>
+
+  <div class="analogy-strip">
+    <div class="a-block arr">
+      <div class="a-label">You already know</div>
+      <div class="a-title">Array</div>
+      <div class="a-desc">Items sit next to each other. Like seats in a row. To add a seat in the middle, everyone shifts.</div>
+    </div>
+    <div class="a-arrow">→</div>
+    <div class="a-block prob">
+      <div class="a-label">The problem</div>
+      <div class="a-title">Shifting is slow</div>
+      <div class="a-desc">Insert 15 between 10 and 20 — you must move 20, 30, 40… That is a lot of work.</div>
+    </div>
+    <div class="a-arrow">→</div>
+    <div class="a-block sol">
+      <div class="a-label">The solution</div>
+      <div class="a-title">Linked List</div>
+      <div class="a-desc">Items live anywhere in memory. To insert, just change two "directions". No shifting needed.</div>
+    </div>
+  </div>
+
+  <div class="chain-wrap">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);margin-bottom:.75rem;">A linked list with 3 items — the order comes from the arrows, not the positions</div>
+    <div class="chain">
+      <div class="cnode">
+        <div class="clabel">head index points here</div>
+        <div class="cbox head"><div class="cdata">10</div><div class="cptr">→ slot 2</div></div>
+        <div class="caddr">slot 0</div>
+      </div>
+      <div class="carr">→</div>
+      <div class="cnode">
+        <div class="clabel">&nbsp;</div>
+        <div class="cbox"><div class="cdata">20</div><div class="cptr">→ slot 4</div></div>
+        <div class="caddr">slot 2</div>
+      </div>
+      <div class="carr">→</div>
+      <div class="cnode">
+        <div class="clabel">last item</div>
+        <div class="cbox tail"><div class="cdata">30</div><div class="cptr">–1</div></div>
+        <div class="caddr">slot 4</div>
+      </div>
+      <div class="cnull"><div class="cnull-box">🛑 –1 = STOP</div></div>
+    </div>
+  </div>
+
+  <div class="box box-stop">
+    <strong>🛑 The two most important rules — memorise these:</strong><br>
+    A pointer value of <code class="ic">–1</code> means "there is no next item" (end of list).<br>
+    <code class="ic">head index = –1</code> means the list is completely empty.<br>
+    <code class="ic">first free index = –1</code> means the list is completely full (no space left).
+  </div>
+
+  <div class="cards" style="margin-top:1rem;">
+    <div class="card"><div class="card-icon">📦</div><div class="card-name">Node / Slot</div><div class="card-desc">One item in the list. Has a value and a direction to the next item.</div></div>
+    <div class="card"><div class="card-icon">👉</div><div class="card-name">next index</div><div class="card-desc">The slot number of the next item. <code class="ic">–1</code> = no next item.</div></div>
+    <div class="card"><div class="card-icon">🟢</div><div class="card-name">head index</div><div class="card-desc">Slot number of the first item. Start here to read the list.</div></div>
+    <div class="card"><div class="card-icon">♻️</div><div class="card-name">first free index</div><div class="card-desc">Slot number of the next empty space. Use this when inserting.</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 02 · CONSTANTS                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">02</div>
+    <div><div class="sec-title">Constants</div><div class="sec-sub">Values that never change</div></div>
+  </div>
+
+  <p class="body">A constant is just a name we give to a value so we do not have to write the number everywhere. Instead of writing <code class="ic">–1</code> in every function, we write <code class="ic">EMPTY</code>. Much easier to read.</p>
+
+<pre class="code"><span class="cm"># This is the only constant we need.</span>
+<span class="cm"># –1 means "nothing here" or "no next item".</span>
+EMPTY = -<span class="nm">1</span></pre>
+
+  <table class="explain-table">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>EMPTY = -1</td><td>We create a name <code class="ic">EMPTY</code> that means "no value / does not exist." We use this instead of writing <code class="ic">-1</code> every time.</td></tr>
+  </table>
+
+  <div class="box box-tip">
+    <strong>💡 Why not just write –1 everywhere?</strong><br>
+    If you use the name <code class="ic">EMPTY</code>, your code is easier to read. "pointer = EMPTY" is clearer than "pointer = -1". The examiner also sees you understand what –1 means.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 03 · NODE CLASS                                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">03</div>
+    <div><div class="sec-title">The Node Class</div><div class="sec-sub">The blueprint for one item in the list</div></div>
+  </div>
+
+  <p class="body">A class is like a recipe card. It describes what one node looks like. Every node has exactly two things: its <strong>value</strong> (the actual data) and a <strong>next index</strong> (which slot comes after it).</p>
+
+<pre class="code"><span class="kw">class</span> <span class="cls">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, value=<span class="st">""</span>, next_index=EMPTY):
+        self.value      = value
+        self.next_index = next_index</pre>
+
+  <table class="explain-table">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>class Node:</td><td>We are creating a blueprint called Node. Every slot in the list will use this blueprint.</td></tr>
+    <tr><td>def __init__(...)</td><td>This runs automatically when we create a new Node. It sets up its starting values.</td></tr>
+    <tr><td>value=""</td><td>The actual data stored. Starts as empty text by default.</td></tr>
+    <tr><td>next_index=EMPTY</td><td>The slot number of the next item. Starts as –1 (meaning: no next item yet).</td></tr>
+    <tr><td>self.value = value</td><td>Save the value into this node.</td></tr>
+    <tr><td>self.next_index = next_index</td><td>Save the next slot number into this node.</td></tr>
+  </table>
+
+  <div class="box box-key">
+    <strong>🧠 Think of it like a box with two compartments:</strong><br>
+    Left side = the actual data (a number, a name…)<br>
+    Right side = the slot number of the next box in the chain
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 04 · CREATE AND INITIALISE                                -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">04</div>
+    <div><div class="sec-title">Create and Initialise the List</div><div class="sec-sub">Setting everything up before we use it</div></div>
+  </div>
+
+  <p class="body">Before we can use the linked list, we must set it up. We create an array of empty nodes and link them all together in a "free chain" — like a waiting room where empty seats know which seat is next.</p>
+
+<pre class="code"><span class="cm"># How many slots our list can hold</span>
+MAX_SIZE = <span class="nm">7</span>
+
+<span class="cm"># The two global variables we always need</span>
+head_index      = EMPTY   <span class="cm"># –1 means the list is empty right now</span>
+first_free_index = <span class="nm">0</span>      <span class="cm"># first empty slot is at position 0</span>
+
+<span class="cm"># Create the array: 7 empty nodes</span>
+slots = [<span class="cls">Node</span>() <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(MAX_SIZE)]
+
+<span class="cm"># Link all the free slots together</span>
+<span class="kw">def</span> <span class="fn">setup_list</span>():
+    <span class="kw">global</span> head_index, first_free_index, slots
+    head_index       = EMPTY
+    first_free_index = <span class="nm">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(MAX_SIZE - <span class="nm">1</span>):
+        slots[i].next_index = i + <span class="nm">1</span>
+    slots[MAX_SIZE - <span class="nm">1</span>].next_index = EMPTY</pre>
+
+  <table class="explain-table">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>head_index = EMPTY</td><td>No items in the list yet. The list is empty. –1 signals this.</td></tr>
+    <tr><td>first_free_index = 0</td><td>The first empty slot we can use is at position 0.</td></tr>
+    <tr><td>slots = [Node() ...]</td><td>Create 7 empty boxes (nodes), all blank to start.</td></tr>
+    <tr><td>for i in range(MAX_SIZE - 1):</td><td>Go through every slot except the last one.</td></tr>
+    <tr><td>slots[i].next_index = i + 1</td><td>Each free slot points to the one after it. Slot 0 → 1, slot 1 → 2, etc.</td></tr>
+    <tr><td>slots[MAX_SIZE-1].next_index = EMPTY</td><td>The last slot has no "next". So it gets –1 to say "I am the end."</td></tr>
+  </table>
+
+  <p class="body" style="margin-top:1rem;">After setup, the array looks like this — all 7 slots are free and linked:</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <tr><th>Slot</th><th>.value</th><th>.next index</th><th>Note</th></tr>
+      <tr><td>0</td><td>""</td><td>1</td><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#1a5c38;">← first_free_index starts here</td></tr>
+      <tr><td>1</td><td>""</td><td>2</td><td class="explain">free slot, points to next free</td></tr>
+      <tr><td>2</td><td>""</td><td>3</td><td class="explain">free slot</td></tr>
+      <tr><td>3</td><td>""</td><td>4</td><td class="explain">free slot</td></tr>
+      <tr><td>4</td><td>""</td><td>5</td><td class="explain">free slot</td></tr>
+      <tr><td>5</td><td>""</td><td>6</td><td class="explain">free slot</td></tr>
+      <tr><td>6</td><td>""</td><td style="color:#5a1010;font-weight:700;">–1</td><td class="explain" style="color:#5a1010;">last free slot — no next one</td></tr>
+    </table>
+  </div>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 What does setup_list() do?</div>
+    <div class="func-summary-body">
+      <p>It prepares the linked list so it is ready to use. It says: "the list is empty" (<code class="ic">head_index = –1</code>) and links all 7 empty slots together so we know which ones are free. Think of it as setting up an empty classroom with chairs all connected by a rope — you can grab the first chair and follow the rope to find the next free one.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 05 · OPERATIONS                                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">05</div>
+    <div><div class="sec-title">Operations</div><div class="sec-sub">Insert · Traverse · Find · Delete</div></div>
+  </div>
+
+  <!-- INSERT AT FRONT -->
+  <p class="body" style="font-size:15px;font-weight:600;margin-bottom:.6rem;">① Insert at the Front</p>
+  <p class="body">This puts a new item at the beginning of the list. The new item becomes the new head. Do this in 4 steps:</p>
+
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><strong>Check if full.</strong> If <code class="ic">first_free_index == –1</code>, there are no empty slots. Print a message and stop.</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><strong>Grab a free slot.</strong> Save <code class="ic">first_free_index</code> as your new slot. Then move <code class="ic">first_free_index</code> forward to the next free slot.</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><strong>Store the data.</strong> Put the value in that slot. Make the new slot point to the old head (the old first item).</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-c"><strong>Update the head.</strong> The new slot is now the first item. Set <code class="ic">head_index</code> to the new slot.</div></div>
+  </div>
+
+<pre class="code"><span class="kw">def</span> <span class="fn">insert_at_front</span>(value):
+    <span class="kw">global</span> slots, head_index, first_free_index
+
+    <span class="kw">if</span> first_free_index == EMPTY:          <span class="cm"># Step 1: is the list full?</span>
+        <span class="fn">print</span>(<span class="st">"List is full — cannot insert"</span>)
+        <span class="kw">return</span>
+
+    new_slot         = first_free_index                   <span class="cm"># Step 2a: grab the slot</span>
+    first_free_index = slots[first_free_index].next_index <span class="cm"># Step 2b: move free pointer forward</span>
+
+    slots[new_slot].value      = value       <span class="cm"># Step 3a: store the data</span>
+    slots[new_slot].next_index = head_index  <span class="cm"># Step 3b: point to old head</span>
+    head_index = new_slot                   <span class="cm"># Step 4: new slot is the new head</span></pre>
+
+  <table class="explain-table" style="margin-top:.5rem;">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>new_slot = first_free_index</td><td>Remember which slot we are about to use.</td></tr>
+    <tr><td>first_free_index = slots[...].next_index</td><td>Move the "next free" pointer to the slot after the one we just took.</td></tr>
+    <tr><td>slots[new_slot].value = value</td><td>Put the actual number/word into our new slot.</td></tr>
+    <tr><td>slots[new_slot].next_index = head_index</td><td>The new item points to whatever was the old first item.</td></tr>
+    <tr><td>head_index = new_slot</td><td>Now this new slot is the head (the first item in the list).</td></tr>
+  </table>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 What does insert_at_front() do?</div>
+    <div class="func-summary-body">
+      <p>It adds one item to the beginning of the list. Imagine a queue — instead of going to the back, this person cuts to the front. The old "first person" becomes second. The new person is now first.</p>
+    </div>
+  </div>
+
+  <div class="divider" style="margin:1.5rem 0;"></div>
+
+  <!-- TRAVERSE -->
+  <p class="body" style="font-size:15px;font-weight:600;margin-bottom:.6rem;">② Traverse — Read the Whole List</p>
+  <p class="body">To read every item, start at <code class="ic">head_index</code> and keep following <code class="ic">next_index</code> until you reach –1 (the stop sign).</p>
+
+<pre class="code"><span class="kw">def</span> <span class="fn">print_list</span>():
+    <span class="kw">global</span> slots, head_index
+
+    current = head_index              <span class="cm"># start at the first item</span>
+    <span class="kw">while</span> current != EMPTY:           <span class="cm"># keep going until we hit –1</span>
+        <span class="fn">print</span>(slots[current].value)   <span class="cm"># print this item's value</span>
+        current = slots[current].next_index  <span class="cm"># follow the arrow to next item</span></pre>
+
+  <table class="explain-table" style="margin-top:.5rem;">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>current = head_index</td><td>Start at the first item in the list.</td></tr>
+    <tr><td>while current != EMPTY</td><td>Keep looping as long as we have not reached the end (–1).</td></tr>
+    <tr><td>print(slots[current].value)</td><td>Print the value stored in the current slot.</td></tr>
+    <tr><td>current = slots[current].next_index</td><td>Move to the next slot by following the arrow.</td></tr>
+  </table>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 What does print_list() do?</div>
+    <div class="func-summary-body">
+      <p>It reads and prints every item in the list, from first to last. It follows the chain of arrows until it sees –1 and then stops. Like following a treasure hunt until there are no more clues.</p>
+    </div>
+  </div>
+
+  <div class="divider" style="margin:1.5rem 0;"></div>
+
+  <!-- FIND -->
+  <p class="body" style="font-size:15px;font-weight:600;margin-bottom:.6rem;">③ Find — Search for a Value</p>
+
+<pre class="code"><span class="kw">def</span> <span class="fn">find_item</span>(target):
+    <span class="kw">global</span> slots, head_index
+
+    current = head_index
+    <span class="kw">while</span> current != EMPTY:
+        <span class="kw">if</span> slots[current].value == target:
+            <span class="fn">print</span>(<span class="fn">f</span><span class="st">"Found {target} at slot {current}"</span>)
+            <span class="kw">return</span> current
+        current = slots[current].next_index
+
+    <span class="fn">print</span>(<span class="fn">f</span><span class="st">"{target} is not in the list"</span>)
+    <span class="kw">return</span> EMPTY</pre>
+
+  <table class="explain-table" style="margin-top:.5rem;">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>if slots[current].value == target</td><td>Is this the item we are looking for?</td></tr>
+    <tr><td>return current</td><td>Yes! Return the slot number where it lives.</td></tr>
+    <tr><td>print(... "not in the list")</td><td>We went through every item and did not find it.</td></tr>
+    <tr><td>return EMPTY</td><td>Return –1 to signal "not found."</td></tr>
+  </table>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 What does find_item() do?</div>
+    <div class="func-summary-body">
+      <p>It searches the list for a specific value. It checks each item one by one. If it finds it, it says where. If not, it says "not found." Like looking for a name in a phone book — one line at a time.</p>
+    </div>
+  </div>
+
+  <div class="divider" style="margin:1.5rem 0;"></div>
+
+  <!-- DELETE -->
+  <p class="body" style="font-size:15px;font-weight:600;margin-bottom:.6rem;">④ Delete — Remove an Item and Recycle the Slot</p>
+  <p class="body">We use two "walkers": <code class="ic">current</code> (the item we are checking) and <code class="ic">previous</code> (the item just before it). When we find the target, we make <code class="ic">previous</code> skip over <code class="ic">current</code>. Then we recycle the slot back to the free list.</p>
+
+<pre class="code"><span class="kw">def</span> <span class="fn">delete_item</span>(target):
+    <span class="kw">global</span> slots, head_index, first_free_index
+
+    current  = head_index
+    previous = EMPTY          <span class="cm"># no previous item at the start</span>
+
+    <span class="cm"># Walk until we find the target</span>
+    <span class="kw">while</span> current != EMPTY <span class="kw">and</span> slots[current].value != target:
+        previous = current
+        current  = slots[current].next_index
+
+    <span class="kw">if</span> current == EMPTY:
+        <span class="fn">print</span>(<span class="fn">f</span><span class="st">"{target} not found"</span>)
+        <span class="kw">return</span>
+
+    <span class="cm"># Re-link: skip over the deleted item</span>
+    <span class="kw">if</span> previous == EMPTY:                              <span class="cm"># deleting the very first item</span>
+        head_index = slots[current].next_index
+    <span class="kw">else</span>:                                              <span class="cm"># deleting a middle or last item</span>
+        slots[previous].next_index = slots[current].next_index
+
+    <span class="cm"># Recycle: return this slot to the free list</span>
+    slots[current].value      = <span class="st">""</span>
+    slots[current].next_index = first_free_index
+    first_free_index          = current</pre>
+
+  <table class="explain-table" style="margin-top:.5rem;">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>previous = EMPTY</td><td>We start with no "previous item" because we are at the very beginning.</td></tr>
+    <tr><td>previous = current; current = ...</td><td>Move both walkers forward together, one step at a time.</td></tr>
+    <tr><td>if previous == EMPTY</td><td>We are deleting the very first item. Update the head to the next item.</td></tr>
+    <tr><td>slots[previous].next_index = slots[current].next_index</td><td>The item before the deleted one now points to the item after it. Skip over the deleted one. Like removing link B from chain A→B→C so it becomes A→C.</td></tr>
+    <tr><td>slots[current].value = ""</td><td>Clear the data from the deleted slot.</td></tr>
+    <tr><td>slots[current].next_index = first_free_index</td><td>The recycled slot points to the old first free slot.</td></tr>
+    <tr><td>first_free_index = current</td><td>The recycled slot is now the first free slot (available for future inserts).</td></tr>
+  </table>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 What does delete_item() do?</div>
+    <div class="func-summary-body">
+      <p>It finds a value in the list and removes it. Then it puts the empty slot back into the "free pool" so it can be reused later. Think of it like removing someone from a queue — the people on either side of them step together, and the removed person's spot is marked as available again.</p>
+    </div>
+  </div>
+
+  <div class="box box-tip">
+    <strong>💡 The skip-over trick visualised:</strong><br>
+    Before: A → B → C (deleting B)<br>
+    After: A → C (A now points directly to C, B is gone)<br>
+    Code does this: <code class="ic">slots[previous].next_index = slots[current].next_index</code>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 06 · 2D ARRAY LINKED LISTS                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">06</div>
+    <div><div class="sec-title">2D Array Linked Lists</div><div class="sec-sub">What the exam actually uses — explained simply</div></div>
+  </div>
+
+  <p class="body">The Cambridge exam does NOT use a Node class. Instead, it uses a <strong>2D array</strong> (a grid). Each row is one slot. Column 0 = the data. Column 1 = the next slot number. That is it.</p>
+
+  <div class="box box-key">
+    <strong>🧠 Translation table — same idea, different syntax:</strong><br><br>
+    <code class="ic">slots[i].value</code> → <code class="ic">LinkedList[i][0]</code><br>
+    <code class="ic">slots[i].next_index</code> → <code class="ic">LinkedList[i][1]</code><br>
+    <code class="ic">head_index</code> → <code class="ic">FirstNode</code><br>
+    <code class="ic">first_free_index</code> → <code class="ic">FirstEmpty</code>
+  </div>
+
+  <p class="body">Here is what the 2D array looks like after inserting 10, then 20, then 30 at the front:</p>
+
+  <div class="twod-wrap">
+    <div class="twod-header">
+      <div>Slot</div>
+      <div>Data [0]</div>
+      <div>Next [1]</div>
+      <div>Note</div>
+    </div>
+    <div class="twod-row"><div>0</div><div>10</div><div>–1</div><div class="note">10 was inserted first, so its next = –1 (it was the only item then)</div></div>
+    <div class="twod-row"><div>1</div><div>20</div><div>0</div><div class="note">20 was inserted second, points to 10</div></div>
+    <div class="twod-row"><div>2</div><div class="g">30</div><div>1</div><div class="note">30 was inserted last → it is the HEAD. FirstNode = 2</div></div>
+    <div class="twod-row"><div>3</div><div>–1</div><div>4</div><div class="note">free slot, points to next free</div></div>
+    <div class="twod-row"><div>4</div><div>–1</div><div class="r">–1</div><div class="note">last free slot</div></div>
+  </div>
+
+  <div class="box box-info">
+    <strong>FirstNode = 2</strong> (the list starts at slot 2, which has value 30)<br>
+    <strong>FirstEmpty = 3</strong> (next free slot is slot 3)<br>
+    Traversal output: 30 → 20 → 10 → STOP
+  </div>
+
+  <p class="body" style="margin-top:1rem;">The exam code uses <code class="ic">LinkedList[i][0]</code> for data and <code class="ic">LinkedList[i][1]</code> for the next pointer. The logic is exactly the same as the Node class — just different brackets.</p>
+
+<pre class="code"><span class="cm"># 2D array version of "insert at front" — exam style</span>
+<span class="kw">def</span> <span class="fn">InsertData</span>(value):
+    <span class="kw">global</span> LinkedList, FirstNode, FirstEmpty
+
+    <span class="kw">if</span> FirstEmpty == -<span class="nm">1</span>:           <span class="cm"># list is full</span>
+        <span class="fn">print</span>(<span class="st">"List is full"</span>)
+        <span class="kw">return</span>
+
+    new_slot               = FirstEmpty
+    FirstEmpty             = LinkedList[FirstEmpty][<span class="nm">1</span>]  <span class="cm"># move free pointer</span>
+    LinkedList[new_slot][<span class="nm">0</span>] = value                   <span class="cm"># store data</span>
+    LinkedList[new_slot][<span class="nm">1</span>] = FirstNode                <span class="cm"># point to old head</span>
+    FirstNode              = new_slot                  <span class="cm"># update head</span></pre>
+
+  <table class="explain-table" style="margin-top:.5rem;">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>LinkedList[FirstEmpty][1]</td><td>Read the next-slot value of the current free slot. This tells us which slot is free after this one.</td></tr>
+    <tr><td>LinkedList[new_slot][0] = value</td><td>Store the actual data in column 0 of this slot.</td></tr>
+    <tr><td>LinkedList[new_slot][1] = FirstNode</td><td>Point to the old head (column 1 = the next-slot number).</td></tr>
+  </table>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 07 · EXERCISES                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">07</div>
+    <div><div class="sec-title">Practice Exercises</div><div class="sec-sub">Build confidence step by step</div></div>
+  </div>
+
+  <p class="body" style="margin-bottom:1.25rem;">Try each question yourself first. When you are ready, click "Show Answer".</p>
+
+ <!-- EX 1 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('e1')">
+      <div class="ex-left"><span class="ex-num">Ex 1</span><span class="ex-title">Write a procedure to insert one item at the front</span></div>
+      <div class="ex-meta"><span class="badge b-easy">Easy</span><span class="badge b-mk">[5 marks]</span><span class="tog" id="e1-lbl">▼ show</span></div>
+    </div>
+    <div class="ex-body" id="e1" style="display:none;">
+      <div class="scenario">
+        A linked list is stored in a 2D array called <code class="ic">LinkedList</code> with 10 slots. Column 0 stores the data, column 1 stores the pointer to the next slot. <code class="ic">FirstNode</code> holds the index of the first data item. <code class="ic">FirstEmpty</code> holds the index of the first free slot. Both are initially set to the correct starting values.<br><br>
+        The procedure <code class="ic">InsertFront(value)</code> takes one integer as a parameter and inserts it at the front of the linked list. If the list is full, it should output a suitable message and stop.
+      </div>
+      <ul class="task-list">
+        <li>Write program code for <code class="ic">InsertFront(value)</code>. <span class="pts">[5]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('e1')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('e1')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="e1-hint">
+        Step 1: Check if FirstEmpty == –1 (full). Step 2: Save FirstEmpty as your new slot. Step 3: Move FirstEmpty forward. Step 4: Store the value in column 0. Step 5: Point the new slot to the old FirstNode (column 1). Step 6: Update FirstNode to the new slot.
+      </div>
+      <div class="ans-block" id="e1-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="kw">def</span> <span class="fn">InsertFront</span>(value):
+    <span class="kw">global</span> LinkedList, FirstNode, FirstEmpty
+
+    <span class="kw">if</span> FirstEmpty == -<span class="nm">1</span>:
+        <span class="fn">print</span>(<span class="st">"List is full"</span>)
+        <span class="kw">return</span>
+
+    new_slot                = FirstEmpty
+    FirstEmpty              = LinkedList[FirstEmpty][<span class="nm">1</span>]
+    LinkedList[new_slot][<span class="nm">0</span>] = value
+    LinkedList[new_slot][<span class="nm">1</span>] = FirstNode
+    FirstNode               = new_slot
+
+<span class="cm">Mark scheme [5]:</span>
+<span class="cm">[1] check FirstEmpty == –1, output message and stop</span>
+<span class="cm">[1] save FirstEmpty as new_slot</span>
+<span class="cm">[1] advance FirstEmpty to LinkedList[FirstEmpty][1]</span>
+<span class="cm">[1] store value in column 0; set column 1 to old FirstNode</span>
+<span class="cm">[1] update FirstNode to new_slot</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('e2')">
+      <div class="ex-left"><span class="ex-num">Ex 2</span><span class="ex-title">Write a function to output the list and count items</span></div>
+      <div class="ex-meta"><span class="badge b-easy">Easy</span><span class="badge b-mk">[4 marks]</span><span class="tog" id="e2-lbl">▼ show</span></div>
+    </div>
+    <div class="ex-body" id="e2" style="display:none;">
+      <div class="scenario">
+        Using the same linked list as Exercise 1.<br><br>
+        <strong>(i)</strong> Write a procedure called <code class="ic">OutputList()</code> that outputs every data item in the list in order, starting from <code class="ic">FirstNode</code>.<br><br>
+        <strong>(ii)</strong> Write a function called <code class="ic">CountItems()</code> that returns the total number of data items currently in the list as an integer.
+      </div>
+      <ul class="task-list">
+        <li>Write program code for <code class="ic">OutputList()</code>. <span class="pts">[2]</span></li>
+        <li>Write program code for <code class="ic">CountItems()</code>. <span class="pts">[2]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('e2')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('e2')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="e2-hint">
+        Both functions start at FirstNode and follow column 1 until –1. OutputList prints each value. CountItems uses a counter that adds 1 each time the loop runs, then returns it at the end.
+      </div>
+      <div class="ans-block" id="e2-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="cm"># (i)</span>
+<span class="kw">def</span> <span class="fn">OutputList</span>():
+    <span class="kw">global</span> LinkedList, FirstNode
+
+    current = FirstNode
+    <span class="kw">while</span> current != -<span class="nm">1</span>:
+        <span class="fn">print</span>(LinkedList[current][<span class="nm">0</span>])
+        current = LinkedList[current][<span class="nm">1</span>]
+
+<span class="cm"># (ii)</span>
+<span class="kw">def</span> <span class="fn">CountItems</span>():
+    <span class="kw">global</span> LinkedList, FirstNode
+
+    count   = <span class="nm">0</span>
+    current = FirstNode
+    <span class="kw">while</span> current != -<span class="nm">1</span>:
+        count  += <span class="nm">1</span>
+        current = LinkedList[current][<span class="nm">1</span>]
+    <span class="kw">return</span> count
+
+<span class="cm">Mark scheme:</span>
+<span class="cm">[1] OutputList: correct loop following column 1 until –1</span>
+<span class="cm">[1] OutputList: prints column 0 of each node</span>
+<span class="cm">[1] CountItems: counter starts at 0, increments each iteration</span>
+<span class="cm">[1] CountItems: returns count after loop ends</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('e3')">
+      <div class="ex-left"><span class="ex-num">Ex 3</span><span class="ex-title">Write a procedure to search for a value and report if found</span></div>
+      <div class="ex-meta"><span class="badge b-mid">Intermediate</span><span class="badge b-mk">[4 marks]</span><span class="tog" id="e3-lbl">▼ show</span></div>
+    </div>
+    <div class="ex-body" id="e3" style="display:none;">
+      <div class="scenario">
+        Using the same linked list. A procedure called <code class="ic">SearchList(target)</code> takes one integer as a parameter.<br><br>
+        It searches the linked list for <code class="ic">target</code>. If found, it outputs the message <code class="ic">"Found: "</code> followed by the slot number where it is stored. If not found, it outputs <code class="ic">"Not found"</code>.
+      </div>
+      <ul class="task-list">
+        <li>Write program code for <code class="ic">SearchList(target)</code>. <span class="pts">[4]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('e3')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('e3')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="e3-hint">
+        Start at FirstNode. Walk the list. Each step: check if column 0 equals target. If yes → print the slot number (that is the variable current) and stop. If the loop ends without finding it → print "Not found".
+      </div>
+      <div class="ans-block" id="e3-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="kw">def</span> <span class="fn">SearchList</span>(target):
+    <span class="kw">global</span> LinkedList, FirstNode
+
+    current = FirstNode
+
+    <span class="kw">while</span> current != -<span class="nm">1</span>:
+        <span class="kw">if</span> LinkedList[current][<span class="nm">0</span>] == target:
+            <span class="fn">print</span>(<span class="st">"Found: slot"</span>, current)
+            <span class="kw">return</span>
+        current = LinkedList[current][<span class="nm">1</span>]
+
+    <span class="fn">print</span>(<span class="st">"Not found"</span>)
+
+<span class="cm">Mark scheme [4]:</span>
+<span class="cm">[1] starts at FirstNode, uses correct loop condition (!= –1)</span>
+<span class="cm">[1] checks LinkedList[current][0] == target inside the loop</span>
+<span class="cm">[1] outputs slot number (current) when found and stops</span>
+<span class="cm">[1] outputs "Not found" only after the loop ends without finding it</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('e4')">
+      <div class="ex-left"><span class="ex-num">Ex 4</span><span class="ex-title">Write a procedure to delete a node and recycle the slot</span></div>
+      <div class="ex-meta"><span class="badge b-mid">Intermediate</span><span class="badge b-mk">[6 marks]</span><span class="tog" id="e4-lbl">▼ show</span></div>
+    </div>
+    <div class="ex-body" id="e4" style="display:none;">
+      <div class="scenario">
+        Using the same linked list. The procedure <code class="ic">DeleteItem(target)</code> takes one integer as a parameter.<br><br>
+        It searches for the first node whose data equals <code class="ic">target</code>. When found, it removes that node from the list by updating the pointers of the surrounding nodes. It then returns the deleted slot to the free list by updating <code class="ic">FirstEmpty</code>. You can assume <code class="ic">target</code> is always present in the list.
+      </div>
+      <ul class="task-list">
+        <li>Write program code for <code class="ic">DeleteItem(target)</code>. <span class="pts">[6]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('e4')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('e4')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="e4-hint">
+        You need two walkers: <code class="ic">current</code> (starts at FirstNode) and <code class="ic">previous</code> (starts at –1). Walk until you find target. Then: if previous == –1, update FirstNode. Otherwise, set previous's column 1 to current's column 1 (skip over current). Finally: clear the slot's data, set its pointer to old FirstEmpty, set FirstEmpty = current.
+      </div>
+      <div class="ans-block" id="e4-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="kw">def</span> <span class="fn">DeleteItem</span>(target):
+    <span class="kw">global</span> LinkedList, FirstNode, FirstEmpty
+
+    current  = FirstNode
+    previous = -<span class="nm">1</span>
+
+    <span class="kw">while</span> current != -<span class="nm">1</span> <span class="kw">and</span> LinkedList[current][<span class="nm">0</span>] != target:
+        previous = current
+        current  = LinkedList[current][<span class="nm">1</span>]
+
+    <span class="kw">if</span> previous == -<span class="nm">1</span>:
+        FirstNode = LinkedList[current][<span class="nm">1</span>]
+    <span class="kw">else</span>:
+        LinkedList[previous][<span class="nm">1</span>] = LinkedList[current][<span class="nm">1</span>]
+
+    LinkedList[current][<span class="nm">0</span>] = -<span class="nm">1</span>
+    LinkedList[current][<span class="nm">1</span>] = FirstEmpty
+    FirstEmpty = current
+
+<span class="cm">Mark scheme [6]:</span>
+<span class="cm">[1] two pointers declared: current = FirstNode, previous = –1</span>
+<span class="cm">[1] loop condition: current != –1 AND column 0 != target</span>
+<span class="cm">[1] previous and current both move forward inside the loop</span>
+<span class="cm">[1] if previous == –1: FirstNode updated to current's next</span>
+<span class="cm">[1] else: LinkedList[previous][1] = LinkedList[current][1]</span>
+<span class="cm">[1] slot recycled: data cleared, pointer = old FirstEmpty, FirstEmpty = current</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('e5')">
+      <div class="ex-left"><span class="ex-num">Ex 5</span><span class="ex-title">Write a procedure to insert multiple items and then remove one</span></div>
+      <div class="ex-meta"><span class="badge b-hard">Hard</span><span class="badge b-mk">[8 marks]</span><span class="tog" id="e5-lbl">▼ show</span></div>
+    </div>
+    <div class="ex-body" id="e5" style="display:none;">
+      <div class="scenario">
+        A linked list is stored in a 2D array called <code class="ic">LinkedList</code> with 8 slots. <code class="ic">FirstNode</code> and <code class="ic">FirstEmpty</code> are already initialised correctly.<br><br>
+        <strong>(i)</strong> Write a procedure <code class="ic">LoadData()</code> that asks the user to input <strong>3 positive integers</strong> one at a time and inserts each at the front of the linked list. If the list becomes full before all 3 are inserted, output <code class="ic">"List full"</code> and stop.<br><br>
+        <strong>(ii)</strong> Write a function <code class="ic">GetLast()</code> that traverses the list and returns the <strong>data value</strong> of the last node (the node whose pointer is –1). If the list is empty, return –1.<br><br>
+        <strong>(iii)</strong> Write program code for the main program that calls <code class="ic">LoadData()</code>, then calls <code class="ic">GetLast()</code> and outputs the result with the label <code class="ic">"Last item:"</code>.
+      </div>
+      <ul class="task-list">
+        <li>Write program code for <code class="ic">LoadData()</code>. <span class="pts">[4]</span></li>
+        <li>Write program code for <code class="ic">GetLast()</code>. <span class="pts">[3]</span></li>
+        <li>Write main program code. <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('e5')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('e5')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="e5-hint">
+        LoadData: loop 3 times, same pattern as InsertFront but check full first. GetLast: if FirstNode == –1, return –1. Otherwise walk the list until you find a node whose column 1 is –1 — that is the last node. Return its column 0 (the data).
+      </div>
+      <div class="ans-block" id="e5-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="cm"># (i)</span>
+<span class="kw">def</span> <span class="fn">LoadData</span>():
+    <span class="kw">global</span> LinkedList, FirstNode, FirstEmpty
+
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">3</span>):
+        <span class="kw">if</span> FirstEmpty == -<span class="nm">1</span>:
+            <span class="fn">print</span>(<span class="st">"List full"</span>)
+            <span class="kw">return</span>
+        value                   = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter a number: "</span>))
+        new_slot                = FirstEmpty
+        FirstEmpty              = LinkedList[FirstEmpty][<span class="nm">1</span>]
+        LinkedList[new_slot][<span class="nm">0</span>] = value
+        LinkedList[new_slot][<span class="nm">1</span>] = FirstNode
+        FirstNode               = new_slot
+
+<span class="cm"># (ii)</span>
+<span class="kw">def</span> <span class="fn">GetLast</span>():
+    <span class="kw">global</span> LinkedList, FirstNode
+
+    <span class="kw">if</span> FirstNode == -<span class="nm">1</span>:
+        <span class="kw">return</span> -<span class="nm">1</span>
+
+    current = FirstNode
+    <span class="kw">while</span> LinkedList[current][<span class="nm">1</span>] != -<span class="nm">1</span>:
+        current = LinkedList[current][<span class="nm">1</span>]
+    <span class="kw">return</span> LinkedList[current][<span class="nm">0</span>]
+
+<span class="cm"># (iii) Main program</span>
+<span class="fn">LoadData</span>()
+<span class="fn">print</span>(<span class="st">"Last item:"</span>, <span class="fn">GetLast</span>())
+
+<span class="cm">Mark scheme:</span>
+<span class="cm">LoadData [4]:</span>
+<span class="cm">  [1] loop runs exactly 3 times</span>
+<span class="cm">  [1] checks FirstEmpty == –1, outputs message and stops</span>
+<span class="cm">  [1] takes input; new_slot = FirstEmpty; FirstEmpty advanced</span>
+<span class="cm">  [1] stores data; sets column 1 to old FirstNode; updates FirstNode</span>
+<span class="cm">GetLast [3]:</span>
+<span class="cm">  [1] handles empty list (FirstNode == –1), returns –1</span>
+<span class="cm">  [1] loop walks until LinkedList[current][1] == –1</span>
+<span class="cm">  [1] returns LinkedList[current][0] (the last data value)</span>
+<span class="cm">Main [1]:</span>
+<span class="cm">  [1] calls LoadData() then prints "Last item:" with GetLast() result</span></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- /section 07 -->
+
+<div class="divider"></div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Linked List · Beginner Friendly</span>
+  <span>–1 always means EMPTY or STOP 🛑</span>
+</footer>
+
+<script>
+function toggle(id){
+  const b=document.getElementById(id);
+  const l=document.getElementById(id+'-lbl');
+  const open=b.style.display==='block';
+  b.style.display=open?'none':'block';
+  if(l)l.textContent=open?'▼ show':'▲ hide';
+}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAns(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+</script>
+</body>
+</html>
