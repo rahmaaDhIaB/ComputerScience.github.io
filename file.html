@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>File Processing &amp; Exception Handling · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#0d1f1a;color:#c8e0d8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(93,202,165,0.08);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-80px;left:120px;width:400px;height:400px;border:2px solid rgba(93,202,165,0.06);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,224,216,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#5dcaa5;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,224,216,0.55);max-width:580px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,224,216,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,224,216,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.at{color:#f0a8c8;}.exc{color:#f09595;font-weight:500;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:200px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin:1px 2px;}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.pill-teal{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);}
+.exc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1rem 0;}
+.exc-card{background:#fff;border:1px solid var(--rule);border-radius:7px;padding:0.85rem 1rem;font-size:13px;}
+.exc-card .ec-name{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--red);margin-bottom:4px;}
+.exc-card .ec-trigger{font-size:11.5px;color:var(--ink3);margin-bottom:6px;}
+.exc-card .ec-desc{font-size:12.5px;color:var(--ink2);line-height:1.5;}
+.sim-panel{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:1.25rem;margin:1rem 0;}
+.sim-label{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);margin-bottom:0.75rem;}
+.btn-primary{background:var(--ink);color:var(--paper);border:none;border-radius:5px;padding:7px 18px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.15s;}
+.btn-primary:hover{background:var(--ink2);}
+.btn-secondary{background:none;color:var(--ink2);border:1px solid var(--rule);border-radius:5px;padding:6px 16px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-secondary:hover{background:var(--paper2);}
+.output-block{background:#0d1f1a;border-radius:6px;padding:0.85rem 1rem;font-family:'DM Mono',monospace;font-size:12.5px;margin:0.5rem 0;line-height:1.9;}
+.out-ok{color:#5dcaa5;}
+.out-err{color:#f09595;}
+.out-info{color:#d4d0c4;}
+.out-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,224,216,0.4);margin-bottom:4px;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+
+/* ═══════════════════════════════════════
+   SEQUENTIAL FILE SECTION — improved
+═══════════════════════════════════════ */
+
+/* Cassette visual card */
+.cassette-card{
+  background:#fff;
+  border:1.5px solid var(--teal-bd);
+  border-radius:14px;
+  overflow:hidden;
+  margin:1rem 0 1.5rem 0;
+}
+.cassette-card-head{
+  background:var(--teal);
+  color:#fff;
+  padding:11px 20px;
+  font-size:13px;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.cassette-card-body{
+  padding:1.25rem 1.5rem;
+}
+.cassette-analogy{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:1.25rem;
+  align-items:center;
+  margin-bottom:1.25rem;
+}
+.cassette-analogy p{
+  font-size:13.5px;
+  color:var(--ink2);
+  line-height:1.8;
+}
+.three-steps{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0.75rem;
+}
+.step-tile{
+  background:var(--paper2);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:0.9rem 1rem;
+  text-align:center;
+  transition:transform 0.12s,box-shadow 0.12s;
+}
+.step-tile:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.07);}
+.step-tile .tile-icon{font-size:24px;margin-bottom:5px;}
+.step-tile .tile-num{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--ink3);
+  margin-bottom:2px;
+}
+.step-tile .tile-title{font-weight:600;font-size:13px;margin-bottom:3px;}
+.step-tile .tile-desc{font-size:11.5px;color:var(--ink3);line-height:1.4;}
+.step-tile.open-tile{border-color:var(--teal-bd);background:var(--teal-bg);}
+.step-tile.open-tile .tile-title{color:var(--teal);}
+.step-tile.read-tile{border-color:var(--blue-bd);background:var(--blue-bg);}
+.step-tile.read-tile .tile-title{color:var(--blue);}
+.step-tile.close-tile{border-color:var(--green-bd);background:var(--green-bg);}
+.step-tile.close-tile .tile-title{color:var(--green);}
+
+/* Tools card */
+.tools-card{
+  background:#fff;
+  border:1.5px solid var(--blue-bd);
+  border-radius:14px;
+  overflow:hidden;
+  margin:1rem 0;
+}
+.tools-card-head{
+  background:var(--blue);
+  color:#fff;
+  padding:11px 20px;
+  font-size:13px;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:0.65rem;
+  padding:1.1rem 1.25rem 1.1rem;
+}
+.tool-chip{
+  background:var(--blue-bg);
+  border:1px solid var(--blue-bd);
+  border-radius:8px;
+  padding:0.7rem 0.85rem;
+}
+.tool-chip .tc-name{
+  font-family:'DM Mono',monospace;
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--blue);
+  margin-bottom:4px;
+}
+.tool-chip .tc-desc{font-size:11.5px;color:var(--ink2);line-height:1.5;}
+.tools-note{
+  margin:0 1.25rem 1.1rem;
+  background:var(--teal-bg);
+  border:1px solid var(--teal-bd);
+  border-radius:6px;
+  padding:0.6rem 0.9rem;
+  font-size:12.5px;
+  color:var(--teal);
+}
+
+/* ═══════════════════════════════════════
+   4 PATTERNS — tabbed switcher
+═══════════════════════════════════════ */
+.patterns-shell{
+  border:1.5px solid var(--rule);
+  border-radius:14px;
+  overflow:hidden;
+  margin:1.5rem 0;
+  background:#fff;
+}
+.patterns-header{
+  background:var(--ink);
+  color:#fff;
+  padding:12px 20px;
+  font-size:13px;
+  font-weight:500;
+}
+.patterns-tabs{
+  display:flex;
+  overflow-x:auto;
+  border-bottom:2px solid var(--rule);
+  background:var(--paper2);
+  scrollbar-width:none;
+}
+.patterns-tabs::-webkit-scrollbar{display:none;}
+.ptab-btn{
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:500;
+  padding:10px 16px;
+  border:none;
+  background:none;
+  color:var(--ink3);
+  cursor:pointer;
+  white-space:nowrap;
+  border-bottom:3px solid transparent;
+  transition:all 0.15s;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.ptab-btn:hover{background:var(--paper3);color:var(--ink2);}
+.ptab-btn.active-teal{background:var(--teal-bg);color:var(--teal);border-bottom-color:var(--teal);font-weight:600;}
+.ptab-btn.active-purple{background:var(--purple-bg);color:var(--purple);border-bottom-color:var(--purple);font-weight:600;}
+.ptab-btn.active-amber{background:var(--amber-bg);color:var(--amber);border-bottom-color:var(--amber);font-weight:600;}
+.ptab-btn.active-blue{background:var(--blue-bg);color:var(--blue);border-bottom-color:var(--blue);font-weight:600;}
+.ptab-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.dot-teal{background:var(--teal);}
+.dot-purple{background:var(--purple);}
+.dot-amber{background:var(--amber);}
+.dot-blue{background:var(--blue);}
+
+.pattern-panel{display:none;padding:1.4rem 1.5rem;animation:fadeIn 0.18s ease;}
+.pattern-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+.pattern-badge-row{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  margin-bottom:1rem;
+  flex-wrap:wrap;
+}
+.pattern-label{
+  font-size:11px;
+  font-weight:600;
+  font-family:'DM Mono',monospace;
+  padding:3px 12px;
+  border-radius:4px;
+  color:#fff;
+}
+.pl-teal{background:var(--teal);}
+.pl-purple{background:var(--purple);}
+.pl-amber{background:var(--amber);}
+.pl-blue{background:var(--blue);}
+
+.pattern-title{font-weight:600;font-size:14.5px;}
+.exam-star{
+  margin-left:auto;
+  font-size:11px;
+  font-weight:500;
+  padding:2px 10px;
+  border-radius:10px;
+  border:1px solid var(--teal-bd);
+  background:var(--teal-bg);
+  color:var(--teal);
+}
+.exam-alt{
+  margin-left:auto;
+  font-size:11px;
+  font-weight:500;
+  padding:2px 10px;
+  border-radius:10px;
+  border:1px solid var(--rule);
+  background:var(--paper2);
+  color:var(--ink3);
+}
+
+.pattern-callout-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0.75rem;
+  margin-top:0.85rem;
+}
+.pcallout{
+  border-radius:7px;
+  padding:0.75rem 0.9rem;
+  font-size:12.5px;
+  line-height:1.6;
+}
+.pcallout strong{display:block;margin-bottom:3px;}
+.pcallout-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.pcallout-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.pcallout-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.pcallout-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.pcallout-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+
+/* rating badge */
+.rating-bar{
+  background:linear-gradient(135deg,#0d1f1a 0%,#1a3028 100%);
+  border-radius:14px;
+  padding:1.5rem 2rem;
+  margin:2rem 0 1rem;
+  display:flex;
+  align-items:center;
+  gap:2rem;
+  flex-wrap:wrap;
+}
+.rating-score{
+  font-family:'DM Serif Display',serif;
+  font-size:3.5rem;
+  color:#5dcaa5;
+  line-height:1;
+}
+.rating-score span{font-size:1.5rem;color:rgba(93,202,165,0.5);}
+.rating-details{flex:1;}
+.rating-title{color:#c8e0d8;font-size:15px;font-weight:600;margin-bottom:4px;}
+.rating-sub{color:rgba(200,224,216,0.5);font-size:12.5px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Chapter 26</div>
+  <h1>File Processing &amp; <em>Exception Handling</em></h1>
+  <div class="cover-sub">Records, binary files, sequential vs random access — and how to stop your program crashing when things go wrong at runtime.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Records</strong>Group data under one name</div>
+    <div class="cover-meta-item"><strong>File Processing</strong>Sequential &amp; random access</div>
+    <div class="cover-meta-item"><strong>Try / Except</strong>Catch errors gracefully</div>
+    <div class="cover-meta-item"><strong>Exception Types</strong>6 types Cambridge tests</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 Linear Search</a>
+  <a href="02_binary_search.html">⚡ Binary Search</a>
+  <a href="03_bubble_insertion_sort.html">🫧 Sorting</a>
+  <a href="05_oop.html">🧬 OOP</a>
+  <a href="06_exception_handling.html" class="active">🛡️ Exception Handling</a>
+</nav>
+
+<div class="page-body">
+
+<!-- ════════════════════════════════════════
+     SECTION 1 — RECORDS
+════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">Records</div>
+    <div class="section-desc">Grouping related data under one name — like a row in a spreadsheet</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>The F1 analogy</strong>
+  Imagine a spreadsheet of F1 teams. Each <strong>row</strong> is one team: position, team name, two drivers, points. All different data types but they belong together — that's a <strong>record</strong>. Instead of 5 separate variables floating around, you bundle them into one named thing.
+</div>
+
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--paper2);padding:8px 14px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);border-bottom:1px solid var(--rule);">Think of it like a spreadsheet row</div>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px;font-family:'DM Mono',monospace;">
+      <tr style="background:var(--paper3);">
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Position</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">TeamName</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Driver_1</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Driver_2</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Points</td>
+      </tr>
+      <tr style="background:var(--teal-bg);">
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">1</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">Red Bull Racing</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">Verstappen</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">Perez</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">860</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">2</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Mercedes</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Hamilton</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Russell</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">409</td>
+      </tr>
+      <tr style="background:var(--paper2);">
+        <td style="padding:7px 14px;border:1px solid var(--rule);">3</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Ferrari</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Leclerc</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Sainz</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">406</td>
+      </tr>
+    </table>
+  </div>
+  <div style="padding:8px 14px;font-size:12px;color:var(--ink3);border-top:1px solid var(--rule);">Each row above = one <strong>record instance</strong>. The column headers = the <strong>record type</strong> (the template).</div>
+</div>
+
+<div class="sec-title">Declaring a record in Python</div>
+<div class="sec-sub">Python has no built-in "record" keyword. We fake it with a class. But it's a SIMPLE class — no private attributes, no getters, no setters. Just a container.</div>
+
+<pre class="py"><span class="cm"># ── DECLARE THE RECORD TYPE ────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">TeamRecord</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, position, team_name, driver_1, driver_2, points):
+        self.Position = position      <span class="cm"># INTEGER  ← NO __ before name = PUBLIC</span>
+        self.TeamName = team_name     <span class="cm"># STRING   ← NO __ before name = PUBLIC</span>
+        self.Driver_1 = driver_1      <span class="cm"># STRING</span>
+        self.Driver_2 = driver_2      <span class="cm"># STRING</span>
+        self.Points   = points        <span class="cm"># INTEGER</span></pre>
+
+<div class="box box-teal">
+  <strong>Every line broken down</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>class TeamRecord:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Creates the record <em>type</em> — the template. No real data yet, just the structure (the column headers).</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>def __init__(self, ...)</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">The constructor. Runs automatically when you create a new record. All the field names are listed as parameters here.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>self.TeamName = team_name</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Creates a field called <code>TeamName</code> inside this record and stores the value. <strong>No <code>__</code> = public — anyone can access it directly.</strong></div>
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Instantiating a record</div>
+<div class="sec-sub">Creating actual record instances with real values.</div>
+
+<pre class="py"><span class="cm"># ── CREATE RECORD INSTANCES ────────────────────────────────</span>
+team1 = <span class="fn">TeamRecord</span>(<span class="nm">1</span>, <span class="st">"Red Bull Racing"</span>, <span class="st">"Verstappen"</span>, <span class="st">"Perez"</span>, <span class="nm">860</span>)
+team2 = <span class="fn">TeamRecord</span>(<span class="nm">2</span>, <span class="st">"Mercedes"</span>,       <span class="st">"Hamilton"</span>,  <span class="st">"Russell"</span>, <span class="nm">409</span>)
+
+<span class="cm"># ── ACCESS FIELDS DIRECTLY — no getter needed ──────────────</span>
+<span class="fn">print</span>(team1.TeamName)    <span class="cm"># output: Red Bull Racing</span>
+<span class="fn">print</span>(team1.Points)      <span class="cm"># output: 860</span>
+team1.Points = <span class="nm">900</span>        <span class="cm"># change it directly — also works!</span>
+
+<span class="cm"># ── STORE MANY RECORDS IN A LIST ───────────────────────────</span>
+teams = [team1, team2]
+<span class="kw">for</span> team <span class="kw">in</span> teams:
+    <span class="fn">print</span>(team.Position, team.TeamName, team.Points)</pre>
+
+<div class="divider"></div>
+<div class="sec-title">Your question: "Is a record the same as an OOP class?"</div>
+<div class="sec-sub">YES — the Python syntax is almost identical. The <strong>only difference</strong> is one character: <code>__</code></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+  <div style="background:#fff;border:2px solid var(--teal-bd);border-radius:10px;overflow:hidden;">
+    <div style="background:var(--teal);color:#fff;padding:10px 16px;font-weight:500;font-size:13px;text-align:center;">RECORD — public fields</div>
+    <div style="padding:1rem;">
+      <pre class="py" style="margin:0;font-size:11.5px;"><span class="kw">class</span> <span class="fn">TeamRecord</span>:
+  <span class="kw">def</span> <span class="fn">__init__</span>(self, name, pts):
+    self<span style="color:#1D9E75;font-weight:700;">.Name</span>   = name
+    self<span style="color:#1D9E75;font-weight:700;">.Points</span> = pts</pre>
+      <div style="margin-top:0.6rem;font-size:12px;line-height:1.6;color:var(--ink2);">
+        <span style="display:inline-block;background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500;margin-bottom:4px;">self.Name</span> — NO double underscore<br>
+        This means the field is <strong>PUBLIC</strong>.<br><br>
+        From outside the class you can:<br>
+        <code style="font-size:11.5px;">print(t.Name)</code> — read it<br>
+        <code style="font-size:11.5px;">t.Points = 900</code> — change it<br><br>
+        No getters. No setters. Direct access.
+      </div>
+    </div>
+  </div>
+  <div style="background:#fff;border:2px solid var(--purple-bd);border-radius:10px;overflow:hidden;">
+    <div style="background:var(--purple);color:#fff;padding:10px 16px;font-weight:500;font-size:13px;text-align:center;">OOP CLASS — private attributes</div>
+    <div style="padding:1rem;">
+      <pre class="py" style="margin:0;font-size:11.5px;"><span class="kw">class</span> <span class="fn">Car</span>:
+  <span class="kw">def</span> <span class="fn">__init__</span>(self, name, spd):
+    self<span style="color:#7F77DD;font-weight:700;">.__Name</span>  = name
+    self<span style="color:#7F77DD;font-weight:700;">.__Speed</span> = spd</pre>
+      <div style="margin-top:0.6rem;font-size:12px;line-height:1.6;color:var(--ink2);">
+        <span style="display:inline-block;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500;margin-bottom:4px;">self.__Name</span> — WITH double underscore<br>
+        This means the attribute is <strong>PRIVATE</strong>.<br><br>
+        From outside the class:<br>
+        <code style="font-size:11.5px;">c.__Name</code> — BLOCKED (AttributeError)<br>
+        <code style="font-size:11.5px;">c.GetName()</code> — must use getter<br><br>
+        Needs getters + setters to access.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.25rem;margin:1rem 0;">
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--ink3);margin-bottom:1rem;">The ONLY difference — one character</div>
+  <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;justify-content:center;">
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:22px;background:var(--teal-bg);color:var(--teal);border:2px solid var(--teal-bd);border-radius:8px;padding:10px 24px;margin-bottom:6px;">self.Points</div>
+      <div style="font-size:12px;color:var(--teal);font-weight:500;">PUBLIC — record field</div>
+      <div style="font-size:11.5px;color:var(--ink3);">Access: <code>t.Points</code></div>
+    </div>
+    <div style="font-size:28px;color:var(--ink3);font-weight:300;">vs</div>
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:22px;background:var(--purple-bg);color:var(--purple);border:2px solid var(--purple-bd);border-radius:8px;padding:10px 24px;margin-bottom:6px;">self.__Points</div>
+      <div style="font-size:12px;color:var(--purple);font-weight:500;">PRIVATE — OOP attribute</div>
+      <div style="font-size:11.5px;color:var(--ink3);">Access: <code>t.GetPoints()</code></div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:var(--amber);line-height:1.7;">
+    <strong>Summary in one sentence:</strong> A record and an OOP class are written the same way in Python. The only difference is that records use <code>self.FieldName</code> (public) and OOP classes use <code>self.__AttributeName</code> (private). When the question says "record" → no underscore, no getters. When it says "OOP class" → double underscore, add getters and setters.
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION 2 — FILE PROCESSING
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">File Processing</div>
+    <div class="section-desc">Sequential reading is in every paper. Random access is basically never tested. Act accordingly.</div>
+  </div>
+</div>
+
+<!-- WHAT IS SEQUENTIAL — improved cassette card -->
+<div class="cassette-card">
+  <div class="cassette-card-head">
+    🎵 What even IS a sequential file?
+  </div>
+  <div class="cassette-card-body">
+    <div class="cassette-analogy">
+      <svg viewBox="0 0 120 80" width="110" height="74" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="10" width="112" height="60" rx="8" fill="#1e1c18" stroke="#5dcaa5" stroke-width="2"/>
+        <rect x="18" y="22" width="84" height="36" rx="4" fill="#2a2820"/>
+        <circle cx="38" cy="40" r="10" fill="none" stroke="#5dcaa5" stroke-width="2"/>
+        <circle cx="38" cy="40" r="4" fill="#5dcaa5"/>
+        <circle cx="82" cy="40" r="10" fill="none" stroke="#5dcaa5" stroke-width="2"/>
+        <circle cx="82" cy="40" r="4" fill="#5dcaa5"/>
+        <rect x="50" y="36" width="20" height="8" rx="2" fill="#3a3830"/>
+        <text x="60" y="72" text-anchor="middle" fill="#5dcaa5" font-size="7" font-family="monospace">SEQUENTIAL</text>
+      </svg>
+      <p>
+        <strong style="color:var(--teal);font-size:14px;">Think of a cassette tape. 🎶</strong><br>
+        You want song 5? Tough — you sit through songs 1, 2, 3 and 4 first. No skipping. Always in order.<br><br>
+        <strong>A text file works exactly like this.</strong> Python starts at line 1 and reads downward. It cannot jump to line 40 without passing through everything above it.
+      </p>
+    </div>
+    <div class="three-steps">
+      <div class="step-tile open-tile">
+        <div class="tile-icon">📂</div>
+        <div class="tile-num">Step 1</div>
+        <div class="tile-title">Open</div>
+        <div class="tile-desc">Unlock the file so Python can read it</div>
+      </div>
+      <div class="step-tile read-tile">
+        <div class="tile-icon">📖</div>
+        <div class="tile-num">Step 2</div>
+        <div class="tile-title">Read</div>
+        <div class="tile-desc">Pull text top to bottom, line by line</div>
+      </div>
+      <div class="step-tile close-tile">
+        <div class="tile-icon">🔒</div>
+        <div class="tile-num">Step 3</div>
+        <div class="tile-title">Close</div>
+        <div class="tile-desc">Lock it back — always do this!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLS — improved grid -->
+<div class="tools-card">
+  <div class="tools-card-head">🛠️ Tools You Need — the building blocks</div>
+  <div class="tools-grid">
+    <div class="tool-chip">
+      <div class="tc-name">🔓 open("filename.txt")</div>
+      <div class="tc-desc">Opens the file. <code>with open(...) as f:</code> opens AND auto-closes when done.</div>
+    </div>
+    <div class="tool-chip">
+      <div class="tc-name">📖 .read()</div>
+      <div class="tc-desc">Reads the <strong>entire file</strong> as one giant string. Every character, every newline.</div>
+    </div>
+    <div class="tool-chip">
+      <div class="tc-name">✂️ .split("\n")</div>
+      <div class="tc-desc">Cuts a string into a list at every newline. <code>"a\nb"</code> → <code>["a","b"]</code></div>
+    </div>
+    <div class="tool-chip">
+      <div class="tc-name">🧹 .strip()</div>
+      <div class="tc-desc">Removes invisible <code>\n</code> and spaces. <code>"beige\n".strip()</code> → <code>"beige"</code></div>
+    </div>
+    <div class="tool-chip">
+      <div class="tc-name">📊 .split(",")</div>
+      <div class="tc-desc">Splits CSV lines. <code>"Beech,30".split(",")</code> → <code>["Beech","30"]</code></div>
+    </div>
+    <div class="tool-chip">
+      <div class="tc-name">🔢 int() / float()</div>
+      <div class="tc-desc">Cast strings from CSV. <code>int("30")</code> → <code>30</code>. Must do this for numbers!</div>
+    </div>
+  </div>
+  <div class="tools-note">
+    🎯 <strong>The deal:</strong> Every file question uses these tools. Master them and the 4 patterns below will feel like a recipe — not magic.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     4 PATTERNS — TABBED SWITCHER
+═══════════════════════════════════ -->
+<div class="patterns-shell">
+  <div class="patterns-header">📦 The 4 Patterns You MUST Know — click to switch between them</div>
+  <div class="patterns-tabs" id="patterns-tabs">
+    <button class="ptab-btn active-teal" data-panel="0" data-color="teal" onclick="switchPattern(0)">
+      <span class="ptab-dot dot-teal"></span>Pattern 1 — Read all at once
+    </button>
+    <button class="ptab-btn" data-panel="1" data-color="purple" onclick="switchPattern(1)">
+      <span class="ptab-dot dot-purple"></span>Pattern 2 — Line by line
+    </button>
+    <button class="ptab-btn" data-panel="2" data-color="amber" onclick="switchPattern(2)">
+      <span class="ptab-dot dot-amber"></span>Pattern 3 — CSV → objects
+    </button>
+    <button class="ptab-btn" data-panel="3" data-color="blue" onclick="switchPattern(3)">
+      <span class="ptab-dot dot-blue"></span>Pattern 4 — Exactly N lines
+    </button>
+  </div>
+
+  <!-- PANEL 0 -->
+  <div class="pattern-panel active" id="pp-0">
+    <div class="pattern-badge-row">
+      <span class="pattern-label pl-teal">Pattern 1</span>
+      <span class="pattern-title">Read everything at once → array</span>
+      <span class="exam-star">⭐ Appeared: ON 2024 Q1(a)</span>
+    </div>
+    <pre class="py"><span class="cm"># EXAMPLE: Data.txt contains:
+# beige
+# green
+# scarlet
+# silver
+# bronze</span>
+
+<span class="kw">def</span> <span class="fn">ReadData</span>():
+    Colours = []
+    <span class="kw">try</span>:
+        File = <span class="fn">open</span>(<span class="st">"Data.txt"</span>)
+        <span class="cm"># Step 1: .read() → "beige\ngreen\nscarlet\nsilver\nbronze"</span>
+        <span class="cm"># Step 2: .split("\n") → ["beige","green","scarlet","silver","bronze"]</span>
+        Colours = File.read().<span class="fn">split</span>(<span class="st">"\n"</span>)
+        File.close()
+        <span class="kw">return</span> Colours
+    <span class="kw">except</span>:
+        <span class="fn">print</span>(<span class="st">"No file found"</span>)
+
+<span class="cm"># RESULT: Colours = ["beige", "green", "scarlet", "silver", "bronze"]</span></pre>
+    <div class="pattern-callout-grid">
+      <div class="pcallout pcallout-teal">
+        <strong>What it does</strong>Reads the whole file as one string → splits on <code>\n</code> → gives a list where each element is one line.
+      </div>
+      <div class="pcallout pcallout-green">
+        <strong>Mark scheme checks ✓</strong>Function ✓ try/except ✓ file opened ✓ .read().split("\n") ✓ file closed ✓ array returned ✓
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 1 -->
+  <div class="pattern-panel" id="pp-1">
+    <div class="pattern-badge-row">
+      <span class="pattern-label pl-purple">Pattern 2</span>
+      <span class="pattern-title">Read line by line with a loop</span>
+      <span class="exam-alt">Alternative — also valid</span>
+    </div>
+    <pre class="py"><span class="cm"># EXAMPLE: Data.txt contains:
+# beige
+# green
+# scarlet
+# silver
+# bronze</span>
+
+<span class="kw">def</span> <span class="fn">ReadLineByLine</span>():
+    data = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"Data.txt"</span>) <span class="kw">as</span> f:
+            <span class="cm"># Loop runs once per line automatically</span>
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                <span class="cm"># line = "beige\n" → .strip() → "beige"</span>
+                data.append(line.strip())
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"File not found"</span>)
+    <span class="kw">return</span> data
+
+<span class="cm"># RESULT: data = ["beige", "green", "scarlet", "silver", "bronze"]</span>
+<span class="cm">#         (same result as Pattern 1 — different method)</span></pre>
+    <div class="pcallout pcallout-blue" style="margin-top:0.85rem;">
+      <strong>Use this when:</strong> You don't know how many lines there are, or you want to process each line as you read it.<br>
+      <strong>Key difference from Pattern 1:</strong> Pattern 1 reads everything at once then splits. Pattern 2 reads one line at a time and strips. <strong>Same result, different method.</strong>
+    </div>
+  </div>
+
+  <!-- PANEL 2 -->
+  <div class="pattern-panel" id="pp-2">
+    <div class="pattern-badge-row">
+      <span class="pattern-label pl-amber">Pattern 3</span>
+      <span class="pattern-title">CSV — split by comma → create objects</span>
+      <span class="exam-star">⭐ Appeared: MJ 2024 Q2(b)</span>
+    </div>
+    <pre class="py"><span class="cm"># EXAMPLE: Trees.txt contains:
+# Beech,30,400,200,No
+# Oak,25,350,180,Yes
+# Maple,20,300,150,No</span>
+
+<span class="kw">def</span> <span class="fn">ReadData</span>():
+    TreeObjects = []
+    <span class="kw">try</span>:
+        File = <span class="fn">open</span>(<span class="st">"Trees.txt"</span>)
+        <span class="cm"># Step 1: split file into lines</span>
+        TreeData = File.read().<span class="fn">split</span>(<span class="st">"\n"</span>)
+        File.close()
+        <span class="kw">for</span> Item <span class="kw">in</span> TreeData:
+            <span class="cm"># Step 2: split each line by comma → ["Beech","30","400","200","No"]</span>
+            Parts = Item.<span class="fn">split</span>(<span class="st">","</span>)
+            <span class="cm"># Step 3: cast numbers with int() → create object</span>
+            TreeObjects.append(
+                <span class="fn">Tree</span>(Parts[<span class="nm">0</span>], <span class="fn">int</span>(Parts[<span class="nm">1</span>]), <span class="fn">int</span>(Parts[<span class="nm">2</span>]), <span class="fn">int</span>(Parts[<span class="nm">3</span>]), Parts[<span class="nm">4</span>])
+            )
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"invalid file"</span>)
+    <span class="kw">return</span> TreeObjects</pre>
+    <div class="pattern-callout-grid">
+      <div class="pcallout pcallout-amber">
+        <strong>The 3-step CSV dance</strong>
+        1. Split file → lines<br>
+        2. Split each line → parts<br>
+        3. Cast numbers with <code>int()</code> → create object
+      </div>
+      <div class="pcallout pcallout-green">
+        <strong>Key difference</strong>Creates <strong>objects</strong> (with all attributes), not just strings. Numbers are cast with <code>int()</code> so you can calculate with them later.
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3 -->
+  <div class="pattern-panel" id="pp-3">
+    <div class="pattern-badge-row">
+      <span class="pattern-label pl-blue">Pattern 4</span>
+      <span class="pattern-title">Read exactly N lines (loop N times)</span>
+      <span class="exam-alt">When question gives exact count</span>
+    </div>
+    <pre class="py"><span class="cm"># EXAMPLE: Question says "there are exactly 45 colours in Data.txt"</span>
+
+<span class="kw">def</span> <span class="fn">ReadNLines</span>():
+    data = []
+    <span class="kw">try</span>:
+        f = <span class="fn">open</span>(<span class="st">"Data.txt"</span>)
+        <span class="cm"># Reads exactly 45 lines (or whatever number question gives)</span>
+        <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">45</span>):           <span class="cm"># ← exact count from question</span>
+            data.append(f.readline())   <span class="cm"># .readline() = one line at a time</span>
+        f.close()
+    <span class="kw">except</span>:
+        <span class="fn">print</span>(<span class="st">"No file found"</span>)
+    <span class="kw">return</span> data
+
+<span class="cm"># RESULT: data = ["beige\n", "green\n", ...]</span>
+<span class="cm"># ⚠️ WARNING: .readline() keeps the \n — use .strip() if needed!</span></pre>
+    <div class="pcallout pcallout-blue" style="margin-top:0.85rem;">
+      <strong>When to use:</strong> The question specifies "45 colours" or "9 trees".<br>
+      <strong>Key difference from Pattern 1 &amp; 2:</strong> Stops after N lines — ignores extra. Use <code>.strip()</code> to remove <code>\n</code> if you need clean strings.<br>
+      <strong>⚠️ Important:</strong> <code>.readline()</code> keeps the <code>\n</code> at the end. Patterns 1 and 2 remove it automatically.
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── WRITING TO FILES ──────────────────────────────── -->
+<div class="divider"></div>
+<div class="sec-title">✍️ Writing to Files — keep it simple</div>
+<div class="sec-sub">Two modes. Two styles. That's all you need.</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+  <div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:6px;">Write mode — without <code>with</code></div>
+    <pre class="py"><span class="cm"># "w" = write mode → creates or overwrites</span>
+f = <span class="fn">open</span>(<span class="st">"output.txt"</span>, <span class="st">"w"</span>)
+f.write(<span class="st">"Hello\n"</span>)
+f.write(<span class="st">"World\n"</span>)
+f.close()           <span class="cm"># must close manually!</span>
+<span class="cm"># ⚠ "w" deletes old content!</span></pre>
+  </div>
+  <div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:6px;">Reading — with <code>with</code> (auto-close)</div>
+    <pre class="py"><span class="cm"># "with" closes the file automatically</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"output.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+    data = f.read().<span class="fn">split</span>(<span class="st">"\n"</span>)
+<span class="cm"># file is already closed — no f.close() needed</span>
+<span class="fn">print</span>(data)</pre>
+  </div>
+</div>
+
+<div style="margin:1rem 0;">
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:6px;">Append mode — adds to end without deleting</div>
+  <pre class="py"><span class="cm"># "a" = append mode → always seen in exams when adding new records</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"output.txt"</span>, <span class="st">"a"</span>) <span class="kw">as</span> f:
+    f.write(<span class="st">"New line added\n"</span>)
+<span class="cm"># "a" keeps ALL old content and adds to the end — safe!</span></pre>
+</div>
+
+<div class="box box-amber">
+  <strong>⚠️ Always add <code>\n</code> yourself</strong>
+  Unlike <code>print()</code>, <code>f.write()</code> does NOT add a newline at the end. Forget it and all your lines smash together on one line. Muscle memory: always end with <code>\n</code>.
+</div>
+
+<!-- FILE MODES TABLE -->
+<div class="sec-title" style="margin-top:1.5rem;">File modes — the cheat sheet 📋</div>
+<table class="diff-table">
+  <tr><th>Mode</th><th>What it does</th><th>Creates file if missing?</th><th>Use for</th></tr>
+  <tr><td><code>"r"</code></td><td>Read text (default)</td><td>❌ No — raises IOError</td><td>Reading .txt files (exam favourite)</td></tr>
+  <tr><td><code>"w"</code></td><td>Write text — overwrites</td><td>✅ Yes</td><td>Creating/replacing a file</td></tr>
+  <tr><td><code>"a"</code></td><td>Append text — adds to end</td><td>✅ Yes</td><td>Adding to existing file</td></tr>
+  <tr><td><code>"rb"</code></td><td>Read binary</td><td>❌ No</td><td>Reading pickle files</td></tr>
+  <tr><td><code>"wb"</code></td><td>Write binary — overwrites</td><td>✅ Yes</td><td>Writing pickle files</td></tr>
+  <tr><td><code>"ab"</code></td><td>Append binary — adds to end</td><td>✅ Yes</td><td>Adding pickle objects to existing file</td></tr>
+</table>
+
+<!-- ─── BINARY FILES ──────────────────────────────────── -->
+<div class="divider"></div>
+<div class="sec-title">🧊 Binary Files with pickle — the short version</div>
+<div class="sec-sub">Read all records from a binary file using the sequential pattern.</div>
+
+<pre class="py"><span class="cm"># ── READ ALL objects (sequential) — the classic pattern ───</span>
+<span class="kw">import</span> pickle
+
+<span class="kw">def</span> <span class="fn">ReadAllRecords</span>():
+    records = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"horses.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+            <span class="kw">while</span> <span class="kw">True</span>:
+                <span class="kw">try</span>:
+                    record = pickle.load(f)
+                    records.append(record)
+                <span class="kw">except</span> <span class="exc">EOFError</span>:        <span class="cm"># end of file — stop reading</span>
+                    <span class="kw">break</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"File not found"</span>)
+    <span class="kw">return</span> records</pre>
+
+<div style="background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:7px;padding:0.85rem 1rem;margin:0.75rem 0;font-size:13px;color:var(--amber);line-height:1.7;">
+  <strong>Why the nested try?</strong><br>
+  <strong>Outer</strong> <code>except IOError</code> — catches the case where the file doesn't exist at all.<br>
+  <strong>Inner</strong> <code>except EOFError</code> — catches when we've read the last record and there's nothing left. That's how you stop the <code>while True</code> loop cleanly.
+</div>
+
+<!-- TEXT vs BINARY TABLE -->
+<div class="sec-title" style="margin-top:1.5rem;">📦 Text Files vs Binary Files</div>
+<table class="diff-table" style="margin:0.75rem 0;">
+  <tr><th>Operation</th><th>Text Files (.txt)</th><th>Binary Files with pickle (.dat)</th></tr>
+  <tr><td><strong>Write</strong></td><td><code>f.write("text")</code></td><td><code>pickle.dump(obj, f)</code></td></tr>
+  <tr><td><strong>Read</strong></td><td><code>f.read()</code> or <code>f.readline()</code></td><td><code>pickle.load(f)</code></td></tr>
+  <tr><td><strong>What's stored</strong></td><td>Strings only</td><td>Any Python object (with all attributes)</td></tr>
+  <tr><td><strong>End of data</strong></td><td>Loop ends / empty string</td><td>Catch <code>EOFError</code> → break</td></tr>
+  <tr><td><strong>File mode</strong></td><td><code>"r"</code> / <code>"w"</code> / <code>"a"</code></td><td><code>"rb"</code> / <code>"wb"</code> / <code>"ab"</code></td></tr>
+</table>
+
+<div style="background:var(--purple-bg);border:1px solid var(--purple-bd);border-radius:8px;padding:0.85rem 1rem;margin:0.75rem 0;font-size:13px;color:var(--purple);line-height:1.7;">
+  <strong>💡 pickle in one sentence:</strong> pickle is for binary objects — it freeze-dries any Python object (with all its attributes) into bytes, saves them, and restores the object perfectly later.<br><br>
+  <strong>⚠️ Important:</strong> If the file has no objects left, <code>pickle.load()</code> raises <code>EOFError</code> immediately. That's how you know you've read everything — catch it and <code>break</code>.
+</div>
+
+<!-- ─── RANDOM ACCESS ─────────────────────────────────── -->
+<div class="divider"></div>
+<div class="sec-title">🎯 Random Access — one pattern, that's it</div>
+<div class="sec-sub">Not in 2024 papers. Know this one example. Move on.</div>
+
+<div style="background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:1rem 1.25rem;margin:0.75rem 0;font-size:13px;color:var(--ink2);line-height:1.7;">
+  With sequential files, Python reads from top to bottom — it must pass through everything. With <strong>random access</strong>, Python can <strong>jump directly</strong> to any position in the file using <code>f.seek()</code>. It's like skipping to chapter 5 of a book instantly.<br><br>
+  The key idea: use a <strong>hash function</strong> to decide <em>where</em> each record goes. Same key → same hash → same position → can find it later without searching.
+</div>
+
+<pre class="py"><span class="cm"># Writing team records to a random-access binary file</span>
+<span class="kw">import</span> pickle
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"random_access_teams.dat"</span>, <span class="st">"wb"</span>) <span class="kw">as</span> file:
+    <span class="kw">for</span> team <span class="kw">in</span> teams:
+        address = <span class="fn">hash</span>(team.TeamName)   <span class="cm"># generate file position using hash function</span>
+        file.<span class="fn">seek</span>(address)              <span class="cm"># move file pointer to that position</span>
+        pickle.dump(team, file)          <span class="cm"># write the team record at that location</span></pre>
+
+<div style="background:var(--purple-bg);border:1px solid var(--purple-bd);border-radius:7px;padding:0.85rem 1rem;margin:0.75rem 0;font-size:13px;color:var(--purple);line-height:1.7;">
+  <strong>Three things happening:</strong><br>
+  <strong>1. hash(key)</strong> — converts the team name into a number. Same name → same number, every time.<br>
+  <strong>2. file.seek(address)</strong> — teleports the cursor to that exact byte in the file.<br>
+  <strong>3. pickle.dump(team, file)</strong> — writes the object at that position. To read it back later: same hash → same seek → <code>pickle.load(file)</code>.
+</div>
+
+<!-- SEQUENTIAL vs RANDOM COMPARISON TABLE -->
+<div class="divider"></div>
+<div class="sec-title">Sequential vs Random — the comparison 📊</div>
+<table class="diff-table">
+  <tr><th>Feature</th><th>Sequential (TEXT)</th><th>Sequential (BINARY)</th><th>Random Access</th></tr>
+  <tr><td>File type</td><td>.txt</td><td>.dat (pickle)</td><td>.dat (pickle)</td></tr>
+  <tr><td>Access pattern</td><td>Read all, line by line</td><td>Read all, object by object</td><td>Jump to exact position</td></tr>
+  <tr><td>Python tool</td><td><code>open() / .read()</code></td><td><code>pickle.load()</code></td><td><code>f.seek() + pickle</code></td></tr>
+  <tr><td>End of data</td><td>Loop ends / EOF</td><td>Catch <code>EOFError</code></td><td>Known: hash → address</td></tr>
+  <tr><td>Cambridge 2024</td><td><strong>✅ Both papers</strong></td><td>Not tested</td><td>Not tested</td></tr>
+  <tr><td>Priority</td><td>🔥 Learn first</td><td>Good to know</td><td>Know the 3 lines</td></tr>
+</table>
+
+
+<!-- ════════════════════════════════════════
+     SECTION 4 — EXCEPTION TYPES
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">Exception Types</div>
+    <div class="section-desc">The 6 types Cambridge tests — know them cold</div>
+  </div>
+</div>
+
+<div class="exc-grid">
+  <div class="exc-card">
+    <div class="ec-name">ZeroDivisionError</div>
+    <div class="ec-trigger">Triggered by: dividing by zero</div>
+    <div class="ec-desc">Mathematically undefined. <code>10 / 0</code> → crash. Very common in calculators and grade average programs.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">ValueError</div>
+    <div class="ec-trigger">Triggered by: wrong value for correct type</div>
+    <div class="ec-desc">Right type, wrong content. <code>int("banana")</code> → crash. The most common one when reading user input.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">IOError</div>
+    <div class="ec-trigger">Triggered by: file doesn't exist / permission denied</div>
+    <div class="ec-desc">Input/output operation fails. Opening a file that isn't there, writing to a read-only file. Essential for file processing.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">EOFError</div>
+    <div class="ec-trigger">Triggered by: reading past end of file</div>
+    <div class="ec-desc">Tried to read more data but the file ended. Used in sequential file processing to detect when all records have been read.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">ImportError</div>
+    <div class="ec-trigger">Triggered by: module not found</div>
+    <div class="ec-desc"><code>import some_module</code> fails because the module isn't installed or doesn't exist. Less common in exams but appears in marking.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">KeyboardInterrupt</div>
+    <div class="ec-trigger">Triggered by: user presses Ctrl+C</div>
+    <div class="ec-desc">User manually interrupts execution. Useful in long-running programs where you want to handle "please stop" gracefully.</div>
+  </div>
+</div>
+
+<!-- INTERACTIVE DEMO -->
+<div class="sec-title" style="margin-top:1.5rem;">Live exception demo — see what gets caught 🎮</div>
+<div class="sim-panel">
+  <div class="sim-label">Click a scenario to see the try/except in action</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
+    <button class="btn-primary" onclick="runScenario('zero')">÷ 0 crash</button>
+    <button class="btn-secondary" onclick="runScenario('value')">Bad input</button>
+    <button class="btn-secondary" onclick="runScenario('file')">File missing</button>
+    <button class="btn-secondary" onclick="runScenario('eof')">End of file</button>
+    <button class="btn-secondary" onclick="runScenario('exc_e')">Exception as e</button>
+  </div>
+  <div id="scenario-code"></div>
+  <div id="scenario-output"></div>
+</div>
+
+<!-- DETAILED EXAMPLES -->
+<div class="sec-title" style="margin-top:1.5rem;">Every exception pattern — explained line by line 🔎</div>
+
+<pre class="py"><span class="cm"># ── BASIC try / except ─────────────────────────────────────</span>
+<span class="kw">try</span>:
+    number = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter a number: "</span>))
+    result = <span class="nm">100</span> / number
+    <span class="fn">print</span>(<span class="st">"Result:"</span>, result)
+<span class="kw">except</span> <span class="exc">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: cannot divide by zero!"</span>)
+<span class="kw">except</span> <span class="exc">ValueError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: please enter a valid number!"</span>)
+
+<span class="cm"># User types "0"  → ZeroDivisionError block runs</span>
+<span class="cm"># User types "abc" → ValueError block runs</span>
+<span class="cm"># User types "5"  → neither except runs, result = 20.0</span></pre>
+
+<pre class="py"><span class="cm"># ── EXCEPTION AS e (capture error message) ─────────────────</span>
+<span class="kw">try</span>:
+    result = <span class="nm">10</span> / <span class="nm">0</span>
+<span class="kw">except</span> <span class="exc">ZeroDivisionError</span> <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="st">"Caught:"</span>, <span class="fn">str</span>(e))   <span class="cm"># output: Caught: division by zero</span>
+
+<span class="cm"># Use this when you want to show the actual error message to the user</span>
+<span class="cm"># or log it for debugging. Cambridge often asks for this pattern.</span></pre>
+
+<pre class="py"><span class="cm"># ── FILE PROCESSING with exception handling ─────────────────</span>
+<span class="kw">try</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+        <span class="kw">while</span> <span class="kw">True</span>:
+            <span class="kw">try</span>:
+                record = pickle.load(f)
+                <span class="fn">print</span>(record.TeamName)
+            <span class="kw">except</span> <span class="exc">EOFError</span>:
+                <span class="kw">break</span>                     <span class="cm"># end of file → stop reading</span>
+<span class="kw">except</span> <span class="exc">IOError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: file not found or cannot be opened"</span>)
+
+<span class="cm"># Outer try: catches IOError if file doesn't exist at all</span>
+<span class="cm"># Inner try: catches EOFError when we've read the last record</span>
+<span class="cm"># This is the FULL pattern Cambridge expects for file reading</span></pre>
+
+<pre class="py"><span class="cm"># ── try / except / else / finally ──────────────────────────</span>
+<span class="kw">try</span>:
+    f = <span class="fn">open</span>(<span class="st">"teams.dat"</span>, <span class="st">"rb"</span>)
+    data = pickle.load(f)
+<span class="kw">except</span> <span class="exc">IOError</span>:
+    <span class="fn">print</span>(<span class="st">"File could not be opened"</span>)   <span class="cm"># runs ONLY if error</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"File read successfully!"</span>)     <span class="cm"># runs ONLY if NO error</span>
+    <span class="fn">print</span>(data.TeamName)
+<span class="kw">finally</span>:
+    f.close()                            <span class="cm"># ALWAYS runs — close the file!</span>
+    <span class="fn">print</span>(<span class="st">"File closed."</span>)</pre>
+
+<div class="box box-teal">
+  <strong>🔎 Why use finally?</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>finally:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">This block runs no matter what — whether an exception was raised or not. Perfect for cleanup: closing files, releasing resources. If you open a file in <code>try</code>, always close it in <code>finally</code>.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>else:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Runs only if the <code>try</code> block completed without any exceptions. Think of it as "the happy path code". Keeps your success logic separate from your error-handling logic.</div>
+  </div>
+</div>
+
+<!-- IMPORTANCE OF EXCEPTION HANDLING -->
+<div class="divider"></div>
+<div class="sec-title">Why exception handling matters 💡</div>
+<div class="sec-sub">Cambridge asks you to "describe the importance of exception handling" — know these 6 points.</div>
+
+<table class="diff-table">
+  <tr><th>#</th><th>Point</th><th>Explanation</th></tr>
+  <tr><td>1</td><td>Prevents unexpected crashes</td><td>Program handles the error and keeps running instead of dying abruptly mid-execution.</td></tr>
+  <tr><td>2</td><td>Graceful error handling</td><td>Instead of a scary Python traceback, the user sees a clear, helpful message.</td></tr>
+  <tr><td>3</td><td>Meaningful error messages</td><td>You control what text is shown. "Please enter a valid number" beats "ValueError: invalid literal for int()."</td></tr>
+  <tr><td>4</td><td>Improves reliability</td><td>A program that handles edge cases is more robust — it works correctly in more situations.</td></tr>
+  <tr><td>5</td><td>Safe continuation</td><td>Program can recover from an error and continue safely, rather than leaving data in a corrupt state.</td></tr>
+  <tr><td>6</td><td>Essential for file processing</td><td>Detecting end-of-file (<code>EOFError</code>) and missing files (<code>IOError</code>) is only possible with exception handling.</td></tr>
+</table>
+
+<div class="box box-teal" style="margin-top:1rem;">
+  <strong>🏆 The Golden Rule — never skip this</strong>
+  Always use <code>try/except</code> around your file operations. Cambridge gives a dedicated mark for exception handling in EVERY file question. It's free marks. Don't lose them.
+  <pre class="py" style="margin-top:0.75rem;"><span class="cm"># The exact structure Cambridge wants to see</span>
+<span class="kw">try</span>:
+    File = <span class="fn">open</span>(<span class="st">"Data.txt"</span>)
+    <span class="cm"># ... your file reading code ...</span>
+    File.close()
+    <span class="kw">return</span> data
+<span class="kw">except</span>:               <span class="cm"># bare except: catches ANYTHING (Cambridge accepts this)</span>
+    <span class="fn">print</span>(<span class="st">"No file found"</span>)
+
+<span class="cm"># OR use with open() which closes automatically:</span>
+<span class="kw">try</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"Data.txt"</span>) <span class="kw">as</span> f:
+        data = f.read().<span class="fn">split</span>(<span class="st">"\n"</span>)
+<span class="kw">except</span> <span class="exc">IOError</span>:
+    <span class="fn">print</span>(<span class="st">"File not found"</span>)</pre>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     EXERCISES
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Cambridge-Style Exercises</div>
+    <div class="section-desc">Styled like Paper 4 — records, file handling, exception handling</div>
+  </div>
+</div>
+
+<!-- E1 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex1')">
+    <div class="ex-head-left">
+      <span class="ex-num">E1</span>
+      <span class="ex-title">Declare a record type and instantiate it</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[5 marks]</span>
+      <span class="toggle-lbl" id="ex1-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex1" style="display:none;">
+    <div class="scenario">
+      A program stores data about students. Each student has the following fields:<br>
+      • <code>StudentID</code> — STRING &nbsp;• <code>Name</code> — STRING &nbsp;• <code>Grade</code> — INTEGER &nbsp;• <code>Passed</code> — BOOLEAN
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the record type <code>StudentRecord</code> with the fields above. <span class="pts">[3]</span></li>
+      <li>Write program code to instantiate two <code>StudentRecord</code> objects: "S001" / "Amir" / grade 85 / passed, and "S002" / "Lena" / grade 42 / did not pass. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex1')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex1')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex1-hint">Class declaration with <code>def __init__(self, student_id, name, grade, passed):</code>. Assign each parameter to <code>self.FieldName</code>. Instantiate with <code>s1 = StudentRecord("S001", "Amir", 85, True)</code>.</div>
+<pre class="answer-pre" id="ex1-ans">
+<span class="cm"># ── DECLARE RECORD TYPE ───────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">StudentRecord</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, student_id, name, grade, passed):
+        self.StudentID = student_id   <span class="cm"># STRING</span>
+        self.Name      = name         <span class="cm"># STRING</span>
+        self.Grade     = grade        <span class="cm"># INTEGER</span>
+        self.Passed    = passed       <span class="cm"># BOOLEAN</span>
+
+<span class="cm"># ── INSTANTIATE TWO RECORDS ───────────────────────────────</span>
+s1 = <span class="fn">StudentRecord</span>(<span class="st">"S001"</span>, <span class="st">"Amir"</span>, <span class="nm">85</span>, <span class="kw">True</span>)
+s2 = <span class="fn">StudentRecord</span>(<span class="st">"S002"</span>, <span class="st">"Lena"</span>, <span class="nm">42</span>, <span class="kw">False</span>)
+<span class="fn">print</span>(s1.Name, s1.Grade)    <span class="cm"># Amir 85</span>
+<span class="fn">print</span>(s2.Passed)            <span class="cm"># False</span>
+
+<span class="cm"># Mark scheme: [1] class declared [1] __init__ with 4 params</span>
+<span class="cm"># [1] all 4 fields as self.FieldName [1] s1 correct [1] s2 correct</span>
+</pre>
+  </div>
+</div>
+
+<!-- E2 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex2')">
+    <div class="ex-head-left">
+      <span class="ex-num">E2</span>
+      <span class="ex-title">Write and read records sequentially — with EOFError handling</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[8 marks]</span>
+      <span class="toggle-lbl" id="ex2-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex2" style="display:none;">
+    <div class="scenario">A program stores <code>StudentRecord</code> objects in a binary file called <code>students.dat</code>. The program needs two procedures: one to write a list of records to the file, one to read them all back.</div>
+    <ul class="task-list">
+      <li>Write procedure <code>WriteStudents(records)</code> that takes a list of <code>StudentRecord</code> objects and writes them sequentially to <code>students.dat</code>. <span class="pts">[3]</span></li>
+      <li>Write procedure <code>ReadStudents()</code> that reads all records and prints each student's name and grade. Use appropriate exception handling for end of file AND handle a missing file. <span class="pts">[5]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Cambridge expects:</strong> <code>import pickle</code>, correct file modes (<code>"wb"</code> / <code>"rb"</code>), <code>EOFError</code> to stop reading, and <code>IOError</code> for missing file.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex2')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex2')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex2-hint">Write: <code>open("students.dat","wb")</code>, loop through records, <code>pickle.dump(record, f)</code>. Read: outer <code>try/except IOError</code> wraps the <code>open</code>. Inner <code>while True: try: pickle.load / except EOFError: break</code>.</div>
+<pre class="answer-pre" id="ex2-ans">
+<span class="kw">import</span> pickle
+
+<span class="cm"># ── WRITE ──────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">WriteStudents</span>(records):
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"students.dat"</span>, <span class="st">"wb"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> record <span class="kw">in</span> records:
+            pickle.dump(record, f)
+
+<span class="cm"># ── READ ───────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">ReadStudents</span>():
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"students.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+            <span class="kw">while</span> <span class="kw">True</span>:
+                <span class="kw">try</span>:
+                    record = pickle.load(f)
+                    <span class="fn">print</span>(record.Name, record.Grade)
+                <span class="kw">except</span> <span class="exc">EOFError</span>:
+                    <span class="kw">break</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not open students.dat"</span>)
+
+<span class="cm"># Mark scheme WriteStudents [1]"wb" mode [1]loop [1]pickle.dump</span>
+<span class="cm"># Mark scheme ReadStudents [1]"rb" mode [1]while True [1]pickle.load</span>
+<span class="cm">#                          [1]EOFError→break [1]IOError handled</span>
+</pre>
+  </div>
+</div>
+
+<!-- E3 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex3')">
+    <div class="ex-head-left">
+      <span class="ex-num">E3</span>
+      <span class="ex-title">Exception handling — identify and handle multiple exceptions</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[7 marks]</span>
+      <span class="toggle-lbl" id="ex3-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex3" style="display:none;">
+    <div class="scenario">A program asks the user to enter two numbers and outputs the result of dividing the first by the second.</div>
+    <ul class="task-list">
+      <li>Identify TWO exceptions that could occur and for each, state what causes it. <span class="pts">[2]</span></li>
+      <li>Write the complete program with appropriate exception handling for BOTH exceptions. Each exception must output a different, meaningful message. <span class="pts">[4]</span></li>
+      <li>Add a <code>finally</code> block that prints "Calculation complete." regardless of whether an error occurred. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex3')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex3')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex3-hint">Two exceptions: <code>ValueError</code> (user types text instead of a number) and <code>ZeroDivisionError</code> (user enters 0 as the second number).</div>
+<pre class="answer-pre" id="ex3-ans">
+<span class="cm"># 1. ValueError   — int("abc") when user types non-numeric input</span>
+<span class="cm"># 2. ZeroDivisionError — num1 / 0 when user enters 0</span>
+
+<span class="kw">try</span>:
+    num1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter first number: "</span>))
+    num2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter second number: "</span>))
+    result = num1 / num2
+    <span class="fn">print</span>(<span class="st">"Result:"</span>, result)
+<span class="kw">except</span> <span class="exc">ValueError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: please enter whole numbers only."</span>)
+<span class="kw">except</span> <span class="exc">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: cannot divide by zero — please try again."</span>)
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="st">"Calculation complete."</span>)
+</pre>
+  </div>
+</div>
+
+<!-- E4 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex4')">
+    <div class="ex-head-left">
+      <span class="ex-num">E4</span>
+      <span class="ex-title">Full program — records + file I/O + exception handling</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[12 marks]</span>
+      <span class="toggle-lbl" id="ex4-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex4" style="display:none;">
+    <div class="scenario">A program manages a product inventory. Each product has: <code>ProductID</code> (STRING), <code>Name</code> (STRING), <code>Price</code> (REAL), <code>Quantity</code> (INTEGER). Products are stored in a binary file <code>inventory.dat</code>.</div>
+    <ul class="task-list">
+      <li>Declare the record type <code>ProductRecord</code>. <span class="pts">[2]</span></li>
+      <li>Write procedure <code>SaveProduct(product)</code> that appends one product to <code>inventory.dat</code> using binary append mode. Handle the case where the file cannot be opened. <span class="pts">[3]</span></li>
+      <li>Write function <code>LoadAllProducts()</code> that reads and returns a list of all products. Use exception handling for end of file and for a missing file. If the file is missing, return an empty list. <span class="pts">[4]</span></li>
+      <li>Write a main section that loads all products, asks the user for a product name to search, and prints the price and quantity if found, or "Not found" if not. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Append mode in Python:</strong> <code>"ab"</code> = append binary. Opens the file and adds to the end without overwriting existing data.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex4')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex4')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex4-hint">SaveProduct: open with <code>"ab"</code> mode, <code>pickle.dump</code>, wrap in try/except IOError. LoadAllProducts: outer try/except IOError returns []. Inner while True loop with EOFError break.</div>
+<pre class="answer-pre" id="ex4-ans">
+<span class="kw">import</span> pickle
+
+<span class="kw">class</span> <span class="fn">ProductRecord</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, product_id, name, price, quantity):
+        self.ProductID = product_id
+        self.Name      = name
+        self.Price     = price
+        self.Quantity  = quantity
+
+<span class="kw">def</span> <span class="fn">SaveProduct</span>(product):
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"inventory.dat"</span>, <span class="st">"ab"</span>) <span class="kw">as</span> f:
+            pickle.dump(product, f)
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not save product to file"</span>)
+
+<span class="kw">def</span> <span class="fn">LoadAllProducts</span>():
+    products = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"inventory.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+            <span class="kw">while</span> <span class="kw">True</span>:
+                <span class="kw">try</span>:
+                    product = pickle.load(f)
+                    products.append(product)
+                <span class="kw">except</span> <span class="exc">EOFError</span>:
+                    <span class="kw">break</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"No inventory file found — starting fresh"</span>)
+    <span class="kw">return</span> products
+
+products = <span class="fn">LoadAllProducts</span>()
+search = <span class="fn">input</span>(<span class="st">"Enter product name: "</span>)
+found = <span class="kw">False</span>
+<span class="kw">for</span> p <span class="kw">in</span> products:
+    <span class="kw">if</span> p.Name.lower() == search.lower():
+        <span class="fn">print</span>(<span class="st">f"Price: {p.Price}  Quantity: {p.Quantity}"</span>)
+        found = <span class="kw">True</span>
+        <span class="kw">break</span>
+<span class="kw">if</span> <span class="kw">not</span> found:
+    <span class="fn">print</span>(<span class="st">"Not found"</span>)
+</pre>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE -->
+<div class="divider"></div>
+<div class="sec-title">Quick Reference — cheat sheet 📋</div>
+<div class="sec-sub">One glance before the exam.</div>
+<table class="diff-table">
+  <tr><th>Task</th><th>Python code</th><th>Key detail</th></tr>
+  <tr><td>Declare record type</td><td><code>class Name: def __init__(self, f1, f2): self.F1 = f1 ...</code></td><td>Fields are PUBLIC (no __)</td></tr>
+  <tr><td>Instantiate record</td><td><code>r = ClassName(val1, val2, ...)</code></td><td>Access with <code>r.FieldName</code></td></tr>
+  <tr><td>Write binary file</td><td><code>open("f.dat","wb")</code> + <code>pickle.dump(obj, f)</code></td><td>"wb" = write binary</td></tr>
+  <tr><td>Append to binary file</td><td><code>open("f.dat","ab")</code> + <code>pickle.dump(obj, f)</code></td><td>"ab" = append binary</td></tr>
+  <tr><td>Read all records</td><td><code>open("f.dat","rb")</code> + <code>pickle.load(f)</code> in while loop</td><td>catch <code>EOFError</code> to stop</td></tr>
+  <tr><td>Random access jump</td><td><code>f.seek(position)</code></td><td>position from hash function</td></tr>
+  <tr><td>Basic exception</td><td><code>try: ... except ZeroDivisionError: ...</code></td><td>Name the specific exception</td></tr>
+  <tr><td>Capture message</td><td><code>except ValueError as e: print(str(e))</code></td><td><code>as e</code> captures the message</td></tr>
+  <tr><td>Always-run cleanup</td><td><code>finally: f.close()</code></td><td>Runs even if error occurred</td></tr>
+  <tr><td>Missing file</td><td><code>except IOError:</code></td><td>Also catches file permission errors</td></tr>
+  <tr><td>End of file</td><td><code>except EOFError: break</code></td><td>In while loop reading records</td></tr>
+  <tr><td>Bad user input</td><td><code>except ValueError:</code></td><td>int("abc") raises this</td></tr>
+</table>
+
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 26 · File Processing &amp; Exception Handling</span>
+  <span>Records · Sequential · Random Access · try/except</span>
+</footer>
+
+<script>
+/* ── EXERCISE TOGGLES ───────────────────────── */
+function toggle(id){
+  const b=document.getElementById(id),l=document.getElementById(id+'-lbl'),o=b.style.display==='block';
+  b.style.display=o?'none':'block';
+  if(l) l.textContent=o?'▼ expand':'▲ collapse';
+}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAnswer(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+
+/* ── 4 PATTERNS TABBED SWITCHER ─────────────── */
+const tabColors = ['teal','purple','amber','blue'];
+function switchPattern(idx){
+  for(let i=0;i<4;i++){
+    const panel = document.getElementById('pp-'+i);
+    const btn = document.querySelectorAll('.ptab-btn')[i];
+    if(i===idx){
+      panel.classList.add('active');
+      btn.className = 'ptab-btn active-'+tabColors[i];
+    } else {
+      panel.classList.remove('active');
+      btn.className = 'ptab-btn';
+    }
+  }
+}
+
+/* ── EXCEPTION SCENARIOS ────────────────────── */
+const scenarios = {
+  zero:{
+    code:`try:\n    result = 10 / 0\n    print("Result:", result)\nexcept ZeroDivisionError:\n    print("Caught: cannot divide by zero!")`,
+    output:`<span class="out-err">ZeroDivisionError raised</span>\n<span class="out-ok">Caught: cannot divide by zero!</span>`,
+    label:'try block raises ZeroDivisionError → except block runs'
+  },
+  value:{
+    code:`try:\n    number = int("banana")\n    print("Number:", number)\nexcept ValueError:\n    print("Caught: 'banana' is not a valid integer!")`,
+    output:`<span class="out-err">ValueError raised</span>\n<span class="out-ok">Caught: 'banana' is not a valid integer!</span>`,
+    label:'int("banana") raises ValueError → except block runs'
+  },
+  file:{
+    code:`import pickle\ntry:\n    with open("missing_file.dat", "rb") as f:\n        data = pickle.load(f)\nexcept IOError:\n    print("Caught: file not found or cannot be opened")`,
+    output:`<span class="out-err">IOError raised (file does not exist)</span>\n<span class="out-ok">Caught: file not found or cannot be opened</span>`,
+    label:'open() on missing file raises IOError → except block runs'
+  },
+  eof:{
+    code:`import pickle\n# (after all records have been read...)\ntry:\n    record = pickle.load(f)   # nothing left\nexcept EOFError:\n    print("End of file — all records read!")\n    break`,
+    output:`<span class="out-err">EOFError raised (no more data)</span>\n<span class="out-ok">End of file — all records read!</span>`,
+    label:'pickle.load() on empty stream raises EOFError → we break out of the loop'
+  },
+  exc_e:{
+    code:`try:\n    result = 10 / 0\nexcept ZeroDivisionError as e:\n    print("Error type:", type(e).__name__)\n    print("Message:", str(e))`,
+    output:`<span class="out-err">ZeroDivisionError raised</span>\n<span class="out-ok">Error type: ZeroDivisionError</span>\n<span class="out-ok">Message: division by zero</span>`,
+    label:'"as e" captures the exception object — you can read its type and message'
+  }
+};
+
+function hl(code){
+  return code
+    .replace(/\b(ZeroDivisionError|ValueError|IOError|EOFError|Exception)\b/g,'<span class="exc">$1</span>')
+    .replace(/\b(try|except|break|with|as|import|while|True|for|if|not|in|and|or|def|class|return)\b/g,'<span class="kw">$1</span>')
+    .replace(/\b(open|int|print|pickle|type|str|input|range|append|load|dump)\b/g,'<span class="fn">$1</span>')
+    .replace(/(#[^\n]*)/g,'<span class="cm">$1</span>');
+}
+
+function runScenario(key){
+  const s=scenarios[key];
+  document.getElementById('scenario-code').innerHTML=`<pre class="py">${hl(s.code)}</pre>`;
+  document.getElementById('scenario-output').innerHTML=
+    `<div class="output-block"><div class="out-label">Output</div>${s.output}</div>
+     <div style="font-size:12px;color:var(--ink3);margin-top:6px;font-style:italic;">${s.label}</div>`;
+}
+runScenario('zero');
+</script>
+</body>
+</html>

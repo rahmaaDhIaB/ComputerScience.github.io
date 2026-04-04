@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>File Processing &amp; Exception Handling · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#0d1f1a;color:#c8e0d8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(93,202,165,0.08);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-80px;left:120px;width:400px;height:400px;border:2px solid rgba(93,202,165,0.06);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,224,216,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#5dcaa5;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,224,216,0.55);max-width:580px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,224,216,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,224,216,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.at{color:#f0a8c8;}.exc{color:#f09595;font-weight:500;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:200px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+/* pill */
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin:1px 2px;}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.pill-teal{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);}
+/* analogy cards */
+.analogy-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.analogy-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1rem;font-size:13px;line-height:1.6;}
+.analogy-card .a-icon{font-size:28px;margin-bottom:6px;}
+.analogy-card .a-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--ink3);margin-bottom:2px;}
+.analogy-card .a-title{font-weight:500;font-size:14px;margin-bottom:4px;}
+/* flow diagram */
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:1rem 0;}
+.flow-box{background:#fff;border:1.5px solid var(--rule);border-radius:7px;padding:8px 14px;font-size:12.5px;font-family:'DM Mono',monospace;text-align:center;font-weight:500;}
+.flow-box.try-box{border-color:var(--teal-bd);background:var(--teal-bg);color:var(--teal);}
+.flow-box.exc-box{border-color:var(--red-bd);background:var(--red-bg);color:var(--red);}
+.flow-box.ok-box{border-color:var(--green-bd);background:var(--green-bg);color:var(--green);}
+.flow-box.else-box{border-color:var(--blue-bd);background:var(--blue-bg);color:var(--blue);}
+.flow-box.fin-box{border-color:var(--amber-bd);background:var(--amber-bg);color:var(--amber);}
+.flow-arrow{padding:0 8px;color:var(--ink3);font-size:18px;}
+.flow-label{font-size:11px;color:var(--ink3);padding:0 4px;font-style:italic;}
+/* exception cards grid */
+.exc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1rem 0;}
+.exc-card{background:#fff;border:1px solid var(--rule);border-radius:7px;padding:0.85rem 1rem;font-size:13px;}
+.exc-card .ec-name{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--red);margin-bottom:4px;}
+.exc-card .ec-trigger{font-size:11.5px;color:var(--ink3);margin-bottom:6px;}
+.exc-card .ec-desc{font-size:12.5px;color:var(--ink2);line-height:1.5;}
+/* file type cards */
+.file-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.file-card{background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;}
+.file-card-head{padding:10px 16px;font-weight:500;font-size:13px;}
+.file-card-head.seq{background:#0d1f1a;color:#5dcaa5;}
+.file-card-head.rand{background:#1a0d2e;color:#afa9ec;}
+.file-card-body{padding:10px 16px;font-size:12.5px;color:var(--ink2);line-height:1.6;}
+/* sim */
+.sim-panel{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:1.25rem;margin:1rem 0;}
+.sim-label{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);margin-bottom:0.75rem;}
+.btn-primary{background:var(--ink);color:var(--paper);border:none;border-radius:5px;padding:7px 18px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.15s;}
+.btn-primary:hover{background:var(--ink2);}
+.btn-secondary{background:none;color:var(--ink2);border:1px solid var(--rule);border-radius:5px;padding:6px 16px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-secondary:hover{background:var(--paper2);}
+/* stepper */
+.step-nav{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.step-btn{background:none;border:1px solid var(--rule);border-radius:4px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink3);}
+.step-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+/* output block */
+.output-block{background:#0d1f1a;border-radius:6px;padding:0.85rem 1rem;font-family:'DM Mono',monospace;font-size:12.5px;margin:0.5rem 0;line-height:1.9;}
+.out-ok{color:#5dcaa5;}
+.out-err{color:#f09595;}
+.out-info{color:#d4d0c4;}
+.out-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,224,216,0.4);margin-bottom:4px;}
+/* trace table */
+.trace-wrap{overflow-x:auto;margin:1rem 0;}
+.trace-table{border-collapse:collapse;font-size:12px;min-width:380px;width:100%;}
+.trace-table th{background:var(--ink);color:#fff;padding:7px 12px;text-align:center;font-weight:500;font-size:11px;letter-spacing:0.05em;}
+.trace-table td{padding:6px 12px;border:1px solid var(--rule);text-align:left;font-family:'DM Mono',monospace;vertical-align:middle;font-size:12px;}
+.trace-table tr:nth-child(even) td{background:var(--paper2);}
+.cell-exc{background:#fdeaea!important;color:var(--red);font-weight:500;}
+.cell-ok{background:var(--green-bg)!important;color:var(--green);font-weight:500;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Chapter 26</div>
+  <h1>File Processing &amp; <em>Exception Handling</em></h1>
+  <div class="cover-sub">Records, binary files, sequential vs random access — and how to stop your program crashing when things go wrong at runtime.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Records</strong>Group data under one name</div>
+    <div class="cover-meta-item"><strong>File Processing</strong>Sequential &amp; random access</div>
+    <div class="cover-meta-item"><strong>Try / Except</strong>Catch errors gracefully</div>
+    <div class="cover-meta-item"><strong>Exception Types</strong>6 types Cambridge tests</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 Linear Search</a>
+  <a href="02_binary_search.html">⚡ Binary Search</a>
+  <a href="03_bubble_insertion_sort.html">🫧 Sorting</a>
+  <a href="05_oop.html">🧬 OOP</a>
+  <a href="06_exception_handling.html" class="active">🛡️ Exception Handling</a>
+</nav>
+
+<div class="page-body">
+
+<!-- ════════════════════════════════════════
+     SECTION 1 — RECORDS
+════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">Records</div>
+    <div class="section-desc">Grouping related data under one name — like a row in a spreadsheet</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>The F1 analogy</strong>
+  Imagine a spreadsheet of F1 teams. Each <strong>row</strong> is one team: position, team name, two drivers, points. All different data types but they belong together — that's a <strong>record</strong>. Instead of 5 separate variables floating around, you bundle them into one named thing.
+</div>
+
+<!-- VISUAL: spreadsheet → record -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--paper2);padding:8px 14px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);border-bottom:1px solid var(--rule);">Think of it like a spreadsheet row</div>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px;font-family:'DM Mono',monospace;">
+      <tr style="background:var(--paper3);">
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Position</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">TeamName</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Driver_1</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Driver_2</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);font-weight:500;color:var(--ink3);font-size:11px;">Points</td>
+      </tr>
+      <tr style="background:var(--teal-bg);">
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">1</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">Red Bull Racing</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">Verstappen</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">Perez</td>
+        <td style="padding:7px 14px;border:1px solid var(--teal-bd);color:var(--teal);">860</td>
+      </tr>
+      <tr>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">2</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Mercedes</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Hamilton</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Russell</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">409</td>
+      </tr>
+      <tr style="background:var(--paper2);">
+        <td style="padding:7px 14px;border:1px solid var(--rule);">3</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Ferrari</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Leclerc</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">Sainz</td>
+        <td style="padding:7px 14px;border:1px solid var(--rule);">406</td>
+      </tr>
+    </table>
+  </div>
+  <div style="padding:8px 14px;font-size:12px;color:var(--ink3);border-top:1px solid var(--rule);">Each row above = one <strong>record instance</strong>. The column headers = the <strong>record type</strong> (the template).</div>
+</div>
+
+<div class="sec-title">Declaring a record in Python</div>
+<div class="sec-sub">Python has no built-in "record" keyword. We fake it with a class. But it's a SIMPLE class — no private attributes, no getters, no setters. Just a container.</div>
+
+<pre class="py"><span class="cm"># ── DECLARE THE RECORD TYPE ────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">TeamRecord</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, position, team_name, driver_1, driver_2, points):
+        self.Position = position      <span class="cm"># INTEGER  ← NO __ before name = PUBLIC</span>
+        self.TeamName = team_name     <span class="cm"># STRING   ← NO __ before name = PUBLIC</span>
+        self.Driver_1 = driver_1      <span class="cm"># STRING</span>
+        self.Driver_2 = driver_2      <span class="cm"># STRING</span>
+        self.Points   = points        <span class="cm"># INTEGER</span></pre>
+
+<div class="box box-teal">
+  <strong>Every line broken down</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>class TeamRecord:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Creates the record <em>type</em> — the template. No real data yet, just the structure (the column headers).</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>def __init__(self, ...)</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">The constructor. Runs automatically when you create a new record. All the field names are listed as parameters here.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>self.TeamName = team_name</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Creates a field called <code>TeamName</code> inside this record and stores the value from the parameter. The <code>self.</code> means "this object's field". <strong>No <code>__</code> = public — anyone can access it directly.</strong></div>
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Instantiating a record</div>
+<div class="sec-sub">Creating actual record instances with real values.</div>
+
+<pre class="py"><span class="cm"># ── CREATE RECORD INSTANCES ────────────────────────────────</span>
+team1 = <span class="fn">TeamRecord</span>(<span class="nm">1</span>, <span class="st">"Red Bull Racing"</span>, <span class="st">"Verstappen"</span>, <span class="st">"Perez"</span>, <span class="nm">860</span>)
+team2 = <span class="fn">TeamRecord</span>(<span class="nm">2</span>, <span class="st">"Mercedes"</span>,       <span class="st">"Hamilton"</span>,  <span class="st">"Russell"</span>, <span class="nm">409</span>)
+
+<span class="cm"># ── ACCESS FIELDS DIRECTLY — no getter needed ──────────────</span>
+<span class="fn">print</span>(team1.TeamName)    <span class="cm"># output: Red Bull Racing</span>
+<span class="fn">print</span>(team1.Points)      <span class="cm"># output: 860</span>
+team1.Points = <span class="nm">900</span>        <span class="cm"># change it directly — also works!</span>
+
+<span class="cm"># ── STORE MANY RECORDS IN A LIST ───────────────────────────</span>
+teams = [team1, team2]
+<span class="kw">for</span> team <span class="kw">in</span> teams:
+    <span class="fn">print</span>(team.Position, team.TeamName, team.Points)</pre>
+
+<!-- ═══════════════════════════════════════════════════
+     BIG VISUAL: RECORD vs OOP — THE REAL QUESTION
+═══════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="sec-title">Your question: "Is a record the same as an OOP class?"</div>
+<div class="sec-sub">YES — the Python syntax is almost identical. The <strong>only difference</strong> is one character: <code>__</code></div>
+
+<!-- Side-by-side annotated comparison -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+
+  <div style="background:#fff;border:2px solid var(--teal-bd);border-radius:10px;overflow:hidden;">
+    <div style="background:var(--teal);color:#fff;padding:10px 16px;font-weight:500;font-size:13px;text-align:center;letter-spacing:0.02em;">RECORD — public fields</div>
+    <div style="padding:1rem;">
+      <pre class="py" style="margin:0;font-size:11.5px;"><span class="kw">class</span> <span class="fn">TeamRecord</span>:
+  <span class="kw">def</span> <span class="fn">__init__</span>(self, name, pts):
+    self<span style="color:#1D9E75;font-weight:700;">.Name</span>   = name
+    self<span style="color:#1D9E75;font-weight:700;">.Points</span> = pts</pre>
+      <div style="margin-top:0.6rem;font-size:12px;line-height:1.6;color:var(--ink2);">
+        <span style="display:inline-block;background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500;margin-bottom:4px;">self.Name</span> — NO double underscore<br>
+        This means the field is <strong>PUBLIC</strong>.<br><br>
+        From outside the class you can:<br>
+        <code style="font-size:11.5px;">print(t.Name)</code> — read it<br>
+        <code style="font-size:11.5px;">t.Points = 900</code> — change it<br><br>
+        No getters. No setters. Direct access.
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border:2px solid var(--purple-bd);border-radius:10px;overflow:hidden;">
+    <div style="background:var(--purple);color:#fff;padding:10px 16px;font-weight:500;font-size:13px;text-align:center;letter-spacing:0.02em;">OOP CLASS — private attributes</div>
+    <div style="padding:1rem;">
+      <pre class="py" style="margin:0;font-size:11.5px;"><span class="kw">class</span> <span class="fn">Car</span>:
+  <span class="kw">def</span> <span class="fn">__init__</span>(self, name, spd):
+    self<span style="color:#7F77DD;font-weight:700;">.__Name</span>  = name
+    self<span style="color:#7F77DD;font-weight:700;">.__Speed</span> = spd</pre>
+      <div style="margin-top:0.6rem;font-size:12px;line-height:1.6;color:var(--ink2);">
+        <span style="display:inline-block;background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);border-radius:4px;padding:1px 7px;font-size:11px;font-weight:500;margin-bottom:4px;">self.__Name</span> — WITH double underscore<br>
+        This means the attribute is <strong>PRIVATE</strong>.<br><br>
+        From outside the class:<br>
+        <code style="font-size:11.5px;">c.__Name</code> — BLOCKED (AttributeError)<br>
+        <code style="font-size:11.5px;">c.GetName()</code> — must use getter<br><br>
+        Needs getters + setters to access.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The single difference highlighted visually -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.25rem;margin:1rem 0;">
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--ink3);margin-bottom:1rem;">The ONLY difference — one character</div>
+  <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;justify-content:center;">
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:22px;background:var(--teal-bg);color:var(--teal);border:2px solid var(--teal-bd);border-radius:8px;padding:10px 24px;margin-bottom:6px;">self.Points</div>
+      <div style="font-size:12px;color:var(--teal);font-weight:500;">PUBLIC — record field</div>
+      <div style="font-size:11.5px;color:var(--ink3);">Access: <code>t.Points</code></div>
+    </div>
+    <div style="font-size:28px;color:var(--ink3);font-weight:300;">vs</div>
+    <div style="text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:22px;background:var(--purple-bg);color:var(--purple);border:2px solid var(--purple-bd);border-radius:8px;padding:10px 24px;margin-bottom:6px;">self.__Points</div>
+      <div style="font-size:12px;color:var(--purple);font-weight:500;">PRIVATE — OOP attribute</div>
+      <div style="font-size:11.5px;color:var(--ink3);">Access: <code>t.GetPoints()</code></div>
+    </div>
+  </div>
+  <div style="margin-top:1rem;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:var(--amber);line-height:1.7;">
+    <strong>Summary in one sentence:</strong> A record and an OOP class are written the same way in Python. The only difference is that records use <code>self.FieldName</code> (public) and OOP classes use <code>self.__AttributeName</code> (private). When the question says "record" → no underscore, no getters. When it says "OOP class" → double underscore, add getters and setters.
+  </div>
+</div>
+
+
+
+<!-- ════════════════════════════════════════
+     SECTION 2 — FILE PROCESSING
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">File Processing</div>
+    <div class="section-desc">Saving records to disk — sequential vs random access</div>
+  </div>
+</div>
+
+<div class="box box-blue">
+  <strong>💾 Why binary files?</strong>
+  Text files can only store strings, line by line. If you want to store full record objects (with integers, strings, etc.) and be able to jump directly to record number 7 without reading 1–6 first — you need <strong>binary files</strong>. Python's <code>pickle</code> module handles this.
+</div>
+
+<!-- FILE TYPE COMPARISON -->
+<div class="file-grid">
+  <div class="file-card">
+    <div class="file-card-head seq">Sequential File Processing</div>
+    <div class="file-card-body">
+      Records are read or written <strong>in order</strong>, from start to finish. Like reading a book — you can't skip to chapter 7 without going through 1–6.<br><br>
+      ✅ Simple to implement<br>
+      ✅ Good for processing <em>all</em> records<br>
+      ❌ Slow to find a specific record<br>
+      ❌ Must read everything before the target
+    </div>
+  </div>
+  <div class="file-card">
+    <div class="file-card-head rand">Random Access File Processing</div>
+    <div class="file-card-body">
+      Jump directly to <strong>any position</strong> in the file using a calculated offset. Like a DVD — skip to any scene instantly.<br><br>
+      ✅ Fast direct access to any record<br>
+      ✅ No need to read irrelevant records<br>
+      ❌ Needs a hash function to find position<br>
+      ❌ More complex to implement
+    </div>
+  </div>
+</div>
+
+<!-- STEPPER: sequential vs random -->
+<div class="sec-title" style="margin-top:1.5rem;">Step through both methods 👣</div>
+<div class="sim-panel">
+  <div class="sim-label">Choose what to see</div>
+  <div class="step-nav">
+    <button class="step-btn active" onclick="showStep('f',0)">Sequential: write</button>
+    <button class="step-btn" onclick="showStep('f',1)">Sequential: read</button>
+    <button class="step-btn" onclick="showStep('f',2)">Random: write</button>
+    <button class="step-btn" onclick="showStep('f',3)">Random: read</button>
+  </div>
+
+  <div class="step-panel active" id="f-0">
+<pre class="py"><span class="cm"># ── SEQUENTIAL WRITE ──────────────────────────────────────</span>
+<span class="kw">import</span> pickle
+
+<span class="kw">def</span> <span class="fn">WriteRecords</span>(records):
+    <span class="cm"># "wb" = write binary mode</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams.dat"</span>, <span class="st">"wb"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> record <span class="kw">in</span> records:
+            pickle.dump(record, f)    <span class="cm"># writes one record at a time, in order</span>
+
+<span class="cm"># Usage</span>
+teams = [team1, team2, team3]
+<span class="fn">WriteRecords</span>(teams)
+<span class="cm"># File now contains all 3 records, written one after another</span></pre>
+
+    <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+      <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">Breaking down <code style="color:#a8d8a0;">with open("teams.dat", "wb") as f:</code></div>
+      <div style="padding:1.25rem 1.25rem 0.75rem;">
+        <div style="display:grid;grid-template-columns:auto 1fr;border:1px solid var(--rule);border-radius:6px;overflow:hidden;font-size:12.5px;">
+          <div style="background:var(--mono-bg);color:#7eb8d4;padding:10px 14px;font-family:'DM Mono',monospace;font-weight:500;border-bottom:1px solid var(--rule);white-space:nowrap;">with</div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);"><strong>Safety wrapper.</strong> Auto-closes the file when done — even if an error occurs. No need to call <code>f.close()</code> yourself.</div>
+          <div style="background:var(--mono-bg);color:#a8d8a0;padding:10px 14px;font-family:'DM Mono',monospace;font-weight:500;border-bottom:1px solid var(--rule);white-space:nowrap;">open(...)</div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);"><strong>Opens or creates the file.</strong> If <code>teams.dat</code> doesn't exist yet, Python creates it from scratch.</div>
+          <div style="background:var(--mono-bg);color:#e8c878;padding:10px 14px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);white-space:nowrap;">"teams.dat"</div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);"><strong>The filename.</strong> Saved in the same folder as your script. The <code>.dat</code> extension is just a convention — you can name it anything.</div>
+          <div style="background:var(--mono-bg);color:#f09595;padding:10px 14px;font-family:'DM Mono',monospace;font-weight:500;border-bottom:1px solid var(--rule);white-space:nowrap;">"wb"</div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);">
+            <strong>The file mode — this is the one that changes:</strong>
+            <div style="margin-top:6px;display:grid;grid-template-columns:auto auto 1fr;gap:4px 12px;font-size:11.5px;">
+              <code style="color:#f09595;">"wb"</code><span style="color:var(--ink3);">write binary</span><span>create/overwrite the file, write objects</span>
+              <code style="color:#a8d8a0;">"rb"</code><span style="color:var(--ink3);">read binary</span><span>open existing file, read objects</span>
+              <code style="color:#c8a8f0;">"ab"</code><span style="color:var(--ink3);">append binary</span><span>add to end, keep old data</span>
+              <code style="color:#e8c878;">"r+b"</code><span style="color:var(--ink3);">read+write binary</span><span>update in place (random access)</span>
+            </div>
+          </div>
+          <div style="background:var(--mono-bg);color:#7eb8d4;padding:10px 14px;font-family:'DM Mono',monospace;font-weight:500;border-bottom:1px solid var(--rule);white-space:nowrap;">as f</div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);"><strong>Name the open file <code>f</code>.</strong> Inside the <code>with</code> block, every read/write uses <code>f</code>. You could call it anything — <code>f</code> is just short and common.</div>
+          <div style="background:var(--mono-bg);color:#d4d0c4;padding:10px 14px;font-family:'DM Mono',monospace;white-space:nowrap;">:</div>
+          <div style="padding:10px 14px;border-left:1px solid var(--rule);">Everything indented below runs while the file is open. Once the indented block ends, file closes automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+      <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">What WriteRecords() is actually doing — the picture</div>
+      <div style="padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:1.25rem;">
+          <div style="border:1.5px solid var(--purple-bd);border-radius:8px;overflow:hidden;background:var(--purple-bg);">
+            <div style="background:var(--purple);color:#fff;font-size:11px;padding:5px 12px;font-weight:500;font-family:'DM Mono',monospace;">records [ ] in RAM</div>
+            <div style="padding:8px 12px;display:flex;flex-direction:column;gap:4px;">
+              <div style="background:#fff;border:1px solid var(--purple-bd);border-radius:4px;padding:4px 10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--purple);">team1 {Name, Points, ...}</div>
+              <div style="background:#fff;border:1px solid var(--purple-bd);border-radius:4px;padding:4px 10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--purple);">team2 {Name, Points, ...}</div>
+              <div style="background:#fff;border:1px solid var(--purple-bd);border-radius:4px;padding:4px 10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--purple);">team3 {Name, Points, ...}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="font-size:11px;color:var(--teal);font-weight:500;font-family:'DM Mono',monospace;text-align:center;">pickle.dump()<br>x3 times</div>
+            <div style="font-size:24px;color:var(--teal);">&#8594;</div>
+            <div style="font-size:11px;color:var(--ink3);text-align:center;">converts each object<br>to bytes</div>
+          </div>
+          <div style="border:1.5px solid var(--teal-bd);border-radius:8px;overflow:hidden;background:var(--teal-bg);">
+            <div style="background:var(--teal);color:#fff;font-size:11px;padding:5px 12px;font-weight:500;font-family:'DM Mono',monospace;">teams.dat on disk</div>
+            <div style="padding:8px 12px;display:flex;flex-direction:column;gap:4px;">
+              <div style="background:#fff;border:1px solid var(--teal-bd);border-radius:4px;padding:4px 10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--teal);">[ bytes for team1 ]</div>
+              <div style="background:#fff;border:1px solid var(--teal-bd);border-radius:4px;padding:4px 10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--teal);">[ bytes for team2 ]</div>
+              <div style="background:#fff;border:1px solid var(--teal-bd);border-radius:4px;padding:4px 10px;font-size:11.5px;font-family:'DM Mono',monospace;color:var(--teal);">[ bytes for team3 ]</div>
+            </div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;font-size:12.5px;">
+          <div style="background:var(--paper2);padding:8px 14px;font-weight:500;border-bottom:1px solid var(--rule);">Every line of the function</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;">
+            <div style="background:var(--mono-bg);color:#a8d8a0;padding:9px 14px;font-family:'DM Mono',monospace;font-size:11.5px;border-bottom:1px solid var(--rule);white-space:nowrap;">def WriteRecords(records):</div>
+            <div style="padding:9px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);">Define the function. <code>records</code> is the list of objects we pass in when we call it.</div>
+            <div style="background:var(--mono-bg);color:#7eb8d4;padding:9px 14px;font-family:'DM Mono',monospace;font-size:11.5px;border-bottom:1px solid var(--rule);white-space:nowrap;">with open(...) as f:</div>
+            <div style="padding:9px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);">Open the file, name it <code>f</code>. In <code>"wb"</code> mode = write binary. Creates the file if it doesn't exist, overwrites it if it does.</div>
+            <div style="background:var(--mono-bg);color:#7eb8d4;padding:9px 14px;font-family:'DM Mono',monospace;font-size:11.5px;border-bottom:1px solid var(--rule);white-space:nowrap;">for record in records:</div>
+            <div style="padding:9px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);">Loop through every item in the list. First time: <code>record</code> = team1. Second: team2. Third: team3.</div>
+            <div style="background:var(--mono-bg);color:#a8d8a0;padding:9px 14px;font-family:'DM Mono',monospace;font-size:11.5px;white-space:nowrap;">pickle.dump(record, f)</div>
+            <div style="padding:9px 14px;border-left:1px solid var(--rule);">Take this record object (with all its fields: Name, Points etc.), convert it to binary bytes, and write those bytes into file <code>f</code>. Repeat for each record.</div>
+          </div>
+        </div>
+        <div class="box box-teal" style="margin-top:0.75rem;">
+          <strong>What is pickle?</strong>
+          Python objects in RAM are complex structures — not just text. <code>pickle</code> converts any object into a stream of bytes (<code>pickle.dump</code> = save) and restores it exactly from those bytes later (<code>pickle.load</code> = load). Like freeze-drying food: compress it, store it, restore it perfectly later.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-panel" id="f-1">
+<pre class="py"><span class="cm"># ── SEQUENTIAL READ ───────────────────────────────────────</span>
+<span class="kw">import</span> pickle
+
+<span class="kw">def</span> <span class="fn">ReadAllRecords</span>():
+    records = []
+    <span class="cm"># "rb" = read binary mode</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+        <span class="kw">while</span> <span class="kw">True</span>:
+            <span class="kw">try</span>:
+                record = pickle.load(f)   <span class="cm"># read next record</span>
+                records.append(record)
+            <span class="kw">except</span> <span class="exc">EOFError</span>:              <span class="cm"># end of file reached — stop!</span>
+                <span class="kw">break</span>
+    <span class="kw">return</span> records
+
+all_teams = <span class="fn">ReadAllRecords</span>()
+<span class="kw">for</span> t <span class="kw">in</span> all_teams:
+    <span class="fn">print</span>(t.TeamName, t.Points)</pre>
+    <div class="box box-amber" style="margin-top:0.5rem;">
+      <strong>Why EOFError?</strong>
+      When <code>pickle.load()</code> tries to read past the last record, it raises <code>EOFError</code> (end of file). We catch it to know we've finished reading. This is exception handling being useful for file processing!
+    </div>
+  </div>
+
+<div class="step-panel" id="f-2">
+ 
+  <div class="box box-blue" style="margin-bottom:1rem;">
+    <strong>Before reading the code — understand the 3-step recipe</strong>
+    Every random access write does exactly three things in order: (1) decide <em>which slot</em> to use via a hash function, (2) calculate <em>which byte</em> that slot starts at, (3) jump the cursor there and write. That's it.
+  </div>
+ 
+  <!-- THE 3-LINE PATTERN TABLE — WRITE -->
+  <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:0.75rem 0;">
+    <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">The 3-line pattern for WRITE — with "why" for each line</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+        <tr style="background:var(--paper2);">
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;white-space:nowrap;">#</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">Code</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">What it does</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">Why you need it</th>
+        </tr>
+        <tr style="background:var(--teal-bg);">
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-weight:500;color:var(--teal);text-align:center;font-family:'DM Mono',monospace;">1</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--teal);white-space:nowrap;">position = hash(key) % TABLE_SIZE</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Converts the key (e.g. team name or ID) into a slot number between 0 and TABLE_SIZE−1</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Without this we don't know <em>where</em> in the file to put the record. The hash gives us a consistent, repeatable slot every time for the same key.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-weight:500;color:var(--purple);text-align:center;font-family:'DM Mono',monospace;">2</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--purple);white-space:nowrap;">offset = position × RECORD_SIZE</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Turns the slot number into a byte address. Slot 3 × 256 bytes = byte 768.</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">The file is just bytes. We need to know which <em>byte</em> our slot starts at. Multiplying by the fixed record size gives us that.</td>
+        </tr>
+        <tr style="background:var(--amber-bg);">
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-weight:500;color:var(--amber);text-align:center;font-family:'DM Mono',monospace;">3</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--amber);white-space:nowrap;">f.seek(offset)</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Moves the file cursor to that exact byte. The next write starts exactly there.</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Without seek(), Python would write at the current cursor position — which is wherever you left it. seek() lets you jump anywhere instantly.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+ 
+<pre class="py"><span class="cm"># ── RANDOM ACCESS WRITE — full code ──────────────────────</span>
+<span class="kw">import</span> pickle
+ 
+RECORD_SIZE = <span class="nm">256</span>   <span class="cm"># fixed bytes per record — MUST be consistent</span>
+TABLE_SIZE  = <span class="nm">100</span>   <span class="cm"># number of slots in the file</span>
+ 
+<span class="kw">def</span> <span class="fn">WriteRecord</span>(record, key):
+    <span class="cm"># ── LINE 1: hash the key to get a slot ──────────────────</span>
+    position = <span class="fn">hash</span>(key) % TABLE_SIZE    <span class="cm"># e.g. hash("Mercedes") % 100 = 43</span>
+ 
+    <span class="cm"># ── LINE 2: convert slot → byte address ─────────────────</span>
+    offset = position * RECORD_SIZE        <span class="cm"># e.g. 43 × 256 = 11,008</span>
+ 
+    <span class="cm"># ── LINE 3: jump to that byte and write ─────────────────</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams_random.dat"</span>, <span class="st">"r+b"</span>) <span class="kw">as</span> f:
+        f.seek(offset)                     <span class="cm"># cursor jumps to byte 11,008</span>
+        data = pickle.dumps(record)        <span class="cm"># convert object → bytes</span>
+        data = data.ljust(RECORD_SIZE, <span class="nm">b</span><span class="st">'\x00'</span>)  <span class="cm"># pad to fixed size</span>
+        f.write(data[:RECORD_SIZE])        <span class="cm"># write exactly 256 bytes</span></pre>
+ 
+  <div class="box box-amber" style="margin-top:0.5rem;">
+    <strong>Why <code>"r+b"</code> not <code>"wb"</code>?</strong>
+    <code>"wb"</code> would <strong>erase the entire file</strong> every time you open it. <code>"r+b"</code> = read+write binary: opens the existing file and lets you overwrite specific bytes without touching the rest. You must create the file first (with all slots pre-filled) before using <code>"r+b"</code>.
+  </div>
+</div>
+<!-- END f-2 panel -->
+
+
+<div class="step-panel" id="f-3">
+ 
+  <!-- THE 3-LINE PATTERN TABLE — READ -->
+  <div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:0.75rem 0;">
+    <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">The 3-line pattern for READ — same logic, reversed</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+        <tr style="background:var(--paper2);">
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;white-space:nowrap;">#</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">Code</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">What it does</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">Why it's the same key</th>
+        </tr>
+        <tr style="background:var(--teal-bg);">
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-weight:500;color:var(--teal);text-align:center;font-family:'DM Mono',monospace;">1</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--teal);white-space:nowrap;">position = hash(key) % TABLE_SIZE</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Identical to the write step. Same key → same slot number.</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);"><strong>This is the magic.</strong> hash() always returns the same value for the same input. So the read calculation lands on exactly the same slot as the write did.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-weight:500;color:var(--purple);text-align:center;font-family:'DM Mono',monospace;">2</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--purple);white-space:nowrap;">offset = position × RECORD_SIZE</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Identical byte address calculation.</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Same slot → same byte address → cursor lands in exactly the right place.</td>
+        </tr>
+        <tr style="background:var(--amber-bg);">
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-weight:500;color:var(--amber);text-align:center;font-family:'DM Mono',monospace;">3</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--amber);white-space:nowrap;">f.read(RECORD_SIZE)</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Reads exactly RECORD_SIZE bytes from the cursor position.</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);">Since every record is the same fixed size, reading exactly RECORD_SIZE bytes always gets exactly one record — no more, no less.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+ 
+<pre class="py"><span class="cm"># ── RANDOM ACCESS READ — full code ───────────────────────</span>
+<span class="kw">import</span> pickle
+ 
+RECORD_SIZE = <span class="nm">256</span>
+TABLE_SIZE  = <span class="nm">100</span>
+ 
+<span class="kw">def</span> <span class="fn">ReadRecord</span>(key):
+    <span class="cm"># ── LINE 1: same hash as write ───────────────────────────</span>
+    position = <span class="fn">hash</span>(key) % TABLE_SIZE    <span class="cm"># SAME formula as write → same slot</span>
+ 
+    <span class="cm"># ── LINE 2: same offset calculation ─────────────────────</span>
+    offset = position * RECORD_SIZE
+ 
+    <span class="cm"># ── LINE 3: jump and read ───────────────────────────────</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams_random.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+        f.seek(offset)                     <span class="cm"># jump to exact byte</span>
+        data = f.read(RECORD_SIZE)         <span class="cm"># read exactly one slot's worth</span>
+        data = data.rstrip(<span class="nm">b</span><span class="st">'\x00'</span>)       <span class="cm"># strip padding bytes</span>
+        record = pickle.loads(data)        <span class="cm"># bytes → object</span>
+    <span class="kw">return</span> record
+ 
+result = <span class="fn">ReadRecord</span>(<span class="st">"Mercedes"</span>)
+<span class="fn">print</span>(result.TeamName)   <span class="cm"># output: Mercedes — found in ONE seek, no loop needed</span></pre>
+ 
+  <div class="box box-teal">
+    <strong>The whole point in one sentence</strong>
+    Because we use the same hash formula on read as on write, we always land on the same slot — which means we jump directly to the right bytes without reading anything else in the file.
+  </div>
+</div>
+<!-- END f-3 panel -->
+</div>
+
+
+
+<!-- ─── EXPANDED RANDOM ACCESS SECTION ──────────────────── -->
+<div class="divider"></div>
+<div class="sec-title">Understanding random access — properly 🗂️</div>
+<div class="sec-sub">The stepper above showed you the code. Now let's build the mental model so you can adapt when the exam changes the scenario.</div>
+ 
+<!-- 1. THE PROBLEM IT SOLVES -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">① The problem random access solves</div>
+  <div style="padding:1.25rem;">
+    <p style="font-size:13.5px;color:var(--ink2);line-height:1.7;margin-bottom:1rem;">
+      Sequential processing is simple — but it forces you to read every record before the one you want. If you have 10,000 teams and you want team number 9,847, you must read 9,846 records first. That's slow. <strong>Random access solves this by jumping directly to the right position in one step</strong> — like skipping to a specific page in a book by knowing the page number, rather than flipping through every page from the front.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div style="background:var(--red-bg);border:1px solid var(--red-bd);border-radius:7px;padding:1rem;font-size:13px;color:var(--red);">
+        <div style="font-weight:500;margin-bottom:6px;">❌ Sequential — finding "Ferrari"</div>
+        Read team 1 → not Ferrari<br>
+        Read team 2 → not Ferrari<br>
+        Read team 3 → not Ferrari<br>
+        Read team 4 → <strong>Ferrari! ✓</strong><br>
+        <div style="margin-top:8px;font-size:12px;opacity:0.8;">Wasted 3 reads. With 10,000 records, could waste 9,999.</div>
+      </div>
+      <div style="background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:1rem;font-size:13px;color:var(--teal);">
+        <div style="font-weight:500;margin-bottom:6px;">✅ Random access — finding "Ferrari"</div>
+        hash("Ferrari") % 100 = 37<br>
+        offset = 37 × 256 = 9,472<br>
+        seek(9,472) → read → <strong>Ferrari! ✓</strong><br>
+        &nbsp;<br>
+        <div style="margin-top:8px;font-size:12px;opacity:0.8;">Always 1 seek. Doesn't matter if there are 10 or 10,000 records.</div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- 2. THE SHELF ANALOGY -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">② The numbered shelf analogy</div>
+  <div style="padding:1.25rem;">
+    <p style="font-size:13.5px;color:var(--ink2);line-height:1.7;margin-bottom:1.25rem;">
+      Imagine a warehouse with 100 numbered shelves (0 to 99). Each shelf holds exactly <strong>one</strong> box. When you store a team's data, you don't just put it on the first free shelf — you let the hash function calculate its shelf number. The rule is simple: <strong>same team → always same shelf</strong>. So later, when you need to find that team, you hash the name again, get the same shelf number, and walk straight there.
+    </p>
+ 
+    <!-- SHELF DIAGRAM -->
+    <div style="overflow-x:auto;margin-bottom:1.25rem;">
+      <div style="min-width:600px;">
+        <div style="font-size:11px;color:var(--ink3);font-weight:500;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;">The warehouse file — 100 shelves, each holds one fixed-size record</div>
+        <div style="display:flex;gap:0;border:1.5px solid var(--rule);border-radius:8px;overflow:hidden;">
+          <div style="min-width:70px;text-align:center;border-right:1px solid var(--rule);">
+            <div style="background:var(--paper3);padding:6px 4px;font-size:10px;font-weight:500;color:var(--ink3);border-bottom:1px solid var(--rule);">shelf 0</div>
+            <div style="padding:8px 4px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);font-style:italic;">empty</div>
+          </div>
+          <div style="min-width:70px;text-align:center;border-right:1px solid var(--rule);">
+            <div style="background:var(--paper3);padding:6px 4px;font-size:10px;font-weight:500;color:var(--ink3);border-bottom:1px solid var(--rule);">shelf 1</div>
+            <div style="padding:8px 4px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);font-style:italic;">empty</div>
+          </div>
+          <div style="min-width:70px;text-align:center;border-right:1px solid var(--rule);">
+            <div style="background:var(--paper3);padding:6px 4px;font-size:10px;font-weight:500;color:var(--ink3);border-bottom:1px solid var(--rule);">shelf 2</div>
+            <div style="padding:8px 4px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);font-style:italic;">empty</div>
+          </div>
+          <div style="min-width:90px;text-align:center;border-right:1px solid var(--rule);">
+            <div style="padding:6px 8px;font-size:10px;font-weight:500;color:var(--ink3);border-bottom:1px solid var(--rule);background:var(--paper3);">shelves 3–36</div>
+            <div style="padding:8px 4px;font-size:13px;color:var(--ink3);">···</div>
+          </div>
+          <div style="min-width:90px;text-align:center;border-right:1px solid var(--rule);background:var(--teal-bg);">
+            <div style="background:var(--teal);color:#fff;padding:6px 4px;font-size:10px;font-weight:500;border-bottom:1px solid var(--teal-bd);">shelf 37</div>
+            <div style="padding:8px 4px;font-size:11px;font-family:'DM Mono',monospace;color:var(--teal);font-weight:500;">Ferrari ✓</div>
+          </div>
+          <div style="min-width:80px;text-align:center;border-right:1px solid var(--rule);">
+            <div style="background:var(--paper3);padding:6px 4px;font-size:10px;font-weight:500;color:var(--ink3);border-bottom:1px solid var(--rule);">shelf 38</div>
+            <div style="padding:8px 4px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);font-style:italic;">empty</div>
+          </div>
+          <div style="min-width:80px;text-align:center;border-right:1px solid var(--rule);background:var(--purple-bg);">
+            <div style="background:var(--purple);color:#fff;padding:6px 4px;font-size:10px;font-weight:500;border-bottom:1px solid var(--purple-bd);">shelf 43</div>
+            <div style="padding:8px 4px;font-size:11px;font-family:'DM Mono',monospace;color:var(--purple);font-weight:500;">Mercedes</div>
+          </div>
+          <div style="min-width:80px;text-align:center;">
+            <div style="background:var(--paper3);padding:6px 4px;font-size:10px;font-weight:500;color:var(--ink3);border-bottom:1px solid var(--rule);">shelves 44–99</div>
+            <div style="padding:8px 4px;font-size:13px;color:var(--ink3);">···</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+          <div style="background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:6px;padding:0.75rem;font-size:12.5px;color:var(--teal);">
+            <strong>WRITE Ferrari:</strong><br>
+            hash("Ferrari") % 100 = 37<br>
+            offset = 37 × 256 = 9,472<br>
+            seek(9,472) → write here
+          </div>
+          <div style="background:var(--purple-bg);border:1px solid var(--purple-bd);border-radius:6px;padding:0.75rem;font-size:12.5px;color:var(--purple);">
+            <strong>READ Ferrari later:</strong><br>
+            hash("Ferrari") % 100 = 37 (same!)<br>
+            offset = 37 × 256 = 9,472 (same!)<br>
+            seek(9,472) → read → Ferrari ✓
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:var(--amber);">
+      <strong>The key insight:</strong> The hash function always gives the same shelf number for the same key. You don't need a lookup table or index. Just hash the key again on read — and you're there.
+    </div>
+  </div>
+</div>
+ 
+<!-- 3. WHAT hash() ACTUALLY DOES -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">③ What <code style="color:#a8d8a0;">hash()</code> actually does</div>
+  <div style="padding:1.25rem;">
+    <p style="font-size:13.5px;color:var(--ink2);line-height:1.7;margin-bottom:1rem;">
+      <code>hash()</code> is a built-in Python function. You don't write it — it already exists. You just call it. The only thing you need to know about it is this one rule:
+    </p>
+ 
+    <div style="background:var(--teal-bg);border:2px solid var(--teal-bd);border-radius:8px;padding:1.25rem;text-align:center;margin-bottom:1.25rem;">
+      <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--teal);margin-bottom:0.5rem;">Same input → <em>always</em> same output</div>
+      <div style="font-size:13px;color:var(--teal);opacity:0.8;">hash("Mercedes") will return the same big integer every single time you call it with "Mercedes"</div>
+    </div>
+ 
+    <!-- HASH EXAMPLES TABLE -->
+    <div style="font-size:11px;color:var(--ink3);font-weight:500;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;">hash() examples — same input, same output, every time</div>
+    <div style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin-bottom:1rem;">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+        <tr style="background:var(--paper2);">
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">Key (input)</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">hash(key) raw</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">% 100 (slot)</th>
+          <th style="padding:8px 12px;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);font-weight:500;">Same every time?</th>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;">"Mercedes"</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--ink3);">7,384,927,461,...</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;font-weight:500;color:var(--teal);">43</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);color:var(--green);font-weight:500;">✓ Yes</td>
+        </tr>
+        <tr style="background:var(--paper2);">
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;">"Ferrari"</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--ink3);">-2,847,193,820,...</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;font-weight:500;color:var(--teal);">37</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);color:var(--green);font-weight:500;">✓ Yes</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;">42 (integer)</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--ink3);">42</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;font-weight:500;color:var(--teal);">42</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);color:var(--green);font-weight:500;">✓ Yes</td>
+        </tr>
+        <tr style="background:var(--paper2);">
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;">"mercedes"<br><span style="font-size:11px;color:var(--red);">(lowercase)</span></td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;color:var(--ink3);">different number</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);font-family:'DM Mono',monospace;font-weight:500;color:var(--red);">different slot!</td>
+          <td style="padding:8px 12px;border:1px solid var(--rule);color:var(--red);font-weight:500;">⚠ Case matters</td>
+        </tr>
+      </table>
+    </div>
+    <div style="background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:6px;padding:0.85rem 1rem;font-size:13px;color:var(--blue);">
+      <strong>Exam advice — you don't need to know how hash() works internally.</strong> You just need to know: (1) same input → same slot, (2) you use modulo <code>%</code> to keep the result within the valid range, (3) use the exact same formula on both write and read.
+    </div>
+  </div>
+</div>
+ 
+<!-- 4. WHAT seek() DOES WITH VISUAL -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">④ What <code style="color:#c8a8f0;">seek()</code> actually does — the cursor picture</div>
+  <div style="padding:1.25rem;">
+    <p style="font-size:13.5px;color:var(--ink2);line-height:1.7;margin-bottom:1.25rem;">
+      A file on disk is just a long sequence of bytes, numbered from 0. When Python opens a file, it keeps an invisible <strong>cursor</strong> — like a blinking text cursor — that marks <em>where the next read or write will happen</em>. Normally the cursor starts at byte 0 and moves forward as you read. <code>f.seek(n)</code> <strong>teleports the cursor to byte n instantly</strong>, without reading anything in between.
+    </p>
+ 
+    <!-- BYTE TAPE DIAGRAM -->
+    <div style="overflow-x:auto;margin-bottom:1rem;">
+      <div style="min-width:620px;">
+        <div style="font-size:11px;color:var(--ink3);font-weight:500;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:8px;">File as a tape of bytes — cursor shown at different positions</div>
+ 
+        <!-- CURSOR AT 0 -->
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:4px;font-style:italic;">Before seek() — cursor at byte 0:</div>
+          <div style="display:flex;gap:0;border:1.5px solid var(--rule);border-radius:6px;overflow:hidden;position:relative;">
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);position:relative;">
+              <div style="background:var(--purple);color:#fff;padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--purple-bd);font-weight:500;">byte 0</div>
+              <div style="padding:6px 2px;font-size:10px;color:var(--purple);">▲ cursor</div>
+            </div>
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 1</div>
+              <div style="padding:6px 2px;font-size:10px;color:var(--ink3);opacity:0;">▲</div>
+            </div>
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 2</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 3</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 4</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 12px;font-size:14px;color:var(--ink3);">···</div>
+            <div style="min-width:62px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 9,472</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 12px;font-size:14px;color:var(--ink3);">···</div>
+          </div>
+        </div>
+ 
+        <!-- CURSOR AFTER SEEK -->
+        <div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:4px;font-style:italic;">After <code>f.seek(9472)</code> — cursor jumps to byte 9,472 (= slot 37 for Ferrari):</div>
+          <div style="display:flex;gap:0;border:1.5px solid var(--rule);border-radius:6px;overflow:hidden;">
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 0</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="min-width:52px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 1</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 8px;font-size:14px;color:var(--ink3);">···</div>
+            <div style="min-width:80px;text-align:center;border-right:1px solid var(--rule);background:var(--teal-bg);">
+              <div style="background:var(--teal);color:#fff;padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--teal-bd);font-weight:500;">byte 9,472</div>
+              <div style="padding:6px 2px;font-size:10px;color:var(--teal);font-weight:500;">▲ cursor here!</div>
+            </div>
+            <div style="min-width:80px;text-align:center;border-right:1px solid var(--rule);">
+              <div style="background:var(--paper3);padding:4px 2px;font-size:10px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);">byte 9,473</div>
+              <div style="padding:6px 2px;font-size:10px;opacity:0;">▲</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 12px;font-size:14px;color:var(--ink3);">···</div>
+          </div>
+          <div style="margin-top:6px;font-size:12px;color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:5px;padding:6px 12px;">
+            Bytes 0 through 9,471 are completely untouched. The next <code>f.write()</code> or <code>f.read()</code> operates at byte 9,472 — exactly the start of Ferrari's slot.
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- SEEK REFERENCE -->
+    <div style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;font-size:12.5px;">
+      <div style="background:var(--paper2);padding:8px 14px;font-weight:500;border-bottom:1px solid var(--rule);">seek() quick reference</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;">
+        <div style="background:var(--mono-bg);color:#c8a8f0;padding:9px 14px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);white-space:nowrap;">f.seek(0)</div>
+        <div style="padding:9px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);">Go back to the very start of the file. Cursor = byte 0.</div>
+        <div style="background:var(--mono-bg);color:#c8a8f0;padding:9px 14px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--rule);white-space:nowrap;">f.seek(offset)</div>
+        <div style="padding:9px 14px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);">Jump to byte number <code>offset</code>. The formula is always <code>slot × RECORD_SIZE</code>.</div>
+        <div style="background:var(--mono-bg);color:#c8a8f0;padding:9px 14px;font-family:'DM Mono',monospace;white-space:nowrap;">f.tell()</div>
+        <div style="padding:9px 14px;border-left:1px solid var(--rule);">Returns the current cursor position (byte number). Useful for debugging.</div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- 5. WHAT CAN GO WRONG (EXAM-SPECIFIC) -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+  <div style="background:#6b1a1a;color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">⑤ What can go wrong — and what the exam expects you to say</div>
+  <div style="padding:1.25rem;">
+ 
+    <!-- PROBLEM 1: COLLISION -->
+    <div style="border:1px solid var(--red-bd);border-radius:7px;overflow:hidden;margin-bottom:1rem;">
+      <div style="background:var(--red-bg);padding:10px 14px;border-bottom:1px solid var(--red-bd);">
+        <div style="font-weight:500;color:var(--red);font-size:13.5px;">⚠ Problem 1: Collision — two records map to the same slot</div>
+        <div style="font-size:12px;color:var(--red);opacity:0.8;margin-top:2px;">hash("Mercedes") % 100 = 43 AND hash("Alpine") % 100 = 43 — same slot!</div>
+      </div>
+      <div style="padding:1rem;">
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:0.75rem;">
+          When two different keys produce the same slot number, the second record overwrites the first. This is called a <strong>hash collision</strong>. The first team's data is gone.
+        </div>
+        <div style="background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:var(--amber);">
+          <strong>What the exam expects:</strong> Name the problem ("hash collision" or "overflow"). State that the solution is an <strong>overflow area</strong> — a separate section of the file where colliding records are stored. On read, if the slot doesn't match the expected key, check the overflow area.
+        </div>
+      </div>
+    </div>
+ 
+    <!-- PROBLEM 2: EMPTY SLOT -->
+    <div style="border:1px solid var(--red-bd);border-radius:7px;overflow:hidden;margin-bottom:1rem;">
+      <div style="background:var(--red-bg);padding:10px 14px;border-bottom:1px solid var(--red-bd);">
+        <div style="font-weight:500;color:var(--red);font-size:13.5px;">⚠ Problem 2: Reading an empty slot</div>
+        <div style="font-size:12px;color:var(--red);opacity:0.8;margin-top:2px;">You search for "McLaren" but nothing was ever written to that slot.</div>
+      </div>
+      <div style="padding:1rem;">
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:0.75rem;">
+          The slot exists (we pre-filled the file with empty/null records) but it contains no real data. Reading it gives you garbage or a null record.
+        </div>
+        <div style="background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:var(--amber);">
+          <strong>What the exam expects:</strong> After reading a record, check if the key field matches what you searched for. If it doesn't match (or the record is empty/null), the team was not found. Output "Record not found." Don't assume the slot is occupied just because you can seek to it.
+        </div>
+<pre class="py" style="margin-top:0.75rem;"><span class="cm"># After reading, ALWAYS verify the record is the right one</span>
+record = pickle.loads(data.rstrip(<span class="nm">b</span><span class="st">'\x00'</span>))
+<span class="kw">if</span> record.TeamName == search_key:
+    <span class="fn">print</span>(<span class="st">"Found:"</span>, record.Points)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Record not found"</span>)   <span class="cm"># empty slot or collision victim</span></pre>
+      </div>
+    </div>
+ 
+    <!-- PROBLEM 3: FILE DOESN'T EXIST -->
+    <div style="border:1px solid var(--red-bd);border-radius:7px;overflow:hidden;">
+      <div style="background:var(--red-bg);padding:10px 14px;border-bottom:1px solid var(--red-bd);">
+        <div style="font-weight:500;color:var(--red);font-size:13.5px;">⚠ Problem 3: File doesn't exist yet</div>
+        <div style="font-size:12px;color:var(--red);opacity:0.8;margin-top:2px;"><code>"r+b"</code> raises IOError if the file doesn't exist — unlike <code>"wb"</code> which creates it.</div>
+      </div>
+      <div style="padding:1rem;">
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:0.75rem;">
+          Random access requires a pre-existing file with all slots already allocated. You can't use <code>"r+b"</code> on a file that hasn't been created yet.
+        </div>
+        <div style="background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:var(--amber);">
+          <strong>What the exam expects:</strong> Wrap the <code>open()</code> in <code>try/except IOError</code>. Alternatively, initialise the file first by writing TABLE_SIZE empty/null records in sequence before any random access operations begin.
+        </div>
+<pre class="py" style="margin-top:0.75rem;"><span class="cm"># Initialise file — write TABLE_SIZE empty slots first</span>
+<span class="kw">def</span> <span class="fn">InitialiseFile</span>():
+    empty = <span class="nm">b</span><span class="st">'\x00'</span> * RECORD_SIZE    <span class="cm"># one blank slot</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams_random.dat"</span>, <span class="st">"wb"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(TABLE_SIZE):
+            f.write(empty)             <span class="cm"># write 100 blank slots</span>
+<span class="cm"># Now the file exists and "r+b" will work</span></pre>
+      </div>
+    </div>
+ 
+  </div>
+</div>
+ 
+<!-- 6. EXAM QUESTION BREAKDOWN -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;">
+  <div style="background:var(--ink);color:#fff;padding:10px 16px;font-size:12px;font-weight:500;">⑥ Real exam question breakdown — what examiners check for</div>
+  <div style="padding:1.25rem;">
+ 
+    <div style="background:var(--paper2);border-left:3px solid var(--ink);padding:0.85rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.25rem;color:var(--ink2);line-height:1.7;">
+      <strong>Exam-style question:</strong> A file <code>products.dat</code> uses random access. Each record has a fixed size of 512 bytes. Write a procedure <code>WriteProduct(product, key)</code> that writes a product record to the correct position in the file. The hash function is <code>hash(key) % 200</code>. <span style="font-family:'DM Mono',monospace;font-size:12px;">[5 marks]</span>
+    </div>
+ 
+<pre class="py"><span class="cm"># Model answer</span>
+<span class="kw">import</span> pickle
+ 
+RECORD_SIZE = <span class="nm">512</span>
+TABLE_SIZE  = <span class="nm">200</span>
+ 
+<span class="kw">def</span> <span class="fn">WriteProduct</span>(product, key):
+    position = <span class="fn">hash</span>(key) % TABLE_SIZE         <span class="cm"># [1] hash → slot</span>
+    offset   = position * RECORD_SIZE           <span class="cm"># [1] slot → byte</span>
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"products.dat"</span>, <span class="st">"r+b"</span>) <span class="kw">as</span> f:  <span class="cm"># [1] correct mode</span>
+            f.seek(offset)                      <span class="cm"># [1] seek to position</span>
+            data = pickle.dumps(product)
+            data = data.ljust(RECORD_SIZE, <span class="nm">b</span><span class="st">'\x00'</span>)
+            f.write(data[:RECORD_SIZE])         <span class="cm"># [1] write fixed-size bytes</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: file could not be opened"</span>)</pre>
+ 
+    <!-- EXAMINER CHECKLIST -->
+    <div style="margin-top:1rem;border:1px solid var(--rule);border-radius:7px;overflow:hidden;">
+      <div style="background:var(--paper2);padding:9px 14px;border-bottom:1px solid var(--rule);font-weight:500;font-size:13px;">Examiner mark checklist — what they're looking for</div>
+      <div style="padding:0.75rem 1rem;">
+        <div style="display:grid;gap:0.5rem;">
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);">
+            <div style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:500;white-space:nowrap;margin-top:1px;">[1]</div>
+            <div style="font-size:13px;color:var(--ink2);">Hash formula applied correctly: <code>hash(key) % TABLE_SIZE</code> — the modulo keeps the slot in range</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);">
+            <div style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:500;white-space:nowrap;margin-top:1px;">[1]</div>
+            <div style="font-size:13px;color:var(--ink2);">Offset calculated: <code>position × RECORD_SIZE</code> — not position alone, not position × some other number</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);">
+            <div style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:500;white-space:nowrap;margin-top:1px;">[1]</div>
+            <div style="font-size:13px;color:var(--ink2);">File opened in <code>"r+b"</code> mode (NOT <code>"wb"</code> which would erase everything, NOT <code>"rb"</code> which is read-only)</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0;border-bottom:0.5px solid var(--paper3);">
+            <div style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:500;white-space:nowrap;margin-top:1px;">[1]</div>
+            <div style="font-size:13px;color:var(--ink2);"><code>f.seek(offset)</code> called before the write — not after, not forgotten</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:0.5rem 0;">
+            <div style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:500;white-space:nowrap;margin-top:1px;">[1]</div>
+            <div style="font-size:13px;color:var(--ink2);">Record serialised with <code>pickle.dumps()</code> and padded/truncated to exactly RECORD_SIZE bytes before writing</div>
+          </div>
+        </div>
+        <div style="margin-top:0.85rem;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:5px;padding:0.65rem 1rem;font-size:12.5px;color:var(--amber);">
+          <strong>Common mistakes that lose marks:</strong> Using <code>"wb"</code> instead of <code>"r+b"</code>. Writing <code>f.seek(position)</code> instead of <code>f.seek(offset)</code>. Forgetting the seek entirely. Not padding to fixed size (means records bleed into each other).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- 7. ONE-PAGE SUMMARY -->
+<div style="background:#0d1f1a;border-radius:10px;overflow:hidden;margin:1.25rem 0;">
+  <div style="padding:12px 18px;background:rgba(93,202,165,0.12);border-bottom:1px solid rgba(93,202,165,0.2);">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(200,224,216,0.5);margin-bottom:2px;">Quick Reference</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:1.15rem;color:#c8e0d8;">Random Access — one-page summary</div>
+  </div>
+  <div style="padding:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+ 
+    <!-- WRITE PATTERN -->
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,224,216,0.4);margin-bottom:8px;font-weight:500;">Write pattern</div>
+<pre class="py" style="margin:0;font-size:11.5px;">position = <span class="fn">hash</span>(key) % TABLE_SIZE
+offset   = position * RECORD_SIZE
+<span class="kw">with</span> <span class="fn">open</span>(filename, <span class="st">"r+b"</span>) <span class="kw">as</span> f:
+    f.seek(offset)
+    data = pickle.dumps(record)
+    data = data.ljust(RECORD_SIZE, <span class="nm">b</span><span class="st">'\x00'</span>)
+    f.write(data[:RECORD_SIZE])</pre>
+    </div>
+ 
+    <!-- READ PATTERN -->
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,224,216,0.4);margin-bottom:8px;font-weight:500;">Read pattern</div>
+<pre class="py" style="margin:0;font-size:11.5px;">position = <span class="fn">hash</span>(key) % TABLE_SIZE
+offset   = position * RECORD_SIZE
+<span class="kw">with</span> <span class="fn">open</span>(filename, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+    f.seek(offset)
+    data = f.read(RECORD_SIZE)
+    data = data.rstrip(<span class="nm">b</span><span class="st">'\x00'</span>)
+    record = pickle.loads(data)</pre>
+    </div>
+ 
+    <!-- ALWAYS -->
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,224,216,0.4);margin-bottom:8px;font-weight:500;">Always ✓</div>
+      <div style="font-size:12.5px;color:rgba(200,224,216,0.75);line-height:1.8;">
+        ✓ Same hash formula on write AND read<br>
+        ✓ RECORD_SIZE is fixed and consistent<br>
+        ✓ seek() before every write or read<br>
+        ✓ Pad to RECORD_SIZE before writing<br>
+        ✓ Wrap in try/except IOError<br>
+        ✓ Verify key after reading (may be empty)
+      </div>
+    </div>
+ 
+    <!-- NEVER + KEYWORDS -->
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(200,224,216,0.4);margin-bottom:8px;font-weight:500;">Never ✗ + Exam keywords</div>
+      <div style="font-size:12.5px;color:rgba(200,224,216,0.75);line-height:1.8;">
+        ✗ Never use <code>"wb"</code> for update (erases file)<br>
+        ✗ Never seek to <code>position</code> — always <code>offset</code><br>
+        ✗ Never assume slot is occupied<br>
+        ✗ Never use variable record sizes<br><br>
+        <span style="color:#5dcaa5;font-weight:500;">Keywords:</span> hash function · seek · offset · fixed-size record · hash collision · overflow area · random access · direct access
+      </div>
+    </div>
+ 
+  </div>
+</div>
+<!-- END EXPANDED RANDOM ACCESS SECTION -->
+
+
+<!-- comparison table -->
+<div class="sec-title" style="margin-top:1.5rem;">Sequential vs Random — key differences 📊</div>
+<table class="diff-table">
+  <tr><th>Feature</th><th>Sequential</th><th>Random Access</th></tr>
+  <tr><td>Access pattern</td><td>One by one, in order</td><td>Jump directly to any record</td></tr>
+  <tr><td>Finding record N</td><td>Must read records 1 to N−1 first</td><td>Calculate offset, jump straight there</td></tr>
+  <tr><td>How to find position</td><td>No calculation needed</td><td>Hash function: <code>key % table_size</code></td></tr>
+  <tr><td>Record size</td><td>Can be variable</td><td>Must be <strong>fixed</strong> — same bytes per record</td></tr>
+  <tr><td>Python tools</td><td><code>pickle.dump / pickle.load</code></td><td><code>pickle.dump/load</code> + <code>f.seek()</code></td></tr>
+  <tr><td>File mode</td><td><code>"wb"</code> / <code>"rb"</code></td><td><code>"r+b"</code> for updates, <code>"rb"</code> for reads</td></tr>
+  <tr><td>End of file detection</td><td><code>EOFError</code> exception</td><td>Known — <code>num_records × RECORD_SIZE</code></td></tr>
+  <tr><td>Best for</td><td>Processing ALL records in bulk</td><td>Frequent lookups of specific records</td></tr>
+</table>
+
+<!-- ════════════════════════════════════════
+     SECTION 3 — EXCEPTION HANDLING
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div>
+    <div class="section-title">Exception Handling</div>
+    <div class="section-desc">Catching runtime errors before they crash your program</div>
+  </div>
+</div>
+
+<div class="box box-red">
+  <strong>💥 What is a runtime error (exception)?</strong>
+  Some bugs can't be caught before the program runs. Dividing by zero, opening a file that doesn't exist, asking the user for a number and they type "banana" — these all crash your program mid-run. An <strong>exception</strong> is Python's way of saying "something went wrong right now, at runtime."
+</div>
+
+<div class="analogy-grid">
+  <div class="analogy-card">
+    <div class="a-icon">🛡️</div>
+    <div class="a-label">Without exception handling</div>
+    <div class="a-title">Program crashes. User panics.</div>
+    Your program hits <code>1/0</code>, throws a <code>ZeroDivisionError</code>, prints a scary traceback, and dies. The user sees gibberish and loses any unsaved work.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">✅</div>
+    <div class="a-label">With exception handling</div>
+    <div class="a-title">Caught. Handled. Continues.</div>
+    You wrap risky code in <code>try</code>. If it fails, Python jumps to <code>except</code>. You show a nice message, maybe ask again, and keep running. User never sees a crash.
+  </div>
+</div>
+
+<!-- FLOW DIAGRAM -->
+<div class="sec-title" style="margin-top:1.5rem;">How try/except flows 🔄</div>
+<div style="background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.25rem;margin:1rem 0;">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
+    <div class="flow-box try-box">TRY block</div>
+    <div class="flow-arrow">→</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="flow-label">no error</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box ok-box">ELSE block<br><span style="font-size:10px;font-style:italic;">(optional)</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box fin-box">FINALLY block<br><span style="font-size:10px;font-style:italic;">(optional)</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box ok-box">Continue</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="flow-label">error!</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box exc-box">EXCEPT block</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box fin-box">FINALLY block<br><span style="font-size:10px;font-style:italic;">(optional)</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box ok-box">Continue</div>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:12px;color:var(--ink3);border-top:1px solid var(--paper3);padding-top:0.75rem;">
+    <span class="pill-teal pill">TRY</span> The risky code goes here.
+    <span class="pill-red pill">EXCEPT</span> Runs only if an error occurred.
+    <span class="pill-blue pill">ELSE</span> Runs only if no error occurred.
+    <span class="pill-amber pill">FINALLY</span> Always runs — error or not. Good for cleanup (closing files).
+  </div>
+</div>
+
+<!-- THE PSEUDOCODE VS PYTHON -->
+<div class="sec-title" style="margin-top:1.5rem;">Cambridge pseudocode vs Python syntax 📝</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+  <div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:6px;">Cambridge Pseudocode</div>
+<pre class="py" style="margin:0;"><span class="kw">TRY</span>
+    &lt;statementA&gt;
+<span class="kw">EXCEPT</span>
+    &lt;statementB&gt;
+<span class="kw">ENDTRY</span></pre>
+  </div>
+  <div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:6px;">Python</div>
+<pre class="py" style="margin:0;"><span class="kw">try</span>:
+    &lt;statementA&gt;
+<span class="kw">except</span> <span class="exc">ExceptionType</span>:
+    &lt;statementB&gt;</pre>
+  </div>
+</div>
+
+<div class="box box-blue">
+  <strong>Key difference</strong>
+  Cambridge pseudocode's <code>EXCEPT</code> is a catch-all. In Python, you specify <em>which</em> exception you're catching: <code>except ZeroDivisionError:</code>. You can have multiple <code>except</code> blocks to handle different errors differently. This is more powerful — and Cambridge Paper 4 expects you to name the correct exception type.
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 4 — EXCEPTION TYPES
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">Exception Types</div>
+    <div class="section-desc">The 6 types Cambridge tests — know them cold</div>
+  </div>
+</div>
+
+<div class="exc-grid">
+  <div class="exc-card">
+    <div class="ec-name">ZeroDivisionError</div>
+    <div class="ec-trigger">Triggered by: dividing by zero</div>
+    <div class="ec-desc">Mathematically undefined. <code>10 / 0</code> → crash. Very common in calculators and grade average programs.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">ValueError</div>
+    <div class="ec-trigger">Triggered by: wrong value for correct type</div>
+    <div class="ec-desc">Right type, wrong content. <code>int("banana")</code> → crash. The most common one when reading user input.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">IOError</div>
+    <div class="ec-trigger">Triggered by: file doesn't exist / permission denied</div>
+    <div class="ec-desc">Input/output operation fails. Opening a file that isn't there, writing to a read-only file. Essential for file processing.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">EOFError</div>
+    <div class="ec-trigger">Triggered by: reading past end of file</div>
+    <div class="ec-desc">Tried to read more data but the file ended. Used in sequential file processing to detect when all records have been read.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">ImportError</div>
+    <div class="ec-trigger">Triggered by: module not found</div>
+    <div class="ec-desc"><code>import some_module</code> fails because the module isn't installed or doesn't exist. Less common in exams but appears in marking.</div>
+  </div>
+  <div class="exc-card">
+    <div class="ec-name">KeyboardInterrupt</div>
+    <div class="ec-trigger">Triggered by: user presses Ctrl+C</div>
+    <div class="ec-desc">User manually interrupts execution. Useful in long-running programs where you want to handle "please stop" gracefully.</div>
+  </div>
+</div>
+
+<!-- INTERACTIVE DEMO: try/except simulator -->
+<div class="sec-title" style="margin-top:1.5rem;">Live exception demo — see what gets caught 🎮</div>
+<div class="sim-panel">
+  <div class="sim-label">Click a scenario to see the try/except in action</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
+    <button class="btn-primary" onclick="runScenario('zero')">÷ 0 crash</button>
+    <button class="btn-secondary" onclick="runScenario('value')">Bad input</button>
+    <button class="btn-secondary" onclick="runScenario('file')">File missing</button>
+    <button class="btn-secondary" onclick="runScenario('eof')">End of file</button>
+    <button class="btn-secondary" onclick="runScenario('exc_e')">Exception as e</button>
+  </div>
+  <div id="scenario-code"></div>
+  <div id="scenario-output"></div>
+</div>
+
+<!-- DETAILED EXAMPLES -->
+<div class="sec-title" style="margin-top:1.5rem;">Every exception pattern — explained line by line 🔎</div>
+
+<pre class="py"><span class="cm"># ── BASIC try / except ─────────────────────────────────────</span>
+<span class="kw">try</span>:
+    number = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter a number: "</span>))
+    result = <span class="nm">100</span> / number
+    <span class="fn">print</span>(<span class="st">"Result:"</span>, result)
+<span class="kw">except</span> <span class="exc">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: cannot divide by zero!"</span>)
+<span class="kw">except</span> <span class="exc">ValueError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: please enter a valid number!"</span>)
+
+<span class="cm"># User types "0"  → ZeroDivisionError block runs</span>
+<span class="cm"># User types "abc" → ValueError block runs</span>
+<span class="cm"># User types "5"  → neither except runs, result = 20.0</span></pre>
+
+<pre class="py"><span class="cm"># ── EXCEPTION AS e (capture error message) ─────────────────</span>
+<span class="cm"># "as e" captures the exception object so you can read its message</span>
+<span class="kw">try</span>:
+    result = <span class="nm">10</span> / <span class="nm">0</span>
+<span class="kw">except</span> <span class="exc">ZeroDivisionError</span> <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="st">"Caught:"</span>, <span class="fn">str</span>(e))   <span class="cm"># output: Caught: division by zero</span>
+
+<span class="cm"># Use this when you want to show the actual error message to the user</span>
+<span class="cm"># or log it for debugging. Cambridge often asks for this pattern.</span></pre>
+
+<pre class="py"><span class="cm"># ── FILE PROCESSING with exception handling ─────────────────</span>
+<span class="kw">try</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"teams.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+        <span class="kw">while</span> <span class="kw">True</span>:
+            <span class="kw">try</span>:
+                record = pickle.load(f)
+                <span class="fn">print</span>(record.TeamName)
+            <span class="kw">except</span> <span class="exc">EOFError</span>:
+                <span class="kw">break</span>                     <span class="cm"># end of file → stop reading</span>
+<span class="kw">except</span> <span class="exc">IOError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: file not found or cannot be opened"</span>)
+
+<span class="cm"># Outer try: catches IOError if file doesn't exist at all</span>
+<span class="cm"># Inner try: catches EOFError when we've read the last record</span>
+<span class="cm"># This is the FULL pattern Cambridge expects for file reading</span></pre>
+
+<pre class="py"><span class="cm"># ── try / except / else / finally ──────────────────────────</span>
+<span class="kw">try</span>:
+    f = <span class="fn">open</span>(<span class="st">"teams.dat"</span>, <span class="st">"rb"</span>)
+    data = pickle.load(f)
+<span class="kw">except</span> <span class="exc">IOError</span>:
+    <span class="fn">print</span>(<span class="st">"File could not be opened"</span>)   <span class="cm"># runs ONLY if error</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"File read successfully!"</span>)     <span class="cm"># runs ONLY if NO error</span>
+    <span class="fn">print</span>(data.TeamName)
+<span class="kw">finally</span>:
+    f.close()                            <span class="cm"># ALWAYS runs — close the file!</span>
+    <span class="fn">print</span>(<span class="st">"File closed."</span>)</pre>
+
+<div class="box box-teal">
+  <strong>🔎 Why use finally?</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>finally:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">This block runs no matter what — whether an exception was raised or not. Perfect for cleanup: closing files, releasing resources, resetting state. If you open a file in <code>try</code>, always close it in <code>finally</code>. (The <code>with</code> statement does this automatically — but Cambridge may ask you to do it manually.)</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>else:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Runs only if the <code>try</code> block completed without any exceptions. Think of it as "the happy path code". Keeps your success logic separate from your error-handling logic — cleaner to read.</div>
+  </div>
+</div>
+
+<!-- IMPORTANCE OF EXCEPTION HANDLING -->
+<div class="divider"></div>
+<div class="sec-title">Why exception handling matters 💡</div>
+<div class="sec-sub">Cambridge asks you to "describe the importance of exception handling" — know these 6 points.</div>
+
+<table class="diff-table">
+  <tr><th>#</th><th>Point</th><th>Explanation</th></tr>
+  <tr><td>1</td><td>Prevents unexpected crashes</td><td>Program handles the error and keeps running instead of dying abruptly mid-execution.</td></tr>
+  <tr><td>2</td><td>Graceful error handling</td><td>Instead of a scary Python traceback, the user sees a clear, helpful message.</td></tr>
+  <tr><td>3</td><td>Meaningful error messages</td><td>You control what text is shown. "Please enter a valid number" beats "ValueError: invalid literal for int()."</td></tr>
+  <tr><td>4</td><td>Improves reliability</td><td>A program that handles edge cases is more robust — it works correctly in more situations.</td></tr>
+  <tr><td>5</td><td>Safe continuation</td><td>Program can recover from an error and continue safely, rather than leaving data in a corrupt state.</td></tr>
+  <tr><td>6</td><td>Essential for file processing</td><td>Detecting end-of-file (<code>EOFError</code>) and missing files (<code>IOError</code>) is only possible with exception handling.</td></tr>
+</table>
+
+<!-- ════════════════════════════════════════
+     SECTION 5 — EXERCISES
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Cambridge-Style Exercises</div>
+    <div class="section-desc">Styled like Paper 4 — records, file handling, exception handling</div>
+  </div>
+</div>
+
+<!-- E1 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex1')">
+    <div class="ex-head-left">
+      <span class="ex-num">E1</span>
+      <span class="ex-title">Declare a record type and instantiate it</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[5 marks]</span>
+      <span class="toggle-lbl" id="ex1-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex1" style="display:none;">
+    <div class="scenario">
+      A program stores data about students. Each student has the following fields:
+      <br>• <code>StudentID</code> — STRING
+      <br>• <code>Name</code> — STRING
+      <br>• <code>Grade</code> — INTEGER
+      <br>• <code>Passed</code> — BOOLEAN
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the record type <code>StudentRecord</code> with the fields above. <span class="pts">[3]</span></li>
+      <li>Write program code to instantiate two <code>StudentRecord</code> objects: one for student "S001" named "Amir" with grade 85 who passed, and one for "S002" named "Lena" with grade 42 who did not pass. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex1')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex1')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex1-hint">
+      Class declaration with <code>def __init__(self, student_id, name, grade, passed):</code>. Assign each parameter to <code>self.FieldName</code>. Instantiate with <code>s1 = StudentRecord("S001", "Amir", 85, True)</code>.
+    </div>
+<pre class="answer-pre" id="ex1-ans">
+<span class="cm"># ── DECLARE RECORD TYPE ───────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">StudentRecord</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, student_id, name, grade, passed):
+        self.StudentID = student_id   <span class="cm"># STRING</span>
+        self.Name      = name         <span class="cm"># STRING</span>
+        self.Grade     = grade        <span class="cm"># INTEGER</span>
+        self.Passed    = passed       <span class="cm"># BOOLEAN</span>
+
+
+<span class="cm"># ── INSTANTIATE TWO RECORDS ───────────────────────────────</span>
+s1 = <span class="fn">StudentRecord</span>(<span class="st">"S001"</span>, <span class="st">"Amir"</span>, <span class="nm">85</span>, <span class="kw">True</span>)
+s2 = <span class="fn">StudentRecord</span>(<span class="st">"S002"</span>, <span class="st">"Lena"</span>, <span class="nm">42</span>, <span class="kw">False</span>)
+
+<span class="cm"># Accessing fields</span>
+<span class="fn">print</span>(s1.Name, s1.Grade)    <span class="cm"># Amir 85</span>
+<span class="fn">print</span>(s2.Passed)            <span class="cm"># False</span>
+
+
+<span class="cm"># Mark scheme (5 marks):</span>
+<span class="cm"># [1] class StudentRecord: declared</span>
+<span class="cm"># [1] __init__ with self + all 4 parameters</span>
+<span class="cm"># [1] all 4 fields assigned with self.FieldName = param</span>
+<span class="cm"># [1] s1 instantiated correctly (4 correct values)</span>
+<span class="cm"># [1] s2 instantiated correctly (4 correct values)</span>
+</pre>
+  </div>
+</div>
+
+<!-- E2 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex2')">
+    <div class="ex-head-left">
+      <span class="ex-num">E2</span>
+      <span class="ex-title">Write and read records sequentially — with EOFError handling</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[8 marks]</span>
+      <span class="toggle-lbl" id="ex2-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex2" style="display:none;">
+    <div class="scenario">
+      A program stores <code>StudentRecord</code> objects in a binary file called <code>students.dat</code>.
+      The program needs two procedures: one to write a list of records to the file, one to read them all back.
+    </div>
+    <ul class="task-list">
+      <li>Write procedure <code>WriteStudents(records)</code> that takes a list of <code>StudentRecord</code> objects and writes them sequentially to <code>students.dat</code>. <span class="pts">[3]</span></li>
+      <li>Write procedure <code>ReadStudents()</code> that reads all records from <code>students.dat</code> and prints each student's name and grade. Use appropriate exception handling to detect end of file AND handle a missing file. <span class="pts">[5]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Cambridge expects:</strong> <code>import pickle</code>, correct file modes (<code>"wb"</code> / <code>"rb"</code>), <code>EOFError</code> to stop reading, and <code>IOError</code> for missing file.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex2')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex2')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex2-hint">
+      Write: <code>open("students.dat","wb")</code>, loop through records, <code>pickle.dump(record, f)</code>.
+      Read: outer <code>try/except IOError</code> wraps the <code>open</code>. Inner <code>while True: try: pickle.load / except EOFError: break</code>.
+    </div>
+<pre class="answer-pre" id="ex2-ans">
+<span class="kw">import</span> pickle
+
+<span class="cm"># ── WRITE ──────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">WriteStudents</span>(records):
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"students.dat"</span>, <span class="st">"wb"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> record <span class="kw">in</span> records:
+            pickle.dump(record, f)
+
+<span class="cm"># Mark scheme WriteStudents (3 marks):</span>
+<span class="cm"># [1] opens file in binary write mode "wb"</span>
+<span class="cm"># [1] loops through records list</span>
+<span class="cm"># [1] pickle.dump(record, f) called correctly</span>
+
+
+<span class="cm"># ── READ ───────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">ReadStudents</span>():
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"students.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+            <span class="kw">while</span> <span class="kw">True</span>:
+                <span class="kw">try</span>:
+                    record = pickle.load(f)
+                    <span class="fn">print</span>(record.Name, record.Grade)
+                <span class="kw">except</span> <span class="exc">EOFError</span>:
+                    <span class="kw">break</span>           <span class="cm"># no more records — exit loop</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not open students.dat"</span>)
+
+
+<span class="cm"># Mark scheme ReadStudents (5 marks):</span>
+<span class="cm"># [1] opens file in binary read mode "rb"</span>
+<span class="cm"># [1] while True loop to read until file ends</span>
+<span class="cm"># [1] pickle.load(f) to read each record</span>
+<span class="cm"># [1] EOFError caught and used to break out of loop</span>
+<span class="cm"># [1] IOError caught with appropriate message for missing file</span>
+
+
+<span class="cm"># ── USAGE ──────────────────────────────────────────────────</span>
+students = [
+    <span class="fn">StudentRecord</span>(<span class="st">"S001"</span>, <span class="st">"Amir"</span>,  <span class="nm">85</span>, <span class="kw">True</span>),
+    <span class="fn">StudentRecord</span>(<span class="st">"S002"</span>, <span class="st">"Lena"</span>,  <span class="nm">42</span>, <span class="kw">False</span>),
+    <span class="fn">StudentRecord</span>(<span class="st">"S003"</span>, <span class="st">"Yusuf"</span>, <span class="nm">91</span>, <span class="kw">True</span>),
+]
+<span class="fn">WriteStudents</span>(students)
+<span class="fn">ReadStudents</span>()
+<span class="cm"># output:</span>
+<span class="cm"># Amir 85</span>
+<span class="cm"># Lena 42</span>
+<span class="cm"># Yusuf 91</span>
+</pre>
+  </div>
+</div>
+
+<!-- E3 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex3')">
+    <div class="ex-head-left">
+      <span class="ex-num">E3</span>
+      <span class="ex-title">Exception handling — identify and handle multiple exceptions</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[7 marks]</span>
+      <span class="toggle-lbl" id="ex3-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex3" style="display:none;">
+    <div class="scenario">
+      A program asks the user to enter two numbers and outputs the result of dividing the first by the second.
+    </div>
+    <ul class="task-list">
+      <li>Identify TWO exceptions that could occur when running this program and for each, state what causes it. <span class="pts">[2]</span></li>
+      <li>Write the complete program with appropriate exception handling for BOTH exceptions. Each exception must output a different, meaningful message. <span class="pts">[4]</span></li>
+      <li>Add a <code>finally</code> block that prints "Calculation complete." regardless of whether an error occurred. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex3')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex3')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex3-hint">
+      Two exceptions: <code>ValueError</code> (user types text instead of a number) and <code>ZeroDivisionError</code> (user enters 0 as the second number). Write a <code>try</code> block with the input and division, then two separate <code>except</code> blocks, then <code>finally</code>.
+    </div>
+<pre class="answer-pre" id="ex3-ans">
+<span class="cm"># ── PART 1: Two possible exceptions ───────────────────────</span>
+<span class="cm"># 1. ValueError   — user enters non-numeric input (e.g. "abc")</span>
+<span class="cm">#                   int("abc") raises ValueError</span>
+<span class="cm"># 2. ZeroDivisionError — user enters 0 as the second number</span>
+<span class="cm">#                        num1 / 0 raises ZeroDivisionError</span>
+
+
+<span class="cm"># ── PART 2 & 3: Full program with exception handling ──────</span>
+<span class="kw">try</span>:
+    num1 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter first number: "</span>))
+    num2 = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter second number: "</span>))
+    result = num1 / num2
+    <span class="fn">print</span>(<span class="st">"Result:"</span>, result)
+
+<span class="kw">except</span> <span class="exc">ValueError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: please enter whole numbers only."</span>)
+
+<span class="kw">except</span> <span class="exc">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: cannot divide by zero — please try a different number."</span>)
+
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="st">"Calculation complete."</span>)   <span class="cm"># always runs</span>
+
+
+<span class="cm"># Mark scheme (7 marks):</span>
+<span class="cm"># [1] ValueError identified and cause explained (non-numeric input)</span>
+<span class="cm"># [1] ZeroDivisionError identified and cause explained (second = 0)</span>
+<span class="cm"># [1] try block contains both inputs and the division</span>
+<span class="cm"># [1] except ValueError with distinct meaningful message</span>
+<span class="cm"># [1] except ZeroDivisionError with distinct meaningful message</span>
+<span class="cm"># [1] both except blocks present (not catch-all)</span>
+<span class="cm"># [1] finally block prints "Calculation complete." correctly</span>
+</pre>
+  </div>
+</div>
+
+<!-- E4 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex4')">
+    <div class="ex-head-left">
+      <span class="ex-num">E4</span>
+      <span class="ex-title">Full program — records + file I/O + exception handling</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[12 marks]</span>
+      <span class="toggle-lbl" id="ex4-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex4" style="display:none;">
+    <div class="scenario">
+      A program manages a product inventory. Each product has: <code>ProductID</code> (STRING), <code>Name</code> (STRING), <code>Price</code> (REAL), <code>Quantity</code> (INTEGER). Products are stored in a binary file <code>inventory.dat</code>.
+    </div>
+    <ul class="task-list">
+      <li>Declare the record type <code>ProductRecord</code>. <span class="pts">[2]</span></li>
+      <li>Write procedure <code>SaveProduct(product)</code> that appends one product to <code>inventory.dat</code> using binary write (append mode). Handle the case where the file cannot be opened. <span class="pts">[3]</span></li>
+      <li>Write function <code>LoadAllProducts()</code> that reads and returns a list of all products. Use exception handling for end of file and for a missing file. If the file is missing, return an empty list. <span class="pts">[4]</span></li>
+      <li>Write a main program section that: loads all products, asks the user for a product name to search, and prints the price and quantity if found, or "Not found" if not. Wrap the user input in exception handling. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Append mode in Python:</strong> <code>"ab"</code> = append binary. Opens the file and adds to the end without overwriting existing data.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex4')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex4')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex4-hint">
+      SaveProduct: open with <code>"ab"</code> mode, <code>pickle.dump</code>, wrap in try/except IOError.
+      LoadAllProducts: outer try/except IOError returns []. Inner while True loop with EOFError break. Return the list.
+      Main: call LoadAllProducts(), get user input, loop through list comparing .Name, print result.
+    </div>
+<pre class="answer-pre" id="ex4-ans">
+<span class="kw">import</span> pickle
+
+<span class="cm"># ── PART 1: Record type ────────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">ProductRecord</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, product_id, name, price, quantity):
+        self.ProductID = product_id   <span class="cm"># STRING</span>
+        self.Name      = name         <span class="cm"># STRING</span>
+        self.Price     = price        <span class="cm"># REAL</span>
+        self.Quantity  = quantity     <span class="cm"># INTEGER</span>
+
+
+<span class="cm"># ── PART 2: Save (append) ──────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">SaveProduct</span>(product):
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"inventory.dat"</span>, <span class="st">"ab"</span>) <span class="kw">as</span> f:   <span class="cm"># "ab" = append binary</span>
+            pickle.dump(product, f)
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not save product to file"</span>)
+
+
+<span class="cm"># ── PART 3: Load all ───────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">LoadAllProducts</span>():
+    products = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"inventory.dat"</span>, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+            <span class="kw">while</span> <span class="kw">True</span>:
+                <span class="kw">try</span>:
+                    product = pickle.load(f)
+                    products.append(product)
+                <span class="kw">except</span> <span class="exc">EOFError</span>:
+                    <span class="kw">break</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"No inventory file found — starting fresh"</span>)
+    <span class="kw">return</span> products   <span class="cm"># returns [] if file not found</span>
+
+
+<span class="cm"># ── PART 4: Main program ───────────────────────────────────</span>
+products = <span class="fn">LoadAllProducts</span>()
+
+<span class="kw">try</span>:
+    search = <span class="fn">input</span>(<span class="st">"Enter product name to search: "</span>)
+    found = <span class="kw">False</span>
+    <span class="kw">for</span> p <span class="kw">in</span> products:
+        <span class="kw">if</span> p.Name.lower() == search.lower():
+            <span class="fn">print</span>(<span class="st">f"Price: {p.Price}  |  Quantity: {p.Quantity}"</span>)
+            found = <span class="kw">True</span>
+            <span class="kw">break</span>
+    <span class="kw">if</span> <span class="kw">not</span> found:
+        <span class="fn">print</span>(<span class="st">"Not found"</span>)
+<span class="kw">except</span> <span class="exc">Exception</span> <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="st">"Unexpected error:"</span>, <span class="fn">str</span>(e))
+
+
+<span class="cm"># ══════════════════════════════════════════════════════════</span>
+<span class="cm"># MARK SCHEME</span>
+<span class="cm"># ══════════════════════════════════════════════════════════</span>
+<span class="cm"># Record (2): class declared, __init__ with 4 fields assigned</span>
+<span class="cm"># SaveProduct (3): "ab" mode, pickle.dump, IOError handled</span>
+<span class="cm"># LoadAllProducts (4): "rb" mode, while True + EOFError break,</span>
+<span class="cm">#                      IOError caught, returns list in both cases</span>
+<span class="cm"># Main (3): calls LoadAllProducts(), input prompt, loop searches</span>
+<span class="cm">#           by name and prints price/quantity OR "Not found"</span>
+</pre>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE -->
+<div class="divider"></div>
+<div class="sec-title">Quick Reference — cheat sheet 📋</div>
+<div class="sec-sub">One glance before the exam.</div>
+
+<table class="diff-table">
+  <tr><th>Task</th><th>Python code</th><th>Key detail</th></tr>
+  <tr><td>Declare record type</td><td><code>class Name: def __init__(self, f1, f2): self.F1 = f1 ...</code></td><td>Fields are PUBLIC (no __)</td></tr>
+  <tr><td>Instantiate record</td><td><code>r = ClassName(val1, val2, ...)</code></td><td>Access with <code>r.FieldName</code></td></tr>
+  <tr><td>Write binary file</td><td><code>open("f.dat","wb")</code> + <code>pickle.dump(obj, f)</code></td><td>"wb" = write binary</td></tr>
+  <tr><td>Append to binary file</td><td><code>open("f.dat","ab")</code> + <code>pickle.dump(obj, f)</code></td><td>"ab" = append binary</td></tr>
+  <tr><td>Read all records</td><td><code>open("f.dat","rb")</code> + <code>pickle.load(f)</code> in while loop</td><td>catch <code>EOFError</code> to stop</td></tr>
+  <tr><td>Random access jump</td><td><code>f.seek(position × record_size)</code></td><td>position from hash function</td></tr>
+  <tr><td>Basic exception</td><td><code>try: ... except ZeroDivisionError: ...</code></td><td>Name the specific exception</td></tr>
+  <tr><td>Capture message</td><td><code>except ValueError as e: print(str(e))</code></td><td><code>as e</code> captures the message</td></tr>
+  <tr><td>Always-run cleanup</td><td><code>finally: f.close()</code></td><td>Runs even if error occurred</td></tr>
+  <tr><td>Missing file</td><td><code>except IOError:</code></td><td>Also catches file permission errors</td></tr>
+  <tr><td>End of file</td><td><code>except EOFError: break</code></td><td>In while loop reading records</td></tr>
+  <tr><td>Bad user input</td><td><code>except ValueError:</code></td><td>int("abc") raises this</td></tr>
+</table>
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 26 · File Processing &amp; Exception Handling</span>
+  <span>Records · Sequential · Random Access · try/except</span>
+</footer>
+
+<script>
+function toggle(id){
+  const b=document.getElementById(id),l=document.getElementById(id+'-lbl'),o=b.style.display==='block';
+  b.style.display=o?'none':'block';
+  if(l) l.textContent=o?'▼ expand':'▲ collapse';
+}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAnswer(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+
+// ── FILE STEPPER ──────────────────────────────────────────
+function showStep(prefix,idx){
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach((p,i)=>p.classList.toggle('active',i===idx));
+  const nav=document.querySelectorAll('.step-nav .step-btn');
+  if(nav.length) nav.forEach((b,i)=>b.classList.toggle('active',i===idx));
+}
+
+// ── EXCEPTION SCENARIOS ──────────────────────────────────
+const scenarios = {
+  zero:{
+    code:`try:
+    result = 10 / 0
+    print("Result:", result)
+except ZeroDivisionError:
+    print("Caught: cannot divide by zero!")`,
+    ok:false, exc:'ZeroDivisionError',
+    output:`<span class="out-err">ZeroDivisionError raised</span>\n<span class="out-ok">Caught: cannot divide by zero!</span>`,
+    label:'try block raises ZeroDivisionError → except block runs'
+  },
+  value:{
+    code:`try:
+    number = int("banana")
+    print("Number:", number)
+except ValueError:
+    print("Caught: 'banana' is not a valid integer!")`,
+    ok:false, exc:'ValueError',
+    output:`<span class="out-err">ValueError raised</span>\n<span class="out-ok">Caught: 'banana' is not a valid integer!</span>`,
+    label:'int("banana") raises ValueError → except block runs'
+  },
+  file:{
+    code:`import pickle
+try:
+    with open("missing_file.dat", "rb") as f:
+        data = pickle.load(f)
+except IOError:
+    print("Caught: file not found or cannot be opened")`,
+    ok:false, exc:'IOError',
+    output:`<span class="out-err">IOError raised (file does not exist)</span>\n<span class="out-ok">Caught: file not found or cannot be opened</span>`,
+    label:'open() on missing file raises IOError → except block runs'
+  },
+  eof:{
+    code:`import pickle
+# (after all records have been read...)
+try:
+    record = pickle.load(f)   # nothing left to read
+except EOFError:
+    print("End of file reached — all records read!")
+    break`,
+    ok:false, exc:'EOFError',
+    output:`<span class="out-err">EOFError raised (no more data)</span>\n<span class="out-ok">End of file reached — all records read!</span>`,
+    label:'pickle.load() on empty stream raises EOFError → we break out of the loop'
+  },
+  exc_e:{
+    code:`try:
+    result = 10 / 0
+except ZeroDivisionError as e:
+    print("Error type:", type(e).__name__)
+    print("Message:", str(e))`,
+    ok:false, exc:'ZeroDivisionError as e',
+    output:`<span class="out-err">ZeroDivisionError raised</span>\n<span class="out-ok">Error type: ZeroDivisionError</span>\n<span class="out-ok">Message: division by zero</span>`,
+    label:`"as e" captures the exception object — you can read its type and message`
+  }
+};
+
+function runScenario(key){
+  const s=scenarios[key];
+  document.getElementById('scenario-code').innerHTML=
+    `<pre class="py">${s.code.replace(/\bZeroDivisionError\b/g,'<span class="exc">ZeroDivisionError</span>').replace(/\bValueError\b/g,'<span class="exc">ValueError</span>').replace(/\bIOError\b/g,'<span class="exc">IOError</span>').replace(/\bEOFError\b/g,'<span class="exc">EOFError</span>').replace(/\b(try|except|break|with|as|import)\b/g,'<span class="kw">$1</span>').replace(/\b(open|int|print|pickle)\b/g,'<span class="fn">$1</span>')}</pre>`;
+  document.getElementById('scenario-output').innerHTML=
+    `<div class="output-block"><div class="out-label">Output</div>${s.output}</div>
+     <div style="font-size:12px;color:var(--ink3);margin-top:6px;font-style:italic;">${s.label}</div>`;
+}
+// load default
+runScenario('zero');
+</script>
+</body>
+</html>

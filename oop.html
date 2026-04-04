@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOP · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#0f1729;color:#c8d4e8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(126,184,212,0.08);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-80px;left:120px;width:400px;height:400px;border:2px solid rgba(100,160,240,0.07);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,212,232,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#7eb8d4;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,212,232,0.55);max-width:560px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,212,232,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,212,232,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.at{color:#f0a8c8;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:200px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+/* ── OOP Specific visual components ── */
+.class-diagram{background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;display:inline-block;min-width:220px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.class-diagram.blue .class-header{background:#185FA5;color:#fff;}
+.class-diagram.green .class-header{background:#3B6D11;color:#fff;}
+.class-diagram.purple .class-header{background:#3C3489;color:#fff;}
+.class-diagram.teal .class-header{background:#085041;color:#fff;}
+.class-header{padding:10px 18px;font-family:'DM Mono',monospace;font-weight:500;font-size:14px;text-align:center;}
+.class-section{border-top:1px solid var(--rule);padding:8px 18px;}
+.class-section p{font-family:'DM Mono',monospace;font-size:12px;padding:2px 0;color:var(--ink2);}
+.class-section p.private{color:var(--red);}
+.class-section p.public{color:var(--green);}
+.class-section-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:4px;}
+/* analogy cards */
+.analogy-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.analogy-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1rem;font-size:13px;line-height:1.6;}
+.analogy-card .a-icon{font-size:28px;margin-bottom:6px;}
+.analogy-card .a-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--ink3);margin-bottom:2px;}
+.analogy-card .a-title{font-weight:500;font-size:14px;margin-bottom:4px;}
+/* inheritance diagram */
+.inherit-wrap{display:flex;flex-direction:column;align-items:center;gap:0;margin:1.5rem 0;}
+.inherit-row{display:flex;gap:1.5rem;justify-content:center;}
+.inherit-arrow{text-align:center;color:var(--purple);font-size:20px;line-height:1.2;margin:4px 0;}
+.inherit-note{font-size:11px;font-style:italic;color:var(--ink3);text-align:center;}
+/* interactive demo */
+.demo-container{background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;}
+.demo-header{background:var(--paper2);padding:0.6rem 1rem;font-size:12px;font-weight:500;border-bottom:1px solid var(--rule);display:flex;gap:6px;align-items:center;}
+.demo-dot{width:10px;height:10px;border-radius:50%;}
+.demo-body{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.demo-code{padding:1rem;font-family:'DM Mono',monospace;font-size:12px;line-height:1.8;background:var(--mono-bg);color:var(--mono-text);}
+.demo-output{padding:1rem;font-size:12.5px;border-left:1px solid var(--rule);}
+.demo-output-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);margin-bottom:6px;}
+.output-line{padding:2px 0;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink2);border-bottom:1px solid var(--paper3);}
+/* sim */
+.sim-panel{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:1.25rem;margin:1rem 0;}
+.sim-label{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);margin-bottom:0.75rem;}
+.obj-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-family:'DM Mono',monospace;font-size:12px;}
+.obj-card .obj-name{font-weight:500;font-size:13px;color:var(--purple);margin-bottom:6px;}
+.obj-card .obj-field{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--paper3);color:var(--ink2);}
+.obj-card .obj-field:last-child{border-bottom:none;}
+.obj-field-key{color:var(--ink3);}
+.obj-field-val{font-weight:500;}
+.btn-primary{background:var(--ink);color:var(--paper);border:none;border-radius:5px;padding:7px 18px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.15s;}
+.btn-primary:hover{background:var(--ink2);}
+.btn-secondary{background:none;color:var(--ink2);border:1px solid var(--rule);border-radius:5px;padding:6px 16px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-secondary:hover{background:var(--paper2);}
+/* trace table */
+.trace-wrap{overflow-x:auto;margin:1rem 0;}
+.trace-table{border-collapse:collapse;font-size:12px;min-width:380px;}
+.trace-table th{background:var(--ink);color:#fff;padding:7px 12px;text-align:center;font-weight:500;font-size:11px;letter-spacing:0.05em;}
+.trace-table td{padding:6px 12px;border:1px solid var(--rule);text-align:center;font-family:'DM Mono',monospace;vertical-align:middle;font-size:12px;}
+.trace-table tr:nth-child(even) td{background:var(--paper2);}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+/* highlight pill */
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin:1px 2px;}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+/* big visual class box */
+.class-big{background:#fff;border:2px solid var(--rule);border-radius:10px;overflow:hidden;margin:1rem auto;max-width:400px;}
+.class-big .cb-header{padding:12px 20px;font-family:'DM Mono',monospace;font-weight:500;font-size:15px;text-align:center;letter-spacing:0.05em;}
+.class-big .cb-section{border-top:2px solid var(--rule);padding:10px 20px;}
+.class-big .cb-row{font-family:'DM Mono',monospace;font-size:12.5px;padding:3px 0;display:flex;gap:12px;}
+.cb-minus{color:var(--red);font-weight:700;}
+.cb-plus{color:var(--green);font-weight:700;}
+.cb-name{color:var(--ink2);}
+.cb-type{color:var(--ink3);}
+/* stepper */
+.stepper{margin:1rem 0;}
+.step-nav{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.step-btn{background:none;border:1px solid var(--rule);border-radius:4px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink3);}
+.step-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Chapter 27</div>
+  <h1>Object-Oriented <em>Programming</em></h1>
+  <div class="cover-sub">Stop writing functions everywhere. Bundle your data + actions together. Classes, Objects, Encapsulation, Inheritance, Polymorphism — all of it, from scratch.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Classes &amp; Objects</strong>Blueprint → real thing</div>
+    <div class="cover-meta-item"><strong>Encapsulation</strong>Private data, public interface</div>
+    <div class="cover-meta-item"><strong>Inheritance</strong>Child steals parent's traits</div>
+    <div class="cover-meta-item"><strong>Polymorphism</strong>Same name, different behaviour</div>
+  </div>
+</div>
+
+
+
+<div class="page-body">
+
+<!-- ════════════════════════════════════════
+     SECTION 1: WHAT IS OOP?
+════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">What even is OOP?</div>
+    <div class="section-desc">The big idea — and why it exists</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>🎮 Real life analogy — a video game character</strong>
+  Think of a video game. Your character has:
+  <br>• <strong>Data</strong> — name, health, position, level
+  <br>• <strong>Actions</strong> — move, attack, jump, heal
+  <br><br>
+  In normal (procedural) programming, you'd have 10 separate variables for the data and 10 separate functions for the actions, all floating around separately. Messy.
+  <br><br>
+  OOP says: <strong>pack the data AND the actions together into one neat box — called an object.</strong> Your character is ONE thing that knows its own health AND knows how to heal itself.
+</div>
+
+<div class="analogy-grid">
+  <div class="analogy-card">
+    <div class="a-icon">🏭</div>
+    <div class="a-label">Class</div>
+    <div class="a-title">The factory blueprint</div>
+    A class is like a <strong>blueprint</strong> or <strong>mould</strong>. It describes WHAT a thing looks like and WHAT it can do — but it's not the thing itself. A car blueprint isn't a car.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">🚗</div>
+    <div class="a-label">Object</div>
+    <div class="a-title">The actual car</div>
+    An object is a <strong>real instance</strong> made from the blueprint. You can make 1000 cars from the same blueprint — each car is a separate object with its own colour, mileage, etc.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">📦</div>
+    <div class="a-label">Attributes</div>
+    <div class="a-title">The stored data</div>
+    Attributes are the <strong>variables inside</strong> the object. For a car: colour, speed, fuel level, registration. Each object has its own copy of these values.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">🔧</div>
+    <div class="a-label">Methods</div>
+    <div class="a-title">The actions</div>
+    Methods are the <strong>functions inside</strong> the class that work on the attributes. For a car: accelerate(), brake(), refuel(). They're the verbs — things the object CAN DO.
+  </div>
+</div>
+
+<!-- KEY TERMS TABLE -->
+<div class="sec-title" style="margin-top:1.5rem;">Key Terms — know these cold 🧊</div>
+<table class="diff-table">
+  <tr><th>Term</th><th>What it means</th><th>Real-world example</th></tr>
+  <tr>
+    <td><span class="pill pill-blue">Class</span></td>
+    <td>A template/blueprint for creating objects. Defines attributes and methods.</td>
+    <td>The blueprint for a house</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-green">Object</span></td>
+    <td>A specific instance created from a class. Has real values in its attributes.</td>
+    <td>The actual house at 42 Oak Street</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-purple">Attribute</span></td>
+    <td>A variable that belongs to a class/object. Stores the object's state/data.</td>
+    <td>Number of bedrooms, colour of walls</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-amber">Method</span></td>
+    <td>A function defined inside a class that operates on the object's attributes.</td>
+    <td>openDoor(), lockWindow()</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-red">Encapsulation</span></td>
+    <td>Bundling data + methods together AND keeping data private. The data is hidden.</td>
+    <td>The house's wiring is hidden in walls — you use the light switch, not the wires</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-blue">Constructor</span></td>
+    <td>A special method (<code>__init__</code> in Python) that runs automatically when an object is created.</td>
+    <td>The building process — sets everything up</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-green">Instantiation</span></td>
+    <td>The act of creating an object from a class. You "instantiate" a class.</td>
+    <td>Actually building the house from the blueprint</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-purple">Getter</span></td>
+    <td>A method that reads (returns) a private attribute's value.</td>
+    <td>An estate agent checking the house's price for you</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-amber">Setter</span></td>
+    <td>A method that updates a private attribute's value (with validation).</td>
+    <td>Officially changing the registered address — goes through a process</td>
+  </tr>
+</table>
+
+<!-- ════════════════════════════════════════
+     NEW SECTION 1.5: WHY DO WE NEED OOP?
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01b</div>
+  <div>
+    <div class="section-title">Why do we even need OOP?</div>
+    <div class="section-desc">Without it, your code becomes spaghetti. With it — clean, reusable, powerful.</div>
+  </div>
+</div>
+
+<div class="sec-title">The problem — imagine a school app 🏫</div>
+<div class="sec-sub">You need to store data for 500 students. Each student has: name, age, grade, score. And you need to calculate their grade. Without OOP, here's what happens...</div>
+
+<!-- SIDE BY SIDE: PROCEDURAL CHAOS vs OOP -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+  <div style="background:#fff;border:2px solid var(--red-bd);border-radius:8px;overflow:hidden;">
+    <div style="background:var(--red-bg);padding:8px 14px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--red);border-bottom:1px solid var(--red-bd);">❌ Without OOP (procedural mess)</div>
+    <div style="padding:1rem;">
+      <pre class="py" style="margin:0;font-size:11px;line-height:1.7;"><span class="cm"># Student 1</span>
+student1_name  = <span class="st">"Ali"</span>
+student1_age   = <span class="nm">17</span>
+student1_score = <span class="nm">85</span>
+
+<span class="cm"># Student 2</span>
+student2_name  = <span class="st">"Sara"</span>
+student2_age   = <span class="nm">16</span>
+student2_score = <span class="nm">92</span>
+
+<span class="cm"># Student 3...</span>
+student3_name  = <span class="st">"Rami"</span>
+<span class="cm"># ... ×500 students</span>
+<span class="cm"># COPY-PASTE NIGHTMARE 😭</span>
+
+<span class="cm"># Calculate grade for student1</span>
+<span class="kw">if</span> student1_score >= <span class="nm">90</span>:
+    student1_grade = <span class="st">"A"</span>
+<span class="cm"># Same code again for student2</span>
+<span class="cm"># Same code again for student3</span>
+<span class="cm"># × 500 times...</span></pre>
+    </div>
+  </div>
+  <div style="background:#fff;border:2px solid var(--green-bd);border-radius:8px;overflow:hidden;">
+    <div style="background:var(--green-bg);padding:8px 14px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);border-bottom:1px solid var(--green-bd);">✅ With OOP (clean &amp; powerful)</div>
+    <div style="padding:1rem;">
+      <pre class="py" style="margin:0;font-size:11px;line-height:1.7;"><span class="cm"># Define the blueprint ONCE</span>
+<span class="kw">class</span> <span class="fn">Student</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age, score):
+        self.<span class="at">__Name</span>  = name
+        self.<span class="at">__Age</span>   = age
+        self.<span class="at">__Score</span> = score
+
+    <span class="kw">def</span> <span class="fn">CalcGrade</span>(self):
+        <span class="kw">if</span> self.<span class="at">__Score</span> >= <span class="nm">90</span>:
+            <span class="kw">return</span> <span class="st">"A"</span>
+        <span class="cm"># logic written ONCE</span>
+
+<span class="cm"># Now create 500 students</span>
+<span class="cm"># in 3 lines each — or a loop!</span>
+s1 = <span class="fn">Student</span>(<span class="st">"Ali"</span>,  <span class="nm">17</span>, <span class="nm">85</span>)
+s2 = <span class="fn">Student</span>(<span class="st">"Sara"</span>, <span class="nm">16</span>, <span class="nm">92</span>)
+s3 = <span class="fn">Student</span>(<span class="st">"Rami"</span>, <span class="nm">15</span>, <span class="nm">78</span>)
+<span class="cm"># Grade logic reused automatically ✅</span></pre>
+    </div>
+  </div>
+</div>
+
+<div class="box box-amber">
+  <strong>💡 The key insight</strong>
+  Without OOP: you write the same code <strong>500 times</strong>. Change one thing? Update 500 places. Find a bug? Check 500 places. That's a nightmare.
+  <br>With OOP: you write the blueprint <strong>once</strong>. Every student object automatically gets all the attributes and methods. Change the blueprint → ALL students update instantly.
+</div>
+
+<!-- SVG: THE STUDENT CLASS → OBJECTS DIAGRAM (like the car image from the teacher) -->
+<div class="sec-title" style="margin-top:1.5rem;">The Student class → three student objects 🎓</div>
+<div class="sec-sub">One class. Three real objects. Each has its own values — but the same structure.</div>
+
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <defs>
+      <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#8a8785" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- CLASS BOX (top center) -->
+    <rect x="215" y="16" width="250" height="160" rx="10" fill="#0f1729" stroke="#334466" stroke-width="1.5"/>
+    <text x="340" y="42" text-anchor="middle" font-family="DM Mono,monospace" font-size="15" font-weight="500" fill="#7eb8d4">Student</text>
+    <text x="340" y="56" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#4a6080" letter-spacing="0.1em">CLASS — blueprint</text>
+    <line x1="215" y1="64" x2="465" y2="64" stroke="#334466" stroke-width="1"/>
+    <!-- attributes label -->
+    <text x="228" y="80" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27" font-weight="500" letter-spacing="0.08em">ATTRIBUTES</text>
+    <text x="228" y="97"  font-family="DM Mono,monospace" font-size="12" fill="#f0a8c8">− Name : STRING</text>
+    <text x="228" y="112" font-family="DM Mono,monospace" font-size="12" fill="#f0a8c8">− Age : INTEGER</text>
+    <text x="228" y="127" font-family="DM Mono,monospace" font-size="12" fill="#f0a8c8">− Score : INTEGER</text>
+    <line x1="215" y1="135" x2="465" y2="135" stroke="#334466" stroke-width="1"/>
+    <!-- methods label -->
+    <text x="228" y="149" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27" font-weight="500" letter-spacing="0.08em">METHODS</text>
+    <text x="228" y="164" font-family="DM Mono,monospace" font-size="12" fill="#a8d8a0">+ CalcGrade()</text>
+
+    <!-- ARROWS from class to objects -->
+    <line x1="280" y1="178" x2="100" y2="298" stroke="#8a8785" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+    <line x1="340" y1="178" x2="340" y2="298" stroke="#8a8785" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+    <line x1="400" y1="178" x2="580" y2="298" stroke="#8a8785" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+
+    <!-- OBJECTS label -->
+    <text x="340" y="260" text-anchor="middle" font-family="DM Serif Display,serif" font-size="13" fill="#8a8785" font-style="italic">creates objects ↓</text>
+
+    <!-- OBJECT 1: Ali (orange) -->
+    <rect x="18" y="300" width="186" height="190" rx="10" fill="#fff8f0" stroke="#EF9F27" stroke-width="2"/>
+    <!-- person icon -->
+    <circle cx="111" cy="328" r="16" fill="#EF9F27" opacity="0.9"/>
+    <text x="111" y="333" text-anchor="middle" font-size="16" font-family="DM Sans,sans-serif" fill="#fff">👤</text>
+    <text x="111" y="360" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#633806">s1 = Ali</text>
+    <text x="111" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27" letter-spacing="0.08em">OBJECT (instance)</text>
+    <line x1="18" y1="382" x2="204" y2="382" stroke="#EF9F27" stroke-width="1" opacity="0.4"/>
+    <text x="32" y="396" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27" font-weight="500" letter-spacing="0.06em">ATTRIBUTES</text>
+    <text x="32" y="412" font-family="DM Mono,monospace" font-size="11.5" fill="#633806">Name  = "Ali"</text>
+    <text x="32" y="427" font-family="DM Mono,monospace" font-size="11.5" fill="#633806">Age   = 17</text>
+    <text x="32" y="442" font-family="DM Mono,monospace" font-size="11.5" fill="#633806">Score = 85</text>
+    <line x1="18" y1="450" x2="204" y2="450" stroke="#EF9F27" stroke-width="1" opacity="0.4"/>
+    <text x="32" y="466" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27" font-weight="500" letter-spacing="0.06em">METHODS</text>
+    <text x="32" y="481" font-family="DM Mono,monospace" font-size="11.5" fill="#633806">CalcGrade() → "B"</text>
+
+    <!-- OBJECT 2: Sara (blue) -->
+    <rect x="247" y="300" width="186" height="190" rx="10" fill="#f0f6ff" stroke="#185FA5" stroke-width="2"/>
+    <circle cx="340" cy="328" r="16" fill="#185FA5" opacity="0.9"/>
+    <text x="340" y="333" text-anchor="middle" font-size="16" font-family="DM Sans,sans-serif" fill="#fff">👤</text>
+    <text x="340" y="360" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#0C447C">s2 = Sara</text>
+    <text x="340" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" letter-spacing="0.08em">OBJECT (instance)</text>
+    <line x1="247" y1="382" x2="433" y2="382" stroke="#185FA5" stroke-width="1" opacity="0.4"/>
+    <text x="261" y="396" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" font-weight="500" letter-spacing="0.06em">ATTRIBUTES</text>
+    <text x="261" y="412" font-family="DM Mono,monospace" font-size="11.5" fill="#0C447C">Name  = "Sara"</text>
+    <text x="261" y="427" font-family="DM Mono,monospace" font-size="11.5" fill="#0C447C">Age   = 16</text>
+    <text x="261" y="442" font-family="DM Mono,monospace" font-size="11.5" fill="#0C447C">Score = 92</text>
+    <line x1="247" y1="450" x2="433" y2="450" stroke="#185FA5" stroke-width="1" opacity="0.4"/>
+    <text x="261" y="466" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" font-weight="500" letter-spacing="0.06em">METHODS</text>
+    <text x="261" y="481" font-family="DM Mono,monospace" font-size="11.5" fill="#0C447C">CalcGrade() → "A"</text>
+
+    <!-- OBJECT 3: Rami (green) -->
+    <rect x="476" y="300" width="186" height="190" rx="10" fill="#f0fff4" stroke="#3B6D11" stroke-width="2"/>
+    <circle cx="569" cy="328" r="16" fill="#3B6D11" opacity="0.9"/>
+    <text x="569" y="333" text-anchor="middle" font-size="16" font-family="DM Sans,sans-serif" fill="#fff">👤</text>
+    <text x="569" y="360" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#27500A">s3 = Rami</text>
+    <text x="569" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" letter-spacing="0.08em">OBJECT (instance)</text>
+    <line x1="476" y1="382" x2="662" y2="382" stroke="#3B6D11" stroke-width="1" opacity="0.4"/>
+    <text x="490" y="396" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" font-weight="500" letter-spacing="0.06em">ATTRIBUTES</text>
+    <text x="490" y="412" font-family="DM Mono,monospace" font-size="11.5" fill="#27500A">Name  = "Rami"</text>
+    <text x="490" y="427" font-family="DM Mono,monospace" font-size="11.5" fill="#27500A">Age   = 15</text>
+    <text x="490" y="442" font-family="DM Mono,monospace" font-size="11.5" fill="#27500A">Score = 78</text>
+    <line x1="476" y1="450" x2="662" y2="450" stroke="#3B6D11" stroke-width="1" opacity="0.4"/>
+    <text x="490" y="466" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" font-weight="500" letter-spacing="0.06em">METHODS</text>
+    <text x="490" y="481" font-family="DM Mono,monospace" font-size="11.5" fill="#27500A">CalcGrade() → "C"</text>
+  </svg>
+</div>
+
+<div class="box box-blue">
+  <strong>🧠 What just happened?</strong>
+  We wrote the <code>Student</code> class <strong>once</strong>. Then we created <strong>three objects</strong> (s1, s2, s3) from it. Each object is called an <strong>instance</strong>. They all have the same structure (Name, Age, Score, CalcGrade) but each one has its <strong>own personal values</strong>. Same mould — different chocolate bars.
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 1c: WHAT IS AN INSTANCE?
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01c</div>
+  <div>
+    <div class="section-title">What is an Instance? 🍪</div>
+    <div class="section-desc">The most confusing word in OOP — finally made simple</div>
+  </div>
+</div>
+
+<!-- COOKIE CUTTER SVG -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <!-- CUTTER (Class) -->
+    <rect x="60" y="20" width="140" height="80" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="130" y="48" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#3C3489">Cookie</text>
+    <text x="130" y="64" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#3C3489">Cutter</text>
+    <text x="130" y="115" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#8a8785">= the CLASS</text>
+    <text x="130" y="129" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#8a8785">(blueprint)</text>
+
+    <!-- arrow -->
+    <line x1="204" y1="60" x2="248" y2="60" stroke="#8a8785" stroke-width="1.5" marker-end="url(#arr2)" stroke-dasharray="4,3"/>
+    <text x="226" y="50" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">stamps out</text>
+
+    <!-- Cookie 1 -->
+    <ellipse cx="290" cy="150" rx="48" ry="36" fill="#EF9F27" stroke="#BA7517" stroke-width="1.5"/>
+    <circle cx="278" cy="140" r="5" fill="#BA7517" opacity="0.5"/>
+    <circle cx="302" cy="140" r="5" fill="#BA7517" opacity="0.5"/>
+    <path d="M278 163 Q290 172 302 163" stroke="#BA7517" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="290" y="208" text-anchor="middle" font-family="DM Mono,monospace" font-size="11.5" fill="#633806">s1 (Ali)</text>
+    <text x="290" y="222" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">instance #1</text>
+
+    <!-- Cookie 2 -->
+    <ellipse cx="400" cy="150" rx="48" ry="36" fill="#185FA5" stroke="#0C447C" stroke-width="1.5"/>
+    <circle cx="388" cy="140" r="5" fill="#0C447C" opacity="0.5"/>
+    <circle cx="412" cy="140" r="5" fill="#0C447C" opacity="0.5"/>
+    <path d="M388 163 Q400 172 412 163" stroke="#0C447C" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="400" y="208" text-anchor="middle" font-family="DM Mono,monospace" font-size="11.5" fill="#0C447C">s2 (Sara)</text>
+    <text x="400" y="222" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">instance #2</text>
+
+    <!-- Cookie 3 -->
+    <ellipse cx="510" cy="150" rx="48" ry="36" fill="#3B6D11" stroke="#27500A" stroke-width="1.5"/>
+    <circle cx="498" cy="140" r="5" fill="#27500A" opacity="0.5"/>
+    <circle cx="522" cy="140" r="5" fill="#27500A" opacity="0.5"/>
+    <path d="M498 163 Q510 172 522 163" stroke="#27500A" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="510" y="208" text-anchor="middle" font-family="DM Mono,monospace" font-size="11.5" fill="#27500A">s3 (Rami)</text>
+    <text x="510" y="222" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">instance #3</text>
+
+    <!-- Connecting lines from cutter to cookies -->
+    <line x1="248" y1="80" x2="285" y2="115" stroke="#AFA9EC" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="248" y1="80" x2="398" y2="115" stroke="#AFA9EC" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="248" y1="80" x2="508" y2="115" stroke="#AFA9EC" stroke-width="1" stroke-dasharray="3,3"/>
+  </svg>
+</div>
+
+<div class="box box-purple">
+  <strong>🍪 Instance = one specific cookie made from the cutter</strong>
+  The <strong>class</strong> is the cookie cutter. The <strong>instance</strong> is the actual cookie. The cutter defines the shape — but every cookie you make is its own thing. You can eat one cookie without destroying the others. You can change Ali's score without changing Sara's score. Each instance is independent.
+  <br><br>
+  <strong>Object = Instance</strong> — these two words mean exactly the same thing. Cambridge uses both. Don't get confused.
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 1d: __init__ DEEP DIVE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01d</div>
+  <div>
+    <div class="section-title">What is <code>__init__</code> and why is it ALWAYS there?</div>
+    <div class="section-desc">The constructor — the setup crew that runs before anything else</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>🏗️ The hotel room analogy</strong>
+  When a hotel guest arrives, a setup crew goes in first: makes the bed, puts fresh towels, sets the temperature. They run AUTOMATICALLY before the guest enters. The guest doesn't call them — it just happens.
+  <br><br>
+  <code>__init__</code> is that setup crew. The moment you create an object, <code>__init__</code> runs automatically and sets up all the attributes. You never call it yourself — Python calls it for you.
+</div>
+
+<!-- __init__ SVG diagram -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 290" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <defs>
+      <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- Step 1: You type this -->
+    <rect x="20" y="20" width="180" height="60" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+    <text x="110" y="40" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3C3489" letter-spacing="0.08em" font-weight="500">YOU TYPE THIS</text>
+    <text x="110" y="58" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#3C3489">s1 = Student("Ali", 17, 85)</text>
+    <text x="110" y="98" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#8a8785">1. You write this one line</text>
+
+    <!-- arrow -->
+    <line x1="202" y1="50" x2="258" y2="50" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr3)"/>
+    <text x="230" y="42" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">Python</text>
+    <text x="230" y="54" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">calls</text>
+
+    <!-- Step 2: Python calls __init__ -->
+    <rect x="260" y="14" width="200" height="76" rx="8" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="360" y="34" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" letter-spacing="0.08em" font-weight="500">__init__ RUNS AUTOMATICALLY</text>
+    <text x="275" y="52" font-family="DM Mono,monospace" font-size="11" fill="#0C447C">def __init__(self,"Ali",17,85)</text>
+    <text x="275" y="68" font-family="DM Mono,monospace" font-size="11" fill="#0C447C">  self.__Name  = "Ali"</text>
+    <text x="275" y="82" font-family="DM Mono,monospace" font-size="11" fill="#0C447C">  self.__Score = 85 ...</text>
+    <text x="360" y="110" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#8a8785">2. __init__ sets up attributes</text>
+
+    <!-- arrow -->
+    <line x1="462" y1="50" x2="518" y2="50" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr3)" style="marker-end:url(#arr3)"/>
+    <text x="490" y="42" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">done!</text>
+
+    <!-- Step 3: object exists -->
+    <rect x="520" y="14" width="140" height="150" rx="8" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/>
+    <text x="590" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" letter-spacing="0.08em" font-weight="500">OBJECT EXISTS</text>
+    <text x="590" y="56" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#27500A">s1</text>
+    <line x1="520" y1="65" x2="660" y2="65" stroke="#97C459" stroke-width="1" opacity="0.5"/>
+    <text x="533" y="82"  font-family="DM Mono,monospace" font-size="11" fill="#27500A">Name  = "Ali"</text>
+    <text x="533" y="98"  font-family="DM Mono,monospace" font-size="11" fill="#27500A">Age   = 17</text>
+    <text x="533" y="114" font-family="DM Mono,monospace" font-size="11" fill="#27500A">Score = 85</text>
+    <line x1="520" y1="122" x2="660" y2="122" stroke="#97C459" stroke-width="1" opacity="0.5"/>
+    <text x="533" y="139" font-family="DM Mono,monospace" font-size="11" fill="#27500A">CalcGrade()</text>
+    <text x="533" y="155" font-family="DM Mono,monospace" font-size="11" fill="#27500A">GetName()</text>
+    <text x="590" y="185" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#8a8785">3. Ready to use!</text>
+
+    <!-- WHY ALWAYS THERE -->
+    <rect x="20" y="190" width="460" height="80" rx="8" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1"/>
+    <text x="40" y="212" font-family="DM Sans,sans-serif" font-size="12" font-weight="500" fill="#1a1916">Why is __init__ ALWAYS there?</text>
+    <text x="40" y="232" font-family="DM Sans,sans-serif" font-size="12" fill="#4a4845">Because every object needs initial values set up before it can be used.</text>
+    <text x="40" y="252" font-family="DM Sans,sans-serif" font-size="12" fill="#4a4845">Without __init__, your object is empty — like a person with no name, no age.</text>
+    <text x="40" y="270" font-family="DM Sans,sans-serif" font-size="12" fill="#4a4845">It runs once — right when the object is born. Never again.</text>
+  </svg>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 1e: SELF DEEP DIVE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01e</div>
+  <div>
+    <div class="section-title">What is <code>self</code> — really?</div>
+    <div class="section-desc">The most confusing keyword for beginners — zero mystery after this</div>
+  </div>
+</div>
+
+<div class="box box-purple">
+  <strong>🪞 self = "me, myself, this specific object"</strong>
+  Imagine you have three students: Ali, Sara, Rami. They all have a name. When Ali says "my name", he means HIS name, not Sara's. When Sara says "my name", she means HER name.
+  <br><br>
+  <code>self</code> is Python's version of "my" / "mine". When code runs on Ali's object, <code>self.__Name</code> means <em>Ali's</em> name. When the same code runs on Sara's object, <code>self.__Name</code> means <em>Sara's</em> name. <strong>Same code — different object.</strong>
+</div>
+
+<!-- SELF SVG DIAGRAM -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <!-- METHOD in class (top) -->
+    <rect x="190" y="16" width="300" height="80" rx="8" fill="#1e1c18" stroke="#334466" stroke-width="1.5"/>
+    <text x="340" y="38" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6a6860" letter-spacing="0.08em">METHOD IN Student CLASS</text>
+    <text x="205" y="56"  font-family="DM Mono,monospace" font-size="12" fill="#7eb8d4">def</text>
+    <text x="232" y="56"  font-family="DM Mono,monospace" font-size="12" fill="#a8d8a0">GetName</text>
+    <text x="302" y="56"  font-family="DM Mono,monospace" font-size="12" fill="#d4d0c4">(</text>
+    <text x="311" y="56"  font-family="DM Mono,monospace" font-size="12" fill="#f0a8c8">self</text>
+    <text x="337" y="56"  font-family="DM Mono,monospace" font-size="12" fill="#d4d0c4">):</text>
+    <text x="205" y="74"  font-family="DM Mono,monospace" font-size="12" fill="#7eb8d4">    return</text>
+    <text x="264" y="74"  font-family="DM Mono,monospace" font-size="12" fill="#f0a8c8">self</text>
+    <text x="290" y="74"  font-family="DM Mono,monospace" font-size="12" fill="#d4d0c4">.__Name</text>
+
+    <!-- arrows pointing from "self" down to each object -->
+    <line x1="260" y1="96" x2="115" y2="196" stroke="#EF9F27" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+    <line x1="300" y1="96" x2="340" y2="196" stroke="#185FA5" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+    <line x1="380" y1="96" x2="565" y2="196" stroke="#3B6D11" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+
+    <text x="148" y="158" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27">when called on s1</text>
+    <text x="148" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27">self = s1 (Ali)</text>
+    <text x="340" y="158" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">when called on s2</text>
+    <text x="340" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">self = s2 (Sara)</text>
+    <text x="530" y="158" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">when called on s3</text>
+    <text x="530" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">self = s3 (Rami)</text>
+
+    <!-- Object boxes -->
+    <rect x="40" y="200" width="150" height="60" rx="6" fill="#fff8f0" stroke="#EF9F27" stroke-width="1.5"/>
+    <text x="115" y="222" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#633806">s1.__Name = "Ali"</text>
+    <text x="115" y="248" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#EF9F27">→ returns "Ali"</text>
+
+    <rect x="265" y="200" width="150" height="60" rx="6" fill="#f0f6ff" stroke="#185FA5" stroke-width="1.5"/>
+    <text x="340" y="222" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#0C447C">s2.__Name = "Sara"</text>
+    <text x="340" y="248" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#185FA5">→ returns "Sara"</text>
+
+    <rect x="490" y="200" width="150" height="60" rx="6" fill="#f0fff4" stroke="#3B6D11" stroke-width="1.5"/>
+    <text x="565" y="222" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" font-weight="500" fill="#27500A">s3.__Name = "Rami"</text>
+    <text x="565" y="248" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#3B6D11">→ returns "Rami"</text>
+
+    <!-- BOTTOM NOTE -->
+    <text x="340" y="292" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#8a8785">Same method code → different result because self points to a different object each time</text>
+  </svg>
+</div>
+
+<div class="box box-blue">
+  <strong>🔎 Why do we write self in every method?</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>def GetName(self):</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc"><code>self</code> must be the first parameter of every method. Python automatically passes the object in there when you call <code>s1.GetName()</code>. You don't type it yourself when calling — Python does it.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>self.__Name</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Means "the <code>__Name</code> attribute of THIS object". Without <code>self</code>, Python would look for a regular variable called <code>__Name</code> and crash. <code>self</code> tells Python: "look inside THIS object's memory."</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Why not just call it "this"?</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Python uses <code>self</code> by convention. Other languages (Java, C++) use <code>this</code>. Same idea. You could technically call it anything — but calling it <code>self</code> is the rule everyone follows.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 1f: GETTER & SETTER DEEP DIVE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01f</div>
+  <div>
+    <div class="section-title">Why Getters &amp; Setters? 🔐</div>
+    <div class="section-desc">Why not just read and change attributes directly?</div>
+  </div>
+</div>
+
+<div class="box box-amber">
+  <strong>🏦 The bank account analogy</strong>
+  Your bank stores your balance. Can you just walk in and change your balance to £1,000,000 yourself? <strong>No.</strong> You go through official channels: you deposit money, you withdraw money. There are RULES. The bank validates everything first.
+  <br><br>
+  That's exactly what setters do. The balance (attribute) is private. The deposit/withdraw methods (setters) are the official channels that check if the operation is valid before changing anything.
+</div>
+
+<!-- GETTER / SETTER VISUAL -->
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <defs>
+      <marker id="arr4g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+      <marker id="arr4r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+      <marker id="arr4bad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- OBJECT (the vault) -->
+    <rect x="255" y="60" width="170" height="160" rx="10" fill="#1e1c18" stroke="#334466" stroke-width="2"/>
+    <text x="340" y="84" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6a6860" letter-spacing="0.08em" font-weight="500">Student OBJECT</text>
+    <rect x="275" y="96" width="130" height="50" rx="6" fill="#2a2820" stroke="#EF9F27" stroke-width="1.5"/>
+    <text x="340" y="115" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#EF9F27">PRIVATE 🔒</text>
+    <text x="340" y="131" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#f0a8c8">__Score = 85</text>
+    <text x="340" y="168" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#a8d8a0">GetScore()</text>
+    <text x="340" y="186" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#a8d8a0">SetScore(val)</text>
+    <text x="340" y="208" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#a8d8a0">CalcGrade()</text>
+
+    <!-- OUTSIDE CODE (left) -->
+    <rect x="20" y="80" width="160" height="50" rx="6" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/>
+    <text x="100" y="100" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" font-weight="500">OUTSIDE CODE</text>
+    <text x="100" y="118" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#27500A">print(s1.GetScore())</text>
+
+    <!-- GETTER arrow: outside → GetScore() → __Score → back out -->
+    <line x1="180" y1="105" x2="253" y2="130" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr4g)"/>
+    <text x="192" y="112" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">calls GetScore()</text>
+    <line x1="253" y1="150" x2="180" y2="150" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr4g)"/>
+    <text x="192" y="143" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">returns 85</text>
+
+    <!-- SETTER: outside → SetScore(95) -->
+    <rect x="20" y="190" width="160" height="50" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="100" y="210" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" font-weight="500">OUTSIDE CODE</text>
+    <text x="100" y="228" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#0C447C">s1.SetScore(95)</text>
+
+    <line x1="180" y1="215" x2="253" y2="190" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr4r)"/>
+    <text x="192" y="210" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">calls SetScore(95)</text>
+    <text x="192" y="222" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">validates → updates</text>
+
+    <!-- BAD ATTEMPT: direct access (crossed out) -->
+    <rect x="470" y="100" width="175" height="50" rx="6" fill="#FCEBEB" stroke="#F09595" stroke-width="1.5"/>
+    <text x="557" y="120" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F" font-weight="500">❌ DIRECT ACCESS (BLOCKED)</text>
+    <text x="557" y="138" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#791F1F">s1.__Score = 9999</text>
+
+    <line x1="470" y1="125" x2="428" y2="125" stroke="#A32D2D" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr4bad)"/>
+    <!-- X mark -->
+    <line x1="448" y1="108" x2="456" y2="120" stroke="#A32D2D" stroke-width="2.5"/>
+    <line x1="456" y1="108" x2="448" y2="120" stroke="#A32D2D" stroke-width="2.5"/>
+
+    <text x="557" y="174" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">Private → can't touch this!</text>
+    <text x="557" y="188" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">No validation = dangerous</text>
+
+    <!-- Bottom labels -->
+    <text x="100" y="260" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11" font-weight="500">Getter = read safely</text>
+    <text x="340" y="248" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">private data,</text>
+    <text x="340" y="262" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">protected inside</text>
+    <text x="557" y="260" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#791F1F" font-weight="500">Direct access = blocked</text>
+  </svg>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+  <div class="box box-green" style="margin:0;">
+    <strong>👁️ Getter — why use it?</strong>
+    The attribute is private. You can't read it directly from outside. A getter is a <strong>safe window</strong> — it lets you see the value without being able to mess with it. It just returns the value, nothing else.
+    <br><br>
+    <code style="font-size:12px;">def GetScore(self):<br>&nbsp;&nbsp;&nbsp;&nbsp;return self.__Score</code>
+  </div>
+  <div class="box box-blue" style="margin:0;">
+    <strong>✍️ Setter — why use it?</strong>
+    You want to change a value — but safely. The setter checks if the new value is valid <strong>before</strong> updating. Without it, anyone could set score to -999 or 99999. With it, you control what's allowed.
+    <br><br>
+    <code style="font-size:12px;">def SetScore(self, val):<br>&nbsp;&nbsp;&nbsp;&nbsp;if 0 &lt;= val &lt;= 100:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__Score = val</code>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 2: CLASS ANATOMY
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">Anatomy of a Class</div>
+    <div class="section-desc">Every class has exactly three parts — header, attributes, methods</div>
+  </div>
+</div>
+
+<!-- UML STYLE DIAGRAM -->
+<div class="sec-title">The UML class diagram — how Cambridge draws it 📐</div>
+<div class="sec-sub">Cambridge always shows the class as a 3-section table. You need to read AND write these.</div>
+
+<div style="display:flex;gap:2rem;flex-wrap:wrap;margin:1rem 0;align-items:flex-start;">
+  <div>
+    <div class="class-big">
+      <div class="cb-header" style="background:#0f1729;color:#c8d4e8;">Car</div>
+      <div class="cb-section">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:4px;">Attributes (data)</div>
+        <div class="cb-row"><span class="cb-minus">−</span><span class="cb-name">ID</span><span class="cb-type">: STRING</span></div>
+        <div class="cb-row"><span class="cb-minus">−</span><span class="cb-name">Colour</span><span class="cb-type">: STRING</span></div>
+        <div class="cb-row"><span class="cb-minus">−</span><span class="cb-name">Speed</span><span class="cb-type">: INTEGER</span></div>
+        <div class="cb-row"><span class="cb-minus">−</span><span class="cb-name">MaxSpeed</span><span class="cb-type">: INTEGER</span></div>
+      </div>
+      <div class="cb-section">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);font-weight:500;margin-bottom:4px;">Methods (actions)</div>
+        <div class="cb-row"><span class="cb-plus">+</span><span class="cb-name">Constructor()</span></div>
+        <div class="cb-row"><span class="cb-plus">+</span><span class="cb-name">GetSpeed()</span></div>
+        <div class="cb-row"><span class="cb-plus">+</span><span class="cb-name">GetID()</span></div>
+        <div class="cb-row"><span class="cb-plus">+</span><span class="cb-name">SetColour()</span></div>
+        <div class="cb-row"><span class="cb-plus">+</span><span class="cb-name">Accelerate()</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;min-width:220px;">
+    <div class="box box-blue" style="margin-bottom:0.75rem;">
+      <strong>− means PRIVATE</strong>
+      The attribute is hidden from the outside world. Code outside the class CANNOT directly access or change it. This is encapsulation.
+    </div>
+    <div class="box box-green" style="margin-bottom:0.75rem;">
+      <strong>+ means PUBLIC</strong>
+      The method is accessible from outside. Anyone can call it. Methods are almost always public — they are the "interface" you interact with.
+    </div>
+    <div class="box box-amber">
+      <strong>🎯 Cambridge exam tip</strong>
+      The top box = class name. Middle box = attributes (usually all private with −). Bottom box = methods (usually all public with +). Always write the Constructor() first in the methods.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 3: WRITING A CLASS IN PYTHON
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div>
+    <div class="section-title">Writing a Class in Python</div>
+    <div class="section-desc">Every single line explained — nothing skipped</div>
+  </div>
+</div>
+
+<div class="sec-title">Step 1 — Declaring the class and constructor 🏗️</div>
+
+<pre class="py"><span class="kw">class</span> <span class="fn">Car</span>:
+    <span class="cm"># ── CONSTRUCTOR ──────────────────────────────</span>
+    <span class="cm"># This runs AUTOMATICALLY when you create a Car object.</span>
+    <span class="cm"># "self" always refers to THIS specific object being created.</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, car_id, colour, max_speed):
+
+        <span class="cm"># __ before the name = PRIVATE attribute</span>
+        <span class="cm"># Nobody outside the class can touch these directly</span>
+        self.<span class="at">__ID</span>       = car_id
+        self.<span class="at">__Colour</span>   = colour
+        self.<span class="at">__Speed</span>    = <span class="nm">0</span>        <span class="cm"># car starts at rest</span>
+        self.<span class="at">__MaxSpeed</span> = max_speed</pre>
+
+<div class="box box-teal">
+  <strong>🔎 What does <code>self</code> mean?</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>class Car:</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Creates a blueprint called Car. Not a real car yet — just the template.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>def __init__(self, ...)</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">The constructor. <code>self</code> is Python's way of saying "this particular object I'm creating right now". Python passes it automatically — you never type it when calling.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>self.__ID = car_id</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Stores the value of parameter <code>car_id</code> into this object's private attribute <code>__ID</code>. The <code>__</code> makes it private — Python name-mangles it so outside code can't easily access it.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>self.__Speed = 0</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Some attributes don't come from parameters — they have a fixed starting value. Speed starts at 0 (car isn't moving yet). This is set up in the constructor automatically every time.</div>
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Step 2 — Getters (read private data) 👁️</div>
+<div class="sec-sub">Because attributes are private, you can't do <code>my_car.__Speed</code> from outside. Getters solve this.</div>
+
+<pre class="py">    <span class="cm"># ── GETTER METHODS ───────────────────────────</span>
+    <span class="cm"># Named GetXxx — return the value, that's it.</span>
+
+    <span class="kw">def</span> <span class="fn">GetID</span>(self):
+        <span class="kw">return</span> self.<span class="at">__ID</span>
+
+    <span class="kw">def</span> <span class="fn">GetColour</span>(self):
+        <span class="kw">return</span> self.<span class="at">__Colour</span>
+
+    <span class="kw">def</span> <span class="fn">GetSpeed</span>(self):
+        <span class="kw">return</span> self.<span class="at">__Speed</span>
+
+    <span class="kw">def</span> <span class="fn">GetMaxSpeed</span>(self):
+        <span class="kw">return</span> self.<span class="at">__MaxSpeed</span></pre>
+
+<div class="box box-blue">
+  <strong>Why do getters exist?</strong>
+  If <code>__Speed</code> is private, you literally cannot do <code>my_car.__Speed</code> from outside the class. The getter <code>GetSpeed()</code> is the only official way to read it. This is intentional — it keeps you in control. You decide what data people can see, and how.
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Step 3 — Setters (change private data with validation) 🔒</div>
+<div class="sec-sub">Setters can reject bad values — a raw assignment outside the class can't.</div>
+
+<pre class="py">    <span class="cm"># ── SETTER METHODS ───────────────────────────</span>
+    <span class="cm"># Named SetXxx — validate first, then update.</span>
+
+    <span class="kw">def</span> <span class="fn">SetColour</span>(self, new_colour):
+        <span class="kw">if</span> new_colour != <span class="st">""</span>:              <span class="cm"># can't set an empty string</span>
+            self.<span class="at">__Colour</span> = new_colour
+
+    <span class="kw">def</span> <span class="fn">SetSpeed</span>(self, new_speed):
+        <span class="kw">if</span> <span class="nm">0</span> <= new_speed <= self.<span class="at">__MaxSpeed</span>:   <span class="cm"># must be valid range</span>
+            self.<span class="at">__Speed</span> = new_speed</pre>
+
+<div class="box box-green">
+  <strong>Why not just let people change the attribute directly?</strong>
+  If speed was public, someone could do <code>my_car.Speed = 99999</code> — breaking the car logic. With a setter, you check: "Is this a valid speed? Is it ≤ MaxSpeed?" Only then do you allow the change. <strong>Validation = control.</strong>
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Step 4 — Other methods (the actual behaviour) ⚡</div>
+
+<pre class="py">    <span class="cm"># ── OTHER METHODS ────────────────────────────</span>
+
+    <span class="kw">def</span> <span class="fn">Accelerate</span>(self, amount):
+        new_speed = self.<span class="at">__Speed</span> + amount
+        <span class="kw">if</span> new_speed > self.<span class="at">__MaxSpeed</span>:
+            self.<span class="at">__Speed</span> = self.<span class="at">__MaxSpeed</span>   <span class="cm"># cap at max</span>
+        <span class="kw">else</span>:
+            self.<span class="at">__Speed</span> = new_speed
+
+    <span class="kw">def</span> <span class="fn">DisplayInfo</span>(self):
+        <span class="fn">print</span>(<span class="st">f"Car: {self.__ID} | Colour: {self.__Colour}"</span>)
+        <span class="fn">print</span>(<span class="st">f"Speed: {self.__Speed} / {self.__MaxSpeed}"</span>)</pre>
+
+<!-- ════════════════════════════════════════
+     SECTION 4: INSTANTIATION
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">Instantiation — Creating Objects</div>
+    <div class="section-desc">Calling the blueprint to life</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>🧬 Instantiation = creating a real object from the class</strong>
+  You write <code>ClassName(arguments)</code>. Python calls <code>__init__</code> automatically. You get back a real object in memory with its own copy of all the attributes.
+</div>
+
+<pre class="py"><span class="cm"># ── CREATING OBJECTS ─────────────────────────────────────────</span>
+<span class="cm"># This calls __init__ automatically with those arguments</span>
+
+car1 = <span class="fn">Car</span>(<span class="st">"ABC123"</span>, <span class="st">"red"</span>, <span class="nm">200</span>)     <span class="cm"># car1 is a Car object</span>
+car2 = <span class="fn">Car</span>(<span class="st">"XYZ999"</span>, <span class="st">"blue"</span>, <span class="nm">150</span>)    <span class="cm"># car2 is a DIFFERENT Car object</span>
+
+<span class="cm"># ── USING GETTERS ────────────────────────────────────────────</span>
+<span class="fn">print</span>(car1.<span class="fn">GetID</span>())         <span class="cm"># output: ABC123</span>
+<span class="fn">print</span>(car2.<span class="fn">GetColour</span>())     <span class="cm"># output: blue</span>
+<span class="fn">print</span>(car1.<span class="fn">GetSpeed</span>())      <span class="cm"># output: 0  (starts at 0)</span>
+
+<span class="cm"># ── USING SETTERS ────────────────────────────────────────────</span>
+car1.<span class="fn">SetColour</span>(<span class="st">"green"</span>)      <span class="cm"># changes colour to green</span>
+car1.<span class="fn">Accelerate</span>(<span class="nm">80</span>)          <span class="cm"># speed becomes 80</span>
+car1.<span class="fn">Accelerate</span>(<span class="nm">200</span>)         <span class="cm"># capped at MaxSpeed = 200</span>
+
+<span class="fn">print</span>(car1.<span class="fn">GetSpeed</span>())      <span class="cm"># output: 200 (not 280 — capped!)</span>
+
+<span class="cm"># ── DOT NOTATION ─────────────────────────────────────────────</span>
+<span class="cm"># object_name.method_name() — always this format</span>
+car2.<span class="fn">DisplayInfo</span>()
+<span class="cm"># output:</span>
+<span class="cm"># Car: XYZ999 | Colour: blue</span>
+<span class="cm"># Speed: 0 / 150</span></pre>
+
+<!-- INTERACTIVE DEMO -->
+<div class="sec-title" style="margin-top:1.5rem;">Interactive demo — play with a Car object 🎮</div>
+<div class="sim-panel">
+  <div class="sim-label">Live Object State</div>
+  <div id="obj-display"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:0.75rem;">
+    <button class="btn-primary" onclick="simAccelerate()">Accelerate +30</button>
+    <button class="btn-secondary" onclick="simBrake()">Brake −20</button>
+    <button class="btn-secondary" onclick="simColour()">Change Colour</button>
+    <button class="btn-secondary" onclick="simReset()">Reset</button>
+  </div>
+  <div id="sim-log" style="margin-top:10px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--green);background:var(--mono-bg);padding:8px 12px;border-radius:5px;min-height:28px;"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 5: ENCAPSULATION
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">05</div>
+  <div>
+    <div class="section-title">Encapsulation</div>
+    <div class="section-desc">Hiding the wiring — the most important OOP concept</div>
+  </div>
+</div>
+
+<div class="box box-purple">
+  <strong>🔒 The capsule analogy</strong>
+  Think of a medicine capsule. The medicine is INSIDE — protected, measured, safe. You don't interact with the powder directly. You just swallow the capsule. That's encapsulation: the data (medicine) is bundled inside the class (capsule), and you only interact through the controlled interface (swallowing).
+</div>
+
+<div class="analogy-grid">
+  <div class="analogy-card">
+    <div class="a-icon">❌</div>
+    <div class="a-label">Without encapsulation</div>
+    <div class="a-title">Direct access (BAD)</div>
+    <code style="font-size:12px;color:var(--red);">car1.Speed = 99999</code><br><br>
+    Anyone can set speed to anything. No validation. Can corrupt the object's state. Impossible to track where the data changed.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">✅</div>
+    <div class="a-label">With encapsulation</div>
+    <div class="a-title">Through setter (GOOD)</div>
+    <code style="font-size:12px;color:var(--green);">car1.SetSpeed(50)</code><br><br>
+    Goes through the setter. Setter validates: is 50 ≤ MaxSpeed? Yes → accepted. Always safe. You control exactly how data changes.
+  </div>
+</div>
+
+<pre class="py"><span class="cm"># WHY __ MAKES ATTRIBUTES PRIVATE IN PYTHON</span>
+<span class="cm"># Python doesn't have "true" private — __ triggers name mangling.</span>
+<span class="cm"># The real name becomes _ClassName__AttributeName</span>
+
+car1 = <span class="fn">Car</span>(<span class="st">"ABC"</span>, <span class="st">"red"</span>, <span class="nm">200</span>)
+
+<span class="cm"># This WON'T WORK as expected (generates AttributeError or different var):</span>
+<span class="cm"># print(car1.__Speed)  → AttributeError</span>
+
+<span class="cm"># This is the CORRECT way (through the getter):</span>
+<span class="fn">print</span>(car1.<span class="fn">GetSpeed</span>())    <span class="cm"># ✅ works — output: 0</span>
+
+<span class="cm"># Cambridge exam rule: always declare private attributes with __ prefix</span>
+<span class="cm"># Always access them via getters, always change via setters.</span></pre>
+
+<div class="box box-amber">
+  <strong>📌 Cambridge mark scheme — what they want to see</strong>
+  When asked to "declare private attributes": use <code>self.__attributeName</code> in <code>__init__</code>
+  When asked to "write a getter for X": a method that returns <code>self.__X</code>
+  When asked to "write a setter for X": a method that optionally validates, then sets <code>self.__X</code>
+  All attributes must be private in Cambridge OOP questions unless told otherwise.
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 6: INHERITANCE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">06</div>
+  <div>
+    <div class="section-title">Inheritance</div>
+    <div class="section-desc">Child class = parent class + extra stuff</div>
+  </div>
+</div>
+
+<div class="box box-green">
+  <strong>🧬 The DNA analogy</strong>
+  You inherited your parents' eye colour, height, nose shape — but you also have your own personality and skills they don't have. That's inheritance in OOP: a <strong>subclass</strong> (child) automatically gets all the attributes and methods from the <strong>superclass</strong> (parent), and can add its own on top.
+</div>
+
+<!-- INHERITANCE DIAGRAM -->
+<div class="sec-title" style="margin-top:1.25rem;">The inheritance hierarchy 🌳</div>
+<div class="inherit-wrap">
+  <div class="class-diagram blue">
+    <div class="class-header">Vehicle (Superclass / Parent)</div>
+    <div class="class-section">
+      <p class="private">− ID : STRING</p>
+      <p class="private">− MaxSpeed : INTEGER</p>
+      <p class="private">− CurrentSpeed : INTEGER</p>
+    </div>
+    <div class="class-section">
+      <p class="public">+ Constructor()</p>
+      <p class="public">+ GetID()</p>
+      <p class="public">+ GetSpeed()</p>
+      <p class="public">+ Accelerate()</p>
+    </div>
+  </div>
+  <div class="inherit-arrow">↓ &nbsp; <span style="font-size:12px;font-style:italic;color:var(--ink3);">inherits</span> &nbsp; ↓</div>
+  <div class="inherit-row">
+    <div class="class-diagram green">
+      <div class="class-header">Car (Subclass / Child)</div>
+      <div class="class-section">
+        <p class="private">− Doors : INTEGER</p>
+        <div style="font-size:10px;color:var(--ink3);padding:2px 0;font-style:italic;">+ all Vehicle attributes</div>
+      </div>
+      <div class="class-section">
+        <p class="public">+ Constructor()</p>
+        <p class="public">+ GetDoors()</p>
+        <div style="font-size:10px;color:var(--ink3);padding:2px 0;font-style:italic;">+ all Vehicle methods</div>
+      </div>
+    </div>
+    <div class="class-diagram purple">
+      <div class="class-header">Helicopter (Subclass)</div>
+      <div class="class-section">
+        <p class="private">− VerticalPos : INTEGER</p>
+        <p class="private">− MaxHeight : INTEGER</p>
+        <div style="font-size:10px;color:var(--ink3);padding:2px 0;font-style:italic;">+ all Vehicle attributes</div>
+      </div>
+      <div class="class-section">
+        <p class="public">+ Constructor()</p>
+        <p class="public">+ GetVerticalPos()</p>
+        <p class="public">+ Accelerate() ← overrides!</p>
+      </div>
+    </div>
+  </div>
+  <div class="inherit-note">Both Car and Helicopter can use GetID(), GetSpeed(), etc. — without rewriting them</div>
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Writing inheritance in Python 🐍</div>
+
+<pre class="py"><span class="cm"># ── SUPERCLASS (Parent) ─────────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">Vehicle</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vehicle_id, max_speed):
+        self.<span class="at">__ID</span>           = vehicle_id
+        self.<span class="at">__MaxSpeed</span>    = max_speed
+        self.<span class="at">__CurrentSpeed</span> = <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">GetID</span>(self):         <span class="kw">return</span> self.<span class="at">__ID</span>
+    <span class="kw">def</span> <span class="fn">GetMaxSpeed</span>(self):  <span class="kw">return</span> self.<span class="at">__MaxSpeed</span>
+    <span class="kw">def</span> <span class="fn">GetSpeed</span>(self):     <span class="kw">return</span> self.<span class="at">__CurrentSpeed</span>
+
+    <span class="kw">def</span> <span class="fn">Accelerate</span>(self, amount):
+        new_speed = self.<span class="at">__CurrentSpeed</span> + amount
+        <span class="kw">if</span> new_speed > self.<span class="at">__MaxSpeed</span>:
+            self.<span class="at">__CurrentSpeed</span> = self.<span class="at">__MaxSpeed</span>
+        <span class="kw">else</span>:
+            self.<span class="at">__CurrentSpeed</span> = new_speed
+
+
+<span class="cm"># ── SUBCLASS (Child) ────────────────────────────────────────</span>
+<span class="cm"># class ChildName(ParentName):  ← this is how you inherit</span>
+<span class="kw">class</span> <span class="fn">Car</span>(<span class="fn">Vehicle</span>):
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vehicle_id, max_speed, doors):
+        <span class="cm"># Call parent's constructor first with super().__init__()</span>
+        <span class="cm"># This sets up all Vehicle attributes automatically</span>
+        <span class="fn">super</span>().<span class="fn">__init__</span>(vehicle_id, max_speed)
+
+        <span class="cm"># Then add Car's own new attribute</span>
+        self.<span class="at">__Doors</span> = doors
+
+    <span class="kw">def</span> <span class="fn">GetDoors</span>(self):
+        <span class="kw">return</span> self.<span class="at">__Doors</span>
+
+
+<span class="cm"># ── ANOTHER SUBCLASS ────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">Helicopter</span>(<span class="fn">Vehicle</span>):
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vehicle_id, max_speed, max_height):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(vehicle_id, max_speed)   <span class="cm"># parent setup</span>
+        self.<span class="at">__VerticalPos</span> = <span class="nm">0</span>
+        self.<span class="at">__MaxHeight</span>  = max_height
+
+    <span class="kw">def</span> <span class="fn">GetVerticalPos</span>(self):
+        <span class="kw">return</span> self.<span class="at">__VerticalPos</span>
+
+
+<span class="cm"># ── USING THEM ──────────────────────────────────────────────</span>
+my_car = <span class="fn">Car</span>(<span class="st">"CAR001"</span>, <span class="nm">200</span>, <span class="nm">4</span>)
+heli   = <span class="fn">Helicopter</span>(<span class="st">"HEL001"</span>, <span class="nm">350</span>, <span class="nm">1000</span>)
+
+<span class="fn">print</span>(my_car.<span class="fn">GetID</span>())        <span class="cm"># from Vehicle — output: CAR001</span>
+<span class="fn">print</span>(my_car.<span class="fn">GetDoors</span>())    <span class="cm"># from Car — output: 4</span>
+my_car.<span class="fn">Accelerate</span>(<span class="nm">60</span>)        <span class="cm"># from Vehicle — works on Car!</span>
+<span class="fn">print</span>(my_car.<span class="fn">GetSpeed</span>())    <span class="cm"># from Vehicle — output: 60</span></pre>
+
+<div class="box box-teal">
+  <strong>🔎 What does <code>super().__init__()</code> actually do?</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>super()</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Refers to the parent class (Vehicle in this case). "Hey parent, I need you."</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>.__init__(id, speed)</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Calls the parent's constructor. This creates all the Vehicle attributes (ID, MaxSpeed, CurrentSpeed) inside our Car object. Without this, the Car wouldn't have any Vehicle attributes!</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Why not just copy the code?</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Because if Vehicle changes, Car automatically gets the update. <strong>Write once, reuse everywhere.</strong> That's the whole point of inheritance — no copy-paste duplication.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 7: POLYMORPHISM
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">07</div>
+  <div>
+    <div class="section-title">Polymorphism</div>
+    <div class="section-desc">Same method name → different behaviour depending on the class</div>
+  </div>
+</div>
+
+<div class="box box-purple">
+  <strong>🎭 Polymorphism = "many forms"</strong>
+  Imagine you text your friends saying "make dinner". Your Italian friend makes pasta. Your Tunisian friend makes couscous. Your Korean friend makes bibimbap. Same message — completely different results. That's polymorphism: the same method name does different things depending on which class's object you call it on.
+</div>
+
+<div class="stepper">
+  <div class="sim-label" style="margin-bottom:0.5rem;">Step through the concept</div>
+  <div class="step-nav">
+    <button class="step-btn active" onclick="showStep(0)">1. Parent method</button>
+    <button class="step-btn" onclick="showStep(1)">2. Override in Car</button>
+    <button class="step-btn" onclick="showStep(2)">3. Override in Heli</button>
+    <button class="step-btn" onclick="showStep(3)">4. Call both</button>
+  </div>
+
+  <div class="step-panel active" id="step-0">
+<pre class="py"><span class="cm"># Step 1: Parent class defines the method</span>
+<span class="kw">class</span> <span class="fn">Vehicle</span>:
+    <span class="kw">def</span> <span class="fn">Move</span>(self):
+        <span class="fn">print</span>(<span class="st">"Vehicle is moving"</span>)    <span class="cm"># generic</span></pre>
+    <div class="box box-blue" style="margin-top:0.5rem;">The parent defines <code>Move()</code> in a basic way. All vehicles can move. But HOW they move is different.</div>
+  </div>
+
+  <div class="step-panel" id="step-1">
+<pre class="py"><span class="cm"># Step 2: Car OVERRIDES the method</span>
+<span class="kw">class</span> <span class="fn">Car</span>(<span class="fn">Vehicle</span>):
+    <span class="kw">def</span> <span class="fn">Move</span>(self):              <span class="cm"># same name — overrides parent!</span>
+        <span class="fn">super</span>().<span class="fn">Move</span>()           <span class="cm"># optional: call parent version first</span>
+        <span class="fn">print</span>(<span class="st">"Car driving on the road at"</span>, self.<span class="fn">GetSpeed</span>(), <span class="st">"km/h"</span>)</pre>
+    <div class="box box-green" style="margin-top:0.5rem;">Car has its own <code>Move()</code> that replaces the parent's. When Python sees <code>my_car.Move()</code>, it uses Car's version, not Vehicle's.</div>
+  </div>
+
+  <div class="step-panel" id="step-2">
+<pre class="py"><span class="cm"># Step 3: Helicopter also overrides — differently!</span>
+<span class="kw">class</span> <span class="fn">Helicopter</span>(<span class="fn">Vehicle</span>):
+    <span class="kw">def</span> <span class="fn">Move</span>(self):
+        <span class="fn">super</span>().<span class="fn">Move</span>()
+        <span class="fn">print</span>(<span class="st">"Helicopter flying at altitude"</span>, self.<span class="fn">GetVerticalPos</span>(), <span class="st">"m"</span>)</pre>
+    <div class="box box-purple" style="margin-top:0.5rem;">Helicopter has its OWN version of <code>Move()</code>. Same method name, completely different behaviour.</div>
+  </div>
+
+  <div class="step-panel" id="step-3">
+<pre class="py"><span class="cm"># Step 4: Calling Move() on both — different outputs!</span>
+my_car = <span class="fn">Car</span>(<span class="st">"CAR001"</span>, <span class="nm">200</span>, <span class="nm">4</span>)
+heli   = <span class="fn">Helicopter</span>(<span class="st">"HEL001"</span>, <span class="nm">350</span>, <span class="nm">1000</span>)
+
+my_car.<span class="fn">Move</span>()
+<span class="cm"># output: Vehicle is moving</span>
+<span class="cm">#         Car driving on the road at 0 km/h</span>
+
+heli.<span class="fn">Move</span>()
+<span class="cm"># output: Vehicle is moving</span>
+<span class="cm">#         Helicopter flying at altitude 0 m</span>
+
+<span class="cm"># SAME method name (.Move()) → DIFFERENT behaviour. That's polymorphism!</span></pre>
+    <div class="box box-amber" style="margin-top:0.5rem;"><strong>This is what Cambridge exams test:</strong> Does the child class override a method? Does it call <code>super().method()</code> first? Does it add its own behaviour?</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 8: CONTAINMENT
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">08</div>
+  <div>
+    <div class="section-title">Containment (Aggregation)</div>
+    <div class="section-desc">An object storing other objects inside it</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>📚 The library analogy</strong>
+  A library CONTAINS books. The library is one object. Each book is another object. The library stores a list of book objects inside it. This is containment (also called aggregation — objects holding other objects).
+</div>
+
+<pre class="py"><span class="cm"># ── CONTAINED class (the book) ──────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">Book</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, title, author):
+        self.<span class="at">__Title</span>  = title
+        self.<span class="at">__Author</span> = author
+
+    <span class="kw">def</span> <span class="fn">GetTitle</span>(self):   <span class="kw">return</span> self.<span class="at">__Title</span>
+    <span class="kw">def</span> <span class="fn">GetAuthor</span>(self):  <span class="kw">return</span> self.<span class="at">__Author</span>
+
+    <span class="kw">def</span> <span class="fn">DisplayDetails</span>(self):
+        <span class="fn">print</span>(<span class="st">f"'{self.__Title}' by {self.__Author}"</span>)
+
+
+<span class="cm"># ── CONTAINER class (the library) ──────────────────────────</span>
+<span class="kw">class</span> <span class="fn">Library</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.<span class="at">__Books</span> = []    <span class="cm"># ← containment happens here (list of Book objects)</span>
+
+    <span class="kw">def</span> <span class="fn">AddBook</span>(self, book):          <span class="cm"># takes a Book object as parameter</span>
+        self.<span class="at">__Books</span>.append(book)
+
+    <span class="kw">def</span> <span class="fn">DisplayAllBooks</span>(self):
+        <span class="kw">for</span> book <span class="kw">in</span> self.<span class="at">__Books</span>:
+            book.<span class="fn">DisplayDetails</span>()   <span class="cm"># calling Book's method from Library!</span>
+
+
+<span class="cm"># ── CREATING THE RELATIONSHIP ───────────────────────────────</span>
+book1 = <span class="fn">Book</span>(<span class="st">"Python Crash Course"</span>, <span class="st">"Eric Matthes"</span>)
+book2 = <span class="fn">Book</span>(<span class="st">"Clean Code"</span>, <span class="st">"Robert Martin"</span>)
+
+my_library = <span class="fn">Library</span>()
+my_library.<span class="fn">AddBook</span>(book1)   <span class="cm"># Library now contains book1</span>
+my_library.<span class="fn">AddBook</span>(book2)   <span class="cm"># Library now contains book2</span>
+
+my_library.<span class="fn">DisplayAllBooks</span>()
+<span class="cm"># output:</span>
+<span class="cm"># 'Python Crash Course' by Eric Matthes</span>
+<span class="cm"># 'Clean Code' by Robert Martin</span></pre>
+
+<!-- ════════════════════════════════════════
+     SECTION 9: EXERCISES
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Past Paper Exercises</div>
+    <div class="section-desc">Styled exactly like Cambridge 9618 Paper 4 — OOP questions</div>
+  </div>
+</div>
+
+<!-- EX 1 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e1')">
+    <div class="ex-head-left">
+      <span class="ex-num">E1</span>
+      <span class="ex-title">Declare the Character class — 9618/41/O/N/23 Q3(a)(i)</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[4 marks]</span>
+      <span class="toggle-lbl" id="e1-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e1" style="display:none;">
+    <div class="scenario">
+      A computer game is written using object-oriented programming. The class <code>Character</code> stores data about game characters. Each character has a name, a current X position and a current Y position.
+      <br><br>
+      <table class="diff-table" style="margin-top:0.75rem;max-width:500px;">
+        <tr><th>Attribute/Method</th><th>Description</th></tr>
+        <tr><td><code>Name : STRING</code></td><td>stores the name as a string</td></tr>
+        <tr><td><code>XPosition : INTEGER</code></td><td>stores the X position</td></tr>
+        <tr><td><code>YPosition : INTEGER</code></td><td>stores the Y position</td></tr>
+        <tr><td><code>Constructor()</code></td><td>initialises Name, XPosition and YPosition to its parameter values</td></tr>
+      </table>
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the class <code>Character</code> and its constructor. Do not declare any other methods. Use Python's appropriate constructor. Include attribute declarations as comments. <span class="pts">[4]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>Cambridge style note:</strong> In Python, write <code># Name : STRING</code> etc. as comments inside <code>__init__</code> to declare attribute types. All attributes must be private (use <code>__</code>). The constructor takes all three values as parameters.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e1')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e1')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e1-hint">
+      Structure: <code>class Character:</code> then indent, <code>def __init__(self, name, x_pos, y_pos):</code> then indent again, write 3 comment declarations, then 3 <code>self.__Name = name</code> etc. lines. Remember: all attributes private with double underscore.
+    </div>
+<pre class="answer-pre" id="e1-ans">
+<span class="kw">class</span> <span class="fn">Character</span>:
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, x_pos, y_pos):
+        <span class="cm"># Name : STRING</span>
+        <span class="cm"># XPosition : INTEGER</span>
+        <span class="cm"># YPosition : INTEGER</span>
+        self.<span class="at">__Name</span>      = name
+        self.<span class="at">__XPosition</span> = x_pos
+        self.<span class="at">__YPosition</span> = y_pos
+
+
+<span class="cm"># Mark scheme (4 marks):</span>
+<span class="cm"># [1] class Character: declared correctly</span>
+<span class="cm"># [1] __init__ with self + 3 correct parameters</span>
+<span class="cm"># [1] 3 attribute declarations as comments with correct types</span>
+<span class="cm"># [1] 3 private attributes assigned (__ prefix used)</span>
+</pre>
+  </div>
+</div>
+
+<!-- EX 2 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e2')">
+    <div class="ex-head-left">
+      <span class="ex-num">E2</span>
+      <span class="ex-title">Getters, setters and Move() — 9618/41/O/N/23 Q3(a)(ii–iv)</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[11 marks]</span>
+      <span class="toggle-lbl" id="e2-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e2" style="display:none;">
+    <div class="scenario">
+      Continuing from E1, the class <code>Character</code> needs additional methods:
+      <br><br>
+      <table class="diff-table" style="max-width:600px;margin-top:0.5rem;">
+        <tr><th>Method</th><th>Description</th></tr>
+        <tr><td><code>GetXPosition()</code></td><td>returns the X position</td></tr>
+        <tr><td><code>GetYPosition()</code></td><td>returns the Y position</td></tr>
+        <tr><td><code>SetXPosition(change)</code></td><td>adds the parameter to X. If new X > 10000, limit to 10000. If new X &lt; 0, limit to 0.</td></tr>
+        <tr><td><code>SetYPosition(change)</code></td><td>adds the parameter to Y. Same validation as above.</td></tr>
+        <tr><td><code>Move(direction)</code></td><td>takes "up"/"down"/"left"/"right". up = Y+10, down = Y−10, left = X−10, right = X+10. Calls SetXPosition or SetYPosition.</td></tr>
+      </table>
+    </div>
+    <ul class="task-list">
+      <li>Write program code for the get methods <code>GetXPosition()</code> and <code>GetYPosition()</code>. <span class="pts">[3]</span></li>
+      <li>Write program code for <code>SetXPosition()</code> and <code>SetYPosition()</code>. <span class="pts">[4]</span></li>
+      <li>Write program code for <code>Move()</code>. <span class="pts">[4]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e2')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e2')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e2-hint">
+      Getters: just <code>return self.__XPosition</code>.
+      Setters: add parameter to current value first, THEN check bounds (not the other way around). Use if/elif to clamp.
+      Move: use if/elif for each direction. Call <code>self.SetXPosition(10)</code> etc. — not direct attribute access.
+    </div>
+<pre class="answer-pre" id="e2-ans">
+<span class="cm"># ── GETTERS ─────────────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">GetXPosition</span>(self):
+        <span class="kw">return</span> self.<span class="at">__XPosition</span>
+
+    <span class="kw">def</span> <span class="fn">GetYPosition</span>(self):
+        <span class="kw">return</span> self.<span class="at">__YPosition</span>
+
+<span class="cm"># Mark scheme GetXPosition/Y (3 marks — one for each method + return):</span>
+<span class="cm"># [1] GetXPosition defined with self, returns __XPosition</span>
+<span class="cm"># [1] GetYPosition defined with self, returns __YPosition</span>
+<span class="cm"># [1] Both use correct private attribute names</span>
+
+
+<span class="cm"># ── SETTERS ─────────────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">SetXPosition</span>(self, change):
+        new_x = self.<span class="at">__XPosition</span> + change
+        <span class="kw">if</span> new_x > <span class="nm">10000</span>:
+            self.<span class="at">__XPosition</span> = <span class="nm">10000</span>
+        <span class="kw">elif</span> new_x < <span class="nm">0</span>:
+            self.<span class="at">__XPosition</span> = <span class="nm">0</span>
+        <span class="kw">else</span>:
+            self.<span class="at">__XPosition</span> = new_x
+
+    <span class="kw">def</span> <span class="fn">SetYPosition</span>(self, change):
+        new_y = self.<span class="at">__YPosition</span> + change
+        <span class="kw">if</span> new_y > <span class="nm">10000</span>:
+            self.<span class="at">__YPosition</span> = <span class="nm">10000</span>
+        <span class="kw">elif</span> new_y < <span class="nm">0</span>:
+            self.<span class="at">__YPosition</span> = <span class="nm">0</span>
+        <span class="kw">else</span>:
+            self.<span class="at">__YPosition</span> = new_y
+
+<span class="cm"># Mark scheme Setters (4 marks):</span>
+<span class="cm"># [1] Calculates new value by ADDING change to current position</span>
+<span class="cm"># [1] Checks if new value > 10000 → limits to 10000</span>
+<span class="cm"># [1] Checks if new value < 0 → limits to 0</span>
+<span class="cm"># [1] Both methods follow same structure (accept one mark if only one shown)</span>
+
+
+<span class="cm"># ── MOVE ────────────────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">Move</span>(self, direction):
+        <span class="kw">if</span> direction == <span class="st">"up"</span>:
+            self.<span class="fn">SetYPosition</span>(<span class="nm">10</span>)
+        <span class="kw">elif</span> direction == <span class="st">"down"</span>:
+            self.<span class="fn">SetYPosition</span>(<span class="nm">-10</span>)
+        <span class="kw">elif</span> direction == <span class="st">"left"</span>:
+            self.<span class="fn">SetXPosition</span>(<span class="nm">-10</span>)
+        <span class="kw">elif</span> direction == <span class="st">"right"</span>:
+            self.<span class="fn">SetXPosition</span>(<span class="nm">10</span>)
+
+<span class="cm"># Mark scheme Move (4 marks):</span>
+<span class="cm"># [1] Takes direction as parameter</span>
+<span class="cm"># [1] Correct if/elif for all 4 directions</span>
+<span class="cm"># [1] Calls SetXPosition or SetYPosition (not direct attribute access)</span>
+<span class="cm"># [1] Correct values: ±10 for X (left/right), ±10 for Y (up/down)</span>
+</pre>
+  </div>
+</div>
+
+<!-- EX 3 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e3')">
+    <div class="ex-head-left">
+      <span class="ex-num">E3</span>
+      <span class="ex-title">BikeCharacter inherits from Character — 9618/41/O/N/23 Q3(c)</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[5 marks]</span>
+      <span class="toggle-lbl" id="e3-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e3" style="display:none;">
+    <div class="scenario">
+      The class <code>BikeCharacter</code> inherits from <code>Character</code>. A bike character moves twice as fast — 20 instead of 10 per move.
+      <br><br>
+      <table class="diff-table" style="max-width:500px;margin-top:0.5rem;">
+        <tr><th>Method</th><th>Description</th></tr>
+        <tr><td><code>Constructor()</code></td><td>takes Name, XPosition, YPosition as parameters. Calls parent constructor.</td></tr>
+        <tr><td><code>Move(direction)</code></td><td>overrides parent's Move(). Uses ±20 instead of ±10.</td></tr>
+      </table>
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the class <code>BikeCharacter</code> and its constructor. Do not declare <code>Move()</code> yet. <span class="pts">[3]</span></li>
+      <li>Write program code for <code>BikeCharacter</code>'s <code>Move()</code> method that overrides the parent's. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e3')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e3')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e3-hint">
+      <code>class BikeCharacter(Character):</code> — put parent name in brackets. Constructor: call <code>super().__init__(name, x, y)</code>. That's all the constructor needs — no new attributes. Move: same structure as parent's Move() but use 20 instead of 10.
+    </div>
+<pre class="answer-pre" id="e3-ans">
+<span class="cm"># ── BikeCharacter CLASS ──────────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">BikeCharacter</span>(<span class="fn">Character</span>):    <span class="cm"># ← inherits from Character</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, x_pos, y_pos):
+        <span class="cm"># No new attributes — just call parent's constructor</span>
+        <span class="fn">super</span>().<span class="fn">__init__</span>(name, x_pos, y_pos)
+
+
+<span class="cm"># Mark scheme Constructor (3 marks):</span>
+<span class="cm"># [1] class BikeCharacter(Character): — correct inheritance syntax</span>
+<span class="cm"># [1] __init__ with self + 3 correct parameters</span>
+<span class="cm"># [1] super().__init__() called with the 3 parameter values</span>
+
+
+    <span class="cm"># ── Move() OVERRIDE ─────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">Move</span>(self, direction):          <span class="cm"># overrides parent's Move()</span>
+        <span class="kw">if</span> direction == <span class="st">"up"</span>:
+            self.<span class="fn">SetYPosition</span>(<span class="nm">20</span>)     <span class="cm"># 20 not 10</span>
+        <span class="kw">elif</span> direction == <span class="st">"down"</span>:
+            self.<span class="fn">SetYPosition</span>(<span class="nm">-20</span>)
+        <span class="kw">elif</span> direction == <span class="st">"left"</span>:
+            self.<span class="fn">SetXPosition</span>(<span class="nm">-20</span>)
+        <span class="kw">elif</span> direction == <span class="st">"right"</span>:
+            self.<span class="fn">SetXPosition</span>(<span class="nm">20</span>)
+
+
+<span class="cm"># Mark scheme Move (2 marks):</span>
+<span class="cm"># [1] Method named Move, overrides parent (same signature)</span>
+<span class="cm"># [1] Correct values: ±20 used for all directions</span>
+</pre>
+  </div>
+</div>
+
+<!-- EX 4 — HARD: Vehicle from s23 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e4')">
+    <div class="ex-head-left">
+      <span class="ex-num">E4</span>
+      <span class="ex-title">Full Vehicle class + Helicopter child — 9618/41/M/J/23 Q2</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[16 marks]</span>
+      <span class="toggle-lbl" id="e4-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e4" style="display:none;">
+    <div class="scenario">
+      A computer game uses OOP. The class <code>Vehicle</code> stores vehicle data. A child class <code>Helicopter</code> inherits from it and adds vertical movement.
+      <br><br>
+      <table class="diff-table" style="max-width:700px;margin-top:0.5rem;margin-bottom:1rem;">
+        <tr><th colspan="2">Vehicle</th></tr>
+        <tr><td><code>ID : STRING</code></td><td>identification name</td></tr>
+        <tr><td><code>MaxSpeed : INTEGER</code></td><td>maximum speed</td></tr>
+        <tr><td><code>CurrentSpeed : INTEGER</code></td><td>current speed (init to 0)</td></tr>
+        <tr><td><code>IncreaseAmount : INTEGER</code></td><td>amount speed increases by each call</td></tr>
+        <tr><td><code>HorizontalPosition : INTEGER</code></td><td>horizontal position (init to 0)</td></tr>
+        <tr><td><code>Constructor(ID, MaxSpeed, IncreaseAmount)</code></td><td>initialises attributes; CurrentSpeed and HorizontalPosition start at 0</td></tr>
+        <tr><td><code>GetCurrentSpeed()</code></td><td>returns current speed</td></tr>
+        <tr><td><code>GetHorizontalPosition()</code></td><td>returns horizontal position</td></tr>
+        <tr><td><code>GetMaxSpeed()</code></td><td>returns max speed</td></tr>
+        <tr><td><code>GetIncreaseAmount()</code></td><td>returns increase amount</td></tr>
+        <tr><td><code>SetCurrentSpeed(val)</code></td><td>assigns val to current speed</td></tr>
+        <tr><td><code>SetHorizontalPosition(val)</code></td><td>assigns val to horizontal position</td></tr>
+        <tr><td><code>IncreaseSpeed()</code></td><td>adds IncreaseAmount to CurrentSpeed (cap at MaxSpeed); adds updated CurrentSpeed to HorizontalPosition</td></tr>
+      </table>
+      <table class="diff-table" style="max-width:700px;">
+        <tr><th colspan="2">Helicopter (inherits Vehicle)</th></tr>
+        <tr><td><code>VerticalPosition : INTEGER</code></td><td>vertical position (init to 0)</td></tr>
+        <tr><td><code>VerticalChange : INTEGER</code></td><td>amount VerticalPosition changes</td></tr>
+        <tr><td><code>MaxHeight : INTEGER</code></td><td>maximum height</td></tr>
+        <tr><td><code>Constructor(ID, MaxSpeed, IncreaseAmount, VerticalChange, MaxHeight)</code></td><td>calls parent constructor; initialises VerticalPosition to 0</td></tr>
+        <tr><td><code>GetVerticalPosition()</code></td><td>returns vertical position</td></tr>
+        <tr><td><code>IncreaseSpeed()</code></td><td>overrides parent: adds VerticalChange to VerticalPos (cap at MaxHeight); adds IncreaseAmount to CurrentSpeed (cap at MaxSpeed); adds updated speed to HorizontalPosition</td></tr>
+      </table>
+    </div>
+    <ul class="task-list">
+      <li>Write the class <code>Vehicle</code> with all private attributes and constructor. <span class="pts">[5]</span></li>
+      <li>Write all 4 getter methods and 2 setter methods for Vehicle. <span class="pts">[3+3]</span></li>
+      <li>Write <code>IncreaseSpeed()</code> for Vehicle. <span class="pts">[3]</span></li>
+      <li>Write class <code>Helicopter</code> with constructor and its overriding <code>IncreaseSpeed()</code>. <span class="pts">[5+4]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Exam tip:</strong> This is a full Question 2 from M/J 2023. It tests every OOP skill. Work top-down: Vehicle first, then Helicopter. In IncreaseSpeed, always add speed to horizontal position AFTER capping it.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e4')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e4')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e4-hint">
+      Vehicle constructor: 3 params (ID, MaxSpeed, IncreaseAmount), set CurrentSpeed=0 and HorizontalPosition=0 manually.
+      IncreaseSpeed: new_speed = current + increase_amount. If > MaxSpeed, cap. Then HorizontalPos += new speed.
+      Helicopter constructor: super().__init__(ID, MaxSpeed, IncreaseAmount) then self.__VerticalPosition = 0 etc.
+      Helicopter IncreaseSpeed: first update vertical (cap at MaxHeight), then call parent logic OR duplicate it.
+    </div>
+<pre class="answer-pre" id="e4-ans">
+<span class="cm"># ══════════════════════════════════════════════════════════════</span>
+<span class="cm"># VEHICLE CLASS</span>
+<span class="cm"># ══════════════════════════════════════════════════════════════</span>
+<span class="kw">class</span> <span class="fn">Vehicle</span>:
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vehicle_id, max_speed, increase_amount):
+        <span class="cm"># ID : STRING</span>
+        <span class="cm"># MaxSpeed : INTEGER</span>
+        <span class="cm"># CurrentSpeed : INTEGER</span>
+        <span class="cm"># IncreaseAmount : INTEGER</span>
+        <span class="cm"># HorizontalPosition : INTEGER</span>
+        self.<span class="at">__ID</span>                 = vehicle_id
+        self.<span class="at">__MaxSpeed</span>          = max_speed
+        self.<span class="at">__IncreaseAmount</span>   = increase_amount
+        self.<span class="at">__CurrentSpeed</span>     = <span class="nm">0</span>
+        self.<span class="at">__HorizontalPosition</span> = <span class="nm">0</span>
+
+    <span class="cm"># ── GETTERS ─────────────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">GetCurrentSpeed</span>(self):
+        <span class="kw">return</span> self.<span class="at">__CurrentSpeed</span>
+
+    <span class="kw">def</span> <span class="fn">GetIncreaseAmount</span>(self):
+        <span class="kw">return</span> self.<span class="at">__IncreaseAmount</span>
+
+    <span class="kw">def</span> <span class="fn">GetMaxSpeed</span>(self):
+        <span class="kw">return</span> self.<span class="at">__MaxSpeed</span>
+
+    <span class="kw">def</span> <span class="fn">GetHorizontalPosition</span>(self):
+        <span class="kw">return</span> self.<span class="at">__HorizontalPosition</span>
+
+    <span class="cm"># ── SETTERS ─────────────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">SetCurrentSpeed</span>(self, val):
+        self.<span class="at">__CurrentSpeed</span> = val
+
+    <span class="kw">def</span> <span class="fn">SetHorizontalPosition</span>(self, val):
+        self.<span class="at">__HorizontalPosition</span> = val
+
+    <span class="cm"># ── INCREASE SPEED ──────────────────────────────────────────</span>
+    <span class="kw">def</span> <span class="fn">IncreaseSpeed</span>(self):
+        new_speed = self.<span class="at">__CurrentSpeed</span> + self.<span class="at">__IncreaseAmount</span>
+        <span class="kw">if</span> new_speed > self.<span class="at">__MaxSpeed</span>:
+            new_speed = self.<span class="at">__MaxSpeed</span>
+        self.<span class="at">__CurrentSpeed</span> = new_speed
+        self.<span class="at">__HorizontalPosition</span> += self.<span class="at">__CurrentSpeed</span>
+
+
+<span class="cm"># ══════════════════════════════════════════════════════════════</span>
+<span class="cm"># HELICOPTER CLASS (inherits Vehicle)</span>
+<span class="cm"># ══════════════════════════════════════════════════════════════</span>
+<span class="kw">class</span> <span class="fn">Helicopter</span>(<span class="fn">Vehicle</span>):
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, vehicle_id, max_speed, increase_amount,
+                 vertical_change, max_height):
+        <span class="cm"># VerticalPosition : INTEGER</span>
+        <span class="cm"># VerticalChange : INTEGER</span>
+        <span class="cm"># MaxHeight : INTEGER</span>
+        <span class="fn">super</span>().<span class="fn">__init__</span>(vehicle_id, max_speed, increase_amount)
+        self.<span class="at">__VerticalPosition</span> = <span class="nm">0</span>
+        self.<span class="at">__VerticalChange</span>  = vertical_change
+        self.<span class="at">__MaxHeight</span>       = max_height
+
+    <span class="kw">def</span> <span class="fn">GetVerticalPosition</span>(self):
+        <span class="kw">return</span> self.<span class="at">__VerticalPosition</span>
+
+    <span class="kw">def</span> <span class="fn">IncreaseSpeed</span>(self):       <span class="cm"># overrides Vehicle's version</span>
+        <span class="cm"># 1. Update vertical position</span>
+        new_vert = self.<span class="at">__VerticalPosition</span> + self.<span class="at">__VerticalChange</span>
+        <span class="kw">if</span> new_vert > self.<span class="at">__MaxHeight</span>:
+            new_vert = self.<span class="at">__MaxHeight</span>
+        self.<span class="at">__VerticalPosition</span> = new_vert
+
+        <span class="cm"># 2. Update speed (cap at MaxSpeed)</span>
+        new_speed = self.<span class="fn">GetCurrentSpeed</span>() + self.<span class="fn">GetIncreaseAmount</span>()
+        <span class="kw">if</span> new_speed > self.<span class="fn">GetMaxSpeed</span>():
+            new_speed = self.<span class="fn">GetMaxSpeed</span>()
+        self.<span class="fn">SetCurrentSpeed</span>(new_speed)
+
+        <span class="cm"># 3. Update horizontal position</span>
+        self.<span class="fn">SetHorizontalPosition</span>(
+            self.<span class="fn">GetHorizontalPosition</span>() + self.<span class="fn">GetCurrentSpeed</span>()
+        )
+
+
+<span class="cm"># ── TESTING ─────────────────────────────────────────────────</span>
+car   = <span class="fn">Vehicle</span>(<span class="st">"Tiger"</span>, <span class="nm">100</span>, <span class="nm">20</span>)
+heli  = <span class="fn">Helicopter</span>(<span class="st">"Lion"</span>, <span class="nm">350</span>, <span class="nm">40</span>, <span class="nm">3</span>, <span class="nm">100</span>)
+
+car.<span class="fn">IncreaseSpeed</span>()
+car.<span class="fn">IncreaseSpeed</span>()
+<span class="fn">print</span>(<span class="st">"Tiger speed:"</span>, car.<span class="fn">GetCurrentSpeed</span>())            <span class="cm"># 40</span>
+<span class="fn">print</span>(<span class="st">"Tiger horizontal:"</span>, car.<span class="fn">GetHorizontalPosition</span>()) <span class="cm"># 60</span>
+
+heli.<span class="fn">IncreaseSpeed</span>()
+heli.<span class="fn">IncreaseSpeed</span>()
+<span class="fn">print</span>(<span class="st">"Lion speed:"</span>, heli.<span class="fn">GetCurrentSpeed</span>())            <span class="cm"># 80</span>
+<span class="fn">print</span>(<span class="st">"Lion altitude:"</span>, heli.<span class="fn">GetVerticalPosition</span>())     <span class="cm"># 6</span>
+
+
+<span class="cm"># ══════════════════════════════════════════════════════════════</span>
+<span class="cm"># MARK SCHEME SUMMARY</span>
+<span class="cm"># ══════════════════════════════════════════════════════════════</span>
+<span class="cm"># Vehicle constructor (5): class declared, __init__ correct params,</span>
+<span class="cm">#   attribute comments, all 5 private attributes, 0 inits correct</span>
+<span class="cm"># Getters (3): any 4 correct getters returning private attributes</span>
+<span class="cm"># Setters (3): SetCurrentSpeed + SetHorizontalPosition assign correctly</span>
+<span class="cm"># IncreaseSpeed Vehicle (3): adds IncreaseAmount, caps at MaxSpeed,</span>
+<span class="cm">#   adds speed to HorizontalPosition</span>
+<span class="cm"># Helicopter constructor (5): class Helicopter(Vehicle), __init__ 5 params,</span>
+<span class="cm">#   super().__init__() correct, 3 new private attrs, VerticalPosition=0</span>
+<span class="cm"># Helicopter IncreaseSpeed (4): vertical update, cap MaxHeight,</span>
+<span class="cm">#   speed update (using getters since parent attrs private), horizontal update</span>
+</pre>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE -->
+<div class="divider"></div>
+<div class="sec-title">Quick Reference — OOP cheat sheet 📋</div>
+<div class="sec-sub">Everything you need to memorise for the exam. One glance before the test.</div>
+
+<table class="diff-table">
+  <tr><th>Thing to write</th><th>Python syntax</th><th>Marks awarded for</th></tr>
+  <tr><td>Declare a class</td><td><code>class ClassName:</code></td><td>class keyword, correct name, colon</td></tr>
+  <tr><td>Constructor</td><td><code>def __init__(self, p1, p2):</code></td><td>__init__ name, self first, all params</td></tr>
+  <tr><td>Private attribute</td><td><code>self.__attributeName = value</code></td><td>double underscore, self dot, assignment</td></tr>
+  <tr><td>Attribute declaration (comment)</td><td><code># AttributeName : TYPE</code></td><td>name, colon, correct type</td></tr>
+  <tr><td>Getter method</td><td><code>def GetAttr(self): return self.__attr</code></td><td>Get prefix, returns correct attribute</td></tr>
+  <tr><td>Setter method</td><td><code>def SetAttr(self, val): self.__attr = val</code></td><td>Set prefix, takes parameter, assigns it</td></tr>
+  <tr><td>Inherit from parent</td><td><code>class Child(Parent):</code></td><td>parent name in brackets</td></tr>
+  <tr><td>Call parent constructor</td><td><code>super().__init__(args)</code></td><td>super(), __init__, correct args</td></tr>
+  <tr><td>Override a method</td><td>Write same method name in child class</td><td>method defined in child, same name</td></tr>
+  <tr><td>Create an object</td><td><code>obj = ClassName(args)</code></td><td>variable assignment, ClassName, brackets</td></tr>
+  <tr><td>Call a method</td><td><code>obj.MethodName(args)</code></td><td>dot notation, correct method name</td></tr>
+</table>
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 27 · OOP</span>
+  <span>Classes · Objects · Encapsulation · Inheritance · Polymorphism</span>
+</footer>
+
+<script>
+function toggle(id) {
+  const body = document.getElementById(id);
+  const lbl  = document.getElementById(id + '-lbl');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if (lbl) lbl.textContent = open ? '▼ expand' : '▲ collapse';
+}
+function showHint(id) { document.getElementById(id + '-hint').classList.toggle('visible'); }
+function showAnswer(id) { document.getElementById(id + '-ans').classList.toggle('visible'); }
+
+// ── STEPPER ─────────────────────────────────────────────
+function showStep(idx) {
+  document.querySelectorAll('.step-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  document.querySelectorAll('.step-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+// ── INTERACTIVE CAR DEMO ─────────────────────────────────
+const carState = { id:'CAR001', colour:'red', speed:0, maxSpeed:200 };
+const colours = ['red','blue','green','orange','black','silver','yellow'];
+let colourIdx = 0;
+
+function renderCar() {
+  const d = document.getElementById('obj-display');
+  d.innerHTML = `
+    <div class="obj-card">
+      <div class="obj-name">Car Object: ${carState.id}</div>
+      <div class="obj-field"><span class="obj-field-key">__ID</span><span class="obj-field-val" style="color:var(--blue)">"${carState.id}"</span></div>
+      <div class="obj-field"><span class="obj-field-key">__Colour</span><span class="obj-field-val" style="color:var(--green)">"${carState.colour}"</span></div>
+      <div class="obj-field"><span class="obj-field-key">__Speed</span><span class="obj-field-val" style="color:var(--purple)">${carState.speed}</span></div>
+      <div class="obj-field"><span class="obj-field-key">__MaxSpeed</span><span class="obj-field-val" style="color:var(--ink3)">${carState.maxSpeed}</span></div>
+    </div>
+    <div style="height:8px;background:var(--paper3);border-radius:4px;overflow:hidden;margin-top:4px;margin-bottom:8px;">
+      <div style="height:100%;width:${(carState.speed/carState.maxSpeed)*100}%;background:var(--purple);border-radius:4px;transition:width 0.3s;"></div>
+    </div>
+    <div style="font-size:11px;color:var(--ink3);text-align:right;">Speed: ${carState.speed} / ${carState.maxSpeed}</div>
+  `;
+}
+
+function simLog(msg) {
+  const log = document.getElementById('sim-log');
+  log.textContent = '>>> ' + msg;
+}
+
+function simAccelerate() {
+  const prev = carState.speed;
+  carState.speed = Math.min(carState.speed + 30, carState.maxSpeed);
+  renderCar();
+  if(carState.speed === carState.maxSpeed && prev === carState.maxSpeed) {
+    simLog('car.Accelerate(30) → speed capped at MaxSpeed (' + carState.maxSpeed + ')');
+  } else {
+    simLog('car.Accelerate(30) → __Speed: ' + prev + ' → ' + carState.speed);
+  }
+}
+function simBrake() {
+  const prev = carState.speed;
+  carState.speed = Math.max(carState.speed - 20, 0);
+  renderCar();
+  simLog('car.SetSpeed(-20) → __Speed: ' + prev + ' → ' + carState.speed);
+}
+function simColour() {
+  colourIdx = (colourIdx + 1) % colours.length;
+  const prev = carState.colour;
+  carState.colour = colours[colourIdx];
+  renderCar();
+  simLog('car.SetColour("' + carState.colour + '") → __Colour: "' + prev + '" → "' + carState.colour + '"');
+}
+function simReset() {
+  carState.speed = 0; carState.colour = 'red'; colourIdx = 0;
+  renderCar();
+  simLog('Object reset. Speed = 0, Colour = "red".');
+}
+renderCar();
+</script>
+</body>
+</html>
