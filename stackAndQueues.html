@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stacks & Queues · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#0f1729;color:#c8d4e8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(126,184,212,0.08);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-80px;left:120px;width:400px;height:400px;border:2px solid rgba(100,160,240,0.07);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,212,232,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#7eb8d4;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,212,232,0.55);max-width:560px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,212,232,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,212,232,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.at{color:#f0a8c8;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.ex-citation{font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;margin-top:1rem;padding-top:0.6rem;border-top:1px solid var(--paper3);}
+.before-exam{background:var(--mono-bg);border-radius:10px;padding:1.5rem 1.75rem;margin:2rem 0;}
+.before-exam h3{font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;color:#c8d4e8;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.08);}
+.be-row{display:flex;gap:0;margin-bottom:0.2rem;}
+.be-key{font-family:'DM Mono',monospace;font-size:11.5px;color:#EF9F27;min-width:220px;flex-shrink:0;line-height:1.8;}
+.be-val{font-family:'DM Mono',monospace;font-size:11.5px;color:#a8d8a0;line-height:1.8;}
+.be-section{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(200,212,232,0.35);font-weight:500;margin:0.9rem 0 0.4rem;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:200px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+.analogy-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+.analogy-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1rem;font-size:13px;line-height:1.6;}
+.analogy-card .a-icon{font-size:28px;margin-bottom:6px;}
+.analogy-card .a-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--ink3);margin-bottom:2px;}
+.analogy-card .a-title{font-weight:500;font-size:14px;margin-bottom:4px;}
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin:1px 2px;}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.pill-teal{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bd);}
+.sim-panel{background:var(--paper2);border:1px solid var(--rule);border-radius:8px;padding:1.25rem;margin:1rem 0;}
+.sim-label{font-size:11px;text-transform:uppercase;letter-spacing:0.09em;font-weight:500;color:var(--ink3);margin-bottom:0.75rem;}
+.btn-primary{background:var(--ink);color:var(--paper);border:none;border-radius:5px;padding:7px 18px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-primary:hover{background:var(--ink2);}
+.btn-secondary{background:none;color:var(--ink2);border:1px solid var(--rule);border-radius:5px;padding:6px 16px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-secondary:hover{background:var(--paper3);}
+/* ── Stack/Queue visual cells ── */
+.ds-visual{display:flex;gap:0.5rem;align-items:flex-end;margin:0.75rem 0;flex-wrap:wrap;}
+.ds-cell{width:52px;height:44px;border:2px solid var(--rule);border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;background:#fff;transition:all 0.3s;position:relative;}
+.ds-cell.filled{background:var(--blue-bg);border-color:var(--blue-bd);color:var(--blue);font-weight:500;}
+.ds-cell.top-ptr{background:var(--purple-bg);border-color:var(--purple-bd);color:var(--purple);font-weight:500;}
+.ds-cell.head-ptr{background:var(--green-bg);border-color:var(--green-bd);color:var(--green);font-weight:500;}
+.ds-cell.tail-ptr{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber);font-weight:500;}
+.ds-cell .cell-idx{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:10px;color:var(--ink3);}
+.ds-cell .cell-ptr{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:10px;color:var(--purple);font-weight:500;}
+.ds-vertical{display:flex;flex-direction:column-reverse;gap:4px;margin:0.75rem 0;}
+.ds-v-cell{width:100%;max-width:200px;height:38px;border:2px solid var(--rule);border-radius:5px;display:flex;align-items:center;padding:0 12px;font-family:'DM Mono',monospace;font-size:12px;background:#fff;transition:all 0.3s;gap:8px;}
+.ds-v-cell.filled{background:var(--blue-bg);border-color:var(--blue-bd);color:var(--blue);font-weight:500;}
+.ds-v-cell.top{background:var(--purple-bg);border-color:var(--purple-bd);color:var(--purple);}
+.ds-v-cell .v-idx{font-size:10px;color:var(--ink3);min-width:20px;}
+.ds-v-cell .v-ptr{font-size:10px;color:var(--purple);margin-left:auto;font-weight:500;}
+.trace-wrap{overflow-x:auto;margin:1rem 0;}
+.trace-table{border-collapse:collapse;font-size:12px;min-width:380px;}
+.trace-table th{background:var(--ink);color:#fff;padding:7px 12px;text-align:center;font-weight:500;font-size:11px;letter-spacing:0.05em;}
+.trace-table td{padding:6px 12px;border:1px solid var(--rule);text-align:center;font-family:'DM Mono',monospace;vertical-align:middle;font-size:12px;}
+.trace-table tr:nth-child(even) td{background:var(--paper2);}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Chapter — Data Structures</div>
+  <h1>Stacks <em>&amp; Queues</em></h1>
+  <div class="cover-sub">Two data structures that run basically everything — your browser, your printer, your game engine. LIFO, FIFO, circular wrap-around — all of it, from scratch, no cap. 🔥</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Stack (LIFO)</strong>Last in, first out</div>
+    <div class="cover-meta-item"><strong>Linear Queue (FIFO)</strong>First in, first out</div>
+    <div class="cover-meta-item"><strong>Circular Queue</strong>Wrap-around with modulo</div>
+    <div class="cover-meta-item"><strong>Push / Pop / Enqueue / Dequeue</strong>The four operations</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 section 1</a>
+  <a href="02_binary_search.html">⚡ section 2</a>
+  <a href="03_bubble_insertion_sort.html">🫧 section 3</a>
+  <a href="05_oop.html">🧬 OOP</a>
+  <a href="04_stacks_queues.html" class="active">📚 Stacks &amp; Queues</a>
+</nav>
+
+<div class="page-body">
+
+<!-- ════════════════════════════════════════
+     SECTION 1: STACKS
+════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">Stacks — LIFO (Last In, First Out)</div>
+    <div class="section-desc">The Pringles can of data structures 🍟</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>🍟 The Pringles analogy — this is literally it</strong>
+  You stack chips into a Pringles can. The LAST chip you put in sits at the TOP. When you reach in, you grab the TOP one first. You physically cannot get to the bottom ones without removing the top ones first. That's a stack — <strong>Last In, First Out (LIFO).</strong>
+</div>
+
+<div class="analogy-grid">
+  <div class="analogy-card">
+    <div class="a-icon">🌐</div>
+    <div class="a-label">Real World</div>
+    <div class="a-title">Browser back button</div>
+    Every page you visit gets pushed onto a stack. Hit back? You pop the most recent page off and go to the one underneath. That's literally a stack in your browser. It's giving LIFO fr fr.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">↩️</div>
+    <div class="a-label">Gaming / Editors</div>
+    <div class="a-title">Ctrl+Z — Undo</div>
+    Every action you do (draw a line, type a word) gets pushed onto the undo stack. Hit Ctrl+Z? It pops the last action off and reverses it. No cap, stacks are why undo exists.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">📞</div>
+    <div class="a-label">WhatsApp</div>
+    <div class="a-title">Call stack (actual coding)</div>
+    When a function calls another function, Python pushes the new one onto the call stack. When it returns, it pops back to where it was. Your entire Python program runs on a stack under the hood.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">🍽️</div>
+    <div class="a-label">Kitchen Vibes</div>
+    <div class="a-title">Stack of plates</div>
+    Canteen puts clean plates on top. You take from the top. The plate at the bottom hasn't moved in years. Classic LIFO. The bottom plate is lowkey suffering.
+  </div>
+</div>
+
+<!-- KEY TERMS TABLE -->
+<div class="sec-title" style="margin-top:1.5rem;">Stack operations — know every single one 🧊</div>
+<table class="diff-table">
+  <tr><th>Operation</th><th>What it does</th><th>Cambridge says</th><th>Analogy</th></tr>
+  <tr>
+    <td><span class="pill pill-purple">Push(x)</span></td>
+    <td>Add element <code>x</code> to the top of the stack. Update <code>TopOfStack</code> first, then insert.</td>
+    <td>Check full first → if full return <code>FALSE</code></td>
+    <td>Put a chip into the Pringles can</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-blue">Pop()</span></td>
+    <td>Remove and return the top element. Decrease <code>TopOfStack</code> by 1.</td>
+    <td>Check empty first → if empty return <code>-999</code></td>
+    <td>Take the top chip out</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-green">Peek() / Top()</span></td>
+    <td>Look at the top element WITHOUT removing it.</td>
+    <td>Return <code>Stack[TopOfStack]</code> without changing pointer</td>
+    <td>Look at top chip without eating it</td>
+  </tr>
+</table>
+
+<!-- STACK VISUAL DIAGRAM -->
+<div class="sec-title" style="margin-top:1.5rem;">How a stack looks in memory 🧠</div>
+<div class="sec-sub">The array is fixed size. TopOfStack pointer tells us where the top is. Starts at -1 (empty).</div>
+
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <defs>
+      <marker id="arrS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#3C3489" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+      <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- Title labels -->
+    <text x="30" y="22" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#8a8785" letter-spacing="0.08em">STATE: 3 items pushed (42, 17, 88)</text>
+
+    <!-- Stack cells (vertical, bottom = index 0, top = index 2) -->
+    <!-- Index 0: 42 -->
+    <rect x="80" y="220" width="80" height="40" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="120" y="245" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#185FA5">42</text>
+    <text x="120" y="272" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#8a8785">[0]</text>
+
+    <!-- Index 1: 17 -->
+    <rect x="80" y="172" width="80" height="40" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="120" y="197" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#185FA5">17</text>
+    <text x="120" y="224" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#8a8785">[1]</text>
+
+    <!-- Index 2: 88 (top) -->
+    <rect x="80" y="124" width="80" height="40" rx="5" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+    <text x="120" y="149" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#3C3489">88</text>
+    <text x="120" y="176" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#8a8785">[2]</text>
+
+    <!-- Index 3,4 empty -->
+    <rect x="80" y="76" width="80" height="40" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="120" y="101" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+    <text x="120" y="128" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[3]</text>
+
+    <rect x="80" y="28" width="80" height="40" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="120" y="53" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+    <text x="120" y="80" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[4]</text>
+
+    <!-- TOP label "…29 more…" -->
+    <text x="120" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#d8d5ce">… 25 more (None) …</text>
+
+    <!-- TopOfStack pointer -->
+    <rect x="200" y="130" width="130" height="34" rx="6" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+    <text x="215" y="147" font-family="DM Mono,monospace" font-size="12" fill="#3C3489" font-weight="500">TopOfStack = 2</text>
+    <text x="215" y="160" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">points to top element</text>
+    <line x1="200" y1="147" x2="162" y2="147" stroke="#3C3489" stroke-width="1.5" marker-end="url(#arrS)"/>
+
+    <!-- PUSH arrow (right side) -->
+    <rect x="380" y="50" width="260" height="86" rx="8" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/>
+    <text x="396" y="72" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#3B6D11" letter-spacing="0.06em">PUSH(55) — adding to top</text>
+    <text x="396" y="90" font-family="DM Mono,monospace" font-size="11" fill="#27500A">TopOfStack++  → 2+1 = 3</text>
+    <text x="396" y="106" font-family="DM Mono,monospace" font-size="11" fill="#27500A">Stack[3] = 55</text>
+    <text x="396" y="125" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">Check: TopOfStack == SIZE-1? If yes → full!</text>
+
+    <!-- POP arrow -->
+    <rect x="380" y="158" width="260" height="86" rx="8" fill="#FCEBEB" stroke="#F09595" stroke-width="1.5"/>
+    <text x="396" y="180" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#791F1F" letter-spacing="0.06em">POP() — removing from top</text>
+    <text x="396" y="198" font-family="DM Mono,monospace" font-size="11" fill="#791F1F">val = Stack[TopOfStack]  → 88</text>
+    <text x="396" y="214" font-family="DM Mono,monospace" font-size="11" fill="#791F1F">TopOfStack--  → 2-1 = 1</text>
+    <text x="396" y="233" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">Check: TopOfStack == -1? If yes → empty!</text>
+
+    <!-- EMPTY / FULL state diagram -->
+    <rect x="380" y="264" width="120" height="28" rx="5" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+    <text x="440" y="282" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3C3489">Empty: TOS = -1</text>
+    <rect x="520" y="264" width="120" height="28" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.5"/>
+    <text x="580" y="282" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806">Full: TOS = SIZE-1</text>
+  </svg>
+</div>
+
+<div class="box box-purple">
+  <strong>🧠 The pointer logic — don't get this wrong</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>TopOfStack = -1</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Stack is <strong>empty</strong>. Index -1 means "nothing here yet". This is the initialisation value — always.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Push: increment FIRST</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc"><code>TopOfStack += 1</code> then <code>Stack[TopOfStack] = value</code>. Move the pointer up, THEN insert.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Pop: read FIRST</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc"><code>val = Stack[TopOfStack]</code> then <code>TopOfStack -= 1</code>. Read the value, THEN move pointer down.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Full check</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc"><code>TopOfStack == SIZE - 1</code>. Stack of 30 → full when <code>TopOfStack == 29</code>.</div>
+  </div>
+</div>
+
+<!-- STACK PYTHON CODE -->
+<div class="sec-title" style="margin-top:1.5rem;">Stack — complete Python code 🐍</div>
+<div class="sec-sub">This is the Cambridge-approved template. Learn every line.</div>
+
+<pre class="py"><span class="cm"># ── STACK DECLARATION ────────────────────────────────────────</span>
+SIZE = <span class="nm">30</span>
+Stack = [<span class="kw">None</span>] * SIZE   <span class="cm"># 1D array of 30 elements, initialised to None</span>
+TopOfStack = <span class="nm">-1</span>         <span class="cm"># global pointer, -1 = stack is empty</span>
+
+
+<span class="cm"># ── PUSH ─────────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">Push</span>(value):
+    <span class="kw">global</span> Stack, TopOfStack   <span class="cm"># ⚠️ MUST use global to modify these</span>
+    <span class="kw">if</span> TopOfStack == SIZE - <span class="nm">1</span>:  <span class="cm"># stack is full</span>
+        <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">else</span>:
+        TopOfStack += <span class="nm">1</span>
+        Stack[TopOfStack] = value
+        <span class="kw">return</span> <span class="kw">True</span>
+
+
+<span class="cm"># ── POP ──────────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">Pop</span>():
+    <span class="kw">global</span> Stack, TopOfStack
+    <span class="kw">if</span> TopOfStack == <span class="nm">-1</span>:   <span class="cm"># stack is empty</span>
+        <span class="kw">return</span> <span class="nm">-999</span>        <span class="cm"># Cambridge sentinel value for "empty"</span>
+    <span class="kw">else</span>:
+        val = Stack[TopOfStack]
+        TopOfStack -= <span class="nm">1</span>
+        <span class="kw">return</span> val</pre>
+
+<div class="box box-red">
+  <strong>⚠️ COMMON MISTAKE — global keyword</strong>
+  In Python, if you modify a global variable inside a function WITHOUT writing <code>global</code>, Python creates a NEW local variable instead. Your Stack and TopOfStack won't actually change. Cambridge will deduct marks for this. Write <code>global Stack, TopOfStack</code> at the top of every function that modifies them. No exceptions.
+</div>
+
+
+
+<!-- ════════════════════════════════════════
+     SECTION 2: LINEAR QUEUE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">Linear Queue — FIFO (First In, First Out)</div>
+    <div class="section-desc">McDonald's drive-thru energy 🍔</div>
+  </div>
+</div>
+
+<div class="box box-green">
+  <strong>🍔 McDonald's drive-thru — the most relatable queue ever</strong>
+  First car to pull in is the first car to get their food. The car at the front gets served first. Nobody cuts. That's a queue — <strong>First In, First Out (FIFO).</strong> The data structure literally works like a queue at McDonald's. No cap.
+</div>
+
+<div class="analogy-grid">
+  <div class="analogy-card">
+    <div class="a-icon">🎵</div>
+    <div class="a-label">Spotify / Apple Music</div>
+    <div class="a-title">Playlist queue</div>
+    Add songs to the queue — the first song you added plays first. New songs go to the back. That's enqueue and dequeue fr.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">🖨️</div>
+    <div class="a-label">Printer</div>
+    <div class="a-title">Print queue</div>
+    Send 5 documents to the printer. Document 1 prints first. Document 5 waits. The printer queue is literally a FIFO queue in real life.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">💬</div>
+    <div class="a-label">TikTok / YouTube</div>
+    <div class="a-title">Comments (oldest first)</div>
+    Oldest comment shown first, newest at the bottom. Comments were added in order, displayed in order. FIFO behaviour.
+  </div>
+  <div class="analogy-card">
+    <div class="a-icon">🎮</div>
+    <div class="a-label">Gaming</div>
+    <div class="a-title">Matchmaking lobby</div>
+    First player to join the lobby gets into the game first. Late arrivals wait at the back of the queue. Classic FIFO.
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.5rem;">Queue operations — both pointers, always 🧊</div>
+<table class="diff-table">
+  <tr><th>Operation</th><th>What it does</th><th>Check first</th><th>Pointer update</th></tr>
+  <tr>
+    <td><span class="pill pill-amber">Enqueue(x)</span></td>
+    <td>Add element to the REAR of the queue</td>
+    <td>Is <code>TailPointer == SIZE</code>? If yes → full</td>
+    <td><code>Queue[TailPointer] = x</code> then <code>TailPointer += 1</code></td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-blue">Dequeue()</span></td>
+    <td>Remove and return element from the FRONT</td>
+    <td>Is <code>HeadPointer == -1</code>? If yes → empty</td>
+    <td><code>val = Queue[HeadPointer]</code> then <code>HeadPointer += 1</code></td>
+  </tr>
+</table>
+
+<!-- LINEAR QUEUE DIAGRAM -->
+<div class="sec-title" style="margin-top:1.25rem;">How a linear queue looks in memory 🧠</div>
+<div class="sec-sub">HeadPointer = -1 (Cambridge init). TailPointer = 0. Head tracks front (remove), Tail tracks next insert position.</div>
+
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 210" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <defs>
+      <marker id="arrH" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+      <marker id="arrT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#633806" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- State label -->
+    <text x="20" y="22" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#8a8785" letter-spacing="0.07em">STATE: 4 items in queue — "A","B","C","D" | HeadPointer=1, TailPointer=5</text>
+
+    <!-- Index labels -->
+    <text x="22" y="55" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785" letter-spacing="0.05em">INDEX</text>
+    <text x="22" y="85" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785" letter-spacing="0.05em">VALUE</text>
+
+    <!-- Cells [0] to [6] -->
+    <!-- [0] dequeued -->
+    <rect x="70" y="40" width="64" height="56" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="102" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[0]</text>
+    <text x="102" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+    <text x="102" y="110" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#d8d5ce">(dequeued)</text>
+
+    <!-- [1] A — HEAD -->
+    <rect x="142" y="40" width="64" height="56" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+    <text x="174" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11">[1]</text>
+    <text x="174" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#3B6D11">"A"</text>
+
+    <!-- [2] B -->
+    <rect x="214" y="40" width="64" height="56" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="246" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">[2]</text>
+    <text x="246" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#185FA5">"B"</text>
+
+    <!-- [3] C -->
+    <rect x="286" y="40" width="64" height="56" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="318" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">[3]</text>
+    <text x="318" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#185FA5">"C"</text>
+
+    <!-- [4] D -->
+    <rect x="358" y="40" width="64" height="56" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="390" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">[4]</text>
+    <text x="390" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="14" font-weight="500" fill="#185FA5">"D"</text>
+
+    <!-- [5] empty — TAIL -->
+    <rect x="430" y="40" width="64" height="56" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="462" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806">[5]</text>
+    <text x="462" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806">None</text>
+    <text x="462" y="95" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#EF9F27">(next insert)</text>
+
+    <!-- [6] empty -->
+    <rect x="502" y="40" width="64" height="56" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="534" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[6]</text>
+    <text x="534" y="82" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+
+    <!-- HeadPointer label -->
+    <text x="174" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3B6D11" font-weight="500">HeadPointer=1</text>
+    <text x="174" y="136" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#3B6D11">↑ front (dequeue here)</text>
+    <line x1="174" y1="98" x2="174" y2="118" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arrH)" transform="rotate(180,174,108)"/>
+
+    <!-- TailPointer label -->
+    <text x="462" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806" font-weight="500">TailPointer=5</text>
+    <text x="462" y="136" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#633806">↑ rear (enqueue here)</text>
+    <line x1="462" y1="98" x2="462" y2="118" stroke="#633806" stroke-width="1.5" marker-end="url(#arrT)" transform="rotate(180,462,108)"/>
+
+    <!-- FIFO direction arrow -->
+    <text x="174" y="180" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11">← Dequeue (remove from front)</font></text>
+    <text x="462" y="180" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#633806">Enqueue (add to rear) →</text>
+    <line x1="200" y1="173" x2="420" y2="173" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="3,3"/>
+
+    <!-- Wasted space warning -->
+    <rect x="590" y="40" width="80" height="56" rx="5" fill="#FCEBEB" stroke="#F09595" stroke-width="1.5"/>
+    <text x="630" y="60" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F" font-weight="500">⚠️ Problem!</text>
+    <text x="630" y="76" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">Index [0] is</text>
+    <text x="630" y="89" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">wasted space!</text>
+  </svg>
+</div>
+
+<div class="box box-amber">
+  <strong>⚠️ The BIG problem with linear queues</strong>
+  See index [0] up there? It's empty — wasted. Once dequeued items leave the front, those spaces can NEVER be reused. The queue slowly slides to the right until <code>TailPointer</code> hits the end — and the queue looks "full" even when half the array is empty. This is why we need <strong>circular queues.</strong>
+</div>
+
+<!-- LINEAR QUEUE PYTHON CODE -->
+<pre class="py"><span class="cm"># ── LINEAR QUEUE DECLARATION ─────────────────────────────────</span>
+SIZE = <span class="nm">50</span>
+Queue = [<span class="kw">None</span>] * SIZE
+HeadPointer = <span class="nm">-1</span>    <span class="cm"># Cambridge init = -1 (empty)</span>
+TailPointer = <span class="nm">0</span>     <span class="cm"># Cambridge init = 0 (next insert at index 0)</span>
+
+
+<span class="cm"># ── ENQUEUE ──────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">Enqueue</span>(value):
+    <span class="kw">global</span> Queue, HeadPointer, TailPointer
+    <span class="kw">if</span> TailPointer == SIZE:      <span class="cm"># queue is full</span>
+        <span class="fn">print</span>(<span class="st">"Queue full"</span>)
+    <span class="kw">else</span>:
+        <span class="kw">if</span> HeadPointer == <span class="nm">-1</span>:   <span class="cm"># first item ever inserted</span>
+            HeadPointer = <span class="nm">0</span>
+        Queue[TailPointer] = value
+        TailPointer += <span class="nm">1</span>
+
+
+<span class="cm"># ── DEQUEUE ──────────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">Dequeue</span>():
+    <span class="kw">global</span> Queue, HeadPointer, TailPointer
+    <span class="kw">if</span> HeadPointer == <span class="nm">-1</span> <span class="kw">or</span> HeadPointer == TailPointer:
+        <span class="fn">print</span>(<span class="st">"Queue empty"</span>)
+        <span class="kw">return</span> <span class="st">"Empty"</span>   <span class="cm"># Cambridge sentinel value</span>
+    <span class="kw">else</span>:
+        val = Queue[HeadPointer]
+        HeadPointer += <span class="nm">1</span>
+        <span class="kw">return</span> val</pre>
+
+<!-- ════════════════════════════════════════
+     SECTION 3: CIRCULAR QUEUE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div>
+    <div class="section-title">Circular Queue — what Cambridge really tests 💀</div>
+    <div class="section-desc">Wrap-around with modulo — the upgrade that fixes linear queue's problem</div>
+  </div>
+</div>
+
+<div class="box box-blue">
+  <strong>🔄 The circular buffer idea — genius tbh</strong>
+  Instead of letting the queue slide to the right forever, we wrap around. When the tail pointer reaches the end of the array, it wraps back to index 0 — IF there's space there from previously dequeued items. It's like a roundabout. No wasted space. No cap, this is the one Cambridge loves to test.
+</div>
+
+<!-- CIRCULAR QUEUE VISUAL -->
+<div class="sec-title" style="margin-top:1.25rem;">How a circular queue wraps around 🔄</div>
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem 1rem;margin:1rem 0;overflow-x:auto;">
+  <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+    <defs>
+      <marker id="arrC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+      <marker id="arrW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#3C3489" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- CIRCULAR RING of 8 cells -->
+    <!-- Centre of circle -->
+    <text x="180" y="148" text-anchor="middle" font-family="DM Serif Display,serif" font-size="15" fill="#8a8785">SIZE = 8</text>
+    <text x="180" y="168" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#8a8785">NumberItems = 5</text>
+
+    <!-- 8 cells arranged in a ring, center (180,148) -->
+    <!-- [0] top -->
+    <rect x="148" y="20" width="64" height="42" rx="6" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+    <text x="180" y="37" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11">[0]</text>
+    <text x="180" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#3B6D11">"X"</text>
+    <text x="180" y="14" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" font-weight="500">← Head (wrapped back!)</text>
+
+    <!-- [1] top-right -->
+    <rect x="248" y="46" width="64" height="42" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="280" y="63" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">[1]</text>
+    <text x="280" y="80" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#185FA5">"Y"</text>
+
+    <!-- [2] right -->
+    <rect x="290" y="120" width="64" height="42" rx="6" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="322" y="137" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">[2]</text>
+    <text x="322" y="154" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" font-weight="500" fill="#185FA5">"Z"</text>
+
+    <!-- [3] bottom-right — TAIL -->
+    <rect x="248" y="194" width="64" height="42" rx="6" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="280" y="211" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806">[3]</text>
+    <text x="280" y="228" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806">None</text>
+    <text x="280" y="248" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#EF9F27" font-weight="500">← Tail (next insert)</text>
+
+    <!-- [4] bottom -->
+    <rect x="148" y="218" width="64" height="42" rx="6" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="180" y="235" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[4]</text>
+    <text x="180" y="252" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+
+    <!-- [5] bottom-left -->
+    <rect x="48" y="194" width="64" height="42" rx="6" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="80" y="211" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[5]</text>
+    <text x="80" y="228" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+
+    <!-- [6] left (dequeued) -->
+    <rect x="6" y="120" width="64" height="42" rx="6" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="38" y="137" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[6]</text>
+    <text x="38" y="154" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+    <text x="38" y="170" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#d8d5ce">(dequeued)</text>
+
+    <!-- [7] top-left (dequeued) -->
+    <rect x="48" y="46" width="64" height="42" rx="6" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="80" y="63" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">[7]</text>
+    <text x="80" y="80" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#d8d5ce">None</text>
+    <text x="80" y="96" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#d8d5ce">(dequeued)</text>
+
+    <!-- Wrap-around arrow -->
+    <path d="M 290 162 Q 390 162 390 240 Q 390 270 320 270 Q 240 270 180 265" stroke="#3C3489" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrW)"/>
+    <text x="420" y="200" font-family="DM Sans,sans-serif" font-size="11" fill="#3C3489" font-weight="500">WRAP-AROUND!</text>
+    <text x="408" y="216" font-family="DM Mono,monospace" font-size="11" fill="#3C3489">TailPointer =</text>
+    <text x="408" y="232" font-family="DM Mono,monospace" font-size="11" fill="#3C3489">(3+1) % 8 = 4</text>
+
+    <!-- Modulo formula box -->
+    <rect x="410" y="40" width="250" height="60" rx="7" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+    <text x="425" y="62" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#3C3489">The modulo formula (🔑 key insight)</text>
+    <text x="425" y="80" font-family="DM Mono,monospace" font-size="12" fill="#3C3489">new = (pointer + 1) % SIZE</text>
+    <text x="425" y="96" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">Used for BOTH HeadPointer and TailPointer</text>
+  </svg>
+</div>
+
+<div class="box box-teal">
+  <strong>🔑 The modulo wrap — one formula to rule them all</strong>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>(TailPointer+1) % SIZE</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">After inserting, move tail forward. If tail was at index 7 (last) in size-8 array: (7+1)%8 = 0. It wraps back to the start! That's the magic.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>(HeadPointer+1) % SIZE</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Same logic for head when dequeuing. Head wraps around too. Both pointers use the same formula.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>NumberItems == 0</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Empty check. Circular queues use a counter — not pointer comparison — because the pointer positions alone are ambiguous.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label"><code>NumberItems == SIZE</code></div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Full check. When counter equals array size, every slot is occupied.</div>
+  </div>
+</div>
+
+<!-- CIRCULAR QUEUE PYTHON CODE -->
+<pre class="py"><span class="cm"># ── CIRCULAR QUEUE DECLARATION ───────────────────────────────</span>
+SIZE = <span class="nm">20</span>
+CircQueue = [<span class="nm">-1</span>] * SIZE   <span class="cm"># initialised with -1 (Cambridge style)</span>
+HeadPointer = <span class="nm">-1</span>          <span class="cm"># both pointers start at -1</span>
+TailPointer = <span class="nm">-1</span>
+NumberItems = <span class="nm">0</span>           <span class="cm"># counter tracks how many items are stored</span>
+
+
+<span class="cm"># ── ENQUEUE (circular) ───────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">Enqueue</span>(value):
+    <span class="kw">global</span> CircQueue, HeadPointer, TailPointer, NumberItems
+    <span class="kw">if</span> NumberItems == SIZE:    <span class="cm"># queue is full</span>
+        <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">else</span>:
+        TailPointer = (TailPointer + <span class="nm">1</span>) % SIZE   <span class="cm"># wrap-around ✅</span>
+        CircQueue[TailPointer] = value
+        <span class="kw">if</span> NumberItems == <span class="nm">0</span>:             <span class="cm"># first item — set head too</span>
+            HeadPointer = TailPointer
+        NumberItems += <span class="nm">1</span>
+        <span class="kw">return</span> <span class="kw">True</span>
+
+
+<span class="cm"># ── DEQUEUE (circular) ───────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">Dequeue</span>():
+    <span class="kw">global</span> CircQueue, HeadPointer, TailPointer, NumberItems
+    <span class="kw">if</span> NumberItems == <span class="nm">0</span>:     <span class="cm"># queue is empty</span>
+        <span class="kw">return</span> <span class="nm">-1</span>           <span class="cm"># Cambridge sentinel for circular = -1</span>
+    <span class="kw">else</span>:
+        val = CircQueue[HeadPointer]
+        NumberItems -= <span class="nm">1</span>
+        <span class="kw">if</span> NumberItems == <span class="nm">0</span>:  <span class="cm"># 🔑 last item just removed — reset BOTH pointers</span>
+            HeadPointer = <span class="nm">-1</span>
+            TailPointer = <span class="nm">-1</span>
+        <span class="kw">else</span>:
+            HeadPointer = (HeadPointer + <span class="nm">1</span>) % SIZE  <span class="cm"># wrap-around ✅</span>
+        <span class="kw">return</span> val</pre>
+
+<div class="box box-red">
+  <strong>⚠️ MOST MISSED MARK — reset pointers when queue empties</strong>
+  When the last item is dequeued (<code>NumberItems</code> becomes 0), you MUST reset both <code>HeadPointer = -1</code> and <code>TailPointer = -1</code>. Cambridge specifically tests this. Students who forget this lose a mark every single time. It's giving free marks to whoever remembers. Don't be the one who forgets.
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 4: COMPARISON TABLE
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">Quick Comparison Cheat Sheet 📋</div>
+    <div class="section-desc">Print this. Stick it on your wall. Stare at it before the exam.</div>
+  </div>
+</div>
+
+<table class="diff-table">
+  <tr>
+    <th>Operation / Property</th>
+    <th>Stack</th>
+    <th>Linear Queue</th>
+    <th>Circular Queue</th>
+  </tr>
+  <tr>
+    <td><strong>Type</strong></td>
+    <td>LIFO</td>
+    <td>FIFO</td>
+    <td>FIFO (improved)</td>
+  </tr>
+  <tr>
+    <td><strong>Pointers initialised</strong></td>
+    <td><code>TopOfStack = -1</code></td>
+    <td><code>HeadPointer = -1</code><br><code>TailPointer = 0</code></td>
+    <td><code>HeadPointer = -1</code><br><code>TailPointer = -1</code><br><code>NumberItems = 0</code></td>
+  </tr>
+  <tr>
+    <td><strong>Empty check</strong></td>
+    <td><code>TopOfStack == -1</code></td>
+    <td><code>HeadPointer == -1</code> or <code>HeadPointer == TailPointer</code></td>
+    <td><code>NumberItems == 0</code></td>
+  </tr>
+  <tr>
+    <td><strong>Full check</strong></td>
+    <td><code>TopOfStack == SIZE - 1</code></td>
+    <td><code>TailPointer == SIZE</code></td>
+    <td><code>NumberItems == SIZE</code></td>
+  </tr>
+  <tr>
+    <td><strong>Add operation</strong></td>
+    <td><code>TopOfStack += 1</code><br><code>Stack[TopOfStack] = data</code></td>
+    <td><code>Queue[TailPointer] = data</code><br><code>TailPointer += 1</code></td>
+    <td><code>TailPointer = (TailPointer+1) % SIZE</code><br><code>Queue[TailPointer] = data</code><br><code>NumberItems += 1</code></td>
+  </tr>
+  <tr>
+    <td><strong>Remove operation</strong></td>
+    <td><code>val = Stack[TopOfStack]</code><br><code>TopOfStack -= 1</code></td>
+    <td><code>val = Queue[HeadPointer]</code><br><code>HeadPointer += 1</code></td>
+    <td><code>val = Queue[HeadPointer]</code><br><code>HeadPointer = (HeadPointer+1) % SIZE</code><br><code>NumberItems -= 1</code></td>
+  </tr>
+  <tr>
+    <td><strong>Empty sentinel return</strong></td>
+    <td><code>-999</code></td>
+    <td><code>"Empty"</code></td>
+    <td><code>-1</code></td>
+  </tr>
+  <tr>
+    <td><strong>Wrap-around?</strong></td>
+    <td>No</td>
+    <td>No ❌ (wastes space)</td>
+    <td>Yes ✅ <code>% SIZE</code></td>
+  </tr>
+</table>
+
+<!-- ════════════════════════════════════════
+     SECTION 5: PAST PAPER EXERCISES
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Past Paper Exercises — The Real Deal 🏆</div>
+    <div class="section-desc">Directly from 9618 Paper 4 past papers. Same format. Same marks. Bet.</div>
+  </div>
+</div>
+
+<!-- EX 0 -->
+<!-- EX 1 — Stack (from Oct/Nov 2025) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e1')">
+    <div class="ex-head-left">
+      <span class="ex-num">E1</span>
+      <span class="ex-title">Game Score History — Stack implementation</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[10 marks]</span>
+      <span class="toggle-lbl" id="e1-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e1" style="display:none;">
+    <div class="scenario">
+      A computer game stores the player's previous scores in a stack. The stack is represented as a 1D array of <strong>30 elements</strong> with the identifier <code>Scores</code>. The global pointer <code>TopOfStack</code> stores the index of the last element inserted. <code>TopOfStack</code> is initialised to –1.
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare <code>Scores</code>, initialise each element to a null value, and declare/initialise <code>TopOfStack</code>. <span class="pts">[2]</span></li>
+      <li>The function <code>AddScore()</code> takes an integer parameter. If the stack is full, it returns <code>FALSE</code>. Otherwise, it inserts the parameter into the stack, updates the pointer, and returns <code>TRUE</code>. Write <code>AddScore()</code>. <span class="pts">[4]</span></li>
+      <li>The function <code>UndoScore()</code> returns the most recent score and removes it from the stack. If the stack is empty, it returns <code>-999</code>. Write <code>UndoScore()</code>. <span class="pts">[4]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>Cambridge mark scheme points:</strong> [2] declaration: array of correct size + None, TopOfStack = -1. [4] for AddScore: checks full (TopOfStack == 29), increments, assigns, returns True/False. [4] for UndoScore: checks empty (TopOfStack == -1), reads value, decrements, returns -999 on empty.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e1')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e1')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e1-hint">
+      Declaration: <code>Scores = [None] * 30</code> and <code>TopOfStack = -1</code>.
+      AddScore: full when <code>TopOfStack == 29</code>. Increment FIRST then assign.
+      UndoScore: empty when <code>TopOfStack == -1</code>. Read value FIRST then decrement.
+      Don't forget <code>global</code> keyword!
+    </div>
+<pre class="answer-pre" id="e1-ans">
+<span class="cm"># ── PART (a) — Declaration ───────────────────────────────────</span>
+SIZE = <span class="nm">30</span>
+Scores = [<span class="kw">None</span>] * SIZE
+TopOfStack = <span class="nm">-1</span>
+
+<span class="cm"># Mark scheme [2]:</span>
+<span class="cm"># [1] Scores declared as 1D array of 30 elements initialised to None/null</span>
+<span class="cm"># [1] TopOfStack declared and initialised to -1</span>
+
+
+<span class="cm"># ── PART (b) — AddScore() (Push) ─────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">AddScore</span>(value):
+    <span class="kw">global</span> Scores, TopOfStack
+    <span class="kw">if</span> TopOfStack == SIZE - <span class="nm">1</span>:   <span class="cm"># full check</span>
+        <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">else</span>:
+        TopOfStack += <span class="nm">1</span>
+        Scores[TopOfStack] = value
+        <span class="kw">return</span> <span class="kw">True</span>
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Checks if stack is full: TopOfStack == SIZE-1 (or == 29)</span>
+<span class="cm"># [1] Returns False if full</span>
+<span class="cm"># [1] Increments TopOfStack and inserts value at Scores[TopOfStack]</span>
+<span class="cm"># [1] Returns True if successfully inserted</span>
+
+
+<span class="cm"># ── PART (c) — UndoScore() (Pop) ────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">UndoScore</span>():
+    <span class="kw">global</span> Scores, TopOfStack
+    <span class="kw">if</span> TopOfStack == <span class="nm">-1</span>:     <span class="cm"># empty check</span>
+        <span class="kw">return</span> <span class="nm">-999</span>
+    <span class="kw">else</span>:
+        val = Scores[TopOfStack]
+        TopOfStack -= <span class="nm">1</span>
+        <span class="kw">return</span> val
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Checks if stack is empty: TopOfStack == -1</span>
+<span class="cm"># [1] Returns -999 if empty</span>
+<span class="cm"># [1] Reads value at Scores[TopOfStack]</span>
+<span class="cm"># [1] Decrements TopOfStack and returns value</span>
+</pre>
+    <div class="ex-citation">📌 Source: Adapted from 9618/41/O/N/25 Q1(a)(b)(c)</div>
+  </div>
+</div>
+
+<!-- EX 2 — Stack with random numbers (from Oct/Nov 2025) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e2')">
+    <div class="ex-head-left">
+      <span class="ex-num">E2</span>
+      <span class="ex-title">High Score Tracker — Random scores + Find best/worst</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[9 marks]</span>
+      <span class="toggle-lbl" id="e2-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e2" style="display:none;">
+    <div class="scenario">
+      Continuing from E1. The game generates <strong>40 random scores between 0 and 1000 (inclusive)</strong> and attempts to insert each one using <code>AddScore()</code>. If the return value indicates the stack is full, output <code>"Score stack full"</code> and stop. Then write <code>AnalyseScores()</code> that pops all scores and outputs the highest and lowest scores ever achieved.
+    </div>
+    <ul class="task-list">
+      <li>Write the main program — 40 random scores, AddScore() each one, stop + output "Score stack full" if full. <span class="pts">[4]</span></li>
+      <li>Write <code>AnalyseScores()</code> — pops until empty, outputs highest and lowest with messages. <span class="pts">[4]</span></li>
+      <li>Extend main program to call <code>AnalyseScores()</code>. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>Key insight:</strong> Use the FIRST popped value to initialise both highest and lowest. Pop returns -999 when empty — use that as loop termination. Cambridge checks that initial values come from actual data, not arbitrary numbers.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e2')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e2')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e2-hint">
+      Main: <code>import random</code>, <code>random.randint(0, 1000)</code>. Loop 40 times. Call AddScore() — if returns False, print message and break.
+      AnalyseScores: first_val = UndoScore() to initialise. Then loop: val = UndoScore(), while val != -999, update highest/lowest.
+    </div>
+<pre class="answer-pre" id="e2-ans">
+<span class="kw">import</span> random
+
+<span class="cm"># ── PART (d) — Main program ───────────────────────────────────</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">40</span>):
+    score = random.<span class="fn">randint</span>(<span class="nm">0</span>, <span class="nm">1000</span>)
+    result = <span class="fn">AddScore</span>(score)
+    <span class="kw">if</span> result == <span class="kw">False</span>:
+        <span class="fn">print</span>(<span class="st">"Score stack full"</span>)
+        <span class="kw">break</span>
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Loop runs up to 40 times</span>
+<span class="cm"># [1] Generates random integer 0 to 1000 inclusive</span>
+<span class="cm"># [1] Calls AddScore() with generated integer</span>
+<span class="cm"># [1] Checks return value — outputs message and stops if False</span>
+
+
+<span class="cm"># ── PART (e) — AnalyseScores() ───────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">AnalyseScores</span>():
+    first_val = <span class="fn">UndoScore</span>()
+    <span class="kw">if</span> first_val == <span class="nm">-999</span>:
+        <span class="fn">print</span>(<span class="st">"No scores recorded"</span>)
+        <span class="kw">return</span>
+    highest = first_val
+    lowest = first_val
+
+    val = <span class="fn">UndoScore</span>()
+    <span class="kw">while</span> val != <span class="nm">-999</span>:
+        <span class="kw">if</span> val > highest:
+            highest = val
+        <span class="kw">if</span> val < lowest:
+            lowest = val
+        val = <span class="fn">UndoScore</span>()
+
+    <span class="fn">print</span>(<span class="st">"Highest score achieved:"</span>, highest)
+    <span class="fn">print</span>(<span class="st">"Lowest score achieved:"</span>, lowest)
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Pops all integers until stack empty (terminates on -999)</span>
+<span class="cm"># [1] Correctly tracks highest value</span>
+<span class="cm"># [1] Correctly tracks lowest value</span>
+<span class="cm"># [1] Outputs both values with appropriate messages</span>
+
+
+<span class="cm"># ── PART (f)(i) — Call AnalyseScores() ──────────────────────</span>
+<span class="fn">AnalyseScores</span>()
+
+<span class="cm"># Mark scheme [1]:</span>
+<span class="cm"># [1] AnalyseScores() called after main program loop</span>
+</pre>
+    <div class="ex-citation">📌 Source: Adapted from 9618/41/O/N/25 Q1(d)(e)(f)</div>
+  </div>
+</div>
+
+<!-- EX 3 — Linear Queue (from Oct/Nov 2023 Q2) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e3')">
+    <div class="ex-head-left">
+      <span class="ex-num">E3</span>
+      <span class="ex-title">Game ID Queue — Linear queue for shop</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[6 marks]</span>
+      <span class="toggle-lbl" id="e3-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e3" style="display:none;">
+    <div class="scenario">
+      A shop sells computer games. Each game has a unique identifier (ID) of string data type. The shop uses a linear queue to process game IDs waiting to be shipped. The queue is implemented using a 1D array <code>GameQueue</code> with <strong>50 elements of type string</strong>. <code>HeadPointer = -1</code>, <code>TailPointer = 0</code>.
+    </div>
+    <ul class="task-list">
+      <li>The procedure <code>AddToQueue()</code> takes a string parameter. If the queue is full, it outputs <code>"Queue is full"</code>. If not full, it inserts the parameter and updates the relevant pointer(s). Write <code>AddToQueue()</code>. <span class="pts">[3]</span></li>
+      <li>The function <code>RemoveFromQueue()</code> checks if the queue is empty. If empty, it outputs <code>"Queue is empty"</code> and returns <code>"Empty"</code>. If not empty, it returns the first element and updates the relevant pointer(s). Write <code>RemoveFromQueue()</code>. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>Linear queue quirk:</strong> HeadPointer starts at -1 but is set to 0 on the FIRST enqueue. TailPointer starts at 0 — the index of the next insert. Full when TailPointer == SIZE (50).
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e3')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e3')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e3-hint">
+      AddToQueue: check <code>TailPointer == SIZE</code> (full). If first insert, set HeadPointer = 0. Insert at Queue[TailPointer], then TailPointer++.
+      RemoveFromQueue: check <code>HeadPointer == -1</code> or <code>HeadPointer == TailPointer</code> (empty). Read value, increment HeadPointer, return value.
+    </div>
+<pre class="answer-pre" id="e3-ans">
+SIZE = <span class="nm">50</span>
+GameQueue = [<span class="kw">None</span>] * SIZE
+HeadPointer = <span class="nm">-1</span>
+TailPointer = <span class="nm">0</span>
+
+
+<span class="kw">def</span> <span class="fn">AddToQueue</span>(gameID):
+    <span class="kw">global</span> GameQueue, HeadPointer, TailPointer
+    <span class="kw">if</span> TailPointer == SIZE:
+        <span class="fn">print</span>(<span class="st">"Queue is full"</span>)
+    <span class="kw">else</span>:
+        <span class="kw">if</span> HeadPointer == <span class="nm">-1</span>:
+            HeadPointer = <span class="nm">0</span>
+        GameQueue[TailPointer] = gameID
+        TailPointer += <span class="nm">1</span>
+
+<span class="cm"># Mark scheme [3]:</span>
+<span class="cm"># [1] Checks full (TailPointer == SIZE) and outputs "Queue is full"</span>
+<span class="cm"># [1] Inserts value at GameQueue[TailPointer]</span>
+<span class="cm"># [1] Updates TailPointer (increment), sets HeadPointer=0 on first insert</span>
+
+
+<span class="kw">def</span> <span class="fn">RemoveFromQueue</span>():
+    <span class="kw">global</span> GameQueue, HeadPointer, TailPointer
+    <span class="kw">if</span> HeadPointer == <span class="nm">-1</span> <span class="kw">or</span> HeadPointer == TailPointer:
+        <span class="fn">print</span>(<span class="st">"Queue is empty"</span>)
+        <span class="kw">return</span> <span class="st">"Empty"</span>
+    <span class="kw">else</span>:
+        val = GameQueue[HeadPointer]
+        HeadPointer += <span class="nm">1</span>
+        <span class="kw">return</span> val
+
+<span class="cm"># Mark scheme [3]:</span>
+<span class="cm"># [1] Checks empty condition and outputs "Queue is empty"</span>
+<span class="cm"># [1] Returns "Empty" string on empty</span>
+<span class="cm"># [1] Returns value and increments HeadPointer</span>
+</pre>
+    <div class="ex-citation">📌 Source: Based on 9618/41/O/N/23 Q2(a)(ii)(iii)</div>
+  </div>
+</div>
+
+<!-- EX 4 — Circular Queue (from June 2023 Q3 style) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e4')">
+    <div class="ex-head-left">
+      <span class="ex-num">E4</span>
+      <span class="ex-title">Customer Call Queue — Circular queue for call centre</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[8 marks]</span>
+      <span class="toggle-lbl" id="e4-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e4" style="display:none;">
+    <div class="scenario">
+      A call centre uses a circular queue to manage customer calls. The queue uses a 1D array of <strong>20 integers</strong> (customer IDs) initialised with <code>-1</code>. <code>HeadPointer = -1</code>, <code>TailPointer = -1</code>, <code>NumberItems = 0</code>. Write the functions for adding and removing customers.
+    </div>
+    <ul class="task-list">
+      <li>The function <code>JoinQueue()</code> takes a customer ID and adds it to the queue. Returns <code>TRUE</code> if successful, <code>FALSE</code> if full. <span class="pts">[4]</span></li>
+      <li>The function <code>ServeCustomer()</code> removes and returns the next customer ID. Returns <code>-1</code> if the queue is empty. <strong>After serving the last customer, reset both pointers to -1.</strong> <span class="pts">[4]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>The mark Cambridge loves to test:</strong> When <code>NumberItems</code> becomes 0 after a dequeue, reset <code>HeadPointer = -1</code> and <code>TailPointer = -1</code>. This is worth 1 dedicated mark. Don't forget it.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e4')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e4')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e4-hint">
+      JoinQueue: full = NumberItems == SIZE. TailPointer = (TailPointer + 1) % SIZE. If NumberItems was 0, set HeadPointer = TailPointer. Increment NumberItems.
+      ServeCustomer: empty = NumberItems == 0, return -1. Read value. Decrement NumberItems. If NumberItems == 0 → reset both to -1. Else HeadPointer = (HeadPointer+1) % SIZE.
+    </div>
+<pre class="answer-pre" id="e4-ans">
+SIZE = <span class="nm">20</span>
+CallQueue = [<span class="nm">-1</span>] * SIZE
+HeadPointer = <span class="nm">-1</span>
+TailPointer = <span class="nm">-1</span>
+NumberItems = <span class="nm">0</span>
+
+
+<span class="kw">def</span> <span class="fn">JoinQueue</span>(customerID):
+    <span class="kw">global</span> CallQueue, HeadPointer, TailPointer, NumberItems
+    <span class="kw">if</span> NumberItems == SIZE:
+        <span class="kw">return</span> <span class="kw">False</span>
+    TailPointer = (TailPointer + <span class="nm">1</span>) % SIZE
+    CallQueue[TailPointer] = customerID
+    <span class="kw">if</span> NumberItems == <span class="nm">0</span>:
+        HeadPointer = TailPointer
+    NumberItems += <span class="nm">1</span>
+    <span class="kw">return</span> <span class="kw">True</span>
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Checks full: NumberItems == SIZE, returns False</span>
+<span class="cm"># [1] TailPointer updated with modulo: (TailPointer+1) % SIZE</span>
+<span class="cm"># [1] Customer ID stored at CallQueue[TailPointer]</span>
+<span class="cm"># [1] NumberItems incremented; HeadPointer set on first insert; returns True</span>
+
+
+<span class="kw">def</span> <span class="fn">ServeCustomer</span>():
+    <span class="kw">global</span> CallQueue, HeadPointer, TailPointer, NumberItems
+    <span class="kw">if</span> NumberItems == <span class="nm">0</span>:
+        <span class="kw">return</span> <span class="nm">-1</span>
+    customerID = CallQueue[HeadPointer]
+    NumberItems -= <span class="nm">1</span>
+    <span class="kw">if</span> NumberItems == <span class="nm">0</span>:
+        HeadPointer = <span class="nm">-1</span>
+        TailPointer = <span class="nm">-1</span>
+    <span class="kw">else</span>:
+        HeadPointer = (HeadPointer + <span class="nm">1</span>) % SIZE
+    <span class="kw">return</span> customerID
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Checks empty: NumberItems == 0, returns -1</span>
+<span class="cm"># [1] Returns value at CallQueue[HeadPointer]</span>
+<span class="cm"># [1] HeadPointer updated with modulo: (HeadPointer+1) % SIZE</span>
+<span class="cm"># [1] When NumberItems becomes 0: resets HeadPointer AND TailPointer to -1  ← most missed!</span>
+</pre>
+    <div class="ex-citation">📌 Source: Based on circular queue from 9618/41/M/J/23 Q3 style</div>
+  </div>
+</div>
+
+<!-- EX 5 — Queue + Check Digit (from May/June 2024 Q3(d)) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e5')">
+    <div class="ex-head-left">
+      <span class="ex-num">E5</span>
+      <span class="ex-title">Product Code Validator — Check digit + queue storage</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[10 marks]</span>
+      <span class="toggle-lbl" id="e5-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e5" style="display:none;">
+    <div class="scenario">
+      A warehouse processes product codes. Each code is 7 characters: first 6 are digits, the 7th is a check digit. The check digit is calculated by:
+      <ul style="margin-top:6px;margin-left:20px;">
+        <li>multiply digits at positions 0, 2, 4 by 1</li>
+        <li>multiply digits at positions 1, 3, 5 by 3</li>
+        <li>sum all products, divide by 10 using integer division → check digit</li>
+        <li>if check digit = 10, it becomes <code>'X'</code></li>
+      </ul>
+      <strong>Example — "9541234":</strong> 9×1=9, 5×3=15, 4×1=4, 1×3=3, 2×1=2, 3×3=9 → sum=42 → 42//10=4 → s[6]='4' → VALID ✅
+    </div>
+    <ul class="task-list">
+      <li>Write <code>ValidateProduct(s)</code> — takes a 7-char string, returns <code>True</code> if valid, <code>False</code> if not. <span class="pts">[4]</span></li>
+      <li>Write <code>ProcessProducts()</code> — takes 10 inputs, validates each using check digit, stores the FIRST 6 characters in a queue (using <code>AddToQueue()</code>) if valid. Count and output number of invalid items. <span class="pts">[6]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>Check digit formula recap:</strong> weights = [1, 3, 1, 3, 1, 3] for positions 0–5. Sum all (int(s[i]) × weights[i]). check = sum // 10. If check == 10 → expected = 'X'. Else expected = str(check). Valid if s[6] == expected.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e5')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e5')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e5-hint">
+      Validate: weights = [1,3,1,3,1,3]. Loop positions 0-5. total += int(s[i]) * weights[i]. check = total // 10. If check == 10, expected = 'X', else expected = str(check). Return s[6] == expected.
+      ProcessProducts: loop 10 times, input. Call ValidateProduct. If valid → AddToQueue(s[:6]). Else invalid_count++. Print count at end.
+    </div>
+<pre class="answer-pre" id="e5-ans">
+<span class="cm"># ── ValidateProduct() ────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">ValidateProduct</span>(code):
+    weights = [<span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">1</span>, <span class="nm">3</span>, <span class="nm">1</span>, <span class="nm">3</span>]
+    total = <span class="nm">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">6</span>):
+        total += <span class="fn">int</span>(code[i]) * weights[i]
+    check = total // <span class="nm">10</span>
+    <span class="kw">if</span> check == <span class="nm">10</span>:
+        expected = <span class="st">'X'</span>
+    <span class="kw">else</span>:
+        expected = <span class="fn">str</span>(check)
+    <span class="kw">return</span> code[<span class="nm">6</span>] == expected
+
+<span class="cm"># Mark scheme [4]:</span>
+<span class="cm"># [1] Multiplies positions 0,2,4 by 1 and 1,3,5 by 3</span>
+<span class="cm"># [1] Sums all products correctly</span>
+<span class="cm"># [1] Calculates check digit using integer division by 10</span>
+<span class="cm"># [1] Handles both cases: == 10 → 'X', else str digit; compares to s[6]</span>
+
+
+<span class="cm"># ── ProcessProducts() ────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">ProcessProducts</span>():
+    invalid_count = <span class="nm">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+        product = <span class="fn">input</span>(<span class="st">"Enter 7-character product code: "</span>)
+        <span class="kw">if</span> <span class="fn">ValidateProduct</span>(product):
+            <span class="fn">AddToQueue</span>(product[:<span class="nm">6</span>])   <span class="cm"># store first 6 characters only</span>
+        <span class="kw">else</span>:
+            invalid_count += <span class="nm">1</span>
+    <span class="fn">print</span>(<span class="st">"Number of invalid products:"</span>, invalid_count)
+
+<span class="cm"># Mark scheme [6]:</span>
+<span class="cm"># [1] Takes exactly 10 inputs from user</span>
+<span class="cm"># [1] Calls ValidateProduct() on each input</span>
+<span class="cm"># [1] Calls AddToQueue() with correct value if valid</span>
+<span class="cm"># [1] Stores only first 6 characters (product[:6])</span>
+<span class="cm"># [1] Counts invalid items correctly</span>
+<span class="cm"># [1] Outputs number of invalid items at the end</span>
+</pre>
+    <div class="ex-citation">📌 Source: Adapted from 9618/41/M/J/24 Q3(d)</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION 6: EXAMINER SECRETS
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">06</div>
+  <div>
+    <div class="section-title">Examiner's Secrets 🕵️ — what they DON'T tell you</div>
+    <div class="section-desc">Marks students lose every year. Don't be that student.</div>
+  </div>
+</div>
+
+<div class="box box-red">
+  <strong>⚠️ 6 marks students throw away every year — memorise these</strong>
+  <div class="arrow-row">
+    <div class="arrow-label">1. Pointer initialisation</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">They ALWAYS test pointer init. Stack: <code>TopOfStack = -1</code>. Linear queue: <code>HeadPointer = -1</code>, <code>TailPointer = 0</code>. Circular: both -1, <code>NumberItems = 0</code>. Get this wrong = lose a mark instantly.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">2. Circular pointer reset</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">When <code>NumberItems</code> becomes 0 after Dequeue: reset both pointers to -1. This is a dedicated mark students miss every exam. No cap.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">3. <code>global</code> keyword in Python</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Modifying global arrays/pointers inside functions REQUIRES <code>global</code>. Without it, Python makes a local copy. Your changes won't persist. Deduct mark.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">4. Always check before operating</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">No check for empty before Pop/Dequeue = lose a mark. No check for full before Push/Enqueue = lose a mark. Both checks are always tested.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">5. Sentinel return values matter</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Stack empty → <code>-999</code>. Linear queue empty → <code>"Empty"</code>. Circular queue empty → <code>-1</code>. Wrong sentinel = wrong mark. Read the question.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">6. Return type must match</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">If question says "function returns Boolean" — your function MUST have <code>return True</code> / <code>return False</code>. If it says "procedure" — no return needed. Cambridge is strict on this.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     VIBE CHECK
+════════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="box box-teal" style="margin-top:1.5rem;">
+  <strong>✅ Vibe Check — Key Takeaways (fr fr no cap)</strong>
+  <br><br>
+  🍟 <strong>Stack = LIFO.</strong> Last in, first out. Pringles can. Push goes up, Pop comes down. <code>TopOfStack = -1</code> to start.
+  <br><br>
+  🍔 <strong>Linear Queue = FIFO.</strong> First in, first out. McDonald's drive-thru. Enqueue at rear, Dequeue at front. Problem: wasted space.
+  <br><br>
+  🔄 <strong>Circular Queue = FIFO with modulo.</strong> <code>(pointer + 1) % SIZE</code> is the spell that wraps around. <code>NumberItems</code> counter for empty/full. Reset both pointers when it empties. Bet.
+  <br><br>
+  🚨 <strong>Cambridge mark scheme traps:</strong> Always check before operating. Always use <code>global</code>. Always reset circular pointers on empty. Always match the return type. These four things are worth at least 4 marks on every paper. It's giving free marks if you remember them.
+</div>
+
+</div><!-- end page-body -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ════════ BEFORE THE EXAM CARD ════════ -->
+<div style="max-width:960px;margin:0 auto;padding:0 2rem 3rem;">
+<div class="before-exam">
+  <h3>🎯 Before the Exam — Quick Reference Card</h3>
+
+  <div class="be-section">── STACK (LIFO) ──────────────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Declare</span><span class="be-val">Stack = [None] * SIZE  |  TopOfStack = -1</span></div>
+  <div class="be-row"><span class="be-key">Empty check</span><span class="be-val">TopOfStack == -1</span></div>
+  <div class="be-row"><span class="be-key">Full check</span><span class="be-val">TopOfStack == SIZE - 1</span></div>
+  <div class="be-row"><span class="be-key">Push (add)</span><span class="be-val">TopOfStack += 1  →  Stack[TopOfStack] = value</span></div>
+  <div class="be-row"><span class="be-key">Pop (remove)</span><span class="be-val">val = Stack[TopOfStack]  →  TopOfStack -= 1</span></div>
+  <div class="be-row"><span class="be-key">Peek (look)</span><span class="be-val">return Stack[TopOfStack]  ← NO pointer change</span></div>
+  <div class="be-row"><span class="be-key">Empty sentinel</span><span class="be-val">return -999</span></div>
+
+  <div class="be-section">── LINEAR QUEUE (FIFO) ───────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Declare</span><span class="be-val">Queue = [None] * SIZE  |  HeadPointer = -1  |  TailPointer = 0</span></div>
+  <div class="be-row"><span class="be-key">Empty check</span><span class="be-val">HeadPointer == -1  or  HeadPointer == TailPointer</span></div>
+  <div class="be-row"><span class="be-key">Full check</span><span class="be-val">TailPointer == SIZE</span></div>
+  <div class="be-row"><span class="be-key">Enqueue (add)</span><span class="be-val">Queue[TailPointer] = value  →  TailPointer += 1</span></div>
+  <div class="be-row"><span class="be-key">Dequeue (remove)</span><span class="be-val">val = Queue[HeadPointer]  →  HeadPointer += 1</span></div>
+  <div class="be-row"><span class="be-key">Empty sentinel</span><span class="be-val">print("Queue empty")  →  return "Empty"</span></div>
+
+  <div class="be-section">── CIRCULAR QUEUE (FIFO + WRAP) ─────────────────────────</div>
+  <div class="be-row"><span class="be-key">Declare</span><span class="be-val">Queue = [-1] * SIZE  |  HeadPointer = -1  |  TailPointer = -1  |  NumberItems = 0</span></div>
+  <div class="be-row"><span class="be-key">Empty check</span><span class="be-val">NumberItems == 0</span></div>
+  <div class="be-row"><span class="be-key">Full check</span><span class="be-val">NumberItems == SIZE</span></div>
+  <div class="be-row"><span class="be-key">Enqueue (add)</span><span class="be-val">TailPointer = (TailPointer + 1) % SIZE  →  Queue[TailPointer] = value  →  NumberItems += 1</span></div>
+  <div class="be-row"><span class="be-key">Dequeue (remove)</span><span class="be-val">val = Queue[HeadPointer]  →  NumberItems -= 1  →  HeadPointer = (HeadPointer+1) % SIZE</span></div>
+  <div class="be-row"><span class="be-key">⚠️ RESET when empty</span><span class="be-val">if NumberItems == 0:  HeadPointer = -1  |  TailPointer = -1</span></div>
+  <div class="be-row"><span class="be-key">Empty sentinel</span><span class="be-val">return -1</span></div>
+
+  <div class="be-section">── THE 4 RULES THAT WIN MARKS ────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Rule 1</span><span class="be-val">Always check empty/full BEFORE operating — it's always 1 mark</span></div>
+  <div class="be-row"><span class="be-key">Rule 2</span><span class="be-val">Always write  global Stack, TopOfStack  inside every Python function that modifies them</span></div>
+  <div class="be-row"><span class="be-key">Rule 3</span><span class="be-val">Circular queue: reset BOTH pointers to -1 when NumberItems hits 0 after Dequeue</span></div>
+  <div class="be-row"><span class="be-key">Rule 4</span><span class="be-val">Match return type: function returns Boolean → True/False. Procedure → no return needed.</span></div>
+</div>
+</div>
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Stacks &amp; Queues</span>
+  <span>Stack (LIFO) · Linear Queue (FIFO) · Circular Queue · Push · Pop · Enqueue · Dequeue</span>
+</footer>
+
+<script>
+/* ── TOGGLE EXERCISES ─────────────────────────────────────── */
+function toggle(id) {
+  const body = document.getElementById(id);
+  const lbl  = document.getElementById(id + '-lbl');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if (lbl) lbl.textContent = open ? '▼ expand' : '▲ collapse';
+}
+function showHint(id) { document.getElementById(id + '-hint').classList.toggle('visible'); }
+function showAnswer(id) { document.getElementById(id + '-ans').classList.toggle('visible'); }
+</script>
+</body>
+</html>

@@ -406,7 +406,7 @@ footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 
 
 <div class="box box-teal">
   <strong>The F1 analogy</strong>
-  Imagine a spreadsheet of F1 teams. Each <strong>row</strong> is one team: position, team name, two drivers, points. All different data types but they belong together — that's a <strong>record</strong>. Instead of 5 separate variables floating around, you bundle them into one named thing.
+  Imagine a spreadsheet of F1 teams. Each row is one team: position, team name, two drivers, points. All different data types but they belong together — that's a record. Instead of 5 separate variables floating around, you bundle them into one named thing.
 </div>
 
 <div style="background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:1rem 0;">
@@ -1345,6 +1345,497 @@ found = <span class="kw">False</span>
 </pre>
   </div>
 </div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  NEW EXERCISES — File Processing Missing Patterns          -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="divider"></div>
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">File Processing — Advanced Exercises</div>
+    <div class="section-desc">Writing arrays to files · with open · return vs print · OOP + files · append mode</div>
+  </div>
+</div>
+
+<!-- IMPORTANT RULE BOX -->
+<div class="box box-teal" style="margin-bottom:1.5rem;">
+  <strong>📌 Before you start — The 3 Golden Rules of File Processing (Cambridge expects these)</strong>
+  <div class="arrow-row">
+    <div class="arrow-label">Rule 1 — Use `with open`</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">Always use <code>with open(...) as f:</code> instead of manual <code>open()</code> + <code>close()</code>. It auto-closes the file and is preferred by examiners.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Rule 2 — Functions must `return`</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc">If the question says "returns the array", your function MUST have a <code>return</code> statement. Printing inside the function is NOT enough.</div>
+  </div>
+  <div class="arrow-row">
+    <div class="arrow-label">Rule 3 — Always add `\n` in write()</div>
+    <div class="arrow-arrow">→</div>
+    <div class="arrow-desc"><code>f.write(text + "\n")</code> — unlike <code>print()</code>, <code>write()</code> does NOT add newlines automatically.</div>
+  </div>
+</div>
+
+<!-- E5 — Writing an array to a file (line by line) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex5')">
+    <div class="ex-head-left">
+      <span class="ex-num">E5</span>
+      <span class="ex-title">Writing an array to a file — line by line</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[6 marks]</span>
+      <span class="toggle-lbl" id="ex5-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex5" style="display:none;">
+    <div class="scenario">
+      A program stores a list of animal names in an array. The program needs to save these names to a text file called <code>animals.txt</code>, with one name per line.
+    </div>
+    <ul class="task-list">
+      <li>Write a procedure <code>SaveAnimalsToFile(animals_array, filename)</code> that writes each animal name from the array to the file on a new line. Use <code>with open(...)</code> and exception handling. <span class="pts">[4]</span></li>
+      <li>Write a main program that creates an array with the names <code>["Lion", "Tiger", "Elephant", "Zebra"]</code> and calls <code>SaveAnimalsToFile()</code> to save them to <code>animals.txt</code>. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>⚠️ Remember Rule 3:</strong> <code>f.write(item + "\n")</code> — you MUST add the newline yourself!
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex5')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex5')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex5-hint">Use <code>with open(filename, "w") as f:</code> then loop through the array and write each item with <code>f.write(item + "\n")</code>. Wrap in <code>try/except IOError</code>.</div>
+    <pre class="answer-pre" id="ex5-ans">
+<span class="cm"># ── PROCEDURE: Save array to file ──────────────────────────</span>
+<span class="kw">def</span> <span class="fn">SaveAnimalsToFile</span>(animals_array, filename):
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(filename, <span class="st">"w"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> animal <span class="kw">in</span> animals_array:
+                f.write(animal + <span class="st">"\n"</span>)   <span class="cm"># ← MUST add \n yourself!</span>
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not write to file"</span>)
+
+<span class="cm"># ── MAIN PROGRAM ──────────────────────────────────────────</span>
+animals = [<span class="st">"Lion"</span>, <span class="st">"Tiger"</span>, <span class="st">"Elephant"</span>, <span class="st">"Zebra"</span>]
+<span class="fn">SaveAnimalsToFile</span>(animals, <span class="st">"animals.txt"</span>)
+
+<span class="cm"># animals.txt will contain:
+# Lion
+# Tiger
+# Elephant
+# Zebra</span>
+</pre>
+  </div>
+</div>
+
+<!-- E6 — Function that returns (not prints) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex6')">
+    <div class="ex-head-left">
+      <span class="ex-num">E6</span>
+      <span class="ex-title">Function that RETURNS data (not print)</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[8 marks]</span>
+      <span class="toggle-lbl" id="ex6-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex6" style="display:none;">
+    <div class="scenario">
+      A text file <code>scores.txt</code> contains integer scores, one per line. The program needs to read all scores and return them as an array so the main program can process them.
+    </div>
+    <ul class="task-list">
+      <li>Write a function <code>ReadScores()</code> that:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Opens <code>scores.txt</code> for reading using <code>with open</code></li>
+          <li>Reads each line, converts to integer, and appends to a list</li>
+          <li>Returns the list of scores</li>
+          <li>Uses exception handling if the file is missing (returns an empty list)</li>
+        </ul>
+        <span class="pts">[5]</span>
+      </li>
+      <li>Write a main program that calls <code>ReadScores()</code>, stores the returned array, and then prints the highest score. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>⚠️ Remember Rule 2:</strong> The function MUST <code>return</code> the array. Printing inside the function is NOT enough!
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex6')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex6')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex6-hint">Use <code>with open("scores.txt") as f:</code> then loop with <code>for line in f:</code>. Use <code>.strip()</code> to remove newline, then <code>int()</code> to convert. Return the list. Main program calls and uses <code>max()</code>.</div>
+    <pre class="answer-pre" id="ex6-ans">
+<span class="cm"># ── FUNCTION: Read and return scores ───────────────────────</span>
+<span class="kw">def</span> <span class="fn">ReadScores</span>():
+    scores = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"scores.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                scores.append(<span class="fn">int</span>(line.strip()))
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"File not found — returning empty list"</span>)
+    <span class="kw">return</span> scores   <span class="cm"># ← MUST return, not print!</span>
+
+<span class="cm"># ── MAIN PROGRAM ──────────────────────────────────────────</span>
+all_scores = <span class="fn">ReadScores</span>()
+<span class="kw">if</span> <span class="fn">len</span>(all_scores) &gt; <span class="nm">0</span>:
+    highest = <span class="fn">max</span>(all_scores)
+    <span class="fn">print</span>(<span class="st">f"Highest score is {highest}"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"No scores to display"</span>)
+</pre>
+  </div>
+</div>
+
+<!-- E7 — OOP + File Reading (CSV → objects) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex7')">
+    <div class="ex-head-left">
+      <span class="ex-num">E7</span>
+      <span class="ex-title">OOP + File Reading — CSV to objects (The Classic Paper 4 Pattern)</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[12 marks]</span>
+      <span class="toggle-lbl" id="ex7-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex7" style="display:none;">
+    <div class="scenario">
+      A program stores data about books. The class <code>Book</code> has private attributes: <code>__Title</code> (STRING), <code>__Author</code> (STRING), <code>__Pages</code> (INTEGER), <code>__Price</code> (REAL).<br><br>
+      The text file <code>books.txt</code> stores data in CSV format:<br>
+      <code>The Great Gatsby,Fitzgerald,180,12.99</code><br>
+      <code>1984,Orwell,328,9.99</code><br>
+      <code>To Kill a Mockingbird,Lee,281,14.99</code>
+    </div>
+    <ul class="task-list">
+      <li>Write the class <code>Book</code> with:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Private attributes (use <code>__</code>)</li>
+          <li>Constructor <code>__init__()</code> that initialises all attributes</li>
+          <li>Getter methods: <code>GetTitle()</code>, <code>GetAuthor()</code>, <code>GetPages()</code>, <code>GetPrice()</code></li>
+        </ul>
+        <span class="pts">[6]</span>
+      </li>
+      <li>Write a function <code>ReadBooks()</code> that:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Opens <code>books.txt</code> using <code>with open</code></li>
+          <li>Reads each line, splits by comma, casts numbers (<code>int</code> for pages, <code>float</code> for price)</li>
+          <li>Creates a <code>Book</code> object for each line and appends to a list</li>
+          <li>Returns the list of <code>Book</code> objects</li>
+          <li>Uses exception handling if file is missing (returns empty list)</li>
+        </ul>
+        <span class="pts">[5]</span>
+      </li>
+      <li>Write a main program that calls <code>ReadBooks()</code> and prints the title and price of each book. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>📌 The 3-step CSV dance:</strong> 1. Split line → parts &nbsp;|&nbsp; 2. Cast numbers with <code>int()</code>/<code>float()</code> &nbsp;|&nbsp; 3. Create object
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex7')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex7')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex7-hint">Class: use <code>self.__Title = title</code> etc. Getters: <code>def GetTitle(self): return self.__Title</code>. ReadBooks: split by <code>","</code>, use <code>.strip()</code>, cast with <code>int()</code> and <code>float()</code>.</div>
+    <pre class="answer-pre" id="ex7-ans">
+<span class="cm"># ── CLASS Book with private attributes and getters ─────────</span>
+<span class="kw">class</span> <span class="fn">Book</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, title, author, pages, price):
+        self.__Title  = title    <span class="cm"># STRING — private</span>
+        self.__Author = author   <span class="cm"># STRING — private</span>
+        self.__Pages  = pages    <span class="cm"># INTEGER — private</span>
+        self.__Price  = price    <span class="cm"># REAL — private</span>
+
+    <span class="kw">def</span> <span class="fn">GetTitle</span>(self):
+        <span class="kw">return</span> self.__Title
+
+    <span class="kw">def</span> <span class="fn">GetAuthor</span>(self):
+        <span class="kw">return</span> self.__Author
+
+    <span class="kw">def</span> <span class="fn">GetPages</span>(self):
+        <span class="kw">return</span> self.__Pages
+
+    <span class="kw">def</span> <span class="fn">GetPrice</span>(self):
+        <span class="kw">return</span> self.__Price
+
+<span class="cm"># ── FUNCTION: Read CSV and create Book objects ─────────────</span>
+<span class="kw">def</span> <span class="fn">ReadBooks</span>():
+    books = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"books.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                parts = line.strip().<span class="fn">split</span>(<span class="st">","</span>)
+                title  = parts[<span class="nm">0</span>]
+                author = parts[<span class="nm">1</span>]
+                pages  = <span class="fn">int</span>(parts[<span class="nm">2</span>])      <span class="cm"># cast to integer</span>
+                price  = <span class="fn">float</span>(parts[<span class="nm">3</span>])    <span class="cm"># cast to float</span>
+                books.append(<span class="fn">Book</span>(title, author, pages, price))
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"File not found — returning empty list"</span>)
+    <span class="kw">return</span> books
+
+<span class="cm"># ── MAIN PROGRAM ──────────────────────────────────────────</span>
+book_list = <span class="fn">ReadBooks</span>()
+<span class="kw">for</span> book <span class="kw">in</span> book_list:
+    <span class="fn">print</span>(<span class="st">f"Title: {book.GetTitle()}, Price: ${book.GetPrice()}"</span>)
+</pre>
+  </div>
+</div>
+
+<!-- E8 — Append mode (adding records without overwriting) -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex8')">
+    <div class="ex-head-left">
+      <span class="ex-num">E8</span>
+      <span class="ex-title">Append mode — adding records without deleting existing data</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[8 marks]</span>
+      <span class="toggle-lbl" id="ex8-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex8" style="display:none;">
+    <div class="scenario">
+      A program maintains a log file <code>visitors.txt</code>. Each time a visitor arrives, their name should be added to the END of the file without deleting previous entries.
+    </div>
+    <ul class="task-list">
+      <li>Write a procedure <code>LogVisitor(name)</code> that appends the visitor's name to <code>visitors.txt</code> on a new line. Use append mode (<code>"a"</code>) and exception handling. <span class="pts">[3]</span></li>
+      <li>Write a function <code>ReadAllVisitors()</code> that reads the entire file and returns a list of all visitor names. Use exception handling for a missing file (return empty list). <span class="pts">[3]</span></li>
+      <li>Write a main program that:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Asks the user for a name</li>
+          <li>Calls <code>LogVisitor()</code> to add it</li>
+          <li>Calls <code>ReadAllVisitors()</code> and prints all visitors</li>
+        </ul>
+        <span class="pts">[2]</span>
+      </li>
+    </ul>
+    <div class="tip-box">
+      <strong>🔑 Key difference:</strong> <code>"a"</code> (append) vs <code>"w"</code> (write). <code>"w"</code> DELETES everything. <code>"a"</code> ADDS to the end. Use <code>"a"</code> when you want to keep old data!
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex8')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex8')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex8-hint">Append: <code>open(filename, "a")</code>. Read: <code>open(filename, "r")</code> with <code>for line in f</code>. Handle <code>IOError</code> for missing file.</div>
+    <pre class="answer-pre" id="ex8-ans">
+<span class="cm"># ── PROCEDURE: Append visitor to log file ──────────────────</span>
+<span class="kw">def</span> <span class="fn">LogVisitor</span>(name):
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"visitors.txt"</span>, <span class="st">"a"</span>) <span class="kw">as</span> f:   <span class="cm"># "a" = append mode</span>
+            f.write(name + <span class="st">"\n"</span>)
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not write to log file"</span>)
+
+<span class="cm"># ── FUNCTION: Read all visitors ────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">ReadAllVisitors</span>():
+    visitors = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"visitors.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                visitors.append(line.strip())
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"No log file found — starting fresh"</span>)
+    <span class="kw">return</span> visitors
+
+<span class="cm"># ── MAIN PROGRAM ──────────────────────────────────────────</span>
+name = <span class="fn">input</span>(<span class="st">"Enter visitor name: "</span>)
+<span class="fn">LogVisitor</span>(name)
+all_visitors = <span class="fn">ReadAllVisitors</span>()
+<span class="fn">print</span>(<span class="st">"All visitors:"</span>)
+<span class="kw">for</span> v <span class="kw">in</span> all_visitors:
+    <span class="fn">print</span>(<span class="st">" -"</span>, v)
+</pre>
+  </div>
+</div>
+
+<!-- E9 — The .strip() before .split() trap -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex9')">
+    <div class="ex-head-left">
+      <span class="ex-num">E9</span>
+      <span class="ex-title">The .strip() trap — removing hidden newlines before splitting</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[5 marks]</span>
+      <span class="toggle-lbl" id="ex9-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex9" style="display:none;">
+    <div class="scenario">
+      A file <code>data.txt</code> contains lines like:<br>
+      <code>apple,5,red</code><br>
+      <code>banana,3,yellow</code><br>
+      <code>grape,7,purple</code><br>
+      A student wrote code that splits each line by comma, but the last element still has a <code>\n</code> attached, causing errors.
+    </div>
+    <ul class="task-list">
+      <li>Explain what is wrong with splitting without <code>.strip()</code> first. <span class="pts">[2]</span></li>
+      <li>Write correct code that reads <code>data.txt</code>, strips each line, splits by comma, and stores each item as a record with fields: <code>name</code> (STRING), <code>quantity</code> (INTEGER), <code>colour</code> (STRING). Return a list of records. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box">
+      <strong>🐛 The bug:</strong> <code>line.split(",")</code> on <code>"grape,7,purple\n"</code> gives <code>["grape", "7", "purple\n"]</code>. The <code>\n</code> stays attached! Use <code>line.strip().split(",")</code> to remove it first.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex9')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex9')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex9-hint">The <code>\n</code> newline character causes problems when comparing strings or converting to integers. Always <code>.strip()</code> before <code>.split()</code>.</div>
+    <pre class="answer-pre" id="ex9-ans">
+<span class="cm"># EXPLANATION:</span>
+<span class="cm"># When you read a line from a file, it ends with a newline character '\n'.</span>
+<span class="cm"># If you split without stripping, the last element still contains '\n'.</span>
+<span class="cm"># This causes problems: "purple\n" != "purple", and int("7\n") crashes.</span>
+
+<span class="cm"># CORRECT CODE:</span>
+<span class="kw">def</span> <span class="fn">ReadItems</span>():
+    items = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"data.txt"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                <span class="cm"># Step 1: .strip() removes \n</span>
+                <span class="cm"># Step 2: .split(",") splits by comma</span>
+                parts = line.strip().<span class="fn">split</span>(<span class="st">","</span>)
+                name     = parts[<span class="nm">0</span>]
+                quantity = <span class="fn">int</span>(parts[<span class="nm">1</span>])
+                colour   = parts[<span class="nm">2</span>]
+                items.append((name, quantity, colour))
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"File not found"</span>)
+    <span class="kw">return</span> items
+
+<span class="cm"># WRONG (causes errors):</span>
+<span class="cm"># parts = line.split(",")   # ← still has \n on last element!</span>
+</pre>
+  </div>
+</div>
+
+<!-- E10 — Combining everything: full Paper 4 style question -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('ex10')">
+    <div class="ex-head-left">
+      <span class="ex-num">E10</span>
+      <span class="ex-title">FULL PAPER 4 STYLE — Records + File I/O + Exception Handling</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[15 marks]</span>
+      <span class="toggle-lbl" id="ex10-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="ex10" style="display:none;">
+    <div class="scenario">
+      A school stores student exam results. Each student has: <code>StudentID</code> (STRING), <code>Name</code> (STRING), <code>Score</code> (INTEGER).<br><br>
+      The text file <code>results.csv</code> contains data in the format:<br>
+      <code>S001,Amir,85</code><br>
+      <code>S002,Lena,92</code><br>
+      <code>S003,Tom,67</code><br>
+      <code>S004,Zara,78</code>
+    </div>
+    <ul class="task-list">
+      <li>Declare a record type <code>StudentResult</code> with the three fields. <span class="pts">[2]</span></li>
+      <li>Write a function <code>LoadResults()</code> that:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Opens <code>results.csv</code> using <code>with open</code></li>
+          <li>Reads each line, strips, splits by comma, casts Score to integer</li>
+          <li>Creates a <code>StudentResult</code> record for each line and appends to a list</li>
+          <li>Returns the list of records</li>
+          <li>Uses exception handling — if file missing, returns empty list</li>
+        </ul>
+        <span class="pts">[5]</span>
+      </li>
+      <li>Write a procedure <code>SaveAboveAverage(records, filename)</code> that:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Calculates the average score from all records</li>
+          <li>Writes ONLY the names of students with scores ABOVE average to the specified file, one name per line</li>
+          <li>Uses exception handling for file writing errors</li>
+        </ul>
+        <span class="pts">[5]</span>
+      </li>
+      <li>Write a main program that:
+        <ul style="margin-left:1.5rem;margin-top:0.3rem;">
+          <li>Calls <code>LoadResults()</code></li>
+          <li>If there are records, calls <code>SaveAboveAverage()</code> to save to <code>high_achievers.txt</code></li>
+          <li>Outputs "Saved X students" where X is the count of above-average students</li>
+        </ul>
+        <span class="pts">[3]</span>
+      </li>
+    </ul>
+    <div class="tip-box">
+      <strong>🎯 This is exactly like Paper 4:</strong> Records → File reading → Processing → File writing → Exception handling. Master this and you're ready.
+    </div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('ex10')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('ex10')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="ex10-hint">Average = sum of scores / number of students. Then loop through records, compare each score to average, if greater → write name to file with <code>f.write(name + "\n")</code>.</div>
+    <pre class="answer-pre" id="ex10-ans">
+<span class="cm"># ── RECORD TYPE ────────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">StudentResult</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, student_id, name, score):
+        self.StudentID = student_id   <span class="cm"># STRING — public (record)</span>
+        self.Name      = name         <span class="cm"># STRING</span>
+        self.Score     = score        <span class="cm"># INTEGER</span>
+
+<span class="cm"># ── FUNCTION: Load results from CSV file ───────────────────</span>
+<span class="kw">def</span> <span class="fn">LoadResults</span>():
+    results = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"results.csv"</span>, <span class="st">"r"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                parts = line.strip().<span class="fn">split</span>(<span class="st">","</span>)
+                student_id = parts[<span class="nm">0</span>]
+                name       = parts[<span class="nm">1</span>]
+                score      = <span class="fn">int</span>(parts[<span class="nm">2</span>])
+                results.append(<span class="fn">StudentResult</span>(student_id, name, score))
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: results.csv not found"</span>)
+    <span class="kw">return</span> results
+
+<span class="cm"># ── PROCEDURE: Save above-average students to file ─────────</span>
+<span class="kw">def</span> <span class="fn">SaveAboveAverage</span>(records, filename):
+    <span class="kw">if</span> <span class="fn">len</span>(records) == <span class="nm">0</span>:
+        <span class="fn">print</span>(<span class="st">"No records to process"</span>)
+        <span class="kw">return</span>
+    
+    <span class="cm"># Calculate average</span>
+    total = <span class="nm">0</span>
+    <span class="kw">for</span> r <span class="kw">in</span> records:
+        total = total + r.Score
+    average = total / <span class="fn">len</span>(records)
+    
+    <span class="cm"># Write names of students above average</span>
+    count = <span class="nm">0</span>
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="fn">open</span>(filename, <span class="st">"w"</span>) <span class="kw">as</span> f:
+            <span class="kw">for</span> r <span class="kw">in</span> records:
+                <span class="kw">if</span> r.Score &gt; average:
+                    f.write(r.Name + <span class="st">"\n"</span>)
+                    count = count + <span class="nm">1</span>
+        <span class="fn">print</span>(<span class="st">f"Saved {count} students to {filename}"</span>)
+    <span class="kw">except</span> <span class="exc">IOError</span>:
+        <span class="fn">print</span>(<span class="st">"Error: could not write to file"</span>)
+
+<span class="cm"># ── MAIN PROGRAM ──────────────────────────────────────────</span>
+all_results = <span class="fn">LoadResults</span>()
+<span class="kw">if</span> <span class="fn">len</span>(all_results) &gt; <span class="nm">0</span>:
+    <span class="fn">SaveAboveAverage</span>(all_results, <span class="st">"high_achievers.txt"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"No results loaded"</span>)
+</pre>
+  </div>
+</div>
+
+
+
+
 
 <!-- QUICK REFERENCE -->
 <div class="divider"></div>
