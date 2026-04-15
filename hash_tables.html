@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hash Tables · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#0f1729;color:#c8d4e8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(126,184,212,0.08);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-80px;left:120px;width:400px;height:400px;border:2px solid rgba(100,160,240,0.07);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,212,232,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#7eb8d4;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,212,232,0.55);max-width:600px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,212,232,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,212,232,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:0.2rem;margin-top:0.5rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.at{color:#f0a8c8;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+/* COLORED ANSWER BLOCKS */
+.answer-block{display:none;margin-top:0.75rem;border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
+.answer-block.visible{display:block;}
+.answer-block pre{font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0;}
+/* keep old .answer-pre for nothing */
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:0.75rem;border:1px solid rgba(255,255,255,0.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+.ex-citation{font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;margin-top:1rem;padding-top:0.6rem;border-top:1px solid var(--paper3);}
+.before-exam{background:var(--mono-bg);border-radius:10px;padding:1.5rem 1.75rem;margin:2rem 0;}
+.before-exam h3{font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;color:#c8d4e8;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.08);}
+.be-row{display:flex;gap:0;margin-bottom:0.2rem;}
+.be-key{font-family:'DM Mono',monospace;font-size:11.5px;color:#EF9F27;min-width:240px;flex-shrink:0;line-height:1.8;}
+.be-val{font-family:'DM Mono',monospace;font-size:11.5px;color:#a8d8a0;line-height:1.8;}
+.be-section{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(200,212,232,0.35);font-weight:500;margin:0.9rem 0 0.4rem;}
+.arrow-row{display:flex;align-items:flex-start;gap:0.75rem;padding:0.45rem 0;border-bottom:0.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:180px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin:1px 2px;}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.step-trace{display:flex;flex-direction:column;gap:6px;margin:1rem 0;}
+.step-row{display:flex;align-items:center;gap:10px;font-size:12.5px;}
+.step-badge{font-family:'DM Mono',monospace;font-size:11px;padding:2px 8px;border-radius:4px;min-width:110px;text-align:center;font-weight:500;}
+.step-badge-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.step-badge-col{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.step-badge-probe{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.hash-cells{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-start;margin:0.75rem 0;}
+.hc{min-width:70px;border:2px solid var(--rule);border-radius:5px;padding:5px 6px;text-align:center;background:#fff;font-family:'DM Mono',monospace;font-size:11px;}
+.hc-idx{font-size:9px;color:var(--ink3);margin-bottom:2px;}
+.hc-val{font-size:11px;font-weight:500;}
+.hc-sub{font-size:9px;color:var(--ink3);margin-top:2px;}
+.hc-empty .hc-val{color:var(--rule);}
+.hc-filled{background:var(--blue-bg);border-color:var(--blue-bd);}.hc-filled .hc-val{color:var(--blue);}
+.hc-home{background:var(--green-bg);border-color:var(--green-bd);}.hc-home .hc-val{color:var(--green);}
+.hc-probe{background:var(--amber-bg);border-color:var(--amber-bd);}.hc-probe .hc-val{color:var(--amber);}
+.method-section{border-radius:12px;padding:1.5rem;margin:1.5rem 0;border:2px solid;}
+.method-section-blue{background:var(--blue-bg);border-color:var(--blue-bd);}
+.method-section-green{background:var(--green-bg);border-color:var(--green-bd);}
+.method-section-purple{background:var(--purple-bg);border-color:var(--purple-bd);}
+.method-badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:0.6rem;}
+.method-badge-blue{background:var(--blue);color:#fff;}
+.method-badge-green{background:var(--green);color:#fff;}
+.method-badge-purple{background:var(--purple);color:#fff;}
+.method-title{font-family:'DM Serif Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.3rem;}
+.diagram-wrap{background:#fff;border-radius:10px;padding:1.2rem;margin:1rem 0;border:1px solid var(--rule);overflow-x:auto;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+@media(max-width:640px){.hash-cells{gap:3px;}.hc{min-width:58px;}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Chapter 23 — Algorithms Part 2</div>
+  <h1>Hash <em>Tables</em></h1>
+  <div class="cover-sub">Store data. Retrieve it in one step. No looping, no scanning — just calculate the address and go straight there. And when two keys fight over the same slot? You have three battle plans. All of them, explained from zero. 🔑</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Hash Function</strong>key % size → instant address</div>
+    <div class="cover-meta-item"><strong>Collision</strong>Two keys, same slot 💥</div>
+    <div class="cover-meta-item"><strong>Method 1 — Chaining</strong>Linked list at address</div>
+    <div class="cover-meta-item"><strong>Method 2 — Overflow Area</strong>Separate overflow zone</div>
+    <div class="cover-meta-item"><strong>Method 3 — Neighbouring Slots</strong>Probe forward linearly</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="01_linear_search.html">🔍 Linear Search</a>
+  <a href="02_binary_search.html">⚡ Binary Search</a>
+  <a href="03_bubble_insertion_sort.html">🫧 Sorting</a>
+  <a href="04_stacks_queues.html">📚 Stacks &amp; Queues</a>
+  <a href="05_oop.html">🧬 OOP</a>
+  <a href="06_hash_tables.html" class="active">🔑 Hash Tables</a>
+</nav>
+
+<div class="page-body">
+
+<!-- ══ SECTION 1 ══ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">What Even Is a Hash Table? — Start From Zero</div>
+    <div class="section-desc">One analogy. One formula. That's all you need.</div>
+  </div>
+</div>
+
+<div class="box box-teal">
+  <strong>📬 The simplest analogy: a post office with numbered boxes</strong>
+  Imagine a post office with <strong>10 mailboxes</strong>, numbered 0 to 9.<br><br>
+  Every person has an ID number. When they get mail, the post worker doesn't check every box. Instead, they do one calculation:<br><br>
+  <strong style="font-size:15px;">box_number = person_ID % 10</strong><br><br>
+  Person with ID 234 → 234 % 10 = 4 → mail always goes to <strong>Box 4</strong>.<br>
+  Person with ID 7 → 7 % 10 = 7 → mail always goes to <strong>Box 7</strong>.<br><br>
+  To find mail? Same calculation. One step. No searching. <strong>That's a hash table.</strong>
+</div>
+
+<div class="diagram-wrap">
+  <div style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;">THE POST OFFICE — 10 boxes, numbered 0 to 9</div>
+  <svg width="100%" viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/>
+      </marker>
+    </defs>
+    <circle cx="52" cy="50" r="22" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+    <text x="52" y="46" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" font-weight="500">Person</text>
+    <text x="52" y="59" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">ID=234</text>
+    <rect x="100" y="30" width="170" height="40" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+    <text x="185" y="47" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3C3489" font-weight="500">234 % 10 = 4</text>
+    <text x="185" y="62" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3C3489">hash function</text>
+    <line x1="74" y1="50" x2="98" y2="50" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="270" y1="50" x2="340" y2="50" stroke="#3C3489" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+    <rect x="20" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="20" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce" stroke-width="1.5"/>
+    <text x="47" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">0</text>
+    <text x="47" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="82" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="82" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce" stroke-width="1.5"/>
+    <text x="109" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">1</text>
+    <text x="109" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="144" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="144" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce" stroke-width="1.5"/>
+    <text x="171" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">2</text>
+    <text x="171" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="206" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="206" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce" stroke-width="1.5"/>
+    <text x="233" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">3</text>
+    <text x="233" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="268" y="98" width="64" height="76" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="2.5"/>
+    <rect x="268" y="98" width="64" height="22" rx="5" fill="#97C459"/>
+    <text x="300" y="113" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#fff" font-weight="500">4 ✓</text>
+    <text x="300" y="143" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11" font-weight="500">"Ali"</text>
+    <text x="300" y="158" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3B6D11">ID=234</text>
+    <rect x="340" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="340" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce"/>
+    <text x="367" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">5</text>
+    <text x="367" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="402" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="402" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce"/>
+    <text x="429" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">6</text>
+    <text x="429" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="464" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="464" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce"/>
+    <text x="491" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">7</text>
+    <text x="491" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="526" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="526" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce"/>
+    <text x="553" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">8</text>
+    <text x="553" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <rect x="588" y="110" width="54" height="64" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+    <rect x="588" y="110" width="54" height="20" rx="5" fill="#e8e5de" stroke="#d8d5ce"/>
+    <text x="615" y="125" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#8a8785">9</text>
+    <text x="615" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+    <line x1="300" y1="50" x2="300" y2="96" stroke="#3C3489" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+    <text x="340" y="195" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#3B6D11" font-weight="500">→ Mail goes straight to Box 4. No searching. One calculation. Done!</text>
+  </svg>
+</div>
+
+<div class="box box-blue">
+  <strong>📖 The formal definition</strong>
+  A hash table stores data as <strong>key-value pairs</strong>. A <strong>hash function</strong> converts the key into an array index. This gives extremely fast insertion, lookup, and deletion — often in <strong>constant time O(1)</strong>.
+</div>
+
+<div class="sec-title" style="margin-top:1.25rem;">The 5 vocabulary words Cambridge will test — know every one 🧊</div>
+<table class="diff-table">
+  <tr><th>Term</th><th>Plain English definition</th><th>Example</th></tr>
+  <tr>
+    <td><span class="pill pill-purple">Key</span></td>
+    <td>The unique identifier — what you search by. Usually an integer.</td>
+    <td>Student ID: 4521</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-blue">Value</span></td>
+    <td>The actual data you store alongside the key.</td>
+    <td>Student name: "Sami"</td>
+  </tr>
+  <tr>
+    <td><span class="pill" style="background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);">Hash Function</span></td>
+    <td>A formula: input = key, output = array index. Cambridge always uses <code>key % table_size</code>.</td>
+    <td>4521 % 10 = 1 → store at index [1]</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-amber">Hash Address</span></td>
+    <td>The index the hash function produces. This is WHERE in the array the data lives.</td>
+    <td>Index [1] is the hash address for key 4521</td>
+  </tr>
+  <tr>
+    <td><span class="pill pill-red">Collision</span></td>
+    <td>When TWO different keys produce the SAME hash address. Both want slot [x]. Problem.</td>
+    <td>4521 % 10 = 1 AND 6231 % 10 = 1 → COLLISION at [1]</td>
+  </tr>
+</table>
+
+<!-- ══ SECTION 2 ══ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">The Hash Function — One Formula, Understand It Once</div>
+    <div class="section-desc">hash_address = key % table_size</div>
+  </div>
+</div>
+
+<div class="box box-purple">
+  <strong>🧮 The formula — memorise it</strong>
+  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:10px 0 6px;">
+    <code style="font-size:15px;letter-spacing:0.04em;background:rgba(60,52,137,0.12);padding:6px 14px;border-radius:6px;display:inline-block;">hash_address = key % table_size</code>
+    <span style="font-size:13px;">← this one line is the entire hash function</span>
+  </div>
+  The <strong>%</strong> symbol means: divide the key by the table size, throw away the whole number, and keep only the <strong>remainder</strong>. The result is always between 0 and (table_size − 1), so it always fits inside the array.<br><br>
+  Example: <code>234 % 10</code> → 234 ÷ 10 = 23 remainder <strong>4</strong> → address is 4. That's it. That's the whole formula.
+</div>
+
+<div class="sec-title" style="margin-top:1.25rem;">Step-by-step trace 🧠</div>
+<div class="sec-sub">Table size = 10 (slots 0–9). Hash function = key % 10. Inserting 6 keys in order.</div>
+
+<div style="background:#fff;border:1px solid var(--rule);border-radius:10px;padding:1.5rem;margin:1rem 0;">
+  <div style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:1rem;">TABLE SIZE = 10 &nbsp;|&nbsp; Keys to insert: 14, 7, 5, then 24, 34, 17</div>
+  <div class="step-trace">
+    <div class="step-row"><span class="step-badge step-badge-ok">key = 14</span><span class="step-text">14 % 10 = <strong>4</strong> → slot [4] is empty → ✅ Store "Ali" at [4]</span></div>
+    <div class="step-row"><span class="step-badge step-badge-ok">key = 7</span><span class="step-text">7 % 10 = <strong>7</strong> → slot [7] is empty → ✅ Store "Sara" at [7]</span></div>
+    <div class="step-row"><span class="step-badge step-badge-ok">key = 5</span><span class="step-text">5 % 10 = <strong>5</strong> → slot [5] is empty → ✅ Store "Omar" at [5]</span></div>
+    <div class="step-row"><span class="step-badge step-badge-col">key = 24 💥</span><span class="step-text">24 % 10 = <strong>4</strong> → slot [4] already has "Ali" → <strong>COLLISION! "Nour" has nowhere to go.</strong></span></div>
+    <div class="step-row"><span class="step-badge step-badge-col">key = 34 💥</span><span class="step-text">34 % 10 = <strong>4</strong> → slot [4] still occupied → <strong>COLLISION AGAIN!</strong></span></div>
+    <div class="step-row"><span class="step-badge step-badge-col">key = 17 💥</span><span class="step-text">17 % 10 = <strong>7</strong> → slot [7] has "Sara" → <strong>COLLISION!</strong></span></div>
+  </div>
+  <div style="margin-top:1.25rem;">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;">State of table after the first 3 insertions (before collisions)</div>
+    <div class="hash-cells">
+      <div class="hc hc-empty"><div class="hc-idx">[0]</div><div class="hc-val">—</div></div>
+      <div class="hc hc-empty"><div class="hc-idx">[1]</div><div class="hc-val">—</div></div>
+      <div class="hc hc-empty"><div class="hc-idx">[2]</div><div class="hc-val">—</div></div>
+      <div class="hc hc-empty"><div class="hc-idx">[3]</div><div class="hc-val">—</div></div>
+      <div class="hc hc-home"><div class="hc-idx">[4] ← key 14</div><div class="hc-val">"Ali"</div><div class="hc-sub">home</div></div>
+      <div class="hc hc-filled"><div class="hc-idx">[5] ← key 5</div><div class="hc-val">"Omar"</div></div>
+      <div class="hc hc-empty"><div class="hc-idx">[6]</div><div class="hc-val">—</div></div>
+      <div class="hc hc-filled"><div class="hc-idx">[7] ← key 7</div><div class="hc-val">"Sara"</div></div>
+      <div class="hc hc-empty"><div class="hc-idx">[8]</div><div class="hc-val">—</div></div>
+      <div class="hc hc-empty"><div class="hc-idx">[9]</div><div class="hc-val">—</div></div>
+    </div>
+    <div style="margin-top:8px;font-size:12.5px;color:var(--red);font-weight:500;">Now keys 24, 34 need slot [4] and key 17 needs slot [7] — but both are taken. We need a collision strategy. We have three.</div>
+  </div>
+</div>
+
+<div class="box box-amber">
+  <strong>⚠️ Why collisions are mathematically guaranteed to happen</strong>
+  If you have 10 slots and store more than 10 items — you MUST have at least one collision. But even with fewer items, bad luck of the hash function causes collisions. Keys 4, 14, 24, 34, 44 ALL hash to slot [4] in a size-10 table. This isn't a bug — it's expected. That's why the three collision methods exist.
+</div>
+
+<!-- ══ SECTION 3 ══ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div>
+    <div class="section-title">3 Ways to Handle a Collision 💥</div>
+    <div class="section-desc">Chaining · Overflow Area · Neighbouring Slots</div>
+  </div>
+</div>
+
+<!-- METHOD 1 — CHAINING -->
+<div class="method-section method-section-blue">
+  <div class="method-badge method-badge-blue">Method 1</div>
+  <div class="method-title" style="color:var(--blue);">Chaining — Build a linked list at the collision spot 🔗</div>
+  <p style="font-size:13.5px;color:var(--blue);margin-bottom:1rem;">
+    Simple idea: When two keys land on the same slot, don't panic. Just make a <strong>linked list</strong> at that slot. Every new collision victim gets added to the end of the list. The slot stores a pointer to the head of that list.
+  </p>
+
+  <div class="diagram-wrap">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Keys 14, 24, 34 all hash to slot [4] → they form a chain</div>
+    <svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker>
+      </defs>
+      <text x="20" y="40" font-family="DM Sans,sans-serif" font-size="11" fill="#185FA5" font-weight="500">Slot [4] in the array</text>
+      <text x="20" y="56" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">(this is just one slot — all other slots [0,1,2,3,5...] are untouched)</text>
+      <rect x="20" y="70" width="110" height="55" rx="7" fill="#E6F1FB" stroke="#85B7EB" stroke-width="2"/>
+      <text x="75" y="92" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">slot [4]</text>
+      <text x="75" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5" font-weight="500">→ head ptr</text>
+      <line x1="130" y1="97" x2="175" y2="97" stroke="#185FA5" stroke-width="2" marker-end="url(#a1)"/>
+      <rect x="176" y="70" width="130" height="55" rx="7" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+      <text x="241" y="88" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11" font-weight="500">Node 1</text>
+      <text x="241" y="103" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3B6D11">key=14 | "Ali"</text>
+      <text x="241" y="117" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3B6D11">→ next ptr</text>
+      <line x1="306" y1="97" x2="348" y2="97" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#a1)"/>
+      <rect x="349" y="70" width="140" height="55" rx="7" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+      <text x="419" y="88" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806" font-weight="500">Node 2 — collision!</text>
+      <text x="419" y="103" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806">key=24 | "Nour"</text>
+      <text x="419" y="117" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806">→ next ptr</text>
+      <line x1="489" y1="97" x2="530" y2="97" stroke="#633806" stroke-width="1.5" marker-end="url(#a1)"/>
+      <rect x="531" y="70" width="135" height="55" rx="7" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+      <text x="598" y="88" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3C3489" font-weight="500">Node 3 — collision!</text>
+      <text x="598" y="103" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3C3489">key=34 | "Ziad"</text>
+      <text x="598" y="117" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3C3489">next = null ✋</text>
+      <text x="75" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">start of list</text>
+      <text x="241" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">first inserted (home)</text>
+      <text x="419" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#633806">chained here</text>
+      <text x="598" y="148" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3C3489">end of chain</text>
+      <rect x="20" y="166" width="645" height="90" rx="7" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/>
+      <text x="36" y="184" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11" font-weight="500">🔍 How to SEARCH for key=34:</text>
+      <rect x="36" y="193" width="120" height="28" rx="5" fill="#EAF3DE" stroke="#97C459"/>
+      <text x="96" y="211" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11">34%10 = 4</text>
+      <line x1="156" y1="207" x2="172" y2="207" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#a1)"/>
+      <rect x="173" y="193" width="140" height="28" rx="5" fill="#FAEEDA" stroke="#EF9F27"/>
+      <text x="243" y="207" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806">slot[4] → node1(14≠34)</text>
+      <line x1="313" y1="207" x2="328" y2="207" stroke="#633806" stroke-width="1.5" marker-end="url(#a1)"/>
+      <rect x="329" y="193" width="140" height="28" rx="5" fill="#FAEEDA" stroke="#EF9F27"/>
+      <text x="399" y="207" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806">node2 (key=24 ≠ 34)</text>
+      <line x1="469" y1="207" x2="484" y2="207" stroke="#633806" stroke-width="1.5" marker-end="url(#a1)"/>
+      <rect x="485" y="193" width="165" height="28" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+      <text x="567" y="207" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11" font-weight="500">node3 (key=34 ✅) → "Ziad"</text>
+      <text x="36" y="244" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">Stop when null is reached and key not found = "Not found"</text>
+    </svg>
+  </div>
+
+  <div style="background:#fff;border-radius:8px;padding:1rem;margin:0.75rem 0;border:1px solid var(--blue-bd);">
+    <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--blue);margin-bottom:8px;">How it works — 3 rules</div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:140px;">Normal insert</div><div class="arrow-arrow">→</div><div class="arrow-desc">Hash key → slot is empty → store item there directly.</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:140px;">Collision insert</div><div class="arrow-arrow">→</div><div class="arrow-desc">Slot taken → create new linked list node → append to the chain at that slot.</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:140px;">Search</div><div class="arrow-arrow">→</div><div class="arrow-desc">Hash key → jump to slot → walk the list node by node → key matches? Return value. Reach null? Not found.</div></div>
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.2rem;">🐍 Method 1 Python — Chaining with a list at each slot</div>
+<div class="sec-sub">The simplest possible implementation: each slot is a Python list that holds all key-value pairs that hash there.</div>
+<pre class="py">SIZE = <span class="nm">10</span>
+HashTable = [[] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(SIZE)]   <span class="cm"># 10 empty lists — one per slot</span>
+
+<span class="kw">def</span> <span class="fn">Hash</span>(key):
+    <span class="kw">return</span> key % SIZE
+
+<span class="kw">def</span> <span class="fn">Insert</span>(key, value):
+    <span class="kw">global</span> HashTable
+    address = <span class="fn">Hash</span>(key)
+    HashTable[address].<span class="fn">append</span>((key, value))   <span class="cm"># add (key,value) tuple to this slot's list</span>
+
+<span class="kw">def</span> <span class="fn">Search</span>(key):
+    <span class="kw">global</span> HashTable
+    address = <span class="fn">Hash</span>(key)
+    <span class="kw">for</span> (k, v) <span class="kw">in</span> HashTable[address]:          <span class="cm"># walk the list at that slot</span>
+        <span class="kw">if</span> k == key:
+            <span class="kw">return</span> v                             <span class="cm"># ✅ found!</span>
+    <span class="kw">return</span> <span class="st">"Not found"</span>                        <span class="cm"># reached end of list, not there</span>
+
+<span class="cm"># Example:</span>
+<span class="fn">Insert</span>(<span class="nm">14</span>, <span class="st">"Ali"</span>)    <span class="cm"># goes to slot [4]</span>
+<span class="fn">Insert</span>(<span class="nm">24</span>, <span class="st">"Nour"</span>)   <span class="cm"># COLLISION → also slot [4], appended to list</span>
+<span class="fn">Insert</span>(<span class="nm">34</span>, <span class="st">"Ziad"</span>)   <span class="cm"># COLLISION → also slot [4], appended again</span>
+<span class="fn">print</span>(<span class="fn">Search</span>(<span class="nm">34</span>))    <span class="cm"># → "Ziad"</span></pre>
+
+<!-- NOTE about append vs linked list -->
+<div class="box box-blue" style="margin-top:0.5rem;">
+  <strong>💡 Wait — are we using a linked list or a Python list here?</strong>
+  Good question. In theory, chaining uses a <strong>linked list</strong> (nodes connected by pointers). But in Python, we use a regular <strong>list</strong> (like an array) instead — and that's totally fine. Why? Because Python lists are <strong>dynamic</strong>: they grow and shrink automatically. You don't need to manage pointers or nodes manually. <code>.append()</code> adds a new item to the end in one line — Python handles all the memory behind the scenes. So <code>HashTable[address].append((key, value))</code> achieves exactly what a linked-list node-insertion would do, just with much simpler code. The <em>concept</em> is chaining; the <em>tool</em> is Python's built-in dynamic list.
+</div>
+
+<!-- METHOD 2 — OVERFLOW AREA -->
+<div class="method-section method-section-green" style="margin-top:2rem;">
+  <div class="method-badge method-badge-green">Method 2</div>
+  <div class="method-title" style="color:var(--green);">Overflow Area — A VIP waiting zone for collisions 🗃️</div>
+  <p style="font-size:13.5px;color:var(--green);margin-bottom:1rem;">
+    The array is split into <strong>two zones</strong>: the <strong>main area</strong> (normal slots) and the <strong>overflow area</strong> (reserved only for collision victims). When a collision happens, the victim goes to the overflow area, and the main slot stores a pointer to find it there.
+  </p>
+
+  <div class="diagram-wrap">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Table split: Main area [0–6] · Overflow area [7–9] · Keys 14, 24, 34 all hash to [4]</div>
+    <svg width="100%" viewBox="0 0 680 245" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="b1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker>
+      </defs>
+      <rect x="14" y="8" width="390" height="14" rx="3" fill="#EAF3DE" stroke="#97C459"/>
+      <text x="209" y="19" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" font-weight="500">MAIN AREA — slots [0] to [6]</text>
+      <rect x="412" y="8" width="255" height="14" rx="3" fill="#FAEEDA" stroke="#EF9F27"/>
+      <text x="539" y="19" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#633806" font-weight="500">OVERFLOW AREA — slots [7] to [9]</text>
+      <rect x="14" y="28" width="50" height="65" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+      <text x="39" y="46" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[0]</text>
+      <text x="39" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+      <rect x="70" y="28" width="50" height="65" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+      <text x="95" y="46" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[1]</text>
+      <text x="95" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+      <rect x="126" y="28" width="50" height="65" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+      <text x="151" y="46" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[2]</text>
+      <text x="151" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+      <rect x="182" y="28" width="50" height="65" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+      <text x="207" y="46" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[3]</text>
+      <text x="207" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+      <rect x="238" y="22" width="76" height="76" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="2.5"/>
+      <text x="276" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3B6D11">[4] HOME</text>
+      <text x="276" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3B6D11" font-weight="500">k=14 "Ali"</text>
+      <text x="276" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3B6D11">overflow→[7]</text>
+      <text x="276" y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#3B6D11">stored normally</text>
+      <rect x="320" y="28" width="50" height="65" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1.5"/>
+      <text x="345" y="44" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#185FA5">[5]</text>
+      <text x="345" y="58" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5" font-weight="500">k=5</text>
+      <text x="345" y="71" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#185FA5">"Omar"</text>
+      <rect x="376" y="28" width="50" height="65" rx="5" fill="#faf9f6" stroke="#d8d5ce" stroke-width="1.5"/>
+      <text x="401" y="46" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[6]</text>
+      <text x="401" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+      <rect x="428" y="22" width="80" height="76" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2.5"/>
+      <text x="468" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806">[7] OVERFLOW</text>
+      <text x="468" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806" font-weight="500">k=24 "Nour"</text>
+      <text x="468" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806">next → [8]</text>
+      <text x="468" y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#EF9F27">collision victim</text>
+      <rect x="515" y="22" width="80" height="76" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2.5"/>
+      <text x="555" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806">[8] OVERFLOW</text>
+      <text x="555" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806" font-weight="500">k=34 "Ziad"</text>
+      <text x="555" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806">next → null ✋</text>
+      <text x="555" y="80" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#EF9F27">collision victim</text>
+      <rect x="602" y="28" width="62" height="65" rx="5" fill="#faf9f6" stroke="#EF9F27" stroke-width="1" stroke-dasharray="5,3"/>
+      <text x="633" y="46" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#EF9F27">[9] free</text>
+      <text x="633" y="65" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce">—</text>
+      <path d="M 276 98 Q 276 135 468 135 Q 468 135 468 98" stroke="#3B6D11" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#b1)"/>
+      <text x="370" y="152" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">overflow pointer</text>
+      <line x1="508" y1="54" x2="513" y2="54" stroke="#633806" stroke-width="1.5" marker-end="url(#b1)"/>
+      <rect x="14" y="168" width="650" height="68" rx="7" fill="#EAF3DE" stroke="#97C459" stroke-width="1.5"/>
+      <text x="26" y="184" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11" font-weight="500">🔍 Search for key=34:</text>
+      <text x="26" y="200" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11">34%10=4 → [4] has k=14 (not 34) → follow overflow ptr → [7] has k=24 (not 34) → next → [8] has k=34 ✅ → "Ziad"</text>
+      <text x="26" y="226" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">If you reach a null pointer and haven't found the key → it doesn't exist → return "Not found"</text>
+    </svg>
+  </div>
+
+  <div style="background:#fff;border-radius:8px;padding:1rem;margin:0.75rem 0;border:1px solid var(--green-bd);">
+    <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--green);margin-bottom:8px;">How it works — 3 rules</div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Array split</div><div class="arrow-arrow">→</div><div class="arrow-desc">Divide the array: slots 0 to N = main area. Last few slots = overflow area (reserved for collisions ONLY).</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Collision insert</div><div class="arrow-arrow">→</div><div class="arrow-desc">Main slot taken → put collision victim in next free overflow slot. The main slot stores a pointer to it.</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Search</div><div class="arrow-arrow">→</div><div class="arrow-desc">Hash key → check main slot. Match? Return value. Has overflow pointer? Follow it. Chain ends at null = "Not found".</div></div>
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.2rem;">🐍 Method 2 Python — Overflow Area</div>
+<div class="sec-sub">We split the array: indices 0 to MAIN_SIZE-1 are main, MAIN_SIZE onwards are overflow. Each slot stores (key, value, overflow_index).</div>
+<pre class="py">MAIN_SIZE = <span class="nm">7</span>     <span class="cm"># main area: slots 0-6</span>
+OVF_SIZE  = <span class="nm">3</span>     <span class="cm"># overflow: slots 7-9</span>
+TOTAL     = MAIN_SIZE + OVF_SIZE   <span class="cm"># = 10</span>
+
+<span class="cm"># Each slot is a list of 3 values: [key, value, overflow_pointer]</span>
+<span class="cm"># key = -1 means this slot is empty.</span>
+<span class="cm"># overflow_pointer = -1 means "no overflow from this slot".</span>
+<span class="cm"># overflow_pointer = 8 means "there's a collision victim stored at index 8".</span>
+HashTable = [[-<span class="nm">1</span>, <span class="st">""</span>, -<span class="nm">1</span>] <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(TOTAL)]
+
+<span class="cm"># Example of what a filled slot looks like:</span>
+<span class="cm">#   [14, "Ali", 8]  → key=14, value="Ali", collision victim is at index 8</span>
+<span class="cm">#   [24, "Nour", -1] → key=24, value="Nour", no further overflow</span>
+<span class="cm">#   [-1, "", -1]    → empty slot</span>
+
+ovf_next = MAIN_SIZE   <span class="cm"># next free overflow slot (starts at 7)</span>
+
+<span class="kw">def</span> <span class="fn">Hash</span>(key):
+    <span class="kw">return</span> key % MAIN_SIZE
+
+<span class="kw">def</span> <span class="fn">Insert</span>(key, value):
+    <span class="kw">global</span> HashTable, ovf_next
+    address = <span class="fn">Hash</span>(key)
+
+    <span class="kw">if</span> HashTable[address][<span class="nm">0</span>] == -<span class="nm">1</span>:      <span class="cm"># main slot is empty → store here</span>
+        HashTable[address] = [key, value, -<span class="nm">1</span>]
+    <span class="kw">else</span>:                                 <span class="cm"># collision! walk to end of overflow chain</span>
+        current = address
+        <span class="kw">while</span> HashTable[current][<span class="nm">2</span>] != -<span class="nm">1</span>: <span class="cm"># [2] is the overflow pointer</span>
+            current = HashTable[current][<span class="nm">2</span>]
+        HashTable[current][<span class="nm">2</span>] = ovf_next  <span class="cm"># point last node → new overflow slot</span>
+        HashTable[ovf_next] = [key, value, -<span class="nm">1</span>]
+        ovf_next += <span class="nm">1</span>
+
+<span class="kw">def</span> <span class="fn">Search</span>(key):
+    <span class="kw">global</span> HashTable
+    current = <span class="fn">Hash</span>(key)
+    <span class="kw">while</span> current != -<span class="nm">1</span>:
+        <span class="kw">if</span> HashTable[current][<span class="nm">0</span>] == key:
+            <span class="kw">return</span> HashTable[current][<span class="nm">1</span>]  <span class="cm"># ✅ found!</span>
+        current = HashTable[current][<span class="nm">2</span>]   <span class="cm"># follow overflow pointer</span>
+    <span class="kw">return</span> <span class="st">"Not found"</span></pre>
+
+<!-- METHOD 3 — NEIGHBOURING SLOTS -->
+<div class="method-section method-section-purple" style="margin-top:2rem;">
+  <div class="method-badge method-badge-purple">Method 3</div>
+  <div class="method-title" style="color:var(--purple);">Neighbouring Slots — "No space here? Try next door!" 🔎</div>
+  <p style="font-size:13.5px;color:var(--purple);margin-bottom:1rem;">
+    The simplest structure of all — just <strong>one flat array</strong>. When a collision happens, don't build lists or use a separate zone. Just check the <strong>next slot</strong>. If that's also taken, try the one after. Keep going until you find an empty slot. Also called <strong>linear probing</strong>.
+  </p>
+
+  <div class="diagram-wrap">
+    <div style="font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Inserting keys 14, 24, 34 — all hash to slot [4] — into a size-10 table</div>
+    <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="c1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker>
+      </defs>
+      <text x="14" y="18" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11" font-weight="500">Step 1 — Insert key 14 → 14%10=4 → slot [4] is empty ✅</text>
+      <rect x="14" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="36" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[0]</text><text x="36" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="62" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="84" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[1]</text><text x="84" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="110" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="132" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[2]</text><text x="132" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="158" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="180" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[3]</text><text x="180" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="206" y="20" width="50" height="46" rx="4" fill="#EAF3DE" stroke="#97C459" stroke-width="2.5"/>
+      <text x="231" y="36" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3B6D11">[4]✅</text>
+      <text x="231" y="52" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11" font-weight="500">Ali(14)</text>
+      <rect x="260" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="282" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[5]</text><text x="282" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="308" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="330" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[6]</text><text x="330" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="356" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="378" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[7]</text><text x="378" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="404" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="426" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[8]</text><text x="426" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="452" y="24" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="474" y="38" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[9]</text><text x="474" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <text x="14" y="88" font-family="DM Sans,sans-serif" font-size="11" fill="#633806" font-weight="500">Step 2 — Insert key 24 → 24%10=4 → slot [4] is TAKEN 💥 → probe [5] → empty ✅</text>
+      <rect x="14" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="36" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[0]</text><text x="36" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="62" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="84" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[1]</text><text x="84" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="110" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="132" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[2]</text><text x="132" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="158" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="180" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[3]</text><text x="180" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="206" y="90" width="50" height="46" rx="4" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+      <text x="231" y="106" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#791F1F">[4]💥</text>
+      <text x="231" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#791F1F">Ali(14)</text>
+      <path d="M 256 113 Q 270 80 285 113" stroke="#633806" stroke-width="1.5" fill="none" stroke-dasharray="4,2" marker-end="url(#c1)"/>
+      <text x="270" y="78" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#633806">probe!</text>
+      <rect x="260" y="90" width="50" height="46" rx="4" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2.5"/>
+      <text x="285" y="106" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806">[5]✅</text>
+      <text x="285" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806" font-weight="500">Nour(24)</text>
+      <rect x="314" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="336" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[6]</text><text x="336" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="362" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="384" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[7]</text><text x="384" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="410" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="432" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[8]</text><text x="432" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="458" y="94" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="480" y="108" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[9]</text><text x="480" y="124" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <text x="14" y="158" font-family="DM Sans,sans-serif" font-size="11" fill="#3C3489" font-weight="500">Step 3 — Insert key 34 → [4] taken 💥 → [5] taken 💥 → probe [6] → empty ✅</text>
+      <rect x="14" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="36" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[0]</text><text x="36" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="62" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="84" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[1]</text><text x="84" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="110" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="132" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[2]</text><text x="132" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="158" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="180" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[3]</text><text x="180" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="206" y="160" width="50" height="46" rx="4" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+      <text x="231" y="176" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#791F1F">[4]💥</text>
+      <text x="231" y="192" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#791F1F">Ali(14)</text>
+      <rect x="260" y="160" width="50" height="46" rx="4" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+      <text x="285" y="176" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#791F1F">[5]💥</text>
+      <text x="285" y="192" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#791F1F">Nour(24)</text>
+      <path d="M 310 183 Q 325 148 340 183" stroke="#3C3489" stroke-width="1.5" fill="none" stroke-dasharray="4,2" marker-end="url(#c1)"/>
+      <text x="325" y="145" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#3C3489">probe!</text>
+      <rect x="314" y="160" width="50" height="46" rx="4" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2.5"/>
+      <text x="339" y="176" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3C3489">[6]✅</text>
+      <text x="339" y="192" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3C3489" font-weight="500">Ziad(34)</text>
+      <rect x="368" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="390" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[7]</text><text x="390" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="416" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="438" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[8]</text><text x="438" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="464" y="164" width="44" height="38" rx="4" fill="#faf9f6" stroke="#d8d5ce"/><text x="486" y="178" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a8785">[9]</text><text x="486" y="194" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+      <rect x="14" y="224" width="650" height="88" rx="7" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+      <text x="26" y="242" font-family="DM Sans,sans-serif" font-size="11" fill="#3C3489" font-weight="500">🔍 Search for key=34:</text>
+      <text x="26" y="259" font-family="DM Mono,monospace" font-size="10" fill="#3C3489">34%10=4 → check [4]: key=14 (not 34) → probe [5]: key=24 (not 34) → probe [6]: key=34 ✅ → return "Ziad"</text>
+      <rect x="26" y="268" width="624" height="36" rx="5" fill="#FCEBEB" stroke="#F09595"/>
+      <text x="36" y="282" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F" font-weight="500">⚠️ STOP RULE: If you hit an EMPTY slot while probing → return "Not found" immediately.</text>
+      <text x="36" y="296" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">An empty slot means the key was NEVER stored past this point. Cambridge tests this every year.</text>
+    </svg>
+  </div>
+
+  <div style="background:#fff;border-radius:8px;padding:1rem;margin:0.75rem 0;border:1px solid var(--purple-bd);">
+    <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--purple);margin-bottom:8px;">How it works — 4 rules</div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Normal insert</div><div class="arrow-arrow">→</div><div class="arrow-desc">Hash key → slot is empty → insert there. Done.</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Collision insert</div><div class="arrow-arrow">→</div><div class="arrow-desc">Slot taken → check [address+1]. Still taken? Check [address+2]. Keep going until you find an empty slot.</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Wrap-around</div><div class="arrow-arrow">→</div><div class="arrow-desc">If you hit slot [9] and it's full, wrap back to [0] using: <code>next = (current + 1) % size</code>.</div></div>
+    <div class="arrow-row"><div class="arrow-label" style="min-width:160px;">Search stop rule</div><div class="arrow-arrow">→</div><div class="arrow-desc">If you hit an <strong>empty slot</strong> while probing → STOP. Return "Not found". Empty = the key was never stored beyond here.</div></div>
+  </div>
+</div>
+
+<div class="sec-title" style="margin-top:1.2rem;">🐍 Method 3 Python — Linear Probing (Neighbouring Slots)</div>
+<div class="sec-sub">The cleanest version. One flat array, -1 means empty. Probe forward with wrap-around using % SIZE.</div>
+<pre class="py">SIZE = <span class="nm">10</span>
+HashTable = [-<span class="nm">1</span>] * SIZE   <span class="cm"># -1 means "empty slot"</span>
+
+<span class="kw">def</span> <span class="fn">Hash</span>(key):
+    <span class="kw">return</span> key % SIZE
+
+<span class="kw">def</span> <span class="fn">Insert</span>(key):
+    <span class="kw">global</span> HashTable
+    address = <span class="fn">Hash</span>(key)
+    <span class="kw">while</span> HashTable[address] != -<span class="nm">1</span>:          <span class="cm"># slot is occupied — probe next</span>
+        address = (address + <span class="nm">1</span>) % SIZE       <span class="cm"># the wrap-around formula</span>
+    HashTable[address] = key                  <span class="cm"># found an empty slot — insert here</span>
+
+<span class="kw">def</span> <span class="fn">Search</span>(key):
+    <span class="kw">global</span> HashTable
+    address = <span class="fn">Hash</span>(key)
+    start = address                           <span class="cm"># remember where we started (avoid infinite loop)</span>
+    <span class="kw">while</span> HashTable[address] != -<span class="nm">1</span>:          <span class="cm"># empty slot? STOP — key not here</span>
+        <span class="kw">if</span> HashTable[address] == key:
+            <span class="kw">return</span> address                   <span class="cm"># ✅ found it!</span>
+        address = (address + <span class="nm">1</span>) % SIZE
+        <span class="kw">if</span> address == start:                  <span class="cm"># full circle, table is full</span>
+            <span class="kw">break</span>
+    <span class="kw">return</span> -<span class="nm">1</span>                               <span class="cm"># not found</span>
+
+<span class="cm"># Example trace:</span>
+<span class="fn">Insert</span>(<span class="nm">14</span>)   <span class="cm"># 14%10=4 → [4] empty → stored at [4]</span>
+<span class="fn">Insert</span>(<span class="nm">24</span>)   <span class="cm"># 24%10=4 → [4] taken → probe [5] → empty → stored at [5]</span>
+<span class="fn">Insert</span>(<span class="nm">34</span>)   <span class="cm"># 34%10=4 → [4],[5] taken → probe [6] → empty → stored at [6]</span>
+<span class="fn">print</span>(<span class="fn">Search</span>(<span class="nm">34</span>))  <span class="cm"># → 6  (found at index 6)</span></pre>
+
+<!-- ══ SECTION 4 — COMPARISON ══ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">All 3 Methods Side-by-Side 📋</div>
+    <div class="section-desc">Cambridge can ask you to compare them. Know every row.</div>
+  </div>
+</div>
+
+<table class="diff-table">
+  <tr><th>Property</th><th>Method 1 — Chaining</th><th>Method 2 — Overflow Area</th><th>Method 3 — Neighbouring Slots</th></tr>
+  <tr><td><strong>Collision goes where?</strong></td><td>Linked list node at home address</td><td>Next free slot in separate overflow section</td><td>Next free slot in the SAME main array</td></tr>
+  <tr><td><strong>Extra structure needed?</strong></td><td>Yes — linked list nodes + pointers</td><td>Yes — reserved overflow section of array</td><td>No — uses same 1D array, no extras</td></tr>
+  <tr><td><strong>Search process</strong></td><td>Hash → slot → follow pointer → walk list</td><td>Hash → main slot → follow overflow pointer chain</td><td>Hash → probe forward slot-by-slot until found or empty</td></tr>
+  <tr><td><strong>"Not found" condition</strong></td><td>Reached null at end of list</td><td>Reached null pointer in overflow chain</td><td>Reached an empty slot while probing</td></tr>
+</table>
+
+<!-- ══ SECTION 5 — CAMBRIDGE 2D ARRAY ══ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">05</div>
+  <div>
+    <div class="section-title">Cambridge 9618 Style — The 2D Array Implementation 🐍</div>
+    <div class="section-desc">This exact structure appeared in Cambridge Paper 4 Q3</div>
+  </div>
+</div>
+
+<!-- VISUAL DIAGRAM of the 2D array structure -->
+<div class="diagram-wrap" style="margin-bottom:1.5rem;">
+  <div style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;">How the 2D array works — HashTable[100][10]</div>
+  <svg width="100%" viewBox="0 0 700 310" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="d1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker>
+    </defs>
+
+    <!-- Title labels -->
+    <text x="14" y="16" font-family="DM Sans,sans-serif" font-size="11" fill="#3C3489" font-weight="500">Each ROW = one hash address (0 to 99) — calculated by key % 100</text>
+    <text x="14" y="30" font-family="DM Sans,sans-serif" font-size="10" fill="#8a8785">Each ROW has 10 COLUMNS — column 0 is the first slot, columns 1-9 are the overflow chain for that address</text>
+
+    <!-- Column header -->
+    <text x="118" y="52" font-family="DM Mono,monospace" font-size="9" fill="#8a8785" text-anchor="middle">col[0]</text>
+    <text x="178" y="52" font-family="DM Mono,monospace" font-size="9" fill="#8a8785" text-anchor="middle">col[1]</text>
+    <text x="238" y="52" font-family="DM Mono,monospace" font-size="9" fill="#8a8785" text-anchor="middle">col[2]</text>
+    <text x="298" y="52" font-family="DM Mono,monospace" font-size="9" fill="#8a8785" text-anchor="middle">col[3]</text>
+    <text x="370" y="52" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce" text-anchor="middle">col[4] … col[9]</text>
+
+    <!-- ROW 0 -->
+    <text x="70" y="76" font-family="DM Mono,monospace" font-size="10" fill="#8a8785" text-anchor="end">row[0]</text>
+    <rect x="80" y="60" width="70" height="28" rx="3" fill="#faf9f6" stroke="#d8d5ce"/>
+    <text x="115" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">Key=-1</text>
+    <rect x="152" y="60" width="54" height="28" rx="3" fill="#faf9f6" stroke="#d8d5ce" stroke-dasharray="3,2"/>
+    <text x="179" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+    <rect x="208" y="60" width="54" height="28" rx="3" fill="#faf9f6" stroke="#d8d5ce" stroke-dasharray="3,2"/>
+    <text x="235" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+    <rect x="264" y="60" width="54" height="28" rx="3" fill="#faf9f6" stroke="#d8d5ce" stroke-dasharray="3,2"/>
+    <text x="291" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+    <text x="380" y="78" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">… all empty …</text>
+
+    <!-- ROW 4 — key 14, 114, 214 example -->
+    <text x="70" y="120" font-family="DM Mono,monospace" font-size="10" fill="#3C3489" text-anchor="end" font-weight="500">row[4]</text>
+    <rect x="80" y="104" width="70" height="30" rx="3" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+    <text x="115" y="117" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#3B6D11" font-weight="500">k=14 "Ali"</text>
+    <text x="115" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3B6D11">14 % 100 = 4 ✅</text>
+    <rect x="152" y="104" width="70" height="30" rx="3" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.5"/>
+    <text x="187" y="117" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806" font-weight="500">k=114 "Ben"</text>
+    <text x="187" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#633806">collision!</text>
+    <rect x="224" y="104" width="70" height="30" rx="3" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.5"/>
+    <text x="259" y="117" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#633806" font-weight="500">k=214 "Cal"</text>
+    <text x="259" y="128" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#633806">collision!</text>
+    <rect x="296" y="104" width="54" height="30" rx="3" fill="#faf9f6" stroke="#d8d5ce" stroke-dasharray="3,2"/>
+    <text x="323" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">empty</text>
+    <text x="380" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">… empty …</text>
+
+    <!-- ROW 7 — single item -->
+    <text x="70" y="163" font-family="DM Mono,monospace" font-size="10" fill="#185FA5" text-anchor="end">row[7]</text>
+    <rect x="80" y="147" width="70" height="30" rx="3" fill="#E6F1FB" stroke="#85B7EB" stroke-width="2"/>
+    <text x="115" y="160" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#185FA5" font-weight="500">k=7 "Sara"</text>
+    <text x="115" y="171" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#185FA5">7 % 100 = 7 ✅</text>
+    <rect x="152" y="147" width="54" height="30" rx="3" fill="#faf9f6" stroke="#d8d5ce" stroke-dasharray="3,2"/>
+    <text x="179" y="166" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">empty</text>
+    <rect x="208" y="147" width="54" height="30" rx="3" fill="#faf9f6" stroke="#d8d5ce" stroke-dasharray="3,2"/>
+    <text x="235" y="166" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">—</text>
+    <text x="380" y="165" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#d8d5ce">… all empty …</text>
+
+    <!-- Dots between rows -->
+    <text x="115" y="200" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" fill="#d8d5ce">⋮</text>
+    <text x="14" y="200" font-family="DM Mono,monospace" font-size="10" fill="#d8d5ce" text-anchor="start">rows 1,2,3,5,6,8,9 … 99</text>
+
+    <!-- Arrow annotations -->
+    <line x1="500" y1="119" x2="420" y2="119" stroke="#633806" stroke-width="1.5" marker-end="url(#d1)"/>
+    <text x="510" y="112" font-family="DM Sans,sans-serif" font-size="10" fill="#633806" font-weight="500">Collision victims fill</text>
+    <text x="510" y="124" font-family="DM Sans,sans-serif" font-size="10" fill="#633806">col[1], col[2]… in order</text>
+
+    <line x1="500" y1="162" x2="200" y2="162" stroke="#185FA5" stroke-width="1.5" marker-end="url(#d1)" stroke-dasharray="4,2"/>
+    <text x="510" y="155" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5" font-weight="500">No collision → only</text>
+    <text x="510" y="167" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">col[0] is used</text>
+
+    <!-- GetRecord walkthrough box -->
+    <rect x="14" y="220" width="670" height="80" rx="7" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+    <text x="26" y="237" font-family="DM Sans,sans-serif" font-size="11" fill="#3C3489" font-weight="500">🔍 GetRecord(114) — searching for key 114:</text>
+    <text x="26" y="253" font-family="DM Mono,monospace" font-size="10" fill="#3C3489">row = Hash(114) = 114 % 100 = 14  →  go to HashTable[14]</text>
+    <text x="26" y="267" font-family="DM Mono,monospace" font-size="10" fill="#3C3489">col=0: HashTable[14][0].Key = 14  →  14 ≠ 114, keep going</text>
+    <text x="26" y="281" font-family="DM Mono,monospace" font-size="10" fill="#3C3489">col=1: HashTable[14][1].Key = 114 →  114 == 114 ✅  →  return HashTable[14][1].Data</text>
+  </svg>
+</div>
+
+<div class="sec-title">Cambridge's exam structure — 2D array with Record class</div>
+<pre class="py"><span class="cm"># ── Record class ─────────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="fn">Record</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="at">self</span>, pKey, pData):
+        <span class="at">self</span>.Key = pKey     <span class="cm"># integer</span>
+        <span class="at">self</span>.Data = pData   <span class="cm"># string</span>
+
+<span class="cm"># ── Hash Table: 100 rows × 10 columns ────────────────────────</span>
+HashTable = []
+
+<span class="kw">def</span> <span class="fn">InitialiseHashTable</span>():
+    <span class="kw">global</span> HashTable
+    HashTable = [[<span class="fn">Record</span>(-<span class="nm">1</span>, <span class="st">""</span>)] * <span class="nm">10</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">100</span>)]
+    <span class="cm"># Creates 100 rows, each containing 10 Record objects.</span>
+    <span class="cm"># ROW index  = the hash address (key % 100 tells you the row).</span>
+    <span class="cm"># COLUMN index = position within that row.</span>
+    <span class="cm">#   col[0] = first item stored at this address (no collision).</span>
+    <span class="cm">#   col[1] = second item if there was a collision.</span>
+    <span class="cm">#   col[2] = third item if there were two collisions. And so on.</span>
+    <span class="cm"># Record(-1, "") signals an empty slot — Key=-1 means "nothing here".</span>
+
+<span class="kw">def</span> <span class="fn">Hash</span>(Key):
+    <span class="kw">return</span> Key % <span class="nm">100</span>   <span class="cm"># returns 0–99</span>
+
+<span class="kw">def</span> <span class="fn">InsertData</span>(RecordData):
+    <span class="kw">global</span> HashTable
+    row = <span class="fn">Hash</span>(RecordData.Key)
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+        <span class="kw">if</span> HashTable[row][col].Key == -<span class="nm">1</span>:   <span class="cm"># empty column → insert here</span>
+            HashTable[row][col] = RecordData
+            <span class="kw">break</span>
+
+<span class="kw">def</span> <span class="fn">GetRecord</span>(Key):
+    <span class="kw">global</span> HashTable
+    row = <span class="fn">Hash</span>(Key)
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+        <span class="kw">if</span> HashTable[row][col].Key == Key:
+            <span class="kw">return</span> HashTable[row][col].Data   <span class="cm"># ✅ found</span>
+    <span class="kw">return</span> <span class="st">"Not found"</span>   <span class="cm"># ← MUST be OUTSIDE the for loop</span>
+
+<span class="kw">def</span> <span class="fn">ReadData</span>():
+    <span class="kw">global</span> HashTable
+    File = <span class="fn">open</span>(<span class="st">"HashTableData.txt"</span>)
+    <span class="kw">for</span> Line <span class="kw">in</span> File:
+        Data = Line.<span class="fn">strip</span>().<span class="fn">split</span>(<span class="st">","</span>)   <span class="cm"># strip() removes \n BEFORE split()</span>
+        <span class="fn">InsertData</span>(<span class="fn">Record</span>(<span class="fn">int</span>(Data[<span class="nm">0</span>]), Data[<span class="nm">1</span>]))
+    File.<span class="fn">close</span>()
+
+<span class="fn">InitialiseHashTable</span>()
+<span class="fn">ReadData</span>()
+<span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):
+    key = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter key: "</span>))
+    <span class="fn">print</span>(<span class="fn">GetRecord</span>(key))</pre>
+
+<!-- ══ EXERCISES ══ -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Past Paper Exercises — Cambridge 9618/41 Style 🏆</div>
+    <div class="section-desc">Same format as the real exam. Same mark allocation. Same wording.</div>
+  </div>
+</div>
+
+<!-- EX H0 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('h0')">
+    <div class="ex-head-left"><span class="ex-num">H0</span><span class="ex-title">Describe the three methods of collision handling</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[6 marks]</span><span class="toggle-lbl" id="h0-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="h0" style="display:none;">
+    <div class="scenario">
+      A hash table of size 10 uses the hash function <code>key MOD 10</code>. When key 12 and key 22 are both inserted, they produce the same hash address — a collision occurs at address 2.<br><br>
+      Describe how each of the three collision-handling methods would resolve this collision. For each method, describe both how the data is stored and how it would later be retrieved.
+    </div>
+    <ul class="task-list">
+      <li>Describe Method 1 — chaining. <span class="pts">[2]</span></li>
+      <li>Describe Method 2 — use of overflow area. <span class="pts">[2]</span></li>
+      <li>Describe Method 3 — neighbouring slots. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Exam technique:</strong> Each [2] answer must cover two separate ideas — where the data goes, AND how you retrieve it. One sentence = 1/2 maximum.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('h0')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('h0')">Show Answer</button></div>
+    <div class="hint-box" id="h0-hint">M1: key 12 at [2], key 22 added as new linked-list node at [2]. Search: hash → [2] → walk list.<br>M2: key 12 in main [2], key 22 in overflow area, [2] stores pointer to it. Search: [2] → follow pointer.<br>M3: key 12 at [2], key 22 probes [3] → empty → stored. Search: hash=2 → [2] not match → [3] match.</div>
+    <div class="answer-block" id="h0-ans">
+<pre><span class="cm"># Method 1 — Chaining [2 marks]</span>
+<span class="cm">#</span>
+<span class="cm">#   Key 12 is stored at hash address [2].</span>
+<span class="cm">#   Key 22 (collision) is added as a new NODE in the linked list rooted at [2].</span>
+<span class="cm">#   Slot [2] stores a start pointer to the head of this list.</span>
+<span class="cm">#</span>
+<span class="cm">#   To search: hash to [2], follow start pointer, traverse list comparing keys</span>
+<span class="cm">#   until key 22 found or null reached (= Not found).</span>
+<span class="cm">#</span>
+<span class="cm">#   [1] Collision stored as linked list node at hash address</span>
+<span class="cm">#   [1] Search follows start pointer, walks list node by node</span>
+
+<span class="cm"># Method 2 — Overflow area [2 marks]</span>
+<span class="cm">#</span>
+<span class="cm">#   The array is split: main area (slots 0–7) and overflow area (slots 8–9).</span>
+<span class="cm">#   Key 12 stored normally in main slot [2].</span>
+<span class="cm">#   Key 22 stored in next free overflow slot (e.g. slot 8). Slot [2] stores a pointer to it.</span>
+<span class="cm">#</span>
+<span class="cm">#   To search: hash to [2], check if key matches, if not follow overflow pointer,</span>
+<span class="cm">#   continue following chain until null (= Not found).</span>
+<span class="cm">#</span>
+<span class="cm">#   [1] Collision stored in a separate overflow section</span>
+<span class="cm">#   [1] Main slot stores pointer to overflow entry; search follows pointer chain</span>
+
+<span class="cm"># Method 3 — Neighbouring slots [2 marks]</span>
+<span class="cm">#</span>
+<span class="cm">#   Key 12 stored at home address [2].</span>
+<span class="cm">#   Key 22 hashes to [2] — occupied — probe slot [3] — empty — store 22 at [3].</span>
+<span class="cm">#</span>
+<span class="cm">#   To search: hash=2, check [2] (key=12, not 22), probe [3] (key=22, match), return value.</span>
+<span class="cm">#   STOP probing if an empty slot is reached — key was never stored beyond this point.</span>
+<span class="cm">#</span>
+<span class="cm">#   [1] Collision victim stored at next available neighbouring empty slot</span>
+<span class="cm">#   [1] Search probes forward; stops at empty slot = Not found</span></pre>
+    </div>
+    <div class="ex-citation">📌 Theory style — Cambridge 9618 Paper 4, Chapter 23</div>
+  </div>
+</div>
+
+<!-- EX H1 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('h1')">
+    <div class="ex-head-left"><span class="ex-num">H1</span><span class="ex-title">Write the Record class and InitialiseHashTable() — Q3(a)(b)</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[4 marks]</span><span class="toggle-lbl" id="h1-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="h1" style="display:none;">
+    <div class="scenario">
+      A program stores records in the 2D array <code>HashTable</code>. The array has <strong>100 × 10</strong> elements. Each element is an object of type <code>Record</code>.<br><br>
+      The class <code>Record</code> stores data about records:
+      <br><br>
+      <code>Key : Integer</code> — stores the integer key field (public)<br>
+      <code>Data : String</code> — stores the string data (public)<br>
+      <code>Constructor()</code> — initialises Key and Data to its parameter values
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the class <code>Record</code> and its constructor. <span class="pts">[2]</span></li>
+      <li>Write program code to declare the global 2D array <code>HashTable</code> and the procedure <code>InitialiseHashTable()</code> — initialises each element to an empty Record where Key = −1. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Cambridge note:</strong> Key and Data are <em>public</em> in this question (unlike Train/Station which are private). No getter methods needed. Use <code>Record(-1, "")</code> for empty slots.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('h1')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('h1')">Show Answer</button></div>
+    <div class="hint-box" id="h1-hint">
+      Record: <code>class Record:</code> → <code>def __init__(self, pKey, pData):</code> → <code>self.Key = pKey</code> and <code>self.Data = pData</code> (no double underscore — public!).<br>
+      InitialiseHashTable: <code>global HashTable</code> then <code>HashTable = [[Record(-1,"")] * 10 for i in range(100)]</code>.
+    </div>
+    <div class="answer-block" id="h1-ans">
+<pre><span class="cm"># (a) Record class — [2 marks]</span>
+<span class="kw">class</span> <span class="fn">Record</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="at">self</span>, pKey, pData):
+        <span class="at">self</span>.Key = pKey      <span class="cm"># integer — PUBLIC (no __)</span>
+        <span class="at">self</span>.Data = pData    <span class="cm"># string  — PUBLIC (no __)</span>
+<span class="cm"># [1] Class header + constructor header with two parameters</span>
+<span class="cm"># [1] Both parameters assigned to self.Key and self.Data</span>
+
+<span class="cm"># (b) HashTable declaration + InitialiseHashTable() — [2 marks]</span>
+HashTable = []
+
+<span class="kw">def</span> <span class="fn">InitialiseHashTable</span>():
+    <span class="kw">global</span> HashTable
+    HashTable = [[<span class="fn">Record</span>(-<span class="nm">1</span>, <span class="st">""</span>)] * <span class="nm">10</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">100</span>)]
+    <span class="cm"># 100 rows × 10 columns, every element = Record(-1, "")</span>
+<span class="cm"># [1] 2D array declared — 100 rows × 10 columns of Record type</span>
+<span class="cm"># [1] Every element initialised to Record(-1, "") — Key=-1 signals empty</span></pre>
+    </div>
+    <div class="ex-citation">📌 Source: 9618/41/O/N/25 Q3(a)(b)</div>
+  </div>
+</div>
+
+<!-- EX H2 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('h2')">
+    <div class="ex-head-left"><span class="ex-num">H2</span><span class="ex-title">Write Hash() and InsertData() — Q3(c)(d)</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[6 marks]</span><span class="toggle-lbl" id="h2-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="h2" style="display:none;">
+    <div class="scenario">
+      Using the <code>Record</code> class and <code>HashTable</code> from H1.<br><br>
+      The function <code>Hash()</code>: takes an integer key field as a parameter. Calculates and returns the hash value using the formula: <strong>key MOD 100</strong>.<br><br>
+      The procedure <code>InsertData()</code>: takes an object of type <code>Record</code> as a parameter. Calculates the hash value for the parameter using <code>Hash()</code>. Stores the parameter in the correct position in <code>HashTable</code>. You can assume no more than 10 objects will generate the same hash value.
+    </div>
+    <ul class="task-list">
+      <li>Write program code for <code>Hash()</code>. <span class="pts">[2]</span></li>
+      <li>Write program code for <code>InsertData()</code>. <span class="pts">[4]</span></li>
+    </ul>
+    <div class="tip-box"><strong>InsertData tip:</strong> Call <code>Hash()</code> first to get the row. Then loop through columns 0 to 9 looking for the first slot where <code>.Key == -1</code>. Store the record there and <code>break</code>.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('h2')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('h2')">Show Answer</button></div>
+    <div class="hint-box" id="h2-hint">
+      Hash: one line — <code>return Key % 100</code>.<br>
+      InsertData: <code>global HashTable</code> → <code>HashValue = Hash(RecordData.Key)</code> → <code>for X in range(10):</code> → <code>if HashTable[HashValue][X].Key == -1:</code> → store → break.
+    </div>
+    <div class="answer-block" id="h2-ans">
+<pre><span class="cm"># Hash() — [2 marks]</span>
+<span class="kw">def</span> <span class="fn">Hash</span>(Key):
+    <span class="kw">return</span> Key % <span class="nm">100</span>
+<span class="cm"># [1] Function header taking one integer parameter</span>
+<span class="cm"># [1] Returns Key % 100 correctly</span>
+
+<span class="cm"># InsertData() — [4 marks]</span>
+<span class="kw">def</span> <span class="fn">InsertData</span>(RecordData):
+    <span class="kw">global</span> HashTable
+    HashValue = <span class="fn">Hash</span>(RecordData.Key)      <span class="cm"># get the row (hash address)</span>
+    <span class="kw">for</span> X <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">10</span>):               <span class="cm"># scan columns 0..9</span>
+        <span class="kw">if</span> HashTable[HashValue][X].Key == -<span class="nm">1</span>:   <span class="cm"># empty slot found</span>
+            HashTable[HashValue][X] = RecordData
+            <span class="kw">break</span>                         <span class="cm"># stop after storing</span>
+<span class="cm"># [1] Procedure header taking one Record parameter</span>
+<span class="cm"># [1] Calls Hash() with the record's Key and stores/uses result</span>
+<span class="cm"># [1] Accesses HashTable[HashValue][0] and stores if empty (no collision)</span>
+<span class="cm"># [1] Iterates 2nd dimension (columns) to find empty slot when collision occurs</span></pre>
+    </div>
+    <div class="ex-citation">📌 Source: 9618/41/O/N/25 Q3(c)(d)</div>
+  </div>
+</div>
+
+<!-- EX H3 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('h3')">
+    <div class="ex-head-left"><span class="ex-num">H3</span><span class="ex-title">Write ReadData() — Q3(e)</span></div>
+    <div class="ex-meta"><span class="badge badge-mid">Intermediate</span><span class="badge badge-marks">[5 marks]</span><span class="toggle-lbl" id="h3-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="h3" style="display:none;">
+    <div class="scenario">
+      The file <code>HashTableData.txt</code> stores 200 key values and string data items in the format:<br><br>
+      <code>key,string</code><br><br>
+      For example, the first row in the text file is:<br>
+      <code>528,permission</code><br><br>
+      The key is <code>528</code> and the string data is <code>"permission"</code>.<br><br>
+      The procedure <code>ReadData()</code>:
+      <ul style="margin:8px 0 0 1.2rem;font-size:13px;">
+        <li>opens the text file and reads each line</li>
+        <li>splits each line into the key and data</li>
+        <li>calls <code>InsertData()</code> with an object containing each key and matching data.</li>
+      </ul>
+    </div>
+    <ul class="task-list">
+      <li>Write program code for <code>ReadData()</code>. <span class="pts">[5]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Key mark:</strong> Use <code>Line.strip().split(",")</code> — <code>strip()</code> removes the hidden newline character <em>before</em> <code>split()</code>. Without it, your Data string has a <code>\n</code> at the end. Cambridge checks this.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('h3')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('h3')">Show Answer</button></div>
+    <div class="hint-box" id="h3-hint">
+      <code>File = open("HashTableData.txt")</code> → <code>for Line in File:</code> → <code>Data = Line.strip().split(",")</code> → <code>InsertData(Record(int(Data[0]), Data[1]))</code> → <code>File.close()</code>.
+    </div>
+    <div class="answer-block" id="h3-ans">
+<pre><span class="cm"># ReadData() — [5 marks]</span>
+<span class="kw">def</span> <span class="fn">ReadData</span>():
+    <span class="kw">global</span> HashTable
+    File = <span class="fn">open</span>(<span class="st">"HashTableData.txt"</span>)
+    <span class="kw">for</span> Line <span class="kw">in</span> File:
+        Data = Line.<span class="fn">strip</span>().<span class="fn">split</span>(<span class="st">","</span>)        <span class="cm"># strip() first, then split(",")</span>
+        <span class="fn">InsertData</span>(<span class="fn">Record</span>(<span class="fn">int</span>(Data[<span class="nm">0</span>]), Data[<span class="nm">1</span>]))
+    File.<span class="fn">close</span>()
+
+<span class="cm"># [1] Opens file and closes file in the correct place</span>
+<span class="cm"># [1] Iterates through each line in the file</span>
+<span class="cm"># [1] Splits each line by comma (after stripping newline)</span>
+<span class="cm"># [1] Creates Record object with int key and string data as arguments</span>
+<span class="cm"># [1] Calls InsertData() with the Record object</span></pre>
+    </div>
+    <div class="ex-citation">📌 Source: 9618/41/O/N/25 Q3(e)</div>
+  </div>
+</div>
+
+<!-- EX H4 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('h4')">
+    <div class="ex-head-left"><span class="ex-num">H4</span><span class="ex-title">Write GetRecord() and the main program — Q3(f)(g)</span></div>
+    <div class="ex-meta"><span class="badge badge-mid">Intermediate</span><span class="badge badge-marks">[8 marks]</span><span class="toggle-lbl" id="h4-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="h4" style="display:none;">
+    <div class="scenario">
+      The function <code>GetRecord()</code>:
+      <ul style="margin:8px 0 0 1.2rem;font-size:13px;">
+        <li>takes an integer key field as a parameter</li>
+        <li>calculates the hash value for the key field using <code>Hash()</code></li>
+        <li>searches the hash table for the record with the matching key field</li>
+        <li>returns the data for the record if found</li>
+        <li>returns <code>"Not found"</code> if the record is not found.</li>
+      </ul>
+      <br>
+      The main program:
+      <ul style="margin:0 0 0 1.2rem;font-size:13px;">
+        <li>calls <code>InitialiseHashTable()</code> and <code>ReadData()</code></li>
+        <li>takes five integer key fields as input from the user</li>
+        <li>calls <code>GetRecord()</code> with each input and outputs the return value.</li>
+      </ul>
+    </div>
+    <ul class="task-list">
+      <li>Write program code for <code>GetRecord()</code>. <span class="pts">[5]</span></li>
+      <li>Write program code for the main program. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box"><strong>The mark Cambridge gives every year for one specific thing:</strong> <code>return "Not found"</code> must be indented at the SAME level as the <code>for</code> loop — NOT inside it. Inside = returns after checking only 1 column. That is wrong. Cambridge allocates 1 dedicated mark to this placement.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('h4')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('h4')">Show Answer</button></div>
+    <div class="hint-box" id="h4-hint">
+      GetRecord: <code>HashValue = Hash(Key)</code> → <code>for X in range(10):</code> → <code>if HashTable[HashValue][X].Key == Key: return HashTable[HashValue][X].Data</code> → OUTSIDE the loop: <code>return "Not found"</code>.<br>
+      Main: <code>InitialiseHashTable()</code> → <code>ReadData()</code> → <code>for x in range(5):</code> → <code>Key = int(input(...))</code> → <code>print(GetRecord(Key))</code>.
+    </div>
+    <div class="answer-block" id="h4-ans">
+<pre><span class="cm"># GetRecord() — [5 marks]</span>
+<span class="kw">def</span> <span class="fn">GetRecord</span>(Key):
+    <span class="kw">global</span> HashTable
+    HashValue = <span class="fn">Hash</span>(Key)
+    <span class="kw">for</span> X <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">10</span>):
+        <span class="kw">if</span> HashTable[HashValue][X].Key == Key:
+            <span class="kw">return</span> HashTable[HashValue][X].Data    <span class="cm"># found!</span>
+    <span class="kw">return</span> <span class="st">"Not found"</span>    <span class="cm"># ← OUTSIDE the for loop (same indent as 'for')</span>
+                          <span class="cm"># only reached after ALL 10 columns checked</span>
+
+<span class="cm"># [1] Function header taking one parameter, returning string in all cases</span>
+<span class="cm"># [1] Calls Hash() with parameter and stores/uses result</span>
+<span class="cm"># [1] Iterates through 2nd dimension (columns 0–9) at HashTable[HashValue]</span>
+<span class="cm"># [1] Returns .Data when .Key matches parameter</span>
+<span class="cm"># [1] Returns "Not found" OUTSIDE (after) the complete for loop</span>
+
+<span class="cm"># Main program — [3 marks]</span>
+<span class="fn">InitialiseHashTable</span>()
+<span class="fn">ReadData</span>()
+
+<span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):
+    Key = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter key field "</span>))
+    <span class="fn">print</span>(<span class="fn">GetRecord</span>(Key))
+
+<span class="cm"># [1] Calls InitialiseHashTable() then ReadData()</span>
+<span class="cm"># [1] Takes five integer inputs</span>
+<span class="cm"># [1] Calls GetRecord() with each input and outputs return value</span>
+
+<span class="cm"># Expected output for test inputs from O/N/25 mark scheme:</span>
+<span class="cm"># 528  → permission</span>
+<span class="cm"># 1128 → peace</span>
+<span class="cm"># 1828 → precedent</span>
+<span class="cm"># 1062 → up</span>
+<span class="cm"># 39   → Not found</span></pre>
+    </div>
+    <div class="ex-citation">📌 Source: 9618/41/O/N/25 Q3(f)(g)</div>
+  </div>
+</div>
+
+<!-- EX H5 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('h5')">
+    <div class="ex-head-left"><span class="ex-num">H5</span><span class="ex-title">Manual trace — show the state of HashTable after inserting 4 records [Hard]</span></div>
+    <div class="ex-meta"><span class="badge badge-hard">Hard</span><span class="badge badge-marks">[6 marks]</span><span class="toggle-lbl" id="h5-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="h5" style="display:none;">
+    <div class="scenario">
+      A hash table uses a 2D array of 10 × 4 elements (10 rows, 4 columns). Each element is a <code>Record</code> object with Key and Data. Empty slots have Key = −1. Hash function = <code>key MOD 10</code>.<br><br>
+      The following four records are inserted in order using <code>InsertData()</code>:<br><br>
+      <code>Record(14, "Ali")</code> &nbsp; <code>Record(24, "Nour")</code> &nbsp; <code>Record(7, "Sara")</code> &nbsp; <code>Record(34, "Ziad")</code>
+    </div>
+    <ul class="task-list">
+      <li>For each record, state: the hash value, which row it goes into, and which column it occupies. <span class="pts">[3]</span></li>
+      <li>Draw the state of the complete 10×4 array after all 4 insertions. Show all rows 0–9 and columns 0–3. <span class="pts">[2]</span></li>
+      <li>Show the steps to retrieve <code>Record(24, "Nour")</code> using <code>GetRecord(24)</code>. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Remember:</strong> 14%10=4, 24%10=4, 34%10=4 — three keys all hash to row 4. They go to columns [0], [1], [2] of row 4 in that order. Row 7 gets Sara at column [0].</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('h5')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('h5')">Show Answer</button></div>
+    <div class="hint-box" id="h5-hint">
+      Ali: 14%10=4 → row 4, col 0 free → store at [4][0].<br>
+      Nour: 24%10=4 → row 4, col 0 taken → col 1 free → store at [4][1].<br>
+      Sara: 7%10=7 → row 7, col 0 free → store at [7][0].<br>
+      Ziad: 34%10=4 → row 4, col 0 taken → col 1 taken → col 2 free → store at [4][2].
+    </div>
+    <div class="answer-block" id="h5-ans">
+<pre><span class="cm"># Part (a) — Trace [3 marks]</span>
+<span class="fn">Record</span>(<span class="nm">14</span>,<span class="st">"Ali"</span>)  <span class="cm"># 14%10=4 → row[4], col[0] is empty → stored at HashTable[4][0]</span>
+<span class="fn">Record</span>(<span class="nm">24</span>,<span class="st">"Nour"</span>) <span class="cm"># 24%10=4 → row[4], col[0] taken, col[1] empty → HashTable[4][1]</span>
+<span class="fn">Record</span>(<span class="nm">7</span>,<span class="st">"Sara"</span>)  <span class="cm">#  7%10=7 → row[7], col[0] is empty → stored at HashTable[7][0]</span>
+<span class="fn">Record</span>(<span class="nm">34</span>,<span class="st">"Ziad"</span>) <span class="cm"># 34%10=4 → row[4], col[0],[1] taken, col[2] empty → HashTable[4][2]</span>
+
+<span class="cm"># [1] Correct hash values for all four (14→4, 24→4, 7→7, 34→4)</span>
+<span class="cm"># [1] Ali at [4][0], Nour at [4][1] correctly showing column increment on collision</span>
+<span class="cm"># [1] Ziad at [4][2] (second collision), Sara at [7][0]</span>
+
+<span class="cm"># Part (b) — Final table state [2 marks]</span>
+<span class="cm"># Row | Col[0]        | Col[1]        | Col[2]        | Col[3]</span>
+<span class="cm"># ----+---------------+---------------+---------------+---------</span>
+<span class="cm"># [0] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [1] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [2] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [3] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [4] | Key=14 "Ali"  | Key=24 "Nour" | Key=34 "Ziad" | Key=-1  ← 3 collisions here</span>
+<span class="cm"># [5] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [6] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [7] | Key=7  "Sara" | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [8] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+<span class="cm"># [9] | Key=-1        | Key=-1        | Key=-1        | Key=-1</span>
+
+<span class="cm"># [1] Row 4 correct: Ali col[0], Nour col[1], Ziad col[2], col[3] empty</span>
+<span class="cm"># [1] All other rows correctly empty (Key=-1); Sara at row[7][0]</span>
+
+<span class="cm"># Part (c) — Retrieving key 24 [1 mark]</span>
+<span class="cm"># GetRecord(24):</span>
+<span class="cm">#   HashValue = Hash(24) = 24 % 10 = 4</span>
+<span class="cm">#   X=0: HashTable[4][0].Key = 14  →  14 ≠ 24, continue</span>
+<span class="cm">#   X=1: HashTable[4][1].Key = 24  →  24 == 24 ✅, return HashTable[4][1].Data → "Nour"</span>
+<span class="cm"># [1] Hash to row 4, scan columns, find key=24 at col[1], return "Nour"</span></pre>
+    </div>
+    <div class="ex-citation">📌 Source: Synthesised — Cambridge 9618/41 trace style</div>
+  </div>
+</div>
+
+<!-- EXAMINER SECRETS -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">07</div>
+  <div>
+    <div class="section-title">Examiner's Secrets 🕵️ — Marks Lost Every Single Year</div>
+    <div class="section-desc">Read this section twice. Then read it again the night before the exam.</div>
+  </div>
+</div>
+
+<div class="box box-red">
+  <strong>⚠️ 6 marks students throw away on hash tables — memorise all of these</strong>
+  <div class="arrow-row"><div class="arrow-label">1. Empty sentinel = -1</div><div class="arrow-arrow">→</div><div class="arrow-desc">Cambridge initialises hash tables with <code>-1</code>. The empty check is <code>== -1</code> or <code>.Key == -1</code>. NOT <code>None</code>, NOT <code>0</code>, NOT <code>""</code>. Use the exact sentinel the question specifies.</div></div>
+  <div class="arrow-row"><div class="arrow-label">2. "Not found" outside the loop</div><div class="arrow-arrow">→</div><div class="arrow-desc">In GetRecord(), <code>return "Not found"</code> must be AFTER the for loop ends — not inside it. Inside means you return it after checking just one slot. Cambridge puts 1 dedicated mark on this exact placement.</div></div>
+  <div class="arrow-row"><div class="arrow-label">3. Always call Hash()</div><div class="arrow-arrow">→</div><div class="arrow-desc">InsertData, GetRecord, and any delete function all start with <code>row = Hash(Key)</code>. Never hardcode the row. Never write <code>key % 100</code> directly in those functions — call Hash().</div></div>
+  <div class="arrow-row"><div class="arrow-label">4. global HashTable</div><div class="arrow-arrow">→</div><div class="arrow-desc">Every function that reads or modifies HashTable needs <code>global HashTable</code>. Without it, Python makes a local copy — your changes vanish. Same rule as Stack and Queue.</div></div>
+  <div class="arrow-row"><div class="arrow-label">5. strip() before split()</div><div class="arrow-arrow">→</div><div class="arrow-desc">File lines end with hidden <code>\n</code>. Use <code>Line.strip().split(",")</code> — strip() removes the newline FIRST, then split() by comma. Without strip(), your data string has a trailing newline. Cambridge checks this.</div></div>
+  <div class="arrow-row"><div class="arrow-label">6. Know all 3 method names</div><div class="arrow-arrow">→</div><div class="arrow-desc"><strong>Chaining</strong> = linked list at address. <strong>Overflow area</strong> = separate section. <strong>Neighbouring slots</strong> = probe forward. All three are valid ways to say the same methods — recognise them all.</div></div>
+</div>
+
+<div class="divider"></div>
+<div class="box box-teal" style="margin-top:1.5rem;">
+  <strong>✅ Final Summary — Everything in One Place</strong>
+  <br><br>
+  🔑 <strong>Hash table = skip the search, go directly to the data.</strong> <code>address = key % size</code>. One calculation. One jump. O(1). No loops.
+  <br><br>
+  💥 <strong>Collision = two keys calculate the same address.</strong> Expected. Always happens. You need one of three plans:
+  <br><br>
+  &nbsp;&nbsp;&nbsp;🔗 <strong>Method 1 — Chaining:</strong> Each slot is the head of a linked list. Collision victim becomes a new node appended to that list. Search: hash → slot → walk list until found or null.
+  <br><br>
+  &nbsp;&nbsp;&nbsp;🗃️ <strong>Method 2 — Overflow Area:</strong> Array split into main zone + overflow zone. Collision victim goes to overflow. Main slot stores a pointer there. Search: hash → main slot → follow pointer if needed.
+  <br><br>
+  &nbsp;&nbsp;&nbsp;🔎 <strong>Method 3 — Neighbouring Slots:</strong> If home slot is full, check [home+1], [home+2]... Same array, no extras. Formula: <code>(slot + 1) % size</code>. Also called linear probing. Stop probing at an empty slot = "Not found".
+  <br><br>
+  🚨 <strong>The marks you keep losing:</strong> Empty check is <code>.Key == -1</code>. "Not found" is OUTSIDE the loop. Always write <code>global HashTable</code>. Always strip() before split(). Know all three method names. These five rules = guaranteed extra marks on every hash table question.
+</div>
+
+</div><!-- end page-body -->
+
+<div style="max-width:960px;margin:0 auto;padding:0 2rem 3rem;">
+<div class="before-exam">
+  <h3>🎯 Before the Exam — Hash Table Quick Reference Card</h3>
+
+  <div class="be-section">── THE CORE FORMULA ─────────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Hash function</span><span class="be-val">address = key % table_size</span></div>
+  <div class="be-row"><span class="be-key">Empty sentinel</span><span class="be-val">-1  (or Record(-1,"") in Cambridge 2D array)</span></div>
+  <div class="be-row"><span class="be-key">Wrap-around probe</span><span class="be-val">next_slot = (current_slot + 1) % size</span></div>
+
+  <div class="be-section">── 3 COLLISION METHODS ──────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Method 1 — Chaining</span><span class="be-val">Linked list at hashed address | slot = start pointer to list head</span></div>
+  <div class="be-row"><span class="be-key">Method 2 — Overflow Area</span><span class="be-val">Separate overflow section | main slot = pointer to overflow entry</span></div>
+  <div class="be-row"><span class="be-key">Method 3 — Neighbouring Slots</span><span class="be-val">Probe (slot+1)%size forward | empty slot while probing = Not Found</span></div>
+
+  <div class="be-section">── CAMBRIDGE 2D ARRAY — Q3 PATTERN ─────────────────────</div>
+  <div class="be-row"><span class="be-key">Declare</span><span class="be-val">HashTable[100][10] of Record  |  Record(-1,"") = empty slot</span></div>
+  <div class="be-row"><span class="be-key">Hash()</span><span class="be-val">return Key % 100</span></div>
+  <div class="be-row"><span class="be-key">InsertData()</span><span class="be-val">row=Hash(Key) → for col 0-9 → if .Key==-1 → store → break</span></div>
+  <div class="be-row"><span class="be-key">GetRecord()</span><span class="be-val">row=Hash(Key) → for col → if .Key==Key → return .Data  |  AFTER loop: return "Not found"</span></div>
+  <div class="be-row"><span class="be-key">ReadData()</span><span class="be-val">open file → Line.strip().split(",") → InsertData(Record(int(Data[0]),Data[1]))</span></div>
+
+  <div class="be-section">── 6 RULES THAT WIN MARKS ───────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Rule 1</span><span class="be-val">Empty check = .Key == -1  (NOT None, NOT 0)</span></div>
+  <div class="be-row"><span class="be-key">Rule 2</span><span class="be-val">"Not found" is OUTSIDE the for loop — after scanning all columns</span></div>
+  <div class="be-row"><span class="be-key">Rule 3</span><span class="be-val">Always call Hash() — never hardcode key%100 in Insert/Get</span></div>
+  <div class="be-row"><span class="be-key">Rule 4</span><span class="be-val">global HashTable in every function that reads or modifies it</span></div>
+  <div class="be-row"><span class="be-key">Rule 5</span><span class="be-val">Line.strip().split(",") — strip() removes hidden newline BEFORE split</span></div>
+  <div class="be-row"><span class="be-key">Rule 6</span><span class="be-val">Know all names: Chaining | Overflow Area | Neighbouring Slots / Linear Probing</span></div>
+</div>
+</div>
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 23 — Hash Tables</span>
+  <span>Hash Function · Chaining · Overflow Area · Linear Probing · InsertData · GetRecord · ReadData</span>
+</footer>
+
+<script>
+function toggle(id){var b=document.getElementById(id),l=document.getElementById(id+'-lbl'),o=b.style.display==='block';b.style.display=o?'none':'block';if(l)l.textContent=o?'▼ expand':'▲ collapse';}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAnswer(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+</script>
+</body>
+</html>
