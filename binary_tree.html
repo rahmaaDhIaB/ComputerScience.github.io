@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Tree · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;
+  --paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;
+  --mono-bg:#1e1c18;--mono-text:#d4d0c4;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;
+  --green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;
+  --amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;
+  --red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;
+  --purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;
+  --teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;
+  --easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;
+  --mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;
+  --hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+
+@keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes glow{0%,100%{text-shadow:none}50%{text-shadow:0 0 22px rgba(239,159,39,0.45)}}
+@keyframes neonPulse{0%,100%{box-shadow:0 0 6px rgba(239,159,39,0.4)}50%{box-shadow:0 0 20px rgba(239,159,39,0.9)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes drawLine{from{stroke-dashoffset:200}to{stroke-dashoffset:0}}
+@keyframes popIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+
+.anim-slide{animation:slideIn 0.5s ease both;}
+.anim-slide:nth-child(2){animation-delay:.1s}
+.anim-slide:nth-child(3){animation-delay:.2s}
+.anim-slide:nth-child(4){animation-delay:.3s}
+
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:color .2s;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+
+.cover{background:linear-gradient(135deg,#1a1206 0%,#2d1f08 50%,#1a1206 100%);color:#e8d4a8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'🌳';position:absolute;right:2rem;top:1rem;font-size:8rem;opacity:.07;animation:bounce 5s ease-in-out infinite;}
+.cover::after{content:'';position:absolute;bottom:-40px;left:5%;width:180px;height:180px;border:25px solid rgba(239,159,39,.06);border-radius:50%;animation:bounce 7s ease-in-out infinite reverse;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(232,212,168,.4);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.4rem;line-height:1.2;font-weight:400;animation:glow 3s ease-in-out infinite;}
+.cover h1 em{font-style:italic;color:#ef9f27;}
+.cover-sub{margin-top:.75rem;font-size:13px;color:rgba(232,212,168,.55);max-width:580px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(232,212,168,.45);}
+.cover-meta-item strong{display:block;color:rgba(232,212,168,.85);font-size:13px;font-weight:500;}
+
+.page-body{padding:1.75rem 2rem 4rem;max-width:900px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;margin-bottom:.2rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.2rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+
+.box{border-radius:7px;padding:.8rem 1rem;font-size:13px;line-height:1.6;margin:.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.op{color:#ef9f27;}
+
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+
+/* ── TREE SVG ── */
+.tree-container{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1rem;margin:1rem 0;overflow-x:auto;display:flex;justify-content:center;}
+.tree-container svg{max-width:100%;height:auto;}
+.tree-edge{stroke:#d8d5ce;stroke-width:2;fill:none;stroke-dasharray:200;stroke-dashoffset:200;animation:drawLine .8s ease forwards;}
+.tree-edge:nth-child(1){animation-delay:.1s}
+.tree-edge:nth-child(2){animation-delay:.2s}
+.tree-edge:nth-child(3){animation-delay:.3s}
+.tree-edge:nth-child(4){animation-delay:.4s}
+.tree-edge:nth-child(5){animation-delay:.5s}
+.tree-edge:nth-child(6){animation-delay:.6s}
+.tree-node{animation:popIn .4s ease both;}
+.tree-node:nth-child(n+2){animation-delay:calc(.15s * var(--i, 1))}
+.node-circle{fill:#fff;stroke:var(--rule);stroke-width:2;}
+.node-circle.root{fill:var(--amber-bg);stroke:var(--amber-bd);}
+.node-circle.insert-hi{fill:var(--green-bg);stroke:var(--green-bd);animation:neonPulse .8s ease 3;}
+.node-circle.path-hi{fill:var(--blue-bg);stroke:var(--blue-bd);}
+.node-circle.found{fill:var(--green-bg);stroke:var(--green-bd);}
+.node-text{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;}
+.node-text.root{fill:var(--amber);}
+
+/* ── ARR TABLE ── */
+.arr-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:.75rem 0;font-family:'DM Mono',monospace;}
+.arr-table th{background:var(--ink);color:#fff;padding:8px 12px;text-align:center;font-weight:500;font-size:11px;letter-spacing:.05em;}
+.arr-table td{padding:7px 12px;border:1px solid var(--rule);text-align:center;vertical-align:middle;}
+.arr-table tr:nth-child(even) td{background:var(--paper2);}
+.arr-table .hi{background:var(--amber-bg)!important;color:var(--amber);font-weight:600;}
+.arr-table .green{background:var(--green-bg)!important;color:var(--green);font-weight:600;}
+.arr-table .blue{background:var(--blue-bg)!important;color:var(--blue);font-weight:600;}
+
+/* ── TRAVERSAL VIZ ── */
+.trav-demo{background:var(--mono-bg);border-radius:8px;padding:1.2rem;margin:1rem 0;}
+.trav-title{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;}
+.trav-output{font-family:'DM Mono',monospace;font-size:14px;color:#a8d8a0;min-height:28px;margin:.5rem 0;letter-spacing:.1em;}
+.trav-controls{display:flex;gap:.5rem;flex-wrap:wrap;}
+.trav-btn{font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 16px;border-radius:5px;cursor:pointer;border:none;font-weight:500;transition:all .15s;}
+.trav-btn.inorder{background:#ef9f27;color:#1a1206;}
+.trav-btn.preorder{background:#7eb8d4;color:#0a1520;}
+.trav-btn.postorder{background:#a8d8a0;color:#0a1a08;}
+.trav-btn.reset-t{background:#4a4845;color:#d4d0c4;}
+
+/* ── TRACE TABLE ── */
+.trace-wrap{overflow-x:auto;margin:1rem 0;}
+.trace-table{border-collapse:collapse;font-size:12px;min-width:340px;}
+.trace-table th{background:var(--ink);color:#fff;padding:7px 14px;text-align:center;font-weight:500;font-size:11px;letter-spacing:.05em;}
+.trace-table td{padding:6px 14px;border:1px solid var(--rule);text-align:center;font-family:'DM Mono',monospace;font-size:12px;}
+.trace-table tr:nth-child(even) td{background:var(--paper2);}
+.cell-hi{background:#fff8e0!important;}
+.cell-left{background:#E6F1FB!important;color:var(--blue);}
+.cell-right{background:#FAEEDA!important;color:var(--amber);}
+.cell-found{background:#e8f5ee!important;font-weight:600;color:var(--green);}
+
+.steps-wrap{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0;}
+.step-row{display:flex;gap:.75rem;align-items:flex-start;padding:.6rem .8rem;background:#fff;border:1px solid var(--rule);border-radius:6px;transition:background .2s;}
+.step-row:hover{background:var(--paper2);}
+.step-num{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-content{font-size:13px;line-height:1.5;color:var(--ink2);}
+.step-content code{font-family:'DM Mono',monospace;font-size:12px;background:var(--paper2);padding:1px 5px;border-radius:3px;}
+
+.arrow-row{display:flex;align-items:flex-start;gap:.75rem;padding:.45rem 0;border-bottom:.5px solid var(--paper3);}
+.arrow-row:last-child{border-bottom:none;}
+.arrow-label{font-size:12px;font-weight:500;min-width:130px;font-family:'DM Mono',monospace;color:var(--ink2);flex-shrink:0;}
+.arrow-arrow{color:var(--ink3);font-size:14px;padding-top:1px;}
+.arrow-desc{font-size:13px;color:var(--ink2);line-height:1.5;flex:1;}
+
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:.6rem .9rem;font-size:12.5px;color:#5a4400;margin:.75rem 0;line-height:1.5;}
+
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;transition:background .15s;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:.3rem 0 .3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;transition:all .15s;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:.75rem 1rem;margin-top:.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-pre{display:none;font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;border-radius:6px;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;margin-top:.75rem;border:1px solid rgba(255,255,255,.06);white-space:pre;}
+.answer-pre.visible{display:block;}
+
+.legend{display:flex;gap:1rem;padding:.85rem 2rem;background:var(--paper2);border-bottom:1px solid var(--rule);flex-wrap:wrap;align-items:center;}
+.legend-label{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-right:.5rem;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+
+/* traversal highlight */
+.trav-node-label{font-size:11px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.5);margin-top:.25rem;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Lesson 3 of 3</div>
+  <h1>Binary <em>Tree</em></h1>
+  <div class="cover-sub">A tree where every node has at most TWO children — left (smaller) and right (larger). Insert, search, and traverse in O(log n) average time. The ultimate sorted structure.</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Structure</strong>Root + Left + Right subtrees</div>
+    <div class="cover-meta-item"><strong>Implemented as</strong>2D Array in Cambridge</div>
+    <div class="cover-meta-item"><strong>Key ops</strong>Insert · Search · In-order traversal</div>
+    <div class="cover-meta-item"><strong>Exam weight</strong>~15 marks on Paper 4</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="#">🔍 Linear Search</a>
+  <a href="linked_list.html">🔗 Linked List</a>
+  <a href="#" class="active">🌳 Binary Tree</a>
+</nav>
+
+<div class="legend">
+  <span class="legend-label">File 3</span>
+  <span style="font-size:12px;color:var(--ink3)">Binary Tree · Concept · Insert · Search · Traversals · Exercises (Cambridge-style)</span>
+</div>
+
+<div class="page-body">
+
+<!-- ── WHAT IS IT ── -->
+<hr class="section-rule">
+<div class="section-header anim-slide">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">What is a Binary Search Tree?</div>
+    <div class="section-desc">Every node has a LEFT child (smaller values) and a RIGHT child (larger values)</div>
+  </div>
+</div>
+
+<div class="box box-amber anim-slide">
+  <strong>🧠 The analogy — the 20-questions game</strong>
+  Think of "guess the number between 1–100." You say 50. Too high? Go left (try 25). Too low? Go right (try 75). Each comparison eliminates HALF the remaining options. That's binary search tree logic — smaller values live on the left branch, larger values on the right branch.
+</div>
+
+<div class="box box-purple anim-slide">
+  <strong>🔑 The BST Property (memorise this!)</strong>
+  For every node N: ALL values in the LEFT subtree &lt; N. ALL values in the RIGHT subtree &gt; N. This property is maintained on every insert — it's what makes searching fast.
+</div>
+
+<div class="box box-teal anim-slide">
+  <strong>🎯 Cambridge stores binary trees in a 2D array with 3 columns</strong>
+  Column 0 = Data. Column 1 = Left child pointer (–1 if none). Column 2 = Right child pointer (–1 if none). A global variable <code style="background:rgba(255,255,255,.2);padding:1px 5px;border-radius:3px;">RootNode</code> stores the index of the root (–1 if empty tree).
+</div>
+
+<!-- ── VISUAL STRUCTURE ── -->
+<div class="divider"></div>
+<div class="sec-title">Visual Structure 👁️</div>
+<div class="sec-sub">Inserting: 50, 30, 70, 20, 40, 60, 80 in that order → classic balanced BST</div>
+
+<div class="tree-container">
+  <svg viewBox="0 0 500 280" width="500" height="280" xmlns="http://www.w3.org/2000/svg">
+    <!-- edges first (behind nodes) -->
+    <line class="tree-edge" x1="250" y1="40" x2="145" y2="110"/>
+    <line class="tree-edge" x1="250" y1="40" x2="355" y2="110"/>
+    <line class="tree-edge" x1="145" y1="110" x2="93" y2="190"/>
+    <line class="tree-edge" x1="145" y1="110" x2="197" y2="190"/>
+    <line class="tree-edge" x1="355" y1="110" x2="303" y2="190"/>
+    <line class="tree-edge" x1="355" y1="110" x2="407" y2="190"/>
+    <!-- root -->
+    <g class="tree-node" style="--i:1">
+      <circle class="node-circle root" cx="250" cy="40" r="26"/>
+      <text class="node-text root" x="250" y="40">50</text>
+    </g>
+    <!-- level 2 -->
+    <g class="tree-node" style="--i:2">
+      <circle class="node-circle" cx="145" cy="110" r="24"/>
+      <text class="node-text" x="145" y="110">30</text>
+    </g>
+    <g class="tree-node" style="--i:3">
+      <circle class="node-circle" cx="355" cy="110" r="24"/>
+      <text class="node-text" x="355" y="110">70</text>
+    </g>
+    <!-- level 3 -->
+    <g class="tree-node" style="--i:4">
+      <circle class="node-circle" cx="93" cy="190" r="22"/>
+      <text class="node-text" x="93" y="190">20</text>
+    </g>
+    <g class="tree-node" style="--i:5">
+      <circle class="node-circle" cx="197" cy="190" r="22"/>
+      <text class="node-text" x="197" y="190">40</text>
+    </g>
+    <g class="tree-node" style="--i:6">
+      <circle class="node-circle" cx="303" cy="190" r="22"/>
+      <text class="node-text" x="303" y="190">60</text>
+    </g>
+    <g class="tree-node" style="--i:7">
+      <circle class="node-circle" cx="407" cy="190" r="22"/>
+      <text class="node-text" x="407" y="190">80</text>
+    </g>
+    <!-- labels -->
+    <text x="250" y="75" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8a8785">Root</text>
+    <text x="93" y="225" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8a8785">Leaf</text>
+    <text x="197" y="225" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8a8785">Leaf</text>
+    <text x="303" y="225" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8a8785">Leaf</text>
+    <text x="407" y="225" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8a8785">Leaf</text>
+    <!-- left/right labels -->
+    <text x="185" y="80" font-family="DM Mono" font-size="10" fill="var(--blue)">LEFT</text>
+    <text x="300" y="80" font-family="DM Mono" font-size="10" fill="var(--amber)">RIGHT</text>
+  </svg>
+</div>
+
+<div class="sec-sub">Same tree as a 2D array (Cambridge format — 3 columns):</div>
+<table class="arr-table">
+  <tr><th>Index</th><th>Data [0]</th><th>Left Ptr [1]</th><th>Right Ptr [2]</th><th>Notes</th></tr>
+  <tr><td>0</td><td class="hi">50</td><td class="blue">1</td><td class="hi">2</td><td style="font-size:11px;color:var(--ink3);">Root (RootNode = 0)</td></tr>
+  <tr><td>1</td><td>30</td><td class="blue">3</td><td>4</td><td style="font-size:11px;color:var(--ink3);">Left child of root</td></tr>
+  <tr><td>2</td><td>70</td><td>5</td><td>6</td><td style="font-size:11px;color:var(--ink3);">Right child of root</td></tr>
+  <tr><td>3</td><td>20</td><td class="red" style="color:var(--red);">–1</td><td class="red" style="color:var(--red);">–1</td><td style="font-size:11px;color:var(--ink3);">Leaf node</td></tr>
+  <tr><td>4</td><td>40</td><td class="red" style="color:var(--red);">–1</td><td class="red" style="color:var(--red);">–1</td><td style="font-size:11px;color:var(--ink3);">Leaf node</td></tr>
+  <tr><td>5</td><td>60</td><td class="red" style="color:var(--red);">–1</td><td class="red" style="color:var(--red);">–1</td><td style="font-size:11px;color:var(--ink3);">Leaf node</td></tr>
+  <tr><td>6</td><td>80</td><td class="red" style="color:var(--red);">–1</td><td class="red" style="color:var(--red);">–1</td><td style="font-size:11px;color:var(--ink3);">Leaf node</td></tr>
+</table>
+
+<!-- ── INSERT ── -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">Inserting a New Value</div>
+    <div class="section-desc">Always start at the root, go left if smaller, right if larger, until you find an empty spot</div>
+  </div>
+</div>
+
+<div class="sec-sub">Example: Inserting <strong>45</strong> into the tree above (50 → 30 → 40 → right of 40)</div>
+
+<div class="steps-wrap">
+  <div class="step-row">
+    <div class="step-num">1</div>
+    <div class="step-content">Start at <code>RootNode</code>. Compare 45 with root value 50. <strong>45 &lt; 50</strong> → go LEFT.</div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">2</div>
+    <div class="step-content">Now at node 30. Compare 45 with 30. <strong>45 &gt; 30</strong> → go RIGHT.</div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">3</div>
+    <div class="step-content">Now at node 40. Compare 45 with 40. <strong>45 &gt; 40</strong> → go RIGHT. Right pointer of 40 is <strong>–1</strong> (empty!).</div>
+  </div>
+  <div class="step-row">
+    <div class="step-num">4</div>
+    <div class="step-content">Found an empty spot! Store 45 at the next available index. Set node 40's RIGHT pointer to the new index.</div>
+  </div>
+</div>
+
+<div class="tree-container">
+  <svg viewBox="0 0 560 320" width="560" height="320" xmlns="http://www.w3.org/2000/svg">
+    <line class="tree-edge" x1="250" y1="40" x2="145" y2="110"/>
+    <line class="tree-edge" x1="250" y1="40" x2="355" y2="110"/>
+    <line class="tree-edge" x1="145" y1="110" x2="93" y2="190"/>
+    <line class="tree-edge" x1="145" y1="110" x2="197" y2="190"/>
+    <line class="tree-edge" x1="355" y1="110" x2="303" y2="190"/>
+    <line class="tree-edge" x1="355" y1="110" x2="407" y2="190"/>
+    <line class="tree-edge" x1="197" y1="190" x2="240" y2="265" stroke="#97C459" stroke-width="2.5"/>
+    <!-- nodes -->
+    <g class="tree-node"><circle class="node-circle root" cx="250" cy="40" r="26"/><text class="node-text root" x="250" y="40">50</text></g>
+    <g class="tree-node"><circle class="node-circle path-hi" cx="145" cy="110" r="24"/><text class="node-text" x="145" y="110">30</text></g>
+    <g class="tree-node"><circle class="node-circle" cx="355" cy="110" r="24"/><text class="node-text" x="355" y="110">70</text></g>
+    <g class="tree-node"><circle class="node-circle" cx="93" cy="190" r="22"/><text class="node-text" x="93" y="190">20</text></g>
+    <g class="tree-node"><circle class="node-circle path-hi" cx="197" cy="190" r="22"/><text class="node-text" x="197" y="190">40</text></g>
+    <g class="tree-node"><circle class="node-circle" cx="303" cy="190" r="22"/><text class="node-text" x="303" y="190">60</text></g>
+    <g class="tree-node"><circle class="node-circle" cx="407" cy="190" r="22"/><text class="node-text" x="407" y="190">80</text></g>
+    <g class="tree-node"><circle class="node-circle insert-hi" cx="240" cy="265" r="22"/><text class="node-text" x="240" y="265">45</text></g>
+    <!-- path labels -->
+    <text x="188" y="80" font-family="DM Mono" font-size="9" fill="var(--blue)">← left</text>
+    <text x="160" y="155" font-family="DM Mono" font-size="9" fill="var(--amber)">right →</text>
+    <text x="218" y="238" font-family="DM Mono" font-size="9" fill="var(--green)">right → NEW!</text>
+  </svg>
+</div>
+
+<!-- <pre class="py"><span class="kw">def</span> <span class="fn">InsertNode</span>(value):
+    <span class="kw">global</span> BinaryTree, RootNode, NextFree
+
+    <span class="cm"># Place new node at NextFree</span>
+    BinaryTree[NextFree][<span class="nm">0</span>] = value      <span class="cm"># data</span>
+    BinaryTree[NextFree][<span class="nm">1</span>] = -<span class="nm">1</span>         <span class="cm"># no left child yet</span>
+    BinaryTree[NextFree][<span class="nm">2</span>] = -<span class="nm">1</span>         <span class="cm"># no right child yet</span>
+    newIndex = NextFree
+    NextFree += <span class="nm">1</span>
+
+    <span class="kw">if</span> RootNode == -<span class="nm">1</span>:                   <span class="cm"># empty tree — new node IS root</span>
+        RootNode = newIndex
+        <span class="kw">return</span>
+
+    <span class="cm"># Walk from root to find insertion point</span>
+    current = RootNode
+    <span class="kw">while True</span>:
+        <span class="kw">if</span> value &lt; BinaryTree[current][<span class="nm">0</span>]:  <span class="cm"># go LEFT</span>
+            <span class="kw">if</span> BinaryTree[current][<span class="nm">1</span>] == -<span class="nm">1</span>:
+                BinaryTree[current][<span class="nm">1</span>] = newIndex   <span class="cm"># attach here</span>
+                <span class="kw">return</span>
+            <span class="kw">else</span>:
+                current = BinaryTree[current][<span class="nm">1</span>]
+        <span class="kw">else</span>:                                   <span class="cm"># go RIGHT</span>
+            <span class="kw">if</span> BinaryTree[current][<span class="nm">2</span>] == -<span class="nm">1</span>:
+                BinaryTree[current][<span class="nm">2</span>] = newIndex   <span class="cm"># attach here</span>
+                <span class="kw">return</span>
+            <span class="kw">else</span>:
+                current = BinaryTree[current][<span class="nm">2</span>]</pre> -->
+<pre class="py"><span class="kw">class</span> <span class="fn">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, pNodeData):
+        self.<span class="nm">_NodeData</span> = pNodeData
+        self.<span class="nm">_LeftNode</span> = <span class="kw">None</span>
+        self.<span class="nm">_RightNode</span> = <span class="kw">None</span>
+
+    <span class="kw">def</span> <span class="fn">GetData</span>(self):
+        <span class="kw">return</span> self.<span class="nm">_NodeData</span>
+
+    <span class="kw">def</span> <span class="fn">GetLeft</span>(self):
+        <span class="kw">return</span> self.<span class="nm">_LeftNode</span>
+
+    <span class="kw">def</span> <span class="fn">GetRight</span>(self):
+        <span class="kw">return</span> self.<span class="nm">_RightNode</span>
+
+    <span class="kw">def</span> <span class="fn">SetLeft</span>(self, NewNode):
+        self.<span class="nm">_LeftNode</span> = NewNode
+
+    <span class="kw">def</span> <span class="fn">SetRight</span>(self, NewNode):
+        self.<span class="nm">_RightNode</span> = NewNode
+
+
+<span class="kw">class</span> <span class="fn">Tree</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, FirstNode):
+        self.<span class="nm">_FirstNode</span> = FirstNode
+
+    <span class="kw">def</span> <span class="fn">GetRootNode</span>(self):
+        <span class="kw">return</span> self.<span class="nm">_FirstNode</span>
+
+    <span class="cm"># Insert from Cambridge past paper 9618_s25_qp_41</span>
+    <span class="kw">def</span> <span class="fn">Insert</span>(self, NewNode):
+        CurrentNode = self.<span class="nm">_FirstNode</span>
+        Inserted = <span class="kw">True</span>
+        <span class="kw">while</span> Inserted:
+            <span class="kw">if</span> NewNode.<span class="fn">GetData</span>() &lt; CurrentNode.<span class="fn">GetData</span>():
+                <span class="kw">if</span> CurrentNode.<span class="fn">GetLeft</span>() == <span class="kw">None</span>:
+                    CurrentNode.<span class="fn">SetLeft</span>(NewNode)
+                    <span class="kw">return</span> <span class="kw">True</span>
+                <span class="kw">else</span>:
+                    CurrentNode = CurrentNode.<span class="fn">GetLeft</span>()
+            <span class="kw">else</span>:
+                <span class="kw">if</span> CurrentNode.<span class="fn">GetRight</span>() == <span class="kw">None</span>:
+                    CurrentNode.<span class="fn">SetRight</span>(NewNode)
+                    <span class="kw">return</span> <span class="kw">True</span>
+                <span class="kw">else</span>:
+                    CurrentNode = CurrentNode.<span class="fn">GetRight</span>()
+
+
+<span class="kw">def</span> <span class="fn">OutputInOrder</span>(RootNode):
+    <span class="kw">if</span> RootNode.<span class="fn">GetLeft</span>() != <span class="kw">None</span>:
+        <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetLeft</span>())
+    <span class="fn">print</span>(RootNode.<span class="fn">GetData</span>())
+    <span class="kw">if</span> RootNode.<span class="fn">GetRight</span>() != <span class="kw">None</span>:
+        <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetRight</span>())
+
+
+<span class="cm"># Example</span>
+FirstNode = <span class="fn">Node</span>(<span class="nm">10</span>)
+MyTree = <span class="fn">Tree</span>(FirstNode)
+MyTree.<span class="fn">Insert</span>(<span class="fn">Node</span>(<span class="nm">20</span>))
+MyTree.<span class="fn">Insert</span>(<span class="fn">Node</span>(<span class="nm">5</span>))
+<span class="fn">OutputInOrder</span>(MyTree.<span class="fn">GetRootNode</span>())</pre>
+
+
+
+
+
+<!-- ── TRAVERSALS ── -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div>
+<div class="sec-title" style="margin-top:1.5rem;">Print All Nodes (In-order Traversal)</div>
+
+  </div>
+</div>
+
+
+<div class="sec-title" style="margin-top:1.5rem;">In-order Code</div>
+<pre class="py"><span class="kw">def</span> <span class="fn">OutputInOrder</span>(RootNode):
+    <span class="kw">if</span> RootNode.<span class="fn">GetLeft</span>() != <span class="kw">None</span>:
+        <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetLeft</span>())
+    <span class="fn">print</span>(RootNode.<span class="fn">GetData</span>())
+    <span class="kw">if</span> RootNode.<span class="fn">GetRight</span>() != <span class="kw">None</span>:
+        <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetRight</span>())</pre>
+
+
+
+
+<!-- ── SEARCH ── -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">Searching the Tree</div>
+    <div class="section-desc">Same logic as insert — follow the BST property at each node</div>
+  </div>
+</div>
+
+<div class="sec-sub">Example: Searching for <strong>40</strong> in the tree. Path: 50 → 30 → 40 ✅</div>
+<div class="trace-wrap">
+  <table class="trace-table">
+    <tr><th>current</th><th>Data</th><th>Target</th><th>Comparison</th><th>Move</th></tr>
+    <tr><td class="cell-hi">0</td><td>50</td><td>40</td><td>40 &lt; 50</td><td class="cell-left">Go LEFT → index 1</td></tr>
+    <tr><td class="cell-hi">1</td><td>30</td><td>40</td><td>40 &gt; 30</td><td class="cell-right">Go RIGHT → index 4</td></tr>
+    <tr><td class="cell-found">4</td><td>40</td><td>40</td><td>40 == 40 ✅</td><td class="cell-found">FOUND at index 4</td></tr>
+  </table>
+</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">Search</span>(target):
+    <span class="kw">global</span> RootNode
+    
+    current = RootNode
+    
+    <span class="kw">while</span> current != <span class="kw">None</span>:
+        <span class="kw">if</span> current.<span class="fn">GetData</span>() == target:
+            <span class="fn">print</span>(<span class="st">"Found:"</span>, target)
+            <span class="kw">return</span> current
+        <span class="kw">elif</span> target &lt; current.<span class="fn">GetData</span>():
+            current = current.<span class="fn">GetLeft</span>()
+        <span class="kw">else</span>:
+            current = current.<span class="fn">GetRight</span>()
+    
+    <span class="fn">print</span>(<span class="st">"Not found"</span>)
+    <span class="kw">return</span> <span class="kw">None</span></pre>
+
+<!-- ── EXERCISES ── -->
+<!-- ── EXERCISES ── -->
+<div class="divider"></div>
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Cambridge-Style Exercises</div>
+    <div class="section-desc">Past paper questions — Cambridge 9618/41 May/June 2025 · Question 3</div>
+  </div>
+</div>
+
+<!-- E1 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e1')">
+    <div class="ex-head-left">
+      <span class="ex-num">3(a)(i)</span>
+      <span class="ex-title">Declare the class Node and its constructor</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[4 marks]</span>
+      <span class="toggle-lbl" id="e1-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e1" style="display:none;">
+    <div class="scenario">
+      A program stores data in a binary tree using Object-Oriented Programming (OOP). The class <code>Node</code> stores data about each node. It has three attributes: <code>NodeData</code> (Integer), <code>LeftNode</code> (Node — null if no left child), and <code>RightNode</code> (Node — null if no right child). The constructor takes one integer parameter, assigns it to <code>NodeData</code>, and initialises <code>LeftNode</code> and <code>RightNode</code> to null. Write program code to declare the class <code>Node</code> and its constructor only. Do not declare the other methods. If writing in Python, include attribute declarations using comments.
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the class <code>Node</code> and its constructor. <span class="pts">[4]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e1')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e1')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e1-hint">You need: (1) class header, (2) constructor with one integer parameter, (3) three attributes with correct types declared, (4) NodeData assigned the parameter value, LeftNode and RightNode both set to None/null/Nothing inside the constructor.</div>
+<pre class="answer-pre" id="e1-ans">
+<span class="cm"># Python solution</span>
+<span class="kw">class</span> <span class="fn">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, pNodeData):
+        self.<span class="nm">NodeData</span>  = pNodeData   <span class="cm"># integer</span>
+        self.<span class="nm">LeftNode</span>  = <span class="kw">None</span>        <span class="cm"># node</span>
+        self.<span class="nm">RightNode</span> = <span class="kw">None</span>        <span class="cm"># node</span>
+
+<span class="cm"># Mark scheme (4 marks):</span>
+<span class="cm"># [1] Class header (and end where appropriate)</span>
+<span class="cm"># [1] Constructor header with at least one integer parameter, inside the class</span>
+<span class="cm"># [1] Three attributes declared with correct data types</span>
+<span class="cm"># [1] NodeData assigned the parameter; LeftNode and RightNode assigned null</span>
+</pre>
+  </div>
+</div>
+
+<!-- E2 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e2')">
+    <div class="ex-head-left">
+      <span class="ex-num">3(a)(ii)&nbsp;&amp;&nbsp;(iii)</span>
+      <span class="ex-title">Write the three get methods and the two set methods</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[6 marks]</span>
+      <span class="toggle-lbl" id="e2-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e2" style="display:none;">
+    <div class="scenario">
+      Continuing the <code>Node</code> class from 3(a)(i). The class also has: <strong>GetLeft()</strong> — returns <code>LeftNode</code>; <strong>GetRight()</strong> — returns <code>RightNode</code>; <strong>GetData()</strong> — returns <code>NodeData</code>; <strong>SetLeft()</strong> — takes a <code>Node</code> parameter and stores it in <code>LeftNode</code>; <strong>SetRight()</strong> — takes a <code>Node</code> parameter and stores it in <code>RightNode</code>.
+    </div>
+    <ul class="task-list">
+      <li>Write program code for the three get methods. <span class="pts">[3]</span></li>
+      <li>Write program code for <code>SetLeft()</code> and <code>SetRight()</code>. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e2')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e2')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e2-hint">Each get method takes no parameters and simply returns the matching attribute. Each set method takes one Node parameter and assigns it to the matching attribute (LeftNode or RightNode).</div>
+<pre class="answer-pre" id="e2-ans">
+<span class="cm"># Get methods</span>
+<span class="kw">def</span> <span class="fn">GetLeft</span>(self):
+    <span class="kw">return</span> self.<span class="nm">LeftNode</span>
+
+<span class="kw">def</span> <span class="fn">GetRight</span>(self):
+    <span class="kw">return</span> self.<span class="nm">RightNode</span>
+
+<span class="kw">def</span> <span class="fn">GetData</span>(self):
+    <span class="kw">return</span> self.<span class="nm">NodeData</span>
+
+<span class="cm"># Set methods</span>
+<span class="kw">def</span> <span class="fn">SetLeft</span>(self, NewNode):
+    self.<span class="nm">LeftNode</span> = NewNode
+
+<span class="kw">def</span> <span class="fn">SetRight</span>(self, NewNode):
+    self.<span class="nm">RightNode</span> = NewNode
+
+<span class="cm"># Mark scheme (6 marks):</span>
+<span class="cm"># [1] One get method with no parameter returning the correct value</span>
+<span class="cm"># [1] Second correct get method</span>
+<span class="cm"># [1] Third correct get method</span>
+<span class="cm"># [1] SetLeft() taking a Node parameter and assigning to LeftNode</span>
+<span class="cm"># [1] SetRight() taking a Node parameter and assigning to RightNode</span>
+<span class="cm"># [1] Both set methods syntactically correct</span>
+</pre>
+  </div>
+</div>
+
+<!-- E3 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e3')">
+    <div class="ex-head-left">
+      <span class="ex-num">3(b)&nbsp;&amp;&nbsp;3(c)(i–ii)</span>
+      <span class="ex-title">Declare 5 Node objects · Declare the Tree class · Write GetRootNode()</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-easy">Easy</span>
+      <span class="badge badge-marks">[5 marks]</span>
+      <span class="toggle-lbl" id="e3-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e3" style="display:none;">
+    <div class="scenario">
+      <strong>Part 3(b):</strong> In the main program, declare five objects of type <code>Node</code>: Node 1 with data 10, Node 2 with data 20, Node 3 with data 5, Node 4 with data 15, Node 5 with data 7. <br><br>
+      <strong>Part 3(c):</strong> A second class <code>Tree</code> stores the tree. It has one attribute: <code>FirstNode</code> (Node — the root). Its constructor takes one <code>Node</code> parameter and stores it in <code>FirstNode</code>. <code>GetRootNode()</code> takes no parameters and returns <code>FirstNode</code>.
+    </div>
+    <ul class="task-list">
+      <li>Write program code to declare the five Node objects in the main program. <span class="pts">[2]</span></li>
+      <li>Write program code to declare class <code>Tree</code> and its constructor (no other methods). <span class="pts">[2]</span></li>
+      <li>Write program code for <code>GetRootNode()</code>. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e3')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e3')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e3-hint">For 3(b): call Node() with each value as argument. For 3(c): Tree has no inheritance, its constructor stores the parameter node in self._FirstNode. GetRootNode returns self._FirstNode with no parameters.</div>
+<pre class="answer-pre" id="e3-ans">
+<span class="cm"># 3(b) — five Node objects in main program</span>
+FirstNode  = <span class="fn">Node</span>(<span class="nm">10</span>)
+SecondNode = <span class="fn">Node</span>(<span class="nm">20</span>)
+ThirdNode  = <span class="fn">Node</span>(<span class="nm">5</span>)
+FourthNode = <span class="fn">Node</span>(<span class="nm">15</span>)
+FifthNode  = <span class="fn">Node</span>(<span class="nm">7</span>)
+
+<span class="cm"># 3(c)(i) — class Tree and constructor</span>
+<span class="kw">class</span> <span class="fn">Tree</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, pFirstNode):
+        self.<span class="nm">_FirstNode</span> = pFirstNode   <span class="cm"># node</span>
+
+    <span class="cm"># 3(c)(ii) — GetRootNode</span>
+    <span class="kw">def</span> <span class="fn">GetRootNode</span>(self):
+        <span class="kw">return</span> self.<span class="nm">_FirstNode</span>
+
+<span class="cm"># Mark scheme (5 marks):</span>
+<span class="cm"># [1] Creating one Node instance with correct value</span>
+<span class="cm"># [1] Remaining four Node instances correct</span>
+<span class="cm"># [1] Tree class header (no inheritance) and constructor taking one Node parameter</span>
+<span class="cm"># [1] Parameter stored in FirstNode declared as Node type</span>
+<span class="cm"># [1] GetRootNode() — no parameter, returns FirstNode</span>
+</pre>
+  </div>
+</div>
+
+<!-- E4 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e4')">
+    <div class="ex-head-left">
+      <span class="ex-num">3(c)(iii)</span>
+      <span class="ex-title">Write Insert() — place a node in the correct position</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[6 marks]</span>
+      <span class="toggle-lbl" id="e4-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e4" style="display:none;">
+    <div class="scenario">
+      The method <code>Insert()</code> belongs to the <code>Tree</code> class. It takes a <code>Node</code> object as a parameter and searches the tree to find the correct insertion position by: checking whether the new node's data is less than or greater than the current node's data; moving left if less, right if greater or equal; repeating until the correct empty position is found, then storing the node there.
+    </div>
+    <ul class="task-list">
+      <li>Write program code for <code>Insert()</code>. <span class="pts">[6]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Cambridge exam tip.</strong> Use a while loop (not recursion) for the walk. The mark scheme awards one mark each for: method header; checking left when data is less and attaching if null; checking right when data ≥ and attaching if null; the loop that continues until insertion.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e4')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e4')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e4-hint">Start at FirstNode. Loop forever: if NewNode.GetData() &lt; CurrentNode.GetData() → check left; if left is None attach and return, else move left. Otherwise check right; if right is None attach and return, else move right.</div>
+<pre class="answer-pre" id="e4-ans">
+<span class="kw">def</span> <span class="fn">Insert</span>(self, NewNode):
+    CurrentNode = self.<span class="nm">_FirstNode</span>
+    Inserted = <span class="kw">True</span>
+    <span class="kw">while</span> Inserted:
+        <span class="kw">if</span> NewNode.<span class="fn">GetData</span>() &lt; CurrentNode.<span class="fn">GetData</span>():
+            <span class="kw">if</span> CurrentNode.<span class="fn">GetLeft</span>() == <span class="kw">None</span>:
+                CurrentNode.<span class="fn">SetLeft</span>(NewNode)
+                <span class="kw">return</span>
+            <span class="kw">else</span>:
+                CurrentNode = CurrentNode.<span class="fn">GetLeft</span>()
+        <span class="kw">else</span>:
+            <span class="kw">if</span> CurrentNode.<span class="fn">GetRight</span>() == <span class="kw">None</span>:
+                CurrentNode.<span class="fn">SetRight</span>(NewNode)
+                <span class="kw">return</span>
+            <span class="kw">else</span>:
+                CurrentNode = CurrentNode.<span class="fn">GetRight</span>()
+
+<span class="cm"># Mark scheme (6 marks):</span>
+<span class="cm"># [1] Insert() method header taking one Node parameter</span>
+<span class="cm"># [1] If new node data < current node → check left child</span>
+<span class="cm"># [1] … attach to left if null / None</span>
+<span class="cm"># [1] If new node data >= current node → check right child</span>
+<span class="cm"># [1] … attach to right if null / None</span>
+<span class="cm"># [1] Loop repeats until correct position is found (while loop / recursion)</span>
+</pre>
+  </div>
+</div>
+
+<!-- E5 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e5')">
+    <div class="ex-head-left">
+      <span class="ex-num">3(d)</span>
+      <span class="ex-title">Write OutputInOrder() — recursive in-order traversal</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-mid">Intermediate</span>
+      <span class="badge badge-marks">[5 marks]</span>
+      <span class="toggle-lbl" id="e5-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e5" style="display:none;">
+    <div class="scenario">
+      The recursive procedure <code>OutputInOrder()</code> outputs the binary tree data in ascending numerical order. It takes a <code>Node</code> object as a parameter. It: checks if the left node is null — if not, calls itself with the left node; outputs the current node's data; checks if the right node is null — if not, calls itself with the right node.
+    </div>
+    <ul class="task-list">
+      <li>Write program code for <code>OutputInOrder()</code>. <span class="pts">[5]</span></li>
+    </ul>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e5')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e5')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e5-hint">Note: unlike the array-based version, this OOP version does NOT check for –1. It checks if the left/right child is None before recursing — it does NOT recurse into None. The order is: recurse left if exists → print data → recurse right if exists.</div>
+<pre class="answer-pre" id="e5-ans">
+<span class="kw">def</span> <span class="fn">OutputInOrder</span>(RootNode):
+    <span class="kw">if</span> RootNode.<span class="fn">GetLeft</span>() != <span class="kw">None</span>:
+        <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetLeft</span>())
+    <span class="fn">print</span>(RootNode.<span class="fn">GetData</span>())
+    <span class="kw">if</span> RootNode.<span class="fn">GetRight</span>() != <span class="kw">None</span>:
+        <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetRight</span>())
+
+<span class="cm"># Mark scheme (5 marks):</span>
+<span class="cm"># [1] Procedure header taking a Node as parameter (recursive)</span>
+<span class="cm"># [1] Checking if left is null, and recursive call with left node if not null</span>
+<span class="cm"># [1] Outputting current node's data</span>
+<span class="cm"># [1] Checking if right is null, and recursive call with right node if not null</span>
+<span class="cm"># [1] Correct order: left → output → right</span>
+</pre>
+  </div>
+</div>
+
+<!-- E6 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('e6')">
+    <div class="ex-head-left">
+      <span class="ex-num">3(e)</span>
+      <span class="ex-title">Full program — build the tree, insert nodes, output in order</span>
+    </div>
+    <div class="ex-meta">
+      <span class="badge badge-hard">Hard</span>
+      <span class="badge badge-marks">[4 marks]</span>
+      <span class="toggle-lbl" id="e6-lbl">▼ expand</span>
+    </div>
+  </div>
+  <div class="ex-body" id="e6" style="display:none;">
+    <div class="scenario">
+      Extend the main program to: create a new <code>Tree</code> object with the Node containing data 10 as the first node; insert the nodes with values 20, 5, 15 and 7 into the tree in that order using <code>Insert()</code>; call <code>OutputInOrder()</code> with the tree's root node as a parameter. Then test your program and record the output.
+    </div>
+    <ul class="task-list">
+      <li>Write program code to extend the main program as described. <span class="pts">[3]</span></li>
+      <li>State the expected output of the program. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box"><strong>Cambridge exam tip.</strong> This is the most common BST question format: build the tree → insert all nodes → traverse in order. The output must be sorted ascending — if it isn't, your Insert() or OutputInOrder() has a bug.</div>
+    <div class="btn-row">
+      <button class="hint-btn" onclick="showHint('e6')">💡 Hint</button>
+      <button class="answer-btn" onclick="showAnswer('e6')">Show Answer</button>
+    </div>
+    <div class="hint-box" id="e6-hint">Create Tree with FirstNode (data=10). Then call MyTree.Insert() four times in the order: SecondNode (20), ThirdNode (5), FourthNode (15), FifthNode (7). Finally call OutputInOrder(MyTree.GetRootNode()). Expected output: 5, 7, 10, 15, 20.</div>
+<pre class="answer-pre" id="e6-ans">
+<span class="cm"># Full program (combining all parts)</span>
+<span class="kw">class</span> <span class="fn">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, pNodeData):
+        self.<span class="nm">_NodeData</span>  = pNodeData
+        self.<span class="nm">_LeftNode</span>  = <span class="kw">None</span>
+        self.<span class="nm">_RightNode</span> = <span class="kw">None</span>
+    <span class="kw">def</span> <span class="fn">GetData</span>(self):  <span class="kw">return</span> self.<span class="nm">_NodeData</span>
+    <span class="kw">def</span> <span class="fn">GetLeft</span>(self):  <span class="kw">return</span> self.<span class="nm">_LeftNode</span>
+    <span class="kw">def</span> <span class="fn">GetRight</span>(self): <span class="kw">return</span> self.<span class="nm">_RightNode</span>
+    <span class="kw">def</span> <span class="fn">SetLeft</span>(self, N):  self.<span class="nm">_LeftNode</span>  = N
+    <span class="kw">def</span> <span class="fn">SetRight</span>(self, N): self.<span class="nm">_RightNode</span> = N
+
+<span class="kw">class</span> <span class="fn">Tree</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, pFirstNode):
+        self.<span class="nm">_FirstNode</span> = pFirstNode
+    <span class="kw">def</span> <span class="fn">GetRootNode</span>(self): <span class="kw">return</span> self.<span class="nm">_FirstNode</span>
+    <span class="kw">def</span> <span class="fn">Insert</span>(self, NewNode):
+        CurrentNode = self.<span class="nm">_FirstNode</span>
+        <span class="kw">while True</span>:
+            <span class="kw">if</span> NewNode.<span class="fn">GetData</span>() &lt; CurrentNode.<span class="fn">GetData</span>():
+                <span class="kw">if</span> CurrentNode.<span class="fn">GetLeft</span>() == <span class="kw">None</span>:
+                    CurrentNode.<span class="fn">SetLeft</span>(NewNode); <span class="kw">return</span>
+                <span class="kw">else</span>: CurrentNode = CurrentNode.<span class="fn">GetLeft</span>()
+            <span class="kw">else</span>:
+                <span class="kw">if</span> CurrentNode.<span class="fn">GetRight</span>() == <span class="kw">None</span>:
+                    CurrentNode.<span class="fn">SetRight</span>(NewNode); <span class="kw">return</span>
+                <span class="kw">else</span>: CurrentNode = CurrentNode.<span class="fn">GetRight</span>()
+
+<span class="kw">def</span> <span class="fn">OutputInOrder</span>(RootNode):
+    <span class="kw">if</span> RootNode.<span class="fn">GetLeft</span>()  != <span class="kw">None</span>: <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetLeft</span>())
+    <span class="fn">print</span>(RootNode.<span class="fn">GetData</span>())
+    <span class="kw">if</span> RootNode.<span class="fn">GetRight</span>() != <span class="kw">None</span>: <span class="fn">OutputInOrder</span>(RootNode.<span class="fn">GetRight</span>())
+
+<span class="cm"># 3(e)(i) — main program extension</span>
+FirstNode  = <span class="fn">Node</span>(<span class="nm">10</span>)
+SecondNode = <span class="fn">Node</span>(<span class="nm">20</span>)
+ThirdNode  = <span class="fn">Node</span>(<span class="nm">5</span>)
+FourthNode = <span class="fn">Node</span>(<span class="nm">15</span>)
+FifthNode  = <span class="fn">Node</span>(<span class="nm">7</span>)
+
+MyTree = <span class="fn">Tree</span>(FirstNode)
+MyTree.<span class="fn">Insert</span>(SecondNode)
+MyTree.<span class="fn">Insert</span>(ThirdNode)
+MyTree.<span class="fn">Insert</span>(FourthNode)
+MyTree.<span class="fn">Insert</span>(FifthNode)
+
+<span class="fn">OutputInOrder</span>(MyTree.<span class="fn">GetRootNode</span>())
+
+<span class="cm"># 3(e)(ii) — expected output:</span>
+<span class="cm"># 5</span>
+<span class="cm"># 7</span>
+<span class="cm"># 10</span>
+<span class="cm"># 15</span>
+<span class="cm"># 20</span>
+
+<span class="cm"># Mark scheme (4 marks):</span>
+<span class="cm"># [1] Tree object created with the Node(10) as parameter</span>
+<span class="cm"># [1] Insert() called for nodes 20, 5, 15, 7 in that order</span>
+<span class="cm"># [1] OutputInOrder() called with tree's root node as parameter</span>
+<span class="cm"># [1] Correct output: 5 / 7 / 10 / 15 / 20</span>
+</pre>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Tutor Pack · File 3 of 3</span>
+  <span>Binary Tree</span>
+</footer>
+
+<script>
+function toggle(id){
+  const b=document.getElementById(id);
+  const l=document.getElementById(id+'-lbl');
+  const open=b.style.display==='block';
+  b.style.display=open?'none':'block';
+  if(l)l.textContent=open?'▼ expand':'▲ collapse';
+}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAnswer(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+
+// traversal demo
+const travData = {
+  inorder: {seq:'20 → 30 → 40 → 50 → 60 → 70 → 80', explain:'Left subtree first (20,30,40), then root (50), then right subtree (60,70,80). Always gives SORTED output!'},
+  preorder: {seq:'50 → 30 → 20 → 40 → 70 → 60 → 80', explain:'Root first (50), then left subtree top-down (30,20,40), then right subtree (70,60,80).'},
+  postorder:{seq:'20 → 40 → 30 → 60 → 80 → 70 → 50', explain:'Left subtree leaves first (20,40,30), right subtree leaves (60,80,70), root LAST (50).'},
+};
+function showTrav(type){
+  const o=document.getElementById('travOutput');
+  const e=document.getElementById('travExplain');
+  if(type==='reset'){o.textContent='Click a traversal to see the output sequence ↓';e.textContent='';return;}
+  const d=travData[type];
+  o.textContent=d.seq;
+  e.textContent=d.explain;
+}
+</script>
+</body>
+</html>
