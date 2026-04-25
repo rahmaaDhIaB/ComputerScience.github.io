@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursion · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1916;--ink2:#4a4845;--ink3:#8a8785;--paper:#faf9f6;--paper2:#f2f0eb;--paper3:#e8e5de;--rule:#d8d5ce;--mono-bg:#1e1c18;--mono-text:#d4d0c4;--blue:#185FA5;--blue-bg:#E6F1FB;--blue-bd:#85B7EB;--green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#97C459;--amber:#633806;--amber-bg:#FAEEDA;--amber-bd:#EF9F27;--red:#791F1F;--red-bg:#FCEBEB;--red-bd:#F09595;--purple:#3C3489;--purple-bg:#EEEDFE;--purple-bd:#AFA9EC;--teal:#085041;--teal-bg:#E1F5EE;--teal-bd:#5DCAA5;--easy:#1a5c38;--easy-bg:#e8f5ee;--easy-rule:#a8d5b8;--mid:#7a4a00;--mid-bg:#fef3e2;--mid-rule:#f0c878;--hard:#6b1a1a;--hard-bg:#fdeaea;--hard-rule:#e8a0a0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.7;}
+.nav{display:flex;overflow-x:auto;background:var(--ink);position:sticky;top:0;z-index:100;}
+.nav a{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:12px 17px;color:rgba(255,255,255,0.45);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;}
+.nav a:hover{color:rgba(255,255,255,0.75);}
+.nav a.active{color:#fff;border-bottom-color:#fff;}
+.cover{background:#0f1729;color:#c8d4e8;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;border:35px solid rgba(126,184,212,0.08);border-radius:50%;}
+.cover::after{content:'';position:absolute;bottom:-80px;left:120px;width:400px;height:400px;border:2px solid rgba(100,160,240,0.07);border-radius:50%;}
+.cover-label{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(200,212,232,0.45);margin-bottom:1rem;font-weight:500;}
+.cover h1{font-family:'DM Serif Display',serif;font-size:2.1rem;line-height:1.2;font-weight:400;}
+.cover h1 em{font-style:italic;color:#7eb8d4;}
+.cover-sub{margin-top:0.75rem;font-size:13px;color:rgba(200,212,232,0.55);max-width:600px;line-height:1.6;}
+.cover-meta{margin-top:1.5rem;display:flex;gap:2rem;flex-wrap:wrap;}
+.cover-meta-item{font-size:12px;color:rgba(200,212,232,0.45);}
+.cover-meta-item strong{display:block;color:rgba(200,212,232,0.85);font-size:13px;font-weight:500;}
+.page-body{padding:1.75rem 2rem 4rem;max-width:960px;margin:0 auto;}
+.section-rule{border:none;border-top:3px solid var(--ink);margin-bottom:1.4rem;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap;}
+.section-num{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--rule);line-height:1;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400;}
+.section-desc{font-size:12px;color:var(--ink3);margin-top:2px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1.25rem;font-weight:400;margin-bottom:0.2rem;margin-top:1rem;}
+.sec-sub{font-size:12.5px;color:var(--ink3);margin-bottom:1.1rem;line-height:1.5;}
+.divider{height:1px;background:var(--rule);margin:2rem 0;}
+.box{border-radius:7px;padding:0.8rem 1rem;font-size:13px;line-height:1.6;margin:0.75rem 0;}
+.box strong{font-weight:500;display:block;margin-bottom:4px;}
+.box-blue{background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);}
+.box-green{background:var(--green-bg);border:1px solid var(--green-bd);color:var(--green);}
+.box-amber{background:var(--amber-bg);border:1px solid var(--amber-bd);color:var(--amber);}
+.box-red{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red);}
+.box-teal{background:var(--teal-bg);border:1px solid var(--teal-bd);color:var(--teal);}
+.box-purple{background:var(--purple-bg);border:1px solid var(--purple-bd);color:var(--purple);}
+pre.py{font-family:'DM Mono',monospace;font-size:12.5px;padding:1rem 1.2rem;border-radius:7px;line-height:1.9;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0.5rem 0;}
+.kw{color:#7eb8d4;font-weight:500;}.fn{color:#a8d8a0;}.st{color:#e8c878;}.cm{color:#6a6860;font-style:italic;}.nm{color:#c8a8f0;}.at{color:#f0a8c8;}
+.badge{font-size:9.5px;padding:2px 9px;border-radius:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.badge-easy{background:var(--easy-bg);color:var(--easy);border:1px solid var(--easy-rule);}
+.badge-mid{background:var(--mid-bg);color:var(--mid);border:1px solid var(--mid-rule);}
+.badge-hard{background:var(--hard-bg);color:var(--hard);border:1px solid var(--hard-rule);}
+.badge-marks{background:var(--paper3);color:var(--ink2);border:1px solid var(--rule);}
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0.75rem 0;}
+.diff-table th{background:var(--paper2);padding:8px 10px;text-align:left;font-weight:500;border:1px solid var(--rule);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink3);}
+.diff-table td{padding:7px 10px;border:1px solid var(--rule);vertical-align:top;line-height:1.5;}
+.diff-table tr:nth-child(even) td{background:var(--paper2);}
+.ex{border:1px solid var(--rule);border-radius:6px;margin-bottom:1.8rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;}
+.ex-head:hover{background:var(--paper2);}
+.ex-head-left{display:flex;align-items:center;gap:0.75rem;}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3);font-weight:500;}
+.ex-title{font-weight:500;font-size:14px;}
+.ex-meta{display:flex;gap:0.5rem;align-items:center;}
+.toggle-lbl{font-size:11px;color:var(--ink3);font-style:italic;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:0.75rem 1rem;border-radius:0 4px 4px 0;font-size:13.5px;margin-bottom:1.2rem;color:var(--ink2);line-height:1.6;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:0.3rem 0 0.3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:0.4rem;color:var(--ink3);}
+.task-list li .pts{float:right;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink2);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.tip-box{background:#fef8e8;border:1px solid #f0d878;border-radius:4px;padding:0.6rem 0.9rem;font-size:12.5px;color:#5a4400;margin:0.75rem 0;line-height:1.5;}
+.btn-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;}
+.hint-btn,.answer-btn{font-family:'DM Sans',sans-serif;font-size:12px;border-radius:4px;padding:5px 14px;cursor:pointer;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.answer-btn{background:var(--ink);border:none;color:var(--paper2);}
+.answer-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:6px;padding:0.75rem 1rem;margin-top:0.5rem;font-size:13px;color:var(--amber);line-height:1.6;}
+.hint-box.visible{display:block;}
+.answer-block{display:none;margin-top:0.75rem;border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
+.answer-block.visible{display:block;}
+.answer-block pre{font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.9;padding:1.2rem 1.4rem;background:var(--mono-bg);color:var(--mono-text);overflow-x:auto;white-space:pre;margin:0;}
+.ex-citation{font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;margin-top:1rem;padding-top:0.6rem;border-top:1px solid var(--paper3);}
+.diagram-wrap{background:#fff;border-radius:10px;padding:1.2rem;margin:1rem 0;border:1px solid var(--rule);overflow-x:auto;}
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:500;margin:1px 2px;}
+.pill-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.pill-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-bd);}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.before-exam{background:var(--mono-bg);border-radius:10px;padding:1.5rem 1.75rem;margin:2rem 0;}
+.before-exam h3{font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;color:#c8d4e8;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.08);}
+.be-row{display:flex;gap:0;margin-bottom:0.2rem;}
+.be-key{font-family:'DM Mono',monospace;font-size:11.5px;color:#EF9F27;min-width:240px;flex-shrink:0;line-height:1.8;}
+.be-val{font-family:'DM Mono',monospace;font-size:11.5px;color:#a8d8a0;line-height:1.8;}
+.be-section{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:rgba(200,212,232,0.35);font-weight:500;margin:0.9rem 0 0.4rem;}
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+/* fun boxes */
+.fun-box{border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;font-size:13.5px;line-height:1.7;border:2px solid;}
+.fun-box-yellow{background:#fffbe6;border-color:#f0c830;color:#5a3e00;}
+.fun-box-pink{background:#fff0f6;border-color:#f0a0c8;color:#6b1040;}
+.fun-box-blue{background:#e8f4ff;border-color:#60a8e0;color:#0a3060;}
+.fun-box-green{background:#edfff0;border-color:#50c870;color:#0a4020;}
+.fun-box-purple{background:#f2f0ff;border-color:#a098e8;color:#2a2068;}
+.fun-box-orange{background:#fff4e6;border-color:#f0a030;color:#5a2e00;}
+.emoji-xl{font-size:2.2rem;vertical-align:middle;margin-right:0.4rem;}
+.step-card{border-radius:8px;padding:0.9rem 1.1rem;margin:0.5rem 0;border-left:5px solid;font-size:13.5px;line-height:1.6;}
+.step-card-green{border-color:var(--green-bd);background:var(--green-bg);color:var(--green);}
+.step-card-blue{border-color:var(--blue-bd);background:var(--blue-bg);color:var(--blue);}
+.step-card-red{border-color:var(--red-bd);background:var(--red-bg);color:var(--red);}
+.step-card-amber{border-color:var(--amber-bd);background:var(--amber-bg);color:var(--amber);}
+.step-card-purple{border-color:var(--purple-bd);background:var(--purple-bg);color:var(--purple);}
+.step-card-teal{border-color:var(--teal-bd);background:var(--teal-bg);color:var(--teal);}
+.step-num{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;display:inline-block;padding:1px 7px;border-radius:3px;background:var(--ink);color:#fff;margin-right:6px;}
+/* big rule badge */
+.rule-badge{display:flex;align-items:flex-start;gap:1rem;border-radius:10px;padding:1rem 1.2rem;margin:0.75rem 0;border:2px solid;}
+.rule-badge-num{font-family:'DM Serif Display',serif;font-size:2.5rem;line-height:1;flex-shrink:0;opacity:0.4;}
+.rule-badge-body{flex:1;}
+.rule-badge-title{font-weight:500;font-size:14px;margin-bottom:3px;}
+.rule-green{background:var(--green-bg);border-color:var(--green-bd);color:var(--green);}
+.rule-blue{background:var(--blue-bg);border-color:var(--blue-bd);color:var(--blue);}
+/* bonus implicit section */
+.bonus-section{background:linear-gradient(135deg,#f0f8ff 0%,#e8ffe8 100%);border:2px dashed var(--teal-bd);border-radius:12px;padding:1.5rem;margin:2rem 0;}
+.bonus-tag{display:inline-block;background:var(--teal);color:#fff;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:0.75rem;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Cambridge International AS &amp; A Level · Computer Science 9618 · Chapter 24</div>
+  <h1>Recur<em>sion</em> 🔁</h1>
+  <div class="cover-sub">A function that calls itself. Like looking in a mirror that holds another mirror. Simple idea — powerful tool. You just need to know when to STOP. 🛑</div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Core idea</strong>A function calls itself</div>
+    <div class="cover-meta-item"><strong>Rule 1 — Base Case 🛑</strong>The stop condition</div>
+    <div class="cover-meta-item"><strong>Rule 2 — General Case 🔁</strong>Call with smaller input</div>
+    <div class="cover-meta-item"><strong>Call Stack 📚</strong>Memory that tracks calls</div>
+    <div class="cover-meta-item"><strong>Stack Overflow 💥</strong>No stop = crash</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="#">🔍 Linear Search</a>
+  <a href="#">⚡ Binary Search</a>
+  <a href="#">🫧 Sorting</a>
+  <a href="#">📚 Stacks &amp; Queues</a>
+  <a href="#">🧬 OOP</a>
+  <a href="#">🔑 Hash Tables</a>
+  <a href="#" class="active">🔁 Recursion</a>
+</nav>
+
+<div class="page-body">
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 01 — WHAT IS RECURSION
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">01</div>
+  <div>
+    <div class="section-title">What is Recursion? — Explained Like You're 5 👶</div>
+    <div class="section-desc">One idea. Very simple. Don't overthink it.</div>
+  </div>
+</div>
+
+<div class="fun-box fun-box-yellow">
+  <span class="emoji-xl">🪆</span><strong>Imagine Russian nesting dolls.</strong><br><br>
+  You open the big doll. Inside is a smaller doll. You open that one. Inside is an even smaller doll. You keep opening… until you reach the tiniest solid doll — the one you <strong>can't open anymore</strong>. That's the <strong>stop</strong>.<br><br>
+  Then you put them back together, one by one, from smallest to biggest. Done!<br><br>
+  <strong>That's recursion.</strong> A function that calls a smaller version of itself, until it hits the tiny solid doll (the stopping point), then everything comes back up.
+</div>
+
+<div class="box box-blue">
+  <strong>📖 Cambridge Definition — learn this word for word</strong>
+  Recursion is when a <strong>function (or procedure) calls itself</strong> as part of its own definition, in order to solve a problem.
+</div>
+
+<div class="fun-box fun-box-green">
+  <span class="emoji-xl">🎮</span><strong>Video game analogy:</strong><br><br>
+  You're in a dungeon with 5 floors underground.<br>
+  Every floor you ask: <em>"Am I on floor 0?"</em><br>
+  If no → go one floor deeper.<br>
+  If yes → grab the treasure 💎 and ride the elevator back up through every floor.<br><br>
+  Going <strong>DOWN</strong> = calling yourself recursively.<br>
+  Hitting <strong>floor 0</strong> = base case (stop!).<br>
+  Coming <strong>UP</strong> = returning the results back through each level.
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 02 — THE 2 RULES
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">02</div>
+  <div>
+    <div class="section-title">The 2 Rules — Never Forget These 🧊</div>
+    <div class="section-desc">Every single recursive function needs BOTH of these. No exceptions.</div>
+  </div>
+</div>
+
+<div class="rule-badge rule-green">
+  <div class="rule-badge-num">1</div>
+  <div class="rule-badge-body">
+    <div class="rule-badge-title">🛑 Base Case — THE STOP SIGN</div>
+    A condition that returns an answer <strong>directly</strong> — without calling the function again. This is what stops the recursion.<br>
+    <strong>Without it → the function calls itself forever → CRASH (stack overflow) 💥</strong><br>
+    Think of it as: <em>"When do I stop asking for help and just answer?"</em>
+  </div>
+</div>
+
+<div class="rule-badge rule-blue">
+  <div class="rule-badge-num">2</div>
+  <div class="rule-badge-body">
+    <div class="rule-badge-title">🔁 General Case — THE RECURSIVE CALL</div>
+    The part that calls the function again — but with a <strong>smaller or simpler input</strong>. Each call gets one step closer to the base case.<br>
+    <strong>Without it → the function never does anything recursive (it's just a regular function).</strong><br>
+    Think of it as: <em>"I can't answer yet — let me ask for a smaller version of the same problem."</em>
+  </div>
+</div>
+
+<div class="fun-box fun-box-pink">
+  <span class="emoji-xl">🏗️</span>
+  <strong>The template — every recursive function looks like this:</strong>
+  <br><br>
+  <code style="font-family:'DM Mono',monospace;font-size:13px;display:block;margin:0.5rem 0;background:rgba(0,0,0,0.06);padding:0.6rem 0.8rem;border-radius:6px;">
+def my_function(n):<br>
+    if [STOP CONDITION]:   # ← Rule 1: Base Case 🛑<br>
+        return [ANSWER]    #   return directly, no call<br>
+    else:<br>
+        return [something] + my_function([SMALLER n])  # ← Rule 2: General Case 🔁
+  </code>
+  The <strong>if</strong> is always the base case.
+  <br>
+  The <strong>else</strong> always contains the recursive call.
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 03 — FACTORIAL (CLASSIC EXAMPLE)
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">03</div>
+  <div>
+    <div class="section-title">Example 1 — Factorial 🧮</div>
+    <div class="section-desc">The most classic example. Learn this one first.</div>
+  </div>
+</div>
+
+<div class="fun-box fun-box-blue">
+  <span class="emoji-xl">🧮</span><strong>What is a factorial?</strong><br><br>
+  <code>5! = 5 × 4 × 3 × 2 × 1 = 120</code><br>
+  <code>4! = 4 × 3 × 2 × 1 = 24</code><br>
+  <code>3! = 3 × 2 × 1 = 6</code><br>
+  <code>2! = 2 × 1 = 2</code><br>
+  <code>1! = 1</code><br>
+  <code>0! = 1</code> ← this will be our <strong>base case</strong><br><br>
+  Notice something? <code>4! = 4 × 3!</code> and <code>3! = 3 × 2!</code><br>
+  It's the <strong>exact same pattern</strong> each time — just with a smaller number!<br>
+  That's why recursion is perfect here. 🎯
+</div>
+
+<div class="sec-title">The recursive code 🐍</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">factorial</span>(n):
+    <span class="cm"># ─────────────────────────────────────────────────</span>
+    <span class="cm"># BASE CASE 🛑  (Rule 1 — the stop sign)</span>
+    <span class="cm"># When n is 0, we know the answer: 0! = 1</span>
+    <span class="cm"># We return 1 directly — NO recursive call here!</span>
+    <span class="cm"># ─────────────────────────────────────────────────</span>
+    <span class="kw">if</span> n == <span class="nm">0</span>:
+        <span class="kw">return</span> <span class="nm">1</span>
+
+    <span class="cm"># ─────────────────────────────────────────────────</span>
+    <span class="cm"># GENERAL CASE 🔁  (Rule 2 — the recursive call)</span>
+    <span class="cm"># n! = n × (n-1)!   e.g. 4! = 4 × 3!</span>
+    <span class="cm"># We call ourselves with n-1 (SMALLER input)</span>
+    <span class="cm"># ─────────────────────────────────────────────────</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="nm">1</span>)
+
+<span class="fn">print</span>(<span class="fn">factorial</span>(<span class="nm">4</span>))   <span class="cm"># output: 24</span></pre>
+
+<div class="sec-title" style="margin-top:1.5rem;">🔬 Full trace of factorial(4) — going DOWN then coming UP</div>
+<div class="sec-sub">Read the left column first (going down). Then read the right column (coming back up). Feel the bounce!</div>
+
+<div class="diagram-wrap">
+  <svg width="100%" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/>
+      </marker>
+    </defs>
+
+    <!-- COLUMN HEADERS -->
+    <rect x="10" y="10" width="295" height="26" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1"/>
+    <text x="157" y="27" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#185FA5" font-weight="500">⬇  CALLING — going deeper</text>
+    <rect x="375" y="10" width="295" height="26" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="1"/>
+    <text x="522" y="27" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#3B6D11" font-weight="500">⬆  RETURNING — results come back</text>
+
+    <!-- ── GOING DOWN (left side, staggered) ── -->
+
+    <!-- factorial(4) -->
+    <rect x="10" y="50" width="190" height="44" rx="7" fill="#E6F1FB" stroke="#85B7EB" stroke-width="2"/>
+    <text x="105" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#185FA5" font-weight="500">factorial(4)</text>
+    <text x="105" y="86" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">4 ≠ 0  →  needs factorial(3)</text>
+    <!-- arrow down-right -->
+    <path d="M155 94 Q175 110 180 118" stroke="#185FA5" fill="none" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr1)"/>
+
+    <!-- factorial(3) -->
+    <rect x="40" y="120" width="190" height="44" rx="7" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+    <text x="135" y="138" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#3C3489" font-weight="500">factorial(3)</text>
+    <text x="135" y="156" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3C3489">3 ≠ 0  →  needs factorial(2)</text>
+    <path d="M185 164 Q205 180 210 188" stroke="#3C3489" fill="none" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr1)"/>
+
+    <!-- factorial(2) -->
+    <rect x="70" y="190" width="190" height="44" rx="7" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="165" y="208" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#633806" font-weight="500">factorial(2)</text>
+    <text x="165" y="226" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#633806">2 ≠ 0  →  needs factorial(1)</text>
+    <path d="M215 234 Q235 250 240 258" stroke="#633806" fill="none" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr1)"/>
+
+    <!-- factorial(1) -->
+    <rect x="100" y="260" width="190" height="44" rx="7" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+    <text x="195" y="278" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#791F1F" font-weight="500">factorial(1)</text>
+    <text x="195" y="296" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">1 ≠ 0  →  needs factorial(0)</text>
+    <path d="M245 304 Q265 320 270 328" stroke="#791F1F" fill="none" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr1)"/>
+
+    <!-- factorial(0) — BASE CASE -->
+    <rect x="125" y="332" width="220" height="50" rx="7" fill="#EAF3DE" stroke="#3B6D11" stroke-width="3"/>
+    <text x="235" y="352" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#3B6D11" font-weight="500">factorial(0)  🛑  BASE CASE</text>
+    <text x="235" y="370" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#3B6D11">n == 0  →  return 1  (no more calls!)</text>
+
+    <!-- Middle label -->
+    <text x="340" y="415" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="var(--ink3)">↑ base case reached — now we go back up ↑</text>
+
+    <!-- ── COMING BACK UP (right side) ── -->
+
+    <!-- returns 1 -->
+    <rect x="375" y="332" width="200" height="50" rx="7" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+    <text x="475" y="352" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#3B6D11" font-weight="500">returns  1</text>
+    <text x="475" y="370" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">factorial(0) = 1</text>
+    <line x1="475" y1="332" x2="475" y2="312" stroke="#3B6D11" stroke-width="2" marker-end="url(#arr1)"/>
+
+    <!-- factorial(1) returns -->
+    <rect x="375" y="260" width="200" height="44" rx="7" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+    <text x="475" y="278" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#791F1F" font-weight="500">returns  1 × 1 = 1</text>
+    <text x="475" y="296" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#791F1F">factorial(1) = 1 × factorial(0) = 1×1</text>
+    <line x1="475" y1="260" x2="475" y2="240" stroke="#791F1F" stroke-width="2" marker-end="url(#arr1)"/>
+
+    <!-- factorial(2) returns -->
+    <rect x="375" y="190" width="200" height="44" rx="7" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="475" y="208" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#633806" font-weight="500">returns  2 × 1 = 2</text>
+    <text x="475" y="226" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#633806">factorial(2) = 2 × factorial(1) = 2×1</text>
+    <line x1="475" y1="190" x2="475" y2="170" stroke="#633806" stroke-width="2" marker-end="url(#arr1)"/>
+
+    <!-- factorial(3) returns -->
+    <rect x="375" y="120" width="200" height="44" rx="7" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+    <text x="475" y="138" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#3C3489" font-weight="500">returns  3 × 2 = 6</text>
+    <text x="475" y="156" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3C3489">factorial(3) = 3 × factorial(2) = 3×2</text>
+    <line x1="475" y1="120" x2="475" y2="100" stroke="#3C3489" stroke-width="2" marker-end="url(#arr1)"/>
+
+    <!-- factorial(4) returns FINAL -->
+    <rect x="375" y="50" width="200" height="44" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="2.5"/>
+    <text x="475" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#185FA5" font-weight="500">returns  4 × 6 = 24  ✅</text>
+    <text x="475" y="86" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#185FA5">factorial(4) = 4 × factorial(3) = 4×6</text>
+
+    <!-- FINAL label -->
+    <text x="340" y="460" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" fill="#3B6D11" font-weight="500">🎉 Final answer: factorial(4) = 24</text>
+    <text x="340" y="478" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="var(--ink3)">Each level got the answer from the level below it, then added its own n on top.</text>
+  </svg>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 04 — SECOND EXAMPLE: SUM DOWN
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">04</div>
+  <div>
+    <div class="section-title">Example 2 — Sum Down ➕</div>
+    <div class="section-desc">sum(4) = 4+3+2+1 = 10. Same pattern — different problem. Learn BOTH.</div>
+  </div>
+</div>
+
+<div class="fun-box fun-box-orange">
+  <span class="emoji-xl">➕</span><strong>What does sum_down do?</strong><br><br>
+  <code>sum_down(4) = 4 + 3 + 2 + 1 = 10</code><br>
+  <code>sum_down(3) = 3 + 2 + 1 = 6</code><br>
+  <code>sum_down(2) = 2 + 1 = 3</code><br>
+  <code>sum_down(1) = 1</code><br>
+  <code>sum_down(0) = 0</code> ← base case<br><br>
+  Notice: <code>sum_down(4) = 4 + sum_down(3)</code><br>
+  Same pattern as factorial! Just + instead of ×.
+</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">sum_down</span>(n):
+    <span class="cm"># BASE CASE 🛑</span>
+    <span class="kw">if</span> n == <span class="nm">0</span>:
+        <span class="kw">return</span> <span class="nm">0</span>       <span class="cm"># sum of nothing = 0. Simple. Direct.</span>
+    <span class="cm"># GENERAL CASE 🔁</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> n + <span class="fn">sum_down</span>(n - <span class="nm">1</span>)   <span class="cm"># e.g. sum(4) = 4 + sum(3)</span>
+
+<span class="fn">print</span>(<span class="fn">sum_down</span>(<span class="nm">4</span>))   <span class="cm"># output: 10</span></pre>
+
+<div class="sec-title" style="margin-top:1.2rem;">🔬 Full trace of sum_down(4)</div>
+
+<div class="diagram-wrap">
+  <svg width="100%" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/>
+      </marker>
+    </defs>
+
+    <!-- Row labels -->
+    <text x="340" y="16" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="var(--ink3)">⬇ calling (each box asks the next one)  ·  ⬆ returning (results bubble back)</text>
+
+    <!-- ROW 1: Calling down (left to right) -->
+    <rect x="8"   y="26" width="110" height="36" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="2"/>
+    <text x="63"  y="40" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5" font-weight="500">sum_down(4)</text>
+    <text x="63"  y="55" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"  fill="#185FA5">4 + sum(3)</text>
+    <line x1="118" y1="44" x2="138" y2="44" stroke="#185FA5" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+
+    <rect x="140" y="26" width="110" height="36" rx="5" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+    <text x="195" y="40" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3C3489" font-weight="500">sum_down(3)</text>
+    <text x="195" y="55" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"  fill="#3C3489">3 + sum(2)</text>
+    <line x1="250" y1="44" x2="270" y2="44" stroke="#3C3489" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+
+    <rect x="272" y="26" width="110" height="36" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="327" y="40" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806" font-weight="500">sum_down(2)</text>
+    <text x="327" y="55" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"  fill="#633806">2 + sum(1)</text>
+    <line x1="382" y1="44" x2="402" y2="44" stroke="#633806" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+
+    <rect x="404" y="26" width="110" height="36" rx="5" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+    <text x="459" y="40" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#791F1F" font-weight="500">sum_down(1)</text>
+    <text x="459" y="55" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"  fill="#791F1F">1 + sum(0)</text>
+    <line x1="514" y1="44" x2="534" y2="44" stroke="#791F1F" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+
+    <rect x="536" y="22" width="130" height="44" rx="5" fill="#EAF3DE" stroke="#3B6D11" stroke-width="3"/>
+    <text x="601" y="40" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11" font-weight="500">sum_down(0) 🛑</text>
+    <text x="601" y="56" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11">return 0</text>
+
+    <!-- ROW 2: Returning up (right to left) -->
+    <rect x="536" y="114" width="130" height="36" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+    <text x="601" y="135" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11" font-weight="500">returns  0</text>
+    <line x1="535" y1="132" x2="515" y2="132" stroke="#3B6D11" stroke-width="2" marker-end="url(#arr2)"/>
+
+    <rect x="404" y="114" width="110" height="36" rx="5" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+    <text x="459" y="135" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#791F1F" font-weight="500">1+0 = returns 1</text>
+    <line x1="403" y1="132" x2="383" y2="132" stroke="#791F1F" stroke-width="2" marker-end="url(#arr2)"/>
+
+    <rect x="272" y="114" width="110" height="36" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="327" y="135" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#633806" font-weight="500">2+1 = returns 3</text>
+    <line x1="271" y1="132" x2="251" y2="132" stroke="#633806" stroke-width="2" marker-end="url(#arr2)"/>
+
+    <rect x="140" y="114" width="110" height="36" rx="5" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+    <text x="195" y="135" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#3C3489" font-weight="500">3+3 = returns 6</text>
+    <line x1="139" y1="132" x2="119" y2="132" stroke="#3C3489" stroke-width="2" marker-end="url(#arr2)"/>
+
+    <rect x="8" y="114" width="110" height="36" rx="5" fill="#E6F1FB" stroke="#185FA5" stroke-width="2.5"/>
+    <text x="63" y="132" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#185FA5" font-weight="500">4+6 = returns 10 ✅</text>
+
+    <text x="340" y="176" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#3B6D11" font-weight="500">Final answer: sum_down(4) = 10 ✅</text>
+    <text x="340" y="196" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="var(--ink3)">Each box waits for the answer from the box to its right, adds its own n, then passes it left.</text>
+    <text x="340" y="214" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="#185FA5" font-weight="500">Same pattern as factorial! Just + instead of ×.</text>
+  </svg>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 05 — VOWELS EXAMPLE (Cambridge)
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">05</div>
+  <div>
+    <div class="section-title">Example 3 — Count Vowels 🔤</div>
+    <div class="section-desc">This one is from a real Cambridge paper. Strings work the same way!</div>
+  </div>
+</div>
+
+<div class="fun-box fun-box-purple">
+  <span class="emoji-xl">🔤</span><strong>Same pattern — but on a STRING instead of a number!</strong><br><br>
+  With numbers we went from <strong>n → n-1 → n-2 → ... → 0</strong><br>
+  With strings we go from <strong>"house" → "ouse" → "use" → "se" → "e" → ""</strong><br><br>
+  Each call chops off the first letter. Base case = empty string. Same idea!
+</div>
+
+<div class="step-card step-card-green">
+  <span class="step-num">BASE CASE 🛑</span> When the string is <strong>empty</strong> (<code>""</code>) there are zero vowels. Return 0 directly.
+</div>
+<div class="step-card step-card-blue">
+  <span class="step-num">GENERAL CASE 🔁</span> Check the FIRST letter. Is it a vowel? Count 1 (or 0). Then call yourself on the REST of the string (<code>Value[1:]</code> = everything except the first letter).
+</div>
+
+<pre class="py"><span class="kw">def</span> <span class="fn">RecursiveVowels</span>(Value):
+    <span class="cm"># BASE CASE 🛑 — empty string, nothing left to check</span>
+    <span class="kw">if</span> Value == <span class="st">""</span>:
+        <span class="kw">return</span> <span class="nm">0</span>
+
+    <span class="cm"># GENERAL CASE 🔁 — check first letter, recurse on the rest</span>
+    <span class="kw">if</span> Value[<span class="nm">0</span>] <span class="kw">in</span> <span class="st">'aeiou'</span>:
+        <span class="kw">return</span> <span class="nm">1</span> + <span class="fn">RecursiveVowels</span>(Value[<span class="nm">1</span>:])   <span class="cm"># vowel! count it</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="nm">0</span> + <span class="fn">RecursiveVowels</span>(Value[<span class="nm">1</span>:])   <span class="cm"># not a vowel, skip it</span>
+
+<span class="fn">print</span>(<span class="fn">RecursiveVowels</span>(<span class="st">"house"</span>))    <span class="cm"># → 3  (o, u, e)</span>
+<span class="fn">print</span>(<span class="fn">RecursiveVowels</span>(<span class="st">"imagine"</span>))  <span class="cm"># → 4  (i, a, i, e)</span></pre>
+
+<div class="diagram-wrap">
+  <div style="font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Trace of RecursiveVowels("hi") — going down and up</div>
+  <svg width="100%" viewBox="0 0 680 190" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/>
+      </marker>
+    </defs>
+    <!-- calling -->
+    <rect x="10"  y="14" width="170" height="40" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="2"/>
+    <text x="95"  y="31" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#185FA5" font-weight="500">Vowels("hi")</text>
+    <text x="95"  y="47" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"  fill="#185FA5">'h' not vowel → 0 + Vowels("i")</text>
+    <line x1="180" y1="34" x2="206" y2="34" stroke="#185FA5" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr3)"/>
+
+    <rect x="208" y="14" width="170" height="40" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="293" y="31" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806" font-weight="500">Vowels("i")</text>
+    <text x="293" y="47" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9"  fill="#633806">'i' IS a vowel → 1 + Vowels("")</text>
+    <line x1="378" y1="34" x2="404" y2="34" stroke="#633806" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr3)"/>
+
+    <rect x="406" y="10" width="174" height="48" rx="5" fill="#EAF3DE" stroke="#3B6D11" stroke-width="3"/>
+    <text x="493" y="30" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3B6D11" font-weight="500">Vowels("")  🛑</text>
+    <text x="493" y="48" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">empty string → BASE CASE → return 0</text>
+
+    <!-- returning -->
+    <rect x="406" y="100" width="174" height="36" rx="5" fill="#EAF3DE" stroke="#97C459" stroke-width="2"/>
+    <text x="493" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3B6D11" font-weight="500">returns 0</text>
+    <line x1="405" y1="118" x2="379" y2="118" stroke="#3B6D11" stroke-width="2" marker-end="url(#arr3)"/>
+
+    <rect x="208" y="100" width="170" height="36" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="293" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806" font-weight="500">1 + 0 = returns 1</text>
+    <line x1="207" y1="118" x2="181" y2="118" stroke="#633806" stroke-width="2" marker-end="url(#arr3)"/>
+
+    <rect x="10"  y="100" width="170" height="36" rx="5" fill="#E6F1FB" stroke="#185FA5" stroke-width="2.5"/>
+    <text x="95"  y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#185FA5" font-weight="500">0 + 1 = returns 1 ✅</text>
+
+    <text x="340" y="162" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#3B6D11" font-weight="500">"hi" has 1 vowel ✅</text>
+    <text x="340" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink3)">Same pattern as factorial — down then up, results bubble back.</text>
+  </svg>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 06 — CALL STACK
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">06</div>
+  <div>
+    <div class="section-title">The Call Stack — How the Computer Remembers 📚</div>
+    <div class="section-desc">Every call gets a "box" in memory — stacked like pancakes 🥞</div>
+  </div>
+</div>
+
+<div class="fun-box fun-box-green">
+  <span class="emoji-xl">🥞</span><strong>Imagine a stack of pancakes:</strong><br><br>
+  Every time factorial calls itself, a new pancake is placed on top.<br>
+  Each pancake remembers: <em>"I am factorial(n), waiting for factorial(n-1) to finish."</em><br><br>
+  When the base case (factorial(0)) is reached → it returns → the top pancake is eaten → the one below gets its answer → it returns → eaten → and so on until the plate is empty and we have our answer!<br><br>
+  <strong>Stack Overflow 💥</strong> = no base case → infinite pancakes → the plate collapses!
+</div>
+
+<div class="diagram-wrap">
+  <svg width="100%" viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg">
+    <!-- Stack on left -->
+    <text x="170" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" fill="var(--ink)" font-weight="500">Stack at peak — all 4 calls are waiting</text>
+
+    <!-- frame 4 (bottom) -->
+    <rect x="30" y="238" width="280" height="40" rx="5" fill="#E6F1FB" stroke="#85B7EB" stroke-width="2"/>
+    <text x="170" y="254" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#185FA5" font-weight="500">factorial(4) ← pushed FIRST</text>
+    <text x="170" y="270" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#185FA5">waiting for factorial(3) to finish...</text>
+
+    <!-- frame 3 -->
+    <rect x="30" y="190" width="280" height="40" rx="5" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="2"/>
+    <text x="170" y="206" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#3C3489" font-weight="500">factorial(3)</text>
+    <text x="170" y="222" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#3C3489">waiting for factorial(2) to finish...</text>
+
+    <!-- frame 2 -->
+    <rect x="30" y="142" width="280" height="40" rx="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2"/>
+    <text x="170" y="158" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#633806" font-weight="500">factorial(2)</text>
+    <text x="170" y="174" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#633806">waiting for factorial(1) to finish...</text>
+
+    <!-- frame 1 -->
+    <rect x="30" y="94" width="280" height="40" rx="5" fill="#FCEBEB" stroke="#F09595" stroke-width="2"/>
+    <text x="170" y="110" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#791F1F" font-weight="500">factorial(1)</text>
+    <text x="170" y="126" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#791F1F">waiting for factorial(0) to finish...</text>
+
+    <!-- frame 0 TOP -->
+    <rect x="30" y="42" width="280" height="44" rx="5" fill="#EAF3DE" stroke="#3B6D11" stroke-width="3"/>
+    <text x="170" y="60" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#3B6D11" font-weight="500">factorial(0)  🛑  ← TOP of stack</text>
+    <text x="170" y="78" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11">BASE CASE → returns 1 → pops off first</text>
+
+    <!-- labels -->
+    <text x="320" y="62" font-family="DM Sans,sans-serif" font-size="9" fill="#3B6D11">← answered first</text>
+    <text x="320" y="260" font-family="DM Sans,sans-serif" font-size="9" fill="#8a8785">← answered last</text>
+
+    <!-- Right explanation -->
+    <rect x="370" y="34" width="296" height="254" rx="8" fill="var(--paper2)" stroke="var(--rule)" stroke-width="1.5"/>
+    <text x="385" y="56" font-family="DM Sans,sans-serif" font-size="12" fill="var(--ink)" font-weight="500">What the stack does:</text>
+    <text x="385" y="76" font-family="DM Mono,monospace" font-size="10" fill="#185FA5">PUSH  ⬇  (going down)</text>
+    <text x="385" y="92" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">Every recursive call pushes a new frame.</text>
+    <text x="385" y="107" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">Each frame saves: the value of n, and</text>
+    <text x="385" y="122" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">where to return to when done.</text>
+    <line x1="385" y1="134" x2="650" y2="134" stroke="var(--rule)" stroke-width="1"/>
+    <text x="385" y="152" font-family="DM Mono,monospace" font-size="10" fill="#3B6D11">POP  ⬆  (coming back up)</text>
+    <text x="385" y="168" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">Base case returns. Top frame pops.</text>
+    <text x="385" y="183" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">Its value goes to the frame below.</text>
+    <text x="385" y="198" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">That frame computes and pops. And so on.</text>
+    <line x1="385" y1="210" x2="650" y2="210" stroke="var(--rule)" stroke-width="1"/>
+    <text x="385" y="228" font-family="DM Mono,monospace" font-size="10" fill="#791F1F">STACK OVERFLOW  💥</text>
+    <text x="385" y="244" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">No base case = infinite pushes.</text>
+    <text x="385" y="259" font-family="DM Sans,sans-serif" font-size="10" fill="var(--ink2)">Stack fills RAM completely → crash.</text>
+    <text x="385" y="278" font-family="DM Sans,sans-serif" font-size="10" fill="#3B6D11" font-weight="500">factorial(4) = only 5 frames. Safe ✅</text>
+  </svg>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════════
+     BONUS SECTION — IMPLICIT BASE CASE (OutputInOrder)
+══════════════════════════════════════════════════ -->
+<div class="bonus-section">
+  <div class="bonus-tag">⭐ Bonus — Advanced Cambridge Knowledge</div>
+  <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:0.5rem;">OutputInOrder — Recursion Without an Explicit Stop 🌳</div>
+  <p style="font-size:13px;color:var(--ink2);margin-bottom:1rem;">You know the normal pattern: <code>if n==0: return 1</code> — the base case is INSIDE the function, clearly written. But Cambridge also uses another style where the stopping condition is a check BEFORE the call. Here's how it works.</p>
+
+  <pre class="py"><span class="kw">def</span> <span class="fn">OutputInOrder</span>(RootNode):
+    <span class="kw">if</span> RootNode.GetLeft() != <span class="nm">None</span>:     <span class="cm"># 🛡️ only call IF there is a left child</span>
+        <span class="fn">OutputInOrder</span>(RootNode.GetLeft())
+
+    <span class="fn">print</span>(RootNode.GetData())           <span class="cm"># print this node</span>
+
+    <span class="kw">if</span> RootNode.GetRight() != <span class="nm">None</span>:    <span class="cm"># 🛡️ only call IF there is a right child</span>
+        <span class="fn">OutputInOrder</span>(RootNode.GetRight())</pre>
+
+  <div class="box box-amber" style="margin-top:0.75rem;">
+    <strong>🤔 "Where is the base case?! There's no if/else, no return!"</strong><br>
+    The base case is <strong>hidden</strong>. Look at the two <code>if</code> conditions. They say:<br>
+    <em>"Only call myself if the next node EXISTS."</em><br><br>
+    So when you reach a leaf node (a node with NO children), BOTH <code>if</code> conditions are FALSE. The function never calls itself. It just prints and ends. That's the stop.<br><br>
+    The base case is: <strong>reaching a node with no children (a leaf)</strong>. It's implicit — it's never written as <code>if ... return</code>, but it's there.
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+    <div style="border:2px solid var(--green-bd);border-radius:8px;padding:1rem;background:var(--green-bg);">
+      <div style="font-weight:500;font-size:13px;color:var(--green);margin-bottom:6px;">Normal style (factorial) 🛑</div>
+      <p style="font-size:12px;color:var(--green);">Function IS called with the stop value (n=0), then checks and returns. Base case is <strong>inside</strong> the function.</p>
+      <code style="font-size:11px;color:var(--green);display:block;margin-top:6px;">if n == 0: return 1  ← explicit</code>
+    </div>
+    <div style="border:2px solid var(--teal-bd);border-radius:8px;padding:1rem;background:var(--teal-bg);">
+      <div style="font-weight:500;font-size:13px;color:var(--teal);margin-bottom:6px;">Guard style (OutputInOrder) 🛡️</div>
+      <p style="font-size:12px;color:var(--teal);">Function checks BEFORE calling itself — if the next value is None, call never happens. Base case is <strong>outside</strong>, as a guard.</p>
+      <code style="font-size:11px;color:var(--teal);display:block;margin-top:6px;">if child != None: recurse  ← implicit</code>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--ink2);font-style:italic;">For your exams: 90% of questions use the normal style (factorial, vowels, sum). The guard style is just for trees. Don't worry — the core idea is identical. Always ask: "what makes the input smaller?" and "when does it stop?"</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════
+     EXERCISES
+══════════════════════════════════════════════════ -->
+<hr class="section-rule">
+<div class="section-header">
+  <div class="section-num">Ex</div>
+  <div>
+    <div class="section-title">Exercises — Start Easy, Level Up 🎮</div>
+    <div class="section-desc">10 exercises. Go in order. Don't skip ahead!</div>
+  </div>
+</div>
+
+<div class="box box-green" style="margin-bottom:1.2rem;"><strong>🟢 EASY  (R0–R3)</strong> — No coding needed. Just reading, tracing, and understanding.</div>
+
+<!-- R0 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r0')">
+    <div class="ex-head-left"><span class="ex-num">R0</span><span class="ex-title">Label the parts — find the base case and general case</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[2 marks]</span><span class="toggle-lbl" id="r0-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r0" style="display:none;">
+    <div class="scenario">
+      Look at this recursive function and answer the questions below.
+      <pre style="margin:0.5rem 0;background:var(--paper3);padding:0.75rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:12.5px;">def countdown(n):
+    if n == 0:
+        print("Blastoff! 🚀")
+        return
+    print(n)
+    countdown(n - 1)</pre>
+    </div>
+    <ul class="task-list">
+      <li>Write down the <strong>base case</strong> (the stop condition). <span class="pts">[1]</span></li>
+      <li>Write down the <strong>general case</strong>. What makes the input smaller each call? <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box">Base case = the IF that returns without calling the function again. General case = the call to countdown() inside the function.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r0')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r0')">Show Answer</button></div>
+    <div class="hint-box" id="r0-hint">Which line stops the recursion? Which line calls countdown() again?</div>
+    <div class="answer-block" id="r0-ans"><pre><span class="cm"># Base case [1 mark]:</span>
+<span class="cm"># if n == 0 → prints "Blastoff!" and returns WITHOUT calling countdown() again.</span>
+<span class="cm"># This is the stop sign. Without it → infinite loop → crash.</span>
+
+<span class="cm"># General case [1 mark]:</span>
+<span class="cm"># countdown(n - 1) — calls itself with n MINUS 1.</span>
+<span class="cm"># Each call: n gets smaller by 1, moving towards 0 (the base case).</span>
+<span class="cm"># countdown(5) → calls countdown(4) → calls countdown(3) → ... → 0 ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- R1 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r1')">
+    <div class="ex-head-left"><span class="ex-num">R1</span><span class="ex-title">Trace factorial(3) — fill in every step</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[4 marks]</span><span class="toggle-lbl" id="r1-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r1" style="display:none;">
+    <div class="scenario">
+      Given: <code style="font-family:'DM Mono',monospace;">def factorial(n): return 1 if n==0 else n * factorial(n-1)</code><br><br>
+      Trace <strong>factorial(3)</strong> completely. Start from the bottom (base case), then work back up.
+    </div>
+    <ul class="task-list">
+      <li>What does <code>factorial(0)</code> return? <span class="pts">[1]</span></li>
+      <li>What does <code>factorial(1)</code> return? Show the calculation. <span class="pts">[1]</span></li>
+      <li>What does <code>factorial(2)</code> return? Show the calculation. <span class="pts">[1]</span></li>
+      <li>What does <code>factorial(3)</code> return? Show the calculation. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box">Always start from the BASE CASE (n=0). Each answer feeds the one above it.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r1')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r1')">Show Answer</button></div>
+    <div class="hint-box" id="r1-hint">factorial(0) = 1 (base case). factorial(1) = 1 × factorial(0) = 1 × ? = ?</div>
+    <div class="answer-block" id="r1-ans"><pre><span class="cm"># factorial(0) = 1               ← base case, direct answer</span>
+<span class="cm"># factorial(1) = 1 × factorial(0) = 1 × 1 = 1</span>
+<span class="cm"># factorial(2) = 2 × factorial(1) = 2 × 1 = 2</span>
+<span class="cm"># factorial(3) = 3 × factorial(2) = 3 × 2 = 6   ← final answer ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- R2 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r2')">
+    <div class="ex-head-left"><span class="ex-num">R2</span><span class="ex-title">Trace sum_down(3) — same exercise, different function</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[4 marks]</span><span class="toggle-lbl" id="r2-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r2" style="display:none;">
+    <div class="scenario">
+      Given:
+      <pre style="margin:0.5rem 0;background:var(--paper3);padding:0.75rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:12.5px;">def sum_down(n):
+    if n == 0:
+        return 0
+    else:
+        return n + sum_down(n - 1)</pre>
+      Trace <strong>sum_down(3)</strong> completely.
+    </div>
+    <ul class="task-list">
+      <li>What does <code>sum_down(0)</code> return? <span class="pts">[1]</span></li>
+      <li>What does <code>sum_down(1)</code> return? Show calculation. <span class="pts">[1]</span></li>
+      <li>What does <code>sum_down(2)</code> return? Show calculation. <span class="pts">[1]</span></li>
+      <li>What does <code>sum_down(3)</code> return? Show calculation. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="tip-box">Exactly the same as factorial! Just + instead of ×. Start from n=0 and work up.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r2')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r2')">Show Answer</button></div>
+    <div class="hint-box" id="r2-hint">sum_down(0) = 0. sum_down(1) = 1 + sum_down(0) = 1 + ? = ?</div>
+    <div class="answer-block" id="r2-ans"><pre><span class="cm"># sum_down(0) = 0               ← base case</span>
+<span class="cm"># sum_down(1) = 1 + sum_down(0) = 1 + 0 = 1</span>
+<span class="cm"># sum_down(2) = 2 + sum_down(1) = 2 + 1 = 3</span>
+<span class="cm"># sum_down(3) = 3 + sum_down(2) = 3 + 3 = 6  ← final answer ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- R3 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r3')">
+    <div class="ex-head-left"><span class="ex-num">R3</span><span class="ex-title">Fix the broken recursive function 🔧</span></div>
+    <div class="ex-meta"><span class="badge badge-easy">Easy</span><span class="badge badge-marks">[3 marks]</span><span class="toggle-lbl" id="r3-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r3" style="display:none;">
+    <div class="scenario">
+      A student wrote this function. It crashes every time with a "RecursionError: maximum recursion depth exceeded". 
+      <pre style="margin:0.5rem 0;background:var(--paper3);padding:0.75rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:12.5px;">def power(n, m):
+    return n * power(n, m - 1)</pre>
+      This should calculate n to the power of m. E.g. power(3, 4) = 81.
+    </div>
+    <ul class="task-list">
+      <li>Explain why this function crashes. <span class="pts">[1]</span></li>
+      <li>State what is missing. <span class="pts">[1]</span></li>
+      <li>Write the corrected version. Hint: any number to the power of 0 is 1. <span class="pts">[1]</span></li>
+    </ul>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r3')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r3')">Show Answer</button></div>
+    <div class="hint-box" id="r3-hint">What are the TWO things every recursive function needs? Which one is missing here? What happens without it?</div>
+    <div class="answer-block" id="r3-ans"><pre><span class="cm"># Why it crashes [1]:</span>
+<span class="cm"># No base case. m decreases forever: power(3,4)→power(3,3)→power(3,2)→...</span>
+<span class="cm"># →power(3,-1)→power(3,-2)→ forever. Stack overflow. 💥</span>
+
+<span class="cm"># What is missing [1]: a BASE CASE — a stopping condition.</span>
+
+<span class="kw">def</span> <span class="fn">power</span>(n, m):
+    <span class="kw">if</span> m == <span class="nm">0</span>:                       <span class="cm"># BASE CASE 🛑 — n^0 = 1 always</span>
+        <span class="kw">return</span> <span class="nm">1</span>
+    <span class="kw">else</span>:                            <span class="cm"># GENERAL CASE 🔁 — n^m = n × n^(m-1)</span>
+        <span class="kw">return</span> n * <span class="fn">power</span>(n, m - <span class="nm">1</span>)
+
+<span class="cm"># power(3,4): 3×power(3,3) → 3×power(3,2) → 3×power(3,1) → 3×power(3,0)</span>
+<span class="cm"># power(3,0) = 1 ← base case</span>
+<span class="cm"># Back: 3×1=3 → 3×3=9 → 3×9=27 → 3×27=81  ✅</span>
+<span class="fn">print</span>(<span class="fn">power</span>(<span class="nm">3</span>, <span class="nm">4</span>))  <span class="cm"># → 81 ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- ─── MEDIUM ─── -->
+<div class="box box-amber" style="margin:2rem 0 1.2rem;"><strong>🟡 MEDIUM  (R4–R7)</strong> — Write code from scratch. Use the template: base case first, then general case.</div>
+
+<!-- R4 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r4')">
+    <div class="ex-head-left"><span class="ex-num">R4</span><span class="ex-title">Write RecursiveVowels() — Cambridge Past Paper Q1(b)</span></div>
+    <div class="ex-meta"><span class="badge badge-mid">Medium</span><span class="badge badge-marks">[6 marks]</span><span class="toggle-lbl" id="r4-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r4" style="display:none;">
+    <div class="scenario">
+      The iterative function below counts lowercase vowels (a, e, i, o, u) in a string.<br>
+      <strong>Rewrite it as a recursive function called <code>RecursiveVowels(Value)</code>.</strong>
+      <pre style="margin:0.5rem 0;background:var(--paper3);padding:0.75rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:12.5px;">def IterativeVowels(Value):
+    Total = 0
+    for X in range(len(Value)):
+        if Value[0] in 'aeiou':
+            Total += 1
+        Value = Value[1:]
+    return Total</pre>
+    </div>
+    <ul class="task-list">
+      <li>Identify the base case. What is the simplest input and what do you return? <span class="pts">[1]</span></li>
+      <li>Identify the general case. What do you check and what do you recurse on? <span class="pts">[1]</span></li>
+      <li>Write the complete code for <code>RecursiveVowels(Value)</code>. <span class="pts">[4]</span></li>
+    </ul>
+    <div class="tip-box">Base case: empty string → return 0. General case: check Value[0], then recurse on Value[1:] (the rest).</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r4')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r4')">Show Answer</button></div>
+    <div class="hint-box" id="r4-hint">if Value == "": return 0. Then if Value[0] in 'aeiou': return 1 + RecursiveVowels(Value[1:]) else return RecursiveVowels(Value[1:]).</div>
+    <div class="answer-block" id="r4-ans"><pre><span class="cm"># Base case: Value == "" → 0 (empty string has no vowels)</span>
+<span class="cm"># General case: check first char (Value[0]), recurse on rest (Value[1:])</span>
+
+<span class="kw">def</span> <span class="fn">RecursiveVowels</span>(Value):
+    <span class="kw">if</span> Value == <span class="st">""</span>:                        <span class="cm"># BASE CASE 🛑</span>
+        <span class="kw">return</span> <span class="nm">0</span>
+    <span class="kw">if</span> Value[<span class="nm">0</span>] <span class="kw">in</span> <span class="st">'aeiou'</span>:              <span class="cm"># GENERAL CASE 🔁</span>
+        <span class="kw">return</span> <span class="nm">1</span> + <span class="fn">RecursiveVowels</span>(Value[<span class="nm">1</span>:])
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="nm">0</span> + <span class="fn">RecursiveVowels</span>(Value[<span class="nm">1</span>:])
+
+<span class="cm"># [1] Correct function header with parameter</span>
+<span class="cm"># [1] Base case: empty string returns 0</span>
+<span class="cm"># [1] Checks first character Value[0] against vowels</span>
+<span class="cm"># [1] Recurses on Value[1:] (string shrinks by 1 each call)</span>
+
+<span class="fn">print</span>(<span class="fn">RecursiveVowels</span>(<span class="st">"house"</span>))    <span class="cm"># → 3 ✅</span>
+<span class="fn">print</span>(<span class="fn">RecursiveVowels</span>(<span class="st">"imagine"</span>))  <span class="cm"># → 4 ✅</span></pre></div>
+    <div class="ex-citation">📌 Source: 9618/41/O/N/23 Q1(b)(i)</div>
+  </div>
+</div>
+
+<!-- R5 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r5')">
+    <div class="ex-head-left"><span class="ex-num">R5</span><span class="ex-title">Write sum of digits — e.g. digits(123) = 1+2+3 = 6</span></div>
+    <div class="ex-meta"><span class="badge badge-mid">Medium</span><span class="badge badge-marks">[5 marks]</span><span class="toggle-lbl" id="r5-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r5" style="display:none;">
+    <div class="scenario">
+      Write a recursive function <code>SumDigits(n)</code> that returns the sum of all digits of a positive integer.<br><br>
+      <code>SumDigits(123) = 1+2+3 = 6</code><br>
+      <code>SumDigits(45)  = 4+5 = 9</code><br>
+      <code>SumDigits(7)   = 7</code><br><br>
+      Useful tools: <code>n % 10</code> = last digit. <code>n // 10</code> = remove last digit.
+    </div>
+    <ul class="task-list">
+      <li>What is the base case? When is n so simple that you return directly? <span class="pts">[1]</span></li>
+      <li>What is the general case? Which digit do you take, and what do you recurse on? <span class="pts">[2]</span></li>
+      <li>Write the complete code for <code>SumDigits(n)</code>. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box">When n has only 1 digit (n &lt; 10), just return n. Otherwise: take the last digit (n%10) and recurse on the rest (n//10).</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r5')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r5')">Show Answer</button></div>
+    <div class="hint-box" id="r5-hint">if n &lt; 10: return n. else: return (n % 10) + SumDigits(n // 10).</div>
+    <div class="answer-block" id="r5-ans"><pre><span class="cm"># Base case: n < 10 → single digit → return it directly</span>
+<span class="cm"># General case: last digit = n%10.  Remaining = n//10 (smaller!)</span>
+<span class="cm"># SumDigits(123) = (123%10) + SumDigits(123//10)</span>
+<span class="cm">#               = 3 + SumDigits(12)</span>
+<span class="cm">#                      = 2 + SumDigits(1)</span>
+<span class="cm">#                             = 1  ← base case</span>
+<span class="cm"># Back: 1 → 2+1=3 → 3+3=6 ✅</span>
+
+<span class="kw">def</span> <span class="fn">SumDigits</span>(n):
+    <span class="kw">if</span> n < <span class="nm">10</span>:                          <span class="cm"># BASE CASE 🛑</span>
+        <span class="kw">return</span> n
+    <span class="kw">else</span>:                              <span class="cm"># GENERAL CASE 🔁</span>
+        <span class="kw">return</span> (n % <span class="nm">10</span>) + <span class="fn">SumDigits</span>(n // <span class="nm">10</span>)
+
+<span class="fn">print</span>(<span class="fn">SumDigits</span>(<span class="nm">123</span>))  <span class="cm"># → 6 ✅</span>
+<span class="fn">print</span>(<span class="fn">SumDigits</span>(<span class="nm">45</span>))   <span class="cm"># → 9 ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- R6 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r6')">
+    <div class="ex-head-left"><span class="ex-num">R6</span><span class="ex-title">Convert iterative → recursive: count a character in a string</span></div>
+    <div class="ex-meta"><span class="badge badge-mid">Medium</span><span class="badge badge-marks">[4 marks]</span><span class="toggle-lbl" id="r6-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r6" style="display:none;">
+    <div class="scenario">
+      This iterative function counts how many times character <code>ch</code> appears in a string. Rewrite it recursively.
+      <pre style="margin:0.5rem 0;background:var(--paper3);padding:0.75rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:12.5px;">def count_char(text, ch):
+    count = 0
+    for letter in text:
+        if letter == ch:
+            count += 1
+    return count
+
+print(count_char("banana", "a"))  # → 3</pre>
+    </div>
+    <ul class="task-list">
+      <li>State the base case. <span class="pts">[1]</span></li>
+      <li>State the general case. <span class="pts">[1]</span></li>
+      <li>Write the complete recursive version. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box">Identical pattern to RecursiveVowels! Check first character, recurse on the rest. Empty string = 0.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r6')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r6')">Show Answer</button></div>
+    <div class="hint-box" id="r6-hint">if text == "": return 0. If text[0] == ch: return 1 + count_char_r(text[1:], ch). Else: return count_char_r(text[1:], ch).</div>
+    <div class="answer-block" id="r6-ans"><pre><span class="kw">def</span> <span class="fn">count_char_r</span>(text, ch):
+    <span class="kw">if</span> text == <span class="st">""</span>:                            <span class="cm"># BASE CASE 🛑</span>
+        <span class="kw">return</span> <span class="nm">0</span>
+    <span class="kw">if</span> text[<span class="nm">0</span>] == ch:                          <span class="cm"># GENERAL CASE 🔁</span>
+        <span class="kw">return</span> <span class="nm">1</span> + <span class="fn">count_char_r</span>(text[<span class="nm">1</span>:], ch)
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="nm">0</span> + <span class="fn">count_char_r</span>(text[<span class="nm">1</span>:], ch)
+
+<span class="fn">print</span>(<span class="fn">count_char_r</span>(<span class="st">"banana"</span>, <span class="st">"a"</span>))  <span class="cm"># → 3 ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- R7 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r7')">
+    <div class="ex-head-left"><span class="ex-num">R7</span><span class="ex-title">Convert iterative → recursive: find max in a list</span></div>
+    <div class="ex-meta"><span class="badge badge-mid">Medium</span><span class="badge badge-marks">[5 marks]</span><span class="toggle-lbl" id="r7-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r7" style="display:none;">
+    <div class="scenario">
+      Rewrite this as a recursive function <code>find_max(lst)</code>:
+      <pre style="margin:0.5rem 0;background:var(--paper3);padding:0.75rem;border-radius:5px;font-family:'DM Mono',monospace;font-size:12.5px;">def find_max_iter(lst):
+    m = lst[0]
+    for item in lst:
+        if item > m:
+            m = item
+    return m
+
+print(find_max_iter([3, 7, 2, 9, 4]))  # → 9</pre>
+      Hint: max of a list = biggest of: first element VS max of everything else.
+    </div>
+    <ul class="task-list">
+      <li>State the base case — what is the simplest list? <span class="pts">[1]</span></li>
+      <li>State the general case — how do you compare first element to the rest? <span class="pts">[2]</span></li>
+      <li>Write the complete recursive function. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box">Base case: one-element list → return that element. General case: compare lst[0] with find_max(lst[1:]), return the bigger one.</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r7')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r7')">Show Answer</button></div>
+    <div class="hint-box" id="r7-hint">if len(lst)==1: return lst[0]. rest = find_max(lst[1:]). if lst[0] > rest: return lst[0]. else: return rest.</div>
+    <div class="answer-block" id="r7-ans"><pre><span class="kw">def</span> <span class="fn">find_max</span>(lst):
+    <span class="kw">if</span> <span class="fn">len</span>(lst) == <span class="nm">1</span>:              <span class="cm"># BASE CASE 🛑 — one item, that IS the max</span>
+        <span class="kw">return</span> lst[<span class="nm">0</span>]
+    <span class="kw">else</span>:                          <span class="cm"># GENERAL CASE 🔁</span>
+        rest_max = <span class="fn">find_max</span>(lst[<span class="nm">1</span>:])   <span class="cm"># max of everything except first</span>
+        <span class="kw">if</span> lst[<span class="nm">0</span>] > rest_max:
+            <span class="kw">return</span> lst[<span class="nm">0</span>]
+        <span class="kw">else</span>:
+            <span class="kw">return</span> rest_max
+
+<span class="cm"># Trace of find_max([3, 7, 2]):</span>
+<span class="cm"># find_max([3,7,2]) → 3 vs find_max([7,2])</span>
+<span class="cm">#   find_max([7,2]) → 7 vs find_max([2])</span>
+<span class="cm">#     find_max([2]) → 2  ← base case</span>
+<span class="cm">#   7 > 2 → return 7</span>
+<span class="cm"># 3 > 7? No → return 7  ✅</span>
+<span class="fn">print</span>(<span class="fn">find_max</span>([<span class="nm">3</span>, <span class="nm">7</span>, <span class="nm">2</span>, <span class="nm">9</span>, <span class="nm">4</span>]))  <span class="cm"># → 9 ✅</span></pre></div>
+  </div>
+</div>
+
+<!-- ─── HARD ─── -->
+<div class="box box-red" style="margin:2rem 0 1.2rem;"><strong>🔴 HARD  (R8–R9)</strong> — Cambridge-style theory questions. Use full sentences.</div>
+
+<!-- R8 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r8')">
+    <div class="ex-head-left"><span class="ex-num">R8</span><span class="ex-title">Theory — define recursion and explain its two features</span></div>
+    <div class="ex-meta"><span class="badge badge-hard">Hard</span><span class="badge badge-marks">[5 marks]</span><span class="toggle-lbl" id="r8-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r8" style="display:none;">
+    <ul class="task-list">
+      <li>Define what is meant by recursion. <span class="pts">[1]</span></li>
+      <li>State the TWO essential features. For each, explain what happens if it is missing. <span class="pts">[2]</span></li>
+      <li>Give ONE benefit and TWO drawbacks of using recursion instead of iteration. <span class="pts">[3]</span></li>
+    </ul>
+    <div class="tip-box">For drawbacks, say WHY — "uses more memory because each call creates a new stack frame."</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r8')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r8')">Show Answer</button></div>
+    <div class="hint-box" id="r8-hint">Definition: "calls itself". Features: base case + general case. Without base case → stack overflow. Benefit: cleaner code. Drawbacks: more memory, stack overflow risk.</div>
+    <div class="answer-block" id="r8-ans"><pre><span class="cm"># Definition [1]:</span>
+<span class="cm"># Recursion is when a function/procedure calls itself as part of its</span>
+<span class="cm"># own definition in order to solve a problem.</span>
+
+<span class="cm"># Feature 1 [1]: Base case — a stopping condition that returns a value</span>
+<span class="cm"># WITHOUT another recursive call. Without it → infinite recursion → stack overflow.</span>
+
+<span class="cm"># Feature 2 [1]: General case — calls itself with a SMALLER/SIMPLER input,</span>
+<span class="cm"># moving towards the base case. Without it → the function never recurses.</span>
+
+<span class="cm"># Benefit [1]: Code is shorter and more readable for naturally recursive</span>
+<span class="cm"># problems (e.g. trees, factorial). The code mirrors the mathematical definition.</span>
+
+<span class="cm"># Drawback 1 [1]: Uses more memory — every call creates a new stack frame</span>
+<span class="cm"># saving local variables. factorial(1000) needs 1001 frames. A loop needs 1.</span>
+
+<span class="cm"># Drawback 2 [1]: Risk of stack overflow — if the base case is missing or</span>
+<span class="cm"># never reached, the call stack fills completely and the program crashes.</span></pre></div>
+  </div>
+</div>
+
+<!-- R9 -->
+<div class="ex">
+  <div class="ex-head" onclick="toggle('r9')">
+    <div class="ex-head-left"><span class="ex-num">R9</span><span class="ex-title">Recursive binary search — write from scratch</span></div>
+    <div class="ex-meta"><span class="badge badge-hard">Hard</span><span class="badge badge-marks">[6 marks]</span><span class="toggle-lbl" id="r9-lbl">▼ expand</span></div>
+  </div>
+  <div class="ex-body" id="r9" style="display:none;">
+    <div class="scenario">
+      Binary search on a SORTED list: look at the middle element. If it matches → found! If target is smaller → search left half. If larger → search right half.<br><br>
+      <strong>Write a recursive function <code>BinarySearch(lst, target, low, high)</code></strong><br>
+      where <code>low</code> and <code>high</code> are the current search boundaries (start as 0 and len-1).<br>
+      Return the index if found, or -1 if not found.
+    </div>
+    <ul class="task-list">
+      <li>State the TWO base cases. <span class="pts">[2]</span></li>
+      <li>State the general case — what two recursive calls are possible? <span class="pts">[2]</span></li>
+      <li>Write the complete recursive function. <span class="pts">[2]</span></li>
+    </ul>
+    <div class="tip-box">Base case 1: low &gt; high → not found → return -1. Base case 2: middle element equals target → return mid. General case: target smaller → search left (high = mid-1). Target bigger → search right (low = mid+1).</div>
+    <div class="btn-row"><button class="hint-btn" onclick="showHint('r9')">💡 Hint</button><button class="answer-btn" onclick="showAnswer('r9')">Show Answer</button></div>
+    <div class="hint-box" id="r9-hint">mid = (low + high) // 2. Three possibilities: found it (return mid), too small (search left), too big (search right).</div>
+    <div class="answer-block" id="r9-ans"><pre><span class="cm"># Base case 1: low > high → search area is empty → not found</span>
+<span class="cm"># Base case 2: lst[mid] == target → found it!</span>
+<span class="cm"># General case: recurse on left OR right half (range halves each call)</span>
+
+<span class="kw">def</span> <span class="fn">BinarySearch</span>(lst, target, low, high):
+    <span class="kw">if</span> low > high:                       <span class="cm"># BASE CASE 1 🛑 — not found</span>
+        <span class="kw">return</span> -<span class="nm">1</span>
+
+    mid = (low + high) // <span class="nm">2</span>
+
+    <span class="kw">if</span> lst[mid] == target:               <span class="cm"># BASE CASE 2 🛑 — found!</span>
+        <span class="kw">return</span> mid
+    <span class="kw">elif</span> target < lst[mid]:              <span class="cm"># GENERAL CASE 🔁 — go left</span>
+        <span class="kw">return</span> <span class="fn">BinarySearch</span>(lst, target, low, mid - <span class="nm">1</span>)
+    <span class="kw">else</span>:                                <span class="cm"># GENERAL CASE 🔁 — go right</span>
+        <span class="kw">return</span> <span class="fn">BinarySearch</span>(lst, target, mid + <span class="nm">1</span>, high)
+
+nums = [<span class="nm">2</span>, <span class="nm">5</span>, <span class="nm">9</span>, <span class="nm">13</span>, <span class="nm">21</span>, <span class="nm">34</span>]
+<span class="fn">print</span>(<span class="fn">BinarySearch</span>(nums, <span class="nm">21</span>, <span class="nm">0</span>, <span class="fn">len</span>(nums)-<span class="nm">1</span>))  <span class="cm"># → 4 ✅</span>
+<span class="fn">print</span>(<span class="fn">BinarySearch</span>(nums, <span class="nm">10</span>, <span class="nm">0</span>, <span class="fn">len</span>(nums)-<span class="nm">1</span>))  <span class="cm"># → -1 (not found) ✅</span></pre></div>
+    <div class="ex-citation">📌 Hard challenge — recursive binary search</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CHEAT SHEET
+══════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="before-exam">
+  <h3>🧠 Cheat Sheet — Stick This on Your Wall</h3>
+  <div class="be-section">── THE 2 RULES — NEVER EVER FORGET ─────────────────────</div>
+  <div class="be-row"><span class="be-key">Rule 1 — Base Case 🛑</span><span class="be-val">if [stop condition]: return [direct answer]</span></div>
+  <div class="be-row"><span class="be-key">Rule 2 — General Case 🔁</span><span class="be-val">else: return [something] + func(SMALLER input)</span></div>
+  <div class="be-section">── CAMBRIDGE DEFINITION ─────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Recursion</span><span class="be-val">A function/procedure that calls itself as part of its own definition.</span></div>
+  <div class="be-section">── 3 TEMPLATES TO MEMORISE ──────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Factorial (number)</span><span class="be-val">if n==0: return 1  |  else: return n * factorial(n-1)</span></div>
+  <div class="be-row"><span class="be-key">Sum down (number)</span><span class="be-val">if n==0: return 0  |  else: return n + sum_down(n-1)</span></div>
+  <div class="be-row"><span class="be-key">Vowels / char (string)</span><span class="be-val">if s=="": return 0  |  check s[0]  |  recurse s[1:]</span></div>
+  <div class="be-section">── CALL STACK ────────────────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">PUSH ⬇ (going down)</span><span class="be-val">Each call adds a new stack frame on top</span></div>
+  <div class="be-row"><span class="be-key">POP ⬆ (coming back)</span><span class="be-val">Base case pops, result goes to frame below, it pops, etc.</span></div>
+  <div class="be-row"><span class="be-key">Stack Overflow 💥</span><span class="be-val">No base case → infinite frames → crash</span></div>
+  <div class="be-section">── PROS AND CONS ─────────────────────────────────────────</div>
+  <div class="be-row"><span class="be-key">Benefit ✅</span><span class="be-val">Shorter code; mirrors the mathematical definition naturally</span></div>
+  <div class="be-row"><span class="be-key">Drawback ❌</span><span class="be-val">More memory — each call creates a new stack frame</span></div>
+  <div class="be-row"><span class="be-key">Drawback ❌</span><span class="be-val">Stack overflow if base case is missing or never reached</span></div>
+  <div class="be-row"><span class="be-key">Drawback ❌</span><span class="be-val">Slower than iteration (function call overhead)</span></div>
+  <div class="be-section">── BONUS: GUARD STYLE (just for trees) ──────────────────</div>
+  <div class="be-row"><span class="be-key">OutputInOrder</span><span class="be-val">No explicit base case. Guards (if != None) prevent bad calls.</span></div>
+  <div class="be-row"><span class="be-key">Implicit base case</span><span class="be-val">Leaf node: both children are None → both ifs false → function ends naturally.</span></div>
+</div>
+
+</div><!-- end page-body -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 24 — Recursion</span>
+  <span>Base Case · General Case · Call Stack · Factorial · SumDown · Vowels · OutputInOrder</span>
+</footer>
+
+<script>
+function toggle(id){var b=document.getElementById(id),l=document.getElementById(id+'-lbl'),o=b.style.display==='block';b.style.display=o?'none':'block';if(l)l.textContent=o?'▼ expand':'▲ collapse';}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAnswer(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+</script>
+</body>
+</html>
