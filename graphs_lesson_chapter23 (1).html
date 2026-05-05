@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graphs · Chapter 23 · Cambridge 9618</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0f0e0c;--ink2:#3a3835;--ink3:#7a7775;
+  --paper:#f7f5f0;--paper2:#edeae3;--paper3:#e2dfd6;--rule:#ccc9c0;
+  --accent:#c84b2f;
+  --code-bg:#17161a;--code-text:#d4cfc4;
+  --kw:#7eb8d4;--fn:#a8d890;--st:#e8c878;--cm:#5a6065;--nm:#c8a8f0;--cls:#f0a060;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Figtree',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.7;}
+
+/* COVER */
+.cover{background:var(--ink);color:#e8e4dc;padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;top:0;right:0;width:320px;height:320px;background:radial-gradient(circle at top right,rgba(200,75,47,.18),transparent 70%);}
+.cover-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(232,228,220,.4);margin-bottom:1rem;}
+.cover h1{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;line-height:1.05;letter-spacing:-.02em;}
+.cover h1 span{color:var(--accent);}
+.cover-sub{margin-top:.75rem;font-size:14px;color:rgba(232,228,220,.5);max-width:520px;}
+.cover-tags{display:flex;gap:.6rem;margin-top:1.5rem;flex-wrap:wrap;}
+.cover-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(232,228,220,.15);padding:4px 12px;border-radius:20px;color:rgba(232,228,220,.45);}
+
+/* PROGRESS */
+.progress{display:flex;overflow-x:auto;background:var(--paper2);border-bottom:2px solid var(--rule);}
+.ps{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;color:var(--ink3);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.ps.active{color:var(--ink);border-bottom-color:var(--accent);}
+
+/* LAYOUT */
+.wrap{max-width:900px;margin:0 auto;padding:0 1.5rem;}
+.section{padding:2.5rem 0 0;}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.sec-num{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:var(--rule);line-height:1;}
+.sec-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;}
+.sec-sub{font-size:12px;color:var(--ink3);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.divider{height:1px;background:var(--rule);margin:2.5rem 0;}
+p.body{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:1rem;}
+
+/* JOKE / ANALOGY STRIP */
+.joke{background:linear-gradient(135deg,#1a0f00,#2a1800);border:1px solid #6a4010;border-radius:10px;padding:1rem 1.3rem;margin:1rem 0;color:#f0d090;font-size:13.5px;line-height:1.7;}
+.joke-title{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#c08040;margin-bottom:.4rem;}
+
+/* DEFINITION CARD */
+.def-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.1rem 1.4rem;margin:1rem 0;}
+.def-card-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--ink3);margin-bottom:.4rem;}
+.def-card-text{font-size:13.5px;color:var(--ink2);line-height:1.75;}
+
+/* BOXES */
+.box{border-radius:6px;padding:.75rem 1rem;font-size:13.5px;line-height:1.65;margin:.85rem 0;}
+.box-info{background:var(--paper2);border-left:3px solid var(--rule);color:var(--ink2);}
+.box-tip{background:#fef8e8;border:1px solid #e8d060;color:#4a3800;}
+.box-key{background:#eef5ff;border:1px solid #aac4ee;color:#0f2a5a;}
+.box-stop{background:#fdecea;border:1px solid #e8a090;color:#5a1010;}
+.box-green{background:#e8f5ee;border:1px solid #a8d5b8;color:#1a4a2a;}
+.box strong{font-weight:600;}
+code.ic{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--paper3);padding:1px 6px;border-radius:3px;color:var(--ink);}
+
+/* ANALOGY STRIP */
+.analogy-strip{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;margin:1rem 0;background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;}
+.a-block{padding:1rem;text-align:center;}
+.a-block.col1{background:var(--paper2);}
+.a-block.col2{background:#fdecea;}
+.a-block.col3{background:#e8f5ee;}
+.a-arrow{display:flex;align-items:center;justify-content:center;padding:0 .5rem;font-size:1.2rem;color:var(--ink3);background:var(--paper2);}
+.a-label{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem;color:var(--ink3);}
+.a-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:.25rem;}
+.a-desc{font-size:12px;color:var(--ink3);line-height:1.5;}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:1rem 0;}
+.card{border:1px solid var(--rule);border-radius:8px;padding:1rem;background:#fff;}
+.card-icon{font-size:1.4rem;margin-bottom:.4rem;}
+.card-name{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--ink2);margin-bottom:.25rem;}
+.card-desc{font-size:12.5px;color:var(--ink3);line-height:1.5;}
+
+/* GRAPH SVG WRAPPER */
+.graph-wrap{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:1.25rem 1.5rem;margin:1rem 0;overflow-x:auto;text-align:center;}
+.graph-caption{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);margin-bottom:.75rem;text-align:left;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;margin:.75rem 0;}
+.tbl{border-collapse:collapse;font-size:13px;width:100%;}
+.tbl th{background:var(--paper2);color:var(--ink2);padding:8px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;border:1px solid var(--rule);font-weight:500;}
+.tbl td{padding:8px 14px;border:1px solid var(--rule);font-size:13px;color:var(--ink3);background:#fff;vertical-align:top;}
+.tbl tr:nth-child(even) td{background:var(--paper2);}
+.tbl td:first-child{font-weight:500;color:var(--ink2);}
+
+/* ADJACENCY MATRIX */
+.matrix-wrap{background:#fff;border:1px solid var(--rule);border-radius:8px;overflow-x:auto;margin:1rem 0;}
+.matrix-table{border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:14px;margin:1rem auto;}
+.matrix-table th{background:var(--paper2);color:var(--ink2);padding:11px 20px;border:1px solid var(--rule);font-weight:600;font-size:13px;text-align:center;}
+.matrix-table td{padding:11px 20px;border:1px solid var(--rule);text-align:center;color:var(--ink3);min-width:56px;}
+.matrix-table td.one{background:#e8f5ee;color:#1a5c38;font-weight:700;}
+.matrix-table td.zero{background:var(--paper2);color:#bbb;}
+.matrix-table th.corner{background:var(--ink);color:#e8e4dc;}
+.matrix-table td.wt{background:#eef5ff;color:#0f2a5a;font-weight:700;}
+.matrix-table td.wt-d{background:#fdecea;color:#5a1010;font-weight:700;}
+
+/* EXPLAIN TABLE */
+.explain-table{width:100%;border-collapse:collapse;font-size:13px;margin:.75rem 0;}
+.explain-table th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--paper2);padding:8px 12px;border:1px solid var(--rule);color:var(--ink2);text-align:left;}
+.explain-table td{padding:8px 12px;border:1px solid var(--rule);background:#fff;vertical-align:top;}
+.explain-table td:first-child{font-family:'JetBrains Mono',monospace;font-size:11px;color:#1a3a6a;background:#f0f6ff;font-weight:500;white-space:nowrap;}
+.explain-table td:last-child{font-size:13px;color:var(--ink2);line-height:1.6;}
+.explain-table tr:nth-child(even) td:last-child{background:var(--paper2);}
+
+/* FUNC SUMMARY */
+.func-summary{background:#fff;border:1px solid var(--rule);border-radius:8px;margin:1rem 0;overflow:hidden;}
+.func-summary-head{background:var(--ink);color:#e8e4dc;padding:.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;}
+.func-summary-body{padding:1rem;}
+.func-summary-body p{font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:.5rem;}
+.func-summary-body p:last-child{margin-bottom:0;}
+
+/* CODE */
+pre.code{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;padding:1.1rem 1.3rem;border-radius:8px;overflow-x:auto;white-space:pre;background:var(--code-bg);color:var(--code-text);margin:.75rem 0;border:1px solid rgba(255,255,255,.05);}
+.kw{color:var(--kw);font-weight:500;}.fn{color:var(--fn);}.st{color:var(--st);}.cm{color:var(--cm);font-style:italic;}.nm{color:var(--nm);}.cls{color:var(--cls);}
+
+/* EXERCISES */
+.ex{border:1px solid var(--rule);border-radius:8px;margin-bottom:1.5rem;overflow:hidden;background:#fff;}
+.ex-head{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.25rem;border-bottom:1px solid var(--rule);gap:1rem;flex-wrap:wrap;cursor:pointer;user-select:none;background:var(--paper2);transition:background .15s;}
+.ex-head:hover{background:var(--paper3);}
+.ex-left{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.ex-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);}
+.ex-title{font-family:'Syne',sans-serif;font-weight:600;font-size:14px;}
+.ex-meta{display:flex;gap:.5rem;align-items:center;}
+.badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
+.b-easy{background:#e8f5ee;color:#1a5c38;border:1px solid #a8d5b8;}
+.b-mid{background:#fef3e2;color:#7a4a00;border:1px solid #f0c878;}
+.b-hard{background:#fdecea;color:#5a1010;border:1px solid #e8a090;}
+.b-mk{background:var(--paper2);color:var(--ink3);border:1px solid var(--rule);}
+.tog{font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace;}
+.ex-body{padding:1.25rem;}
+.scenario{background:var(--paper2);border-left:3px solid var(--rule);padding:.75rem 1rem;border-radius:0 6px 6px 0;font-size:13.5px;margin-bottom:1.1rem;color:var(--ink2);line-height:1.65;}
+.task-list{list-style:none;padding:0;margin-bottom:1rem;}
+.task-list li{padding:.3rem 0 .3rem 1.4rem;position:relative;font-size:13.5px;border-bottom:1px solid var(--paper2);color:var(--ink2);}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'•';position:absolute;left:.4rem;color:var(--ink3);}
+.pts{float:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);background:var(--paper2);padding:1px 6px;border-radius:3px;}
+.btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem;}
+.hint-btn,.ans-btn{font-family:'Figtree',sans-serif;font-size:12px;border-radius:5px;padding:5px 14px;cursor:pointer;font-weight:600;transition:all .15s;}
+.hint-btn{background:none;border:1px solid var(--rule);color:var(--ink3);}
+.hint-btn:hover{background:var(--paper2);color:var(--ink2);}
+.ans-btn{background:var(--ink);border:none;color:var(--paper);}
+.ans-btn:hover{background:var(--ink2);}
+.hint-box{display:none;background:#fef8e8;border:1px solid #e8d060;border-radius:6px;padding:.7rem .9rem;margin-top:.6rem;font-size:13px;color:#4a3800;line-height:1.65;}
+.hint-box.visible{display:block;}
+.ans-block{display:none;border-radius:6px;background:var(--code-bg);border:1px solid rgba(255,255,255,.06);margin-top:.75rem;overflow:hidden;}
+.ans-block.visible{display:block;}
+.ans-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--fn);padding:.6rem 1rem;background:rgba(168,216,144,.08);border-bottom:1px solid rgba(168,216,144,.15);}
+.ans-block pre.code{margin:0;border-radius:0;border:none;}
+
+/* COMPARISON GRID */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:1rem 0;}
+.cg-cell{background:#fff;padding:.85rem 1rem;}
+.cg-cell.head{background:var(--ink);color:#e8e4dc;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:500;}
+.cg-cell.t1{background:#e8f5ee;}
+.cg-cell.t2{background:#eef5ff;}
+.cg-cell.t3{background:#fdecea;}
+.cg-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;margin-bottom:.3rem;}
+.cg-desc{font-size:12.5px;color:var(--ink3);line-height:1.55;}
+
+footer{background:var(--paper2);border-top:1px solid var(--rule);padding:1.5rem 2rem;font-size:12px;color:var(--ink3);margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+
+<!-- ─── COVER ─────────────────────────────────────────────── -->
+<div class="cover">
+  <div class="cover-eyebrow">Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 23 · Section 03</div>
+  <h1>Graphs <span>🕸️</span></h1>
+  <div class="cover-sub">Vertices. Edges. Weights. Directions. The data structure that runs the internet, GPS, and your friend drama — explained simply, with jokes.</div>
+  <div class="cover-tags">
+    <span class="cover-tag">What is a Graph?</span>
+    <span class="cover-tag">Unweighted</span>
+    <span class="cover-tag">Adjacency Matrix</span>
+    <span class="cover-tag">Weighted</span>
+    <span class="cover-tag">Weighted &amp; Directed</span>
+    <span class="cover-tag">5 Exercises</span>
+  </div>
+</div>
+
+<div class="progress">
+  <div class="ps active">01 · What is a Graph?</div>
+  <div class="ps">02 · Unweighted</div>
+  <div class="ps">03 · Adjacency Matrix</div>
+  <div class="ps">04 · Weighted</div>
+  <div class="ps">05 · Directed</div>
+  <div class="ps">06 · Exercises</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 01 · WHAT IS A GRAPH                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">01</div>
+    <div>
+      <div class="sec-title">What is a Graph?</div>
+      <div class="sec-sub">Slide 17 — the definition</div>
+    </div>
+  </div>
+
+  <div class="def-card">
+    <div class="def-card-label">Definition — straight from your slides</div>
+    <div class="def-card-text">
+      A Graph is a conceptual model representing a collection of <strong>vertices (nodes)</strong> and <strong>edges (connections)</strong> between them. It models relationships, supporting operations like adding/removing vertices/edges, checking adjacency, and finding paths. It can be <strong>directed</strong> (one-way) or <strong>undirected</strong> (two-way), <strong>weighted</strong> or <strong>unweighted</strong>.
+    </div>
+  </div>
+
+  <div class="joke">
+    <div class="joke-title">😂 Real talk — what IS a graph though?</div>
+    Imagine you and your friends. You're all people (vertices). Some of you follow each other on Instagram (edges). Some follow back (undirected). Some don't (directed — awkward). Some of you live far away so calls cost more (weighted). <strong>That whole messy situation = a graph.</strong> Computer science just gave the drama a name.
+  </div>
+
+  <p class="body">Two words you <strong>must</strong> know. The examiner will use both, sometimes in the same question:</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🔵</div>
+      <div class="card-name">Vertex (pl. Vertices)</div>
+      <div class="card-desc">One item in the graph. A dot. A city, a person, a router, a station. Also called a <strong>node</strong> — both words mean exactly the same thing in Cambridge exams.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">➖</div>
+      <div class="card-name">Edge (pl. Edges)</div>
+      <div class="card-desc">A connection between two vertices. The line between the dots. Also called an <strong>arc</strong>. It can have a direction (arrow) or not, and a weight (number) or not.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔢</div>
+      <div class="card-name">Weight</div>
+      <div class="card-desc">A number on an edge. Represents cost, distance, time — anything measurable. Only exists in <em>weighted</em> graphs. Not all graphs have weights.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">➡️</div>
+      <div class="card-name">Direction</div>
+      <div class="card-desc">An arrow on an edge. Means you can only travel <em>one way</em>. Like a one-way street. Only exists in <em>directed</em> graphs (also called digraphs).</div>
+    </div>
+  </div>
+
+  <div class="box box-stop">
+    <strong>🛑 The three types you need to know — exactly from your slides:</strong><br>
+    <strong>① Unweighted Graph</strong> — edges show connection only. No numbers.<br>
+    <strong>② Weighted Graph</strong> — edges have numbers (cost / distance / capacity).<br>
+    <strong>③ Weighted &amp; Directed Graph</strong> — edges have numbers AND arrows (one-way with a cost).<br><br>
+    These map exactly to slides 18–24. Let's go through each one.
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 02 · UNWEIGHTED GRAPHS                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">02</div>
+    <div>
+      <div class="sec-title">Unweighted Graphs</div>
+      <div class="sec-sub">Slides 18–20 — the simplest type</div>
+    </div>
+  </div>
+
+  <div class="def-card">
+    <div class="def-card-label">Definition — straight from your slides</div>
+    <div class="def-card-text">
+      An unweighted graph is a type of graph where edges simply show a <strong>connection between nodes (vertices)</strong> without any assigned numerical values like distance or cost.
+    </div>
+  </div>
+
+  <div class="joke">
+    <div class="joke-title">😄 The "yes or no" graph</div>
+    Unweighted means the edge only answers one question: <strong>"Are these two connected? Yes or no?"</strong><br>
+    No distance. No cost. No drama. Just: "we're connected" or "we're not."<br>
+    Think of it like a friendship list — either someone is your friend (edge = 1) or they're not (edge = 0). No "sort of friends" here. Binary. Ruthless. Honest.
+  </div>
+
+  <p class="body">Here is what an unweighted, undirected graph looks like. Four vertices (A, B, C, D) with some connections — plain lines, no numbers, no arrows:</p>
+
+  <div class="graph-wrap">
+    <div class="graph-caption">Unweighted, undirected graph — just connections, nothing else</div>
+    <svg viewBox="0 0 500 260" width="500" height="260" xmlns="http://www.w3.org/2000/svg">
+      <!-- Edges — plain lines, no arrows, no weights -->
+      <line x1="155" y1="130" x2="250" y2="60"  stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="155" y1="130" x2="250" y2="200" stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="345" y1="130" x2="250" y2="60"  stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="345" y1="130" x2="250" y2="200" stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="155" y1="130" x2="345" y2="130" stroke="#ccc9c0" stroke-width="2.5"/>
+
+      <!-- Vertices -->
+      <circle cx="250" cy="60"  r="28" fill="#e8f5ee" stroke="#a8d5b8" stroke-width="2.5"/>
+      <text x="250" y="66" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#1a5c38">A</text>
+
+      <circle cx="155" cy="130" r="28" fill="#eef5ff" stroke="#aac4ee" stroke-width="2.5"/>
+      <text x="155" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#0f2a5a">B</text>
+
+      <circle cx="345" cy="130" r="28" fill="#eef5ff" stroke="#aac4ee" stroke-width="2.5"/>
+      <text x="345" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#0f2a5a">C</text>
+
+      <circle cx="250" cy="200" r="28" fill="#fef3e2" stroke="#f0c878" stroke-width="2.5"/>
+      <text x="250" y="206" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#7a4a00">D</text>
+
+      <!-- Labels -->
+      <text x="250" y="245" text-anchor="middle" font-family="Figtree" font-size="12" fill="#7a7775">Plain lines = undirected (no arrows). No numbers = unweighted. Simple.</text>
+    </svg>
+  </div>
+
+  <p class="body">Reading this graph: A is connected to B, A is connected to C, B is connected to C, B is connected to D, C is connected to D. That is it. No more information — just "connected" or "not connected."</p>
+
+  <div class="box box-key">
+    <strong>🧠 Undirected means BOTH ways:</strong><br>
+    If there is an edge between A and B, you can travel A→B <em>and</em> B→A.<br>
+    No arrows = two-way street. Think of it like a hallway — you can walk either direction.<br>
+    This has a big consequence for the adjacency matrix (next section 👀).
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 03 · ADJACENCY MATRIX                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">03</div>
+    <div>
+      <div class="sec-title">Adjacency Matrix</div>
+      <div class="sec-sub">Slide 19 — how to store a graph in a 2D array</div>
+    </div>
+  </div>
+
+  <div class="def-card">
+    <div class="def-card-label">Definition — straight from your slides</div>
+    <div class="def-card-text">
+      An adjacency matrix for an unweighted graph is a <strong>square matrix</strong> where entries are <strong>1 if an edge exists</strong> between two vertices and <strong>0 if it doesn't</strong>.
+    </div>
+  </div>
+
+  <div class="joke">
+    <div class="joke-title">😂 Think of it as a "who texted who first" spreadsheet</div>
+    Put all your friends along the top row AND down the left column.<br>
+    If person X texted person Y → put a 1. If not → put a 0.<br>
+    That's an adjacency matrix. It's literally a grid of "connected?" questions.<br>
+    <em>(And yes, if it's undirected, and X texted Y, then Y texted X too. The grid will be symmetric. Unlike real life where some people leave you on read.)</em>
+  </div>
+
+  <p class="body">For the graph from Section 02 — edges: A–B, A–C, B–C, B–D, C–D:</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix-table">
+      <tr>
+        <th class="corner">—</th>
+        <th>A</th><th>B</th><th>C</th><th>D</th>
+      </tr>
+      <tr>
+        <th>A</th>
+        <td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td>
+      </tr>
+      <tr>
+        <th>B</th>
+        <td class="one">1</td><td class="zero">0</td><td class="one">1</td><td class="one">1</td>
+      </tr>
+      <tr>
+        <th>C</th>
+        <td class="one">1</td><td class="one">1</td><td class="zero">0</td><td class="one">1</td>
+      </tr>
+      <tr>
+        <th>D</th>
+        <td class="zero">0</td><td class="one">1</td><td class="one">1</td><td class="zero">0</td>
+      </tr>
+    </table>
+    <div style="padding:.5rem 1.2rem 1rem;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);">
+      🟢 Green 1 = edge exists &nbsp;·&nbsp; ⬜ Grey 0 = no edge &nbsp;·&nbsp; Black diagonal = always 0 (no self-loops)
+    </div>
+  </div>
+
+  <p class="body">Let's decode every rule hiding in this matrix:</p>
+
+  <table class="explain-table">
+    <tr><th>What you see</th><th>What it means</th></tr>
+    <tr>
+      <td>Row A, Col B = 1</td>
+      <td>There IS an edge between A and B. They are connected.</td>
+    </tr>
+    <tr>
+      <td>Row A, Col D = 0</td>
+      <td>There is NO edge between A and D. They are not directly connected.</td>
+    </tr>
+    <tr>
+      <td>Diagonal = all 0s</td>
+      <td>A vertex does not connect to itself. There are no "self-loops." The diagonal is always zero.</td>
+    </tr>
+    <tr>
+      <td>Matrix is symmetric</td>
+      <td>Row i col j = Row j col i. This is because the graph is <strong>undirected</strong> — A–B is the same edge as B–A. The matrix mirrors itself along the diagonal.</td>
+    </tr>
+    <tr>
+      <td>Size of matrix</td>
+      <td>Always V × V, where V = number of vertices. 4 vertices = 4×4 = 16 cells.</td>
+    </tr>
+  </table>
+
+  <div class="box box-stop">
+    <strong>🛑 Three rules the examiner will test — memorise all three:</strong><br>
+    <strong>Rule 1:</strong> The diagonal is ALWAYS 0. No vertex connects to itself.<br>
+    <strong>Rule 2:</strong> An undirected graph ALWAYS produces a symmetric matrix. If [i][j] = 1 then [j][i] = 1.<br>
+    <strong>Rule 3:</strong> A directed graph is NOT symmetric. [i][j] may differ from [j][i]. (More on this in Section 05.)
+  </div>
+
+  <p class="body" style="font-weight:600;margin-top:1.5rem;margin-bottom:.5rem;">How to represent this in Python — a 2D list:</p>
+
+<pre class="code"><span class="cm"># Vertices: A=0, B=1, C=2, D=3 (we use numbers as indices)</span>
+<span class="cm"># 0 = no edge,  1 = edge exists</span>
+
+adj = [
+    [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>],   <span class="cm"># row A: connected to B and C</span>
+    [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>],   <span class="cm"># row B: connected to A, C and D</span>
+    [<span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>],   <span class="cm"># row C: connected to A, B and D</span>
+    [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">0</span>],   <span class="cm"># row D: connected to B and C</span>
+]
+
+<span class="cm"># Check if A (0) and B (1) are connected:</span>
+<span class="kw">if</span> adj[<span class="nm">0</span>][<span class="nm">1</span>] == <span class="nm">1</span>:
+    <span class="fn">print</span>(<span class="st">"A and B are connected"</span>)   <span class="cm"># → prints this</span>
+
+<span class="cm"># Check if A (0) and D (3) are connected:</span>
+<span class="kw">if</span> adj[<span class="nm">0</span>][<span class="nm">3</span>] == <span class="nm">0</span>:
+    <span class="fn">print</span>(<span class="st">"A and D are NOT connected"</span>) <span class="cm"># → prints this</span>
+
+<span class="cm"># Find all neighbours of B (index 1):</span>
+<span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(adj)):
+    <span class="kw">if</span> adj[<span class="nm">1</span>][j] == <span class="nm">1</span>:
+        <span class="fn">print</span>(<span class="fn">f</span><span class="st">"B is connected to vertex {j}"</span>)
+<span class="cm"># → B is connected to vertex 0 (A)</span>
+<span class="cm"># → B is connected to vertex 2 (C)</span>
+<span class="cm"># → B is connected to vertex 3 (D)</span></pre>
+
+  <table class="explain-table">
+    <tr><th>Line</th><th>What it means in plain English</th></tr>
+    <tr><td>adj[0][1]</td><td>Row 0 (vertex A), column 1 (vertex B). Is there an edge from A to B?</td></tr>
+    <tr><td>== 1</td><td>If the value is 1, the edge exists. If 0, it does not.</td></tr>
+    <tr><td>for j in range(len(adj))</td><td>Loop through every possible vertex (every column index).</td></tr>
+    <tr><td>if adj[1][j] == 1</td><td>If this column has a 1, then B is connected to vertex j. That is a neighbour.</td></tr>
+  </table>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 Advantages and Disadvantages of an Adjacency Matrix</div>
+    <div class="func-summary-body">
+      <p><strong>✅ Advantage 1 — Fast edge lookup:</strong> To check if vertices i and j are connected, just read <code class="ic">adj[i][j]</code>. One operation. Instant. That is O(1) speed.</p>
+      <p><strong>✅ Advantage 2 — Simple to implement:</strong> It is just a 2D list. You already know how to use those. Easy to set up and read.</p>
+      <p><strong>❌ Disadvantage 1 — Wastes memory for sparse graphs:</strong> If your graph has 1,000 vertices but only 10 edges, you still create a 1,000 × 1,000 grid = 1,000,000 cells. Most are 0. That is a lot of wasted space.</p>
+      <p><strong>❌ Disadvantage 2 — Slow to find all neighbours:</strong> To list everyone connected to vertex i, you must check all V columns in row i — even if only one has a 1.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 04 · WEIGHTED GRAPHS                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">04</div>
+    <div>
+      <div class="sec-title">Weighted Graphs</div>
+      <div class="sec-sub">Slides 21–22 — edges with numbers</div>
+    </div>
+  </div>
+
+  <div class="def-card">
+    <div class="def-card-label">Definition — straight from your slides</div>
+    <div class="def-card-text">
+      Weighted graphs are graphs where each edge has a <strong>numerical value (a "weight")</strong> representing a cost, distance, capacity, or other metric, allowing them to model real-world scenarios like <strong>road networks</strong> or <strong>computer networks</strong> for optimization and pathfinding.
+    </div>
+  </div>
+
+  <div class="joke">
+    <div class="joke-title">🗺️ GPS is literally just a weighted graph — no cap</div>
+    Every time Google Maps finds you a route, it is doing weighted graph stuff.<br>
+    Cities = vertices. Roads = edges. Road length (or travel time) = weight.<br>
+    "Fastest route" = find the path where the sum of weights is smallest.<br>
+    You use weighted graphs every single day and did not even know it. You are basically already a graph expert. Sort of.
+  </div>
+
+  <p class="body">Same structure as before — but now each edge carries a number. The number could mean kilometres, minutes, cost in pounds, whatever the problem says it means:</p>
+
+  <div class="graph-wrap">
+    <div class="graph-caption">Weighted, undirected graph — same connections as before, now with costs on each edge</div>
+    <svg viewBox="0 0 500 280" width="500" height="280" xmlns="http://www.w3.org/2000/svg">
+      <!-- Edges -->
+      <line x1="155" y1="130" x2="250" y2="60"  stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="155" y1="130" x2="250" y2="200" stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="345" y1="130" x2="250" y2="60"  stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="345" y1="130" x2="250" y2="200" stroke="#ccc9c0" stroke-width="2.5"/>
+      <line x1="155" y1="130" x2="345" y2="130" stroke="#ccc9c0" stroke-width="2.5"/>
+
+      <!-- Weight labels on edges -->
+      <!-- A-B: 4 -->
+      <rect x="182" y="76" width="30" height="20" rx="5" fill="#eef5ff" stroke="#aac4ee" stroke-width="1.5"/>
+      <text x="197" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#0f2a5a">4</text>
+      <!-- A-C: 9 -->
+      <rect x="278" y="76" width="30" height="20" rx="5" fill="#eef5ff" stroke="#aac4ee" stroke-width="1.5"/>
+      <text x="293" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#0f2a5a">9</text>
+      <!-- B-C: 7 -->
+      <rect x="235" y="122" width="30" height="20" rx="5" fill="#eef5ff" stroke="#aac4ee" stroke-width="1.5"/>
+      <text x="250" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#0f2a5a">7</text>
+      <!-- B-D: 11 -->
+      <rect x="178" y="160" width="30" height="20" rx="5" fill="#fef3e2" stroke="#f0c878" stroke-width="1.5"/>
+      <text x="193" y="174" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#7a4a00">11</text>
+      <!-- C-D: 5 -->
+      <rect x="276" y="160" width="30" height="20" rx="5" fill="#fef3e2" stroke="#f0c878" stroke-width="1.5"/>
+      <text x="291" y="174" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#7a4a00">5</text>
+
+      <!-- Vertices -->
+      <circle cx="250" cy="60"  r="28" fill="#e8f5ee" stroke="#a8d5b8" stroke-width="2.5"/>
+      <text x="250" y="66" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#1a5c38">A</text>
+
+      <circle cx="155" cy="130" r="28" fill="#eef5ff" stroke="#aac4ee" stroke-width="2.5"/>
+      <text x="155" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#0f2a5a">B</text>
+
+      <circle cx="345" cy="130" r="28" fill="#eef5ff" stroke="#aac4ee" stroke-width="2.5"/>
+      <text x="345" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#0f2a5a">C</text>
+
+      <circle cx="250" cy="200" r="28" fill="#fef3e2" stroke="#f0c878" stroke-width="2.5"/>
+      <text x="250" y="206" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#7a4a00">D</text>
+
+      <text x="250" y="250" text-anchor="middle" font-family="Figtree" font-size="12" fill="#7a7775">Numbers on edges = weights. Still no arrows = still undirected (two-way).</text>
+    </svg>
+  </div>
+
+  <p class="body">Now the adjacency matrix changes too. Instead of writing 1 for "connected," we write <strong>the actual weight</strong>. And instead of 0 for "not connected," we still use 0 (meaning: this edge does not exist):</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix-table">
+      <tr>
+        <th class="corner">—</th>
+        <th>A</th><th>B</th><th>C</th><th>D</th>
+      </tr>
+      <tr>
+        <th>A</th>
+        <td class="zero">0</td><td class="wt">4</td><td class="wt">9</td><td class="zero">0</td>
+      </tr>
+      <tr>
+        <th>B</th>
+        <td class="wt">4</td><td class="zero">0</td><td class="wt">7</td><td class="wt">11</td>
+      </tr>
+      <tr>
+        <th>C</th>
+        <td class="wt">9</td><td class="wt">7</td><td class="zero">0</td><td class="wt">5</td>
+      </tr>
+      <tr>
+        <th>D</th>
+        <td class="zero">0</td><td class="wt">11</td><td class="wt">5</td><td class="zero">0</td>
+      </tr>
+    </table>
+    <div style="padding:.5rem 1.2rem 1rem;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);">
+      🔵 Blue numbers = the weight of the edge &nbsp;·&nbsp; ⬜ Grey 0 = no edge &nbsp;·&nbsp; Still symmetric (still undirected!)
+    </div>
+  </div>
+
+  <table class="explain-table">
+    <tr><th>Matrix cell</th><th>What it means</th></tr>
+    <tr><td>adj[A][B] = 4</td><td>There is an edge between A and B. Its weight (cost/distance) is 4.</td></tr>
+    <tr><td>adj[A][D] = 0</td><td>There is NO direct edge between A and D.</td></tr>
+    <tr><td>adj[B][A] = 4</td><td>Same as adj[A][B] = 4 — still symmetric because still undirected.</td></tr>
+    <tr><td>Diagonal = 0</td><td>Still always 0. A vertex still does not connect to itself.</td></tr>
+  </table>
+
+  <div class="box box-tip">
+    <strong>💡 The only change from unweighted → weighted:</strong><br>
+    Replace every <code class="ic">1</code> with the <strong>actual weight value</strong>.<br>
+    Replace every <code class="ic">0</code> with... still <code class="ic">0</code> (means no edge).<br>
+    Everything else — symmetry, diagonal, size — stays exactly the same.
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 05 · WEIGHTED & DIRECTED GRAPHS                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">05</div>
+    <div>
+      <div class="sec-title">Weighted &amp; Directed Graphs</div>
+      <div class="sec-sub">Slides 23–24 — arrows AND numbers. The full package.</div>
+    </div>
+  </div>
+
+  <div class="def-card">
+    <div class="def-card-label">Definition — straight from your slides</div>
+    <div class="def-card-text">
+      Weighted and directed graphs are graph structures where edges have both a <strong>numerical value (weight)</strong> and a <strong>specific direction (arrow)</strong>, making them ideal for modeling real-world systems like road networks, resource flows, or social connections where cost, distance, time, or <strong>one-way relationships</strong> matter.
+    </div>
+  </div>
+
+  <div class="joke">
+    <div class="joke-title">😭 The "one-way street with a toll" graph</div>
+    Directed = one-way street. Weighted = there is a toll to pay.<br>
+    So a directed, weighted edge from A to B (weight 12) means: <strong>"You can drive from A to B, and it costs £12. But you cannot drive back from B to A on this road."</strong><br>
+    Real life examples: bus routes (only go one way), internet packet routing (data flows in specific directions with different costs), currency exchange (converting £ to $ is a different rate than $ to £).
+  </div>
+
+  <p class="body">Now the edges have <strong>both arrows and numbers</strong>. Arrows tell you the direction. Numbers tell you the cost in that direction:</p>
+
+  <div class="graph-wrap">
+    <div class="graph-caption">Weighted AND directed graph — arrows show direction, numbers show cost in that direction</div>
+    <svg viewBox="0 0 520 290" width="520" height="290" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M1 1L9 5L1 9" fill="none" stroke="#c84b2f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Directed edges — solid red with arrowheads -->
+      <!-- A → B (weight 6) -->
+      <line x1="222" y1="73"  x2="178" y2="106" stroke="#c84b2f" stroke-width="2.2" marker-end="url(#arrowhead)"/>
+      <!-- B → D (weight 8) -->
+      <line x1="155" y1="158" x2="222" y2="190" stroke="#c84b2f" stroke-width="2.2" marker-end="url(#arrowhead)"/>
+      <!-- A → C (weight 15) -->
+      <line x1="278" y1="73"  x2="322" y2="106" stroke="#c84b2f" stroke-width="2.2" marker-end="url(#arrowhead)"/>
+      <!-- C → D (weight 3) -->
+      <line x1="345" y1="158" x2="278" y2="190" stroke="#c84b2f" stroke-width="2.2" marker-end="url(#arrowhead)"/>
+      <!-- C → B (weight 10) — curved, going left -->
+      <path d="M 318 130 Q 250 90 182 130" stroke="#7a4a00" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="6 3"/>
+
+      <!-- Weight labels -->
+      <!-- A→B: 6 -->
+      <rect x="179" y="72" width="28" height="20" rx="5" fill="#fdecea" stroke="#e8a090" stroke-width="1.5"/>
+      <text x="193" y="86" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#5a1010">6</text>
+      <!-- A→C: 15 -->
+      <rect x="285" y="72" width="28" height="20" rx="5" fill="#fdecea" stroke="#e8a090" stroke-width="1.5"/>
+      <text x="299" y="86" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#5a1010">15</text>
+      <!-- B→D: 8 -->
+      <rect x="172" y="170" width="28" height="20" rx="5" fill="#fdecea" stroke="#e8a090" stroke-width="1.5"/>
+      <text x="186" y="184" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#5a1010">8</text>
+      <!-- C→D: 3 -->
+      <rect x="289" y="170" width="28" height="20" rx="5" fill="#fdecea" stroke="#e8a090" stroke-width="1.5"/>
+      <text x="303" y="184" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#5a1010">3</text>
+      <!-- C→B: 10 (curved) -->
+      <rect x="231" y="98" width="30" height="20" rx="5" fill="#fef3e2" stroke="#f0c878" stroke-width="1.5"/>
+      <text x="246" y="112" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#7a4a00">10</text>
+
+      <!-- Vertices -->
+      <circle cx="250" cy="55"  r="28" fill="#e8f5ee" stroke="#a8d5b8" stroke-width="2.5"/>
+      <text x="250" y="61" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#1a5c38">A</text>
+
+      <circle cx="155" cy="130" r="28" fill="#eef5ff" stroke="#aac4ee" stroke-width="2.5"/>
+      <text x="155" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#0f2a5a">B</text>
+
+      <circle cx="345" cy="130" r="28" fill="#eef5ff" stroke="#aac4ee" stroke-width="2.5"/>
+      <text x="345" y="136" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#0f2a5a">C</text>
+
+      <circle cx="250" cy="210" r="28" fill="#fef3e2" stroke="#f0c878" stroke-width="2.5"/>
+      <text x="250" y="216" text-anchor="middle" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#7a4a00">D</text>
+
+      <text x="260" y="258" text-anchor="middle" font-family="Figtree" font-size="11.5" fill="#c84b2f">Solid red = directed edges. Dashed orange = C→B (different direction, different cost).</text>
+      <text x="260" y="275" text-anchor="middle" font-family="Figtree" font-size="11.5" fill="#7a7775">Note: there is NO edge from D back to anyone. D is a dead end — you can get there but not leave.</text>
+    </svg>
+  </div>
+
+  <p class="body">Now look carefully at what directed edges do to the adjacency matrix. <strong>It breaks the symmetry.</strong> Row A col B ≠ Row B col A anymore, because A→B is a different edge (with possibly a different weight, or no return edge at all) compared to B→A.</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix-table">
+      <tr>
+        <th class="corner">—</th>
+        <th>A</th><th>B</th><th>C</th><th>D</th>
+      </tr>
+      <tr>
+        <th>A</th>
+        <td class="zero">0</td>
+        <td class="wt-d">6</td>
+        <td class="wt-d">15</td>
+        <td class="zero">0</td>
+      </tr>
+      <tr>
+        <th>B</th>
+        <td class="zero">0</td>
+        <td class="zero">0</td>
+        <td class="zero">0</td>
+        <td class="wt-d">8</td>
+      </tr>
+      <tr>
+        <th>C</th>
+        <td class="zero">0</td>
+        <td class="wt-d">10</td>
+        <td class="zero">0</td>
+        <td class="wt-d">3</td>
+      </tr>
+      <tr>
+        <th>D</th>
+        <td class="zero">0</td>
+        <td class="zero">0</td>
+        <td class="zero">0</td>
+        <td class="zero">0</td>
+      </tr>
+    </table>
+    <div style="padding:.5rem 1.2rem 1rem;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);">
+      🔴 Red numbers = directed edge weight. Row i, col j = weight of edge FROM i TO j. &nbsp;·&nbsp; NOT symmetric!
+    </div>
+  </div>
+
+  <p class="body">How to read this matrix:</p>
+
+  <table class="explain-table">
+    <tr><th>Cell</th><th>Meaning</th></tr>
+    <tr><td>Row A, Col B = 6</td><td>There is a directed edge FROM A TO B. Cost = 6. You can travel A→B.</td></tr>
+    <tr><td>Row B, Col A = 0</td><td>There is NO edge from B back to A. You cannot travel B→A. One-way only.</td></tr>
+    <tr><td>Row C, Col B = 10</td><td>There IS an edge FROM C TO B. Cost = 10. C→B is possible.</td></tr>
+    <tr><td>Row B, Col C = 0</td><td>There is NO edge from B to C. Even though C→B exists, B→C does not.</td></tr>
+    <tr><td>Row D = all 0s</td><td>D has no outgoing edges. You can arrive at D but you cannot leave. Dead end.</td></tr>
+    <tr><td>Not symmetric</td><td>Row i col j ≠ Row j col i in general. Directed graphs break the symmetry.</td></tr>
+  </table>
+
+  <div class="box box-stop">
+    <strong>🛑 This is the BIG difference between directed and undirected — the exam loves this:</strong><br>
+    <strong>Undirected matrix</strong> = always symmetric. [i][j] = [j][i] always.<br>
+    <strong>Directed matrix</strong> = NOT necessarily symmetric. [i][j] may be totally different from [j][i].<br>
+    If a question gives you a matrix and asks "is this graph directed?" — check if it is symmetric. If yes → undirected. If no → directed.
+  </div>
+
+  <p class="body" style="font-weight:600;margin-top:1.5rem;margin-bottom:.5rem;">Python representation of a weighted directed graph:</p>
+
+<pre class="code"><span class="cm"># Vertices: A=0, B=1, C=2, D=3</span>
+<span class="cm"># 0 means no edge. Weight means directed edge with that cost.</span>
+<span class="cm"># Read as: adj[FROM][TO] = cost</span>
+
+adj = [
+    [<span class="nm">0</span>,  <span class="nm">6</span>, <span class="nm">15</span>,  <span class="nm">0</span>],  <span class="cm"># A→B costs 6,  A→C costs 15</span>
+    [<span class="nm">0</span>,  <span class="nm">0</span>,  <span class="nm">0</span>,  <span class="nm">8</span>],  <span class="cm"># B→D costs 8   (B cannot reach A or C directly)</span>
+    [<span class="nm">0</span>, <span class="nm">10</span>,  <span class="nm">0</span>,  <span class="nm">3</span>],  <span class="cm"># C→B costs 10, C→D costs 3</span>
+    [<span class="nm">0</span>,  <span class="nm">0</span>,  <span class="nm">0</span>,  <span class="nm">0</span>],  <span class="cm"># D has NO outgoing edges — dead end</span>
+]
+
+<span class="cm"># Can we go from A to B? Yes, and it costs:</span>
+<span class="fn">print</span>(adj[<span class="nm">0</span>][<span class="nm">1</span>])   <span class="cm"># → 6</span>
+
+<span class="cm"># Can we go from B back to A?</span>
+<span class="fn">print</span>(adj[<span class="nm">1</span>][<span class="nm">0</span>])   <span class="cm"># → 0 (no — one-way only)</span>
+
+<span class="cm"># List all outgoing edges from C (index 2):</span>
+<span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(adj)):
+    <span class="kw">if</span> adj[<span class="nm">2</span>][j] != <span class="nm">0</span>:
+        <span class="fn">print</span>(<span class="fn">f</span><span class="st">"C → vertex {j} (cost {adj[2][j]})"</span>)
+<span class="cm"># → C → vertex 1 (cost 10)    i.e. C→B</span>
+<span class="cm"># → C → vertex 3 (cost 3)     i.e. C→D</span></pre>
+
+  <div class="func-summary">
+    <div class="func-summary-head">📋 Full summary — all three graph types from your slides</div>
+    <div class="func-summary-body">
+      <p><strong>Unweighted graph</strong> (slides 18–20): Edges show connection only. Matrix entries: 0 or 1. Matrix is symmetric (undirected). Real life: friendship networks, road maps where you just care "is there a road?" not how long it is.</p>
+      <p><strong>Weighted graph</strong> (slides 21–22): Edges have numerical values. Matrix entries: 0 or the weight. Still symmetric if undirected. Real life: road distances, network bandwidth, travel costs.</p>
+      <p><strong>Weighted &amp; directed graph</strong> (slides 23–24): Edges have both weight AND direction. Matrix entries: 0 or the weight. NOT symmetric. Row i col j = cost of going FROM i TO j. Real life: GPS navigation with one-way streets, internet routing, currency exchange rates.</p>
+    </div>
+  </div>
+
+  <div class="compare-grid">
+    <div class="cg-cell head">Feature</div>
+    <div class="cg-cell head">Unweighted</div>
+    <div class="cg-cell head">Weighted</div>
+
+    <div class="cg-cell">Matrix entry</div>
+    <div class="cg-cell t1"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#1a5c38;">0 or 1</span></div>
+    <div class="cg-cell t2"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#0f2a5a;">0 or weight</span></div>
+
+    <div class="cg-cell">Has numbers on edges?</div>
+    <div class="cg-cell t1" style="color:#5a1010;">❌ No</div>
+    <div class="cg-cell t2" style="color:#1a5c38;">✅ Yes</div>
+
+    <div class="cg-cell">Has arrows on edges?</div>
+    <div class="cg-cell t1" style="color:#5a1010;">❌ No (undirected)</div>
+    <div class="cg-cell t2">Can be either direction</div>
+
+    <div class="cg-cell">Matrix symmetric?</div>
+    <div class="cg-cell t1" style="color:#1a5c38;">✅ Yes (undirected)</div>
+    <div class="cg-cell t2">Only if undirected</div>
+
+    <div class="cg-cell">Directed version?</div>
+    <div class="cg-cell t1">Possible — just no weights</div>
+    <div class="cg-cell t3" style="color:#5a1010;font-weight:600;">Weighted &amp; directed — arrows + weights. NOT symmetric.</div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- 06 · EXERCISES                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="sec-num">06</div>
+    <div>
+      <div class="sec-title">Practice Exercises</div>
+      <div class="sec-sub">Cambridge-style — only what is in your lesson</div>
+    </div>
+  </div>
+
+  <p class="body" style="margin-bottom:1.25rem;">All five questions are based strictly on the graph content from your slides. Try each one before peeking at the answer — that is how you actually learn this stuff.</p>
+
+  <!-- ── EX 1 ───────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('g1')">
+      <div class="ex-left">
+        <span class="ex-num">Ex 1</span>
+        <span class="ex-title">Build an adjacency matrix for an unweighted graph</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-easy">Easy</span>
+        <span class="badge b-mk">[4 marks]</span>
+        <span class="tog" id="g1-lbl">▼ show</span>
+      </div>
+    </div>
+    <div class="ex-body" id="g1" style="display:none;">
+      <div class="scenario">
+        An unweighted, undirected graph has 4 vertices: A, B, C, D. The edges are:<br>
+        A–B, A–D, B–C, C–D<br><br>
+        <strong>(i)</strong> Write program code to represent this graph as a 4×4 adjacency matrix called <code class="ic">adj</code>, stored as a 2D list in Python. Use 0 for no edge and 1 for an edge.<br><br>
+        <strong>(ii)</strong> Write one line of code to check whether B (index 1) and D (index 3) are connected, and print an appropriate message.
+      </div>
+      <ul class="task-list">
+        <li>Write the adjacency matrix code. <span class="pts">[3]</span></li>
+        <li>Write the one-line check for B–D connection. <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('g1')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('g1')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="g1-hint">
+        Start with a 4×4 grid of zeros. For each undirected edge, set BOTH adj[i][j] = 1 AND adj[j][i] = 1 (because undirected = both directions). Map A=0, B=1, C=2, D=3. For part (ii): check adj[1][3] and print a message based on whether it is 0 or 1.
+      </div>
+      <div class="ans-block" id="g1-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="cm"># (i) Adjacency matrix — A=0, B=1, C=2, D=3</span>
+adj = [
+    [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>],   <span class="cm"># A: connected to B and D</span>
+    [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>],   <span class="cm"># B: connected to A and C</span>
+    [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>],   <span class="cm"># C: connected to B and D</span>
+    [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>],   <span class="cm"># D: connected to A and C</span>
+]
+
+<span class="cm"># Verify symmetry (undirected = symmetric):</span>
+<span class="cm"># adj[0][1]=1 and adj[1][0]=1 ✓  (A-B edge, both directions)</span>
+<span class="cm"># adj[0][2]=0 and adj[2][0]=0 ✓  (A and C not connected)</span>
+
+<span class="cm"># (ii) Check B (index 1) — D (index 3) connection:</span>
+<span class="fn">print</span>(<span class="st">"B and D are connected"</span> <span class="kw">if</span> adj[<span class="nm">1</span>][<span class="nm">3</span>] == <span class="nm">1</span> <span class="kw">else</span> <span class="st">"B and D are NOT connected"</span>)
+<span class="cm"># → B and D are NOT connected</span>
+
+<span class="cm">Mark scheme [4]:</span>
+<span class="cm">[1] 4×4 2D list initialised correctly</span>
+<span class="cm">[1] all 4 edges present (A-B, A-D, B-C, C-D)</span>
+<span class="cm">[1] both directions set for each edge (adj[i][j] = adj[j][i] = 1)</span>
+<span class="cm">[1] checks adj[1][3] and prints appropriate message</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EX 2 ───────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('g2')">
+      <div class="ex-left">
+        <span class="ex-num">Ex 2</span>
+        <span class="ex-title">Read the adjacency matrix and print all edges</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-easy">Easy</span>
+        <span class="badge b-mk">[4 marks]</span>
+        <span class="tog" id="g2-lbl">▼ show</span>
+      </div>
+    </div>
+    <div class="ex-body" id="g2" style="display:none;">
+      <div class="scenario">
+        An unweighted, undirected graph is stored as a 2D list called <code class="ic">adj</code>. Vertex labels are stored in a separate list called <code class="ic">labels</code>.<br><br>
+        Write a procedure <code class="ic">print_edges(adj, labels)</code> that outputs every edge in the graph exactly once, in the format:<br>
+        <code class="ic">A -- B</code><br><br>
+        Since the graph is undirected, the edge A–B and B–A are the same edge. Do not print duplicates.
+      </div>
+      <ul class="task-list">
+        <li>Write procedure <code class="ic">print_edges(adj, labels)</code>. <span class="pts">[4]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('g2')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('g2')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="g2-hint">
+        Use two nested loops: outer loop i from 0 to n-1, inner loop j from i+1 to n-1. Why j starts at i+1: this ensures you only look at the upper triangle of the matrix, so each edge is only printed once (no duplicates). If adj[i][j] == 1, print labels[i] + " -- " + labels[j].
+      </div>
+      <div class="ans-block" id="g2-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="kw">def</span> <span class="fn">print_edges</span>(adj, labels):
+    n = <span class="fn">len</span>(adj)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i + <span class="nm">1</span>, n):   <span class="cm"># j starts ABOVE i → upper triangle only → no duplicates</span>
+            <span class="kw">if</span> adj[i][j] == <span class="nm">1</span>:
+                <span class="fn">print</span>(labels[i], <span class="st">"--"</span>, labels[j])
+
+<span class="cm"># Test:</span>
+adj = [
+    [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>],
+    [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>],
+    [<span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>],
+    [<span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>],
+]
+labels = [<span class="st">'A'</span>, <span class="st">'B'</span>, <span class="st">'C'</span>, <span class="st">'D'</span>]
+<span class="fn">print_edges</span>(adj, labels)
+
+<span class="cm">Mark scheme [4]:</span>
+<span class="cm">[1] outer loop i from 0 to n-1</span>
+<span class="cm">[1] inner loop j from i+1 to n-1 (not 0 — avoids duplicates)</span>
+<span class="cm">[1] checks adj[i][j] == 1</span>
+<span class="cm">[1] prints labels[i] and labels[j] in correct format</span></pre>
+        <div style="background:#0a0e14;border:1px solid #2a3040;border-radius:8px;margin:.75rem 0;overflow:hidden;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#7eb8d4;padding:.5rem 1rem;background:#0d1420;border-bottom:1px solid #2a3040;">🖥️ Expected output</div>
+          <pre style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8d890;padding:.75rem 1rem;line-height:1.7;margin:0;">A -- B
+A -- D
+B -- C
+C -- D</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EX 3 ───────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('g3')">
+      <div class="ex-left">
+        <span class="ex-num">Ex 3</span>
+        <span class="ex-title">Build and query a weighted adjacency matrix</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-mk">[6 marks]</span>
+        <span class="tog" id="g3-lbl">▼ show</span>
+      </div>
+    </div>
+    <div class="ex-body" id="g3" style="display:none;">
+      <div class="scenario">
+        A weighted, undirected graph has 4 vertices (0, 1, 2, 3) and the following edges:<br>
+        0–1 (weight 5), 0–2 (weight 10), 1–3 (weight 3), 2–3 (weight 8)<br><br>
+        <strong>(i)</strong> Write code to build the adjacency matrix <code class="ic">adj</code> as a 4×4 2D list. Use 0 for no edge.<br><br>
+        <strong>(ii)</strong> Write a function <code class="ic">get_weight(adj, u, v)</code> that returns the weight of the edge between vertex <code class="ic">u</code> and vertex <code class="ic">v</code>. If no edge exists, return –1.<br><br>
+        <strong>(iii)</strong> Write a function <code class="ic">total_weight(adj)</code> that returns the sum of all edge weights in the graph. Remember: because it is undirected, each edge appears twice in the matrix — count it only once.
+      </div>
+      <ul class="task-list">
+        <li>Build weighted adjacency matrix <code class="ic">adj</code>. <span class="pts">[2]</span></li>
+        <li>Write function <code class="ic">get_weight(adj, u, v)</code>. <span class="pts">[2]</span></li>
+        <li>Write function <code class="ic">total_weight(adj)</code>. <span class="pts">[2]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('g3')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('g3')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="g3-hint">
+        (i) Start with 4×4 zeros. Set adj[u][v] = adj[v][u] = weight for each edge (both directions — undirected). (ii) Simply return adj[u][v] if it is not 0, otherwise return –1. (iii) Loop using the upper triangle trick (j from i+1): if adj[i][j] != 0, add it to a running total. Return the total.
+      </div>
+      <div class="ans-block" id="g3-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="cm"># (i) Build weighted adjacency matrix</span>
+adj = [[<span class="nm">0</span>] * <span class="nm">4</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">4</span>)]
+
+adj[<span class="nm">0</span>][<span class="nm">1</span>] = adj[<span class="nm">1</span>][<span class="nm">0</span>] = <span class="nm">5</span>
+adj[<span class="nm">0</span>][<span class="nm">2</span>] = adj[<span class="nm">2</span>][<span class="nm">0</span>] = <span class="nm">10</span>
+adj[<span class="nm">1</span>][<span class="nm">3</span>] = adj[<span class="nm">3</span>][<span class="nm">1</span>] = <span class="nm">3</span>
+adj[<span class="nm">2</span>][<span class="nm">3</span>] = adj[<span class="nm">3</span>][<span class="nm">2</span>] = <span class="nm">8</span>
+
+<span class="cm"># (ii) Get weight of a specific edge</span>
+<span class="kw">def</span> <span class="fn">get_weight</span>(adj, u, v):
+    <span class="kw">if</span> adj[u][v] != <span class="nm">0</span>:
+        <span class="kw">return</span> adj[u][v]    <span class="cm"># edge exists — return its weight</span>
+    <span class="kw">return</span> -<span class="nm">1</span>              <span class="cm"># no edge</span>
+
+<span class="cm"># (iii) Sum all edge weights (count each edge ONCE)</span>
+<span class="kw">def</span> <span class="fn">total_weight</span>(adj):
+    total = <span class="nm">0</span>
+    n = <span class="fn">len</span>(adj)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i + <span class="nm">1</span>, n):  <span class="cm"># upper triangle → each edge counted once</span>
+            <span class="kw">if</span> adj[i][j] != <span class="nm">0</span>:
+                total += adj[i][j]
+    <span class="kw">return</span> total
+
+<span class="fn">print</span>(<span class="fn">get_weight</span>(adj, <span class="nm">0</span>, <span class="nm">1</span>))    <span class="cm"># → 5</span>
+<span class="fn">print</span>(<span class="fn">get_weight</span>(adj, <span class="nm">0</span>, <span class="nm">3</span>))    <span class="cm"># → -1 (no direct edge)</span>
+<span class="fn">print</span>(<span class="fn">total_weight</span>(adj))          <span class="cm"># → 26 (5 + 10 + 3 + 8)</span>
+
+<span class="cm">Mark scheme [6]:</span>
+<span class="cm">[1] 4×4 2D list initialised with zeros</span>
+<span class="cm">[1] all 4 edges set with BOTH directions (adj[i][j] = adj[j][i] = weight)</span>
+<span class="cm">[1] get_weight: returns adj[u][v] when non-zero</span>
+<span class="cm">[1] get_weight: returns –1 when adj[u][v] == 0</span>
+<span class="cm">[1] total_weight: uses upper triangle (j from i+1) to avoid double-counting</span>
+<span class="cm">[1] total_weight: returns correct sum (26)</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EX 4 ───────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('g4')">
+      <div class="ex-left">
+        <span class="ex-num">Ex 4</span>
+        <span class="ex-title">Directed graph — build matrix and find outgoing edges</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-mid">Intermediate</span>
+        <span class="badge b-mk">[6 marks]</span>
+        <span class="tog" id="g4-lbl">▼ show</span>
+      </div>
+    </div>
+    <div class="ex-body" id="g4" style="display:none;">
+      <div class="scenario">
+        A weighted, directed graph (digraph) has 4 vertices: 0, 1, 2, 3. The directed edges are:<br>
+        0→1 (cost 7), 0→2 (cost 4), 1→3 (cost 9), 2→1 (cost 2), 2→3 (cost 6)<br>
+        There is NO edge from 3 to anywhere.<br><br>
+        <strong>(i)</strong> Write code to build the adjacency matrix <code class="ic">adj</code> as a 4×4 2D list. Use 0 for no edge. Remember: directed means you only set ONE direction per edge.<br><br>
+        <strong>(ii)</strong> Write a function <code class="ic">out_edges(adj, v)</code> that returns a list of tuples <code class="ic">(destination, cost)</code> for all outgoing directed edges from vertex <code class="ic">v</code>.<br><br>
+        <strong>(iii)</strong> State whether this adjacency matrix is symmetric and explain why.
+      </div>
+      <ul class="task-list">
+        <li>Build directed weighted adjacency matrix. <span class="pts">[2]</span></li>
+        <li>Write function <code class="ic">out_edges(adj, v)</code>. <span class="pts">[2]</span></li>
+        <li>State and explain symmetry. <span class="pts">[2]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('g4')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('g4')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="g4-hint">
+        (i) Directed = set ONLY adj[FROM][TO] = cost. Do NOT set adj[TO][FROM]. Only one direction. (ii) Loop through all columns j in row v. If adj[v][j] != 0, add (j, adj[v][j]) to the result list. (iii) Not symmetric — because for directed graphs adj[i][j] ≠ adj[j][i] in general. For example adj[0][1]=7 but adj[1][0]=0.
+      </div>
+      <div class="ans-block" id="g4-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="cm"># (i) Directed weighted adjacency matrix</span>
+<span class="cm"># adj[FROM][TO] = cost. Only ONE direction per edge.</span>
+adj = [[<span class="nm">0</span>] * <span class="nm">4</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">4</span>)]
+
+adj[<span class="nm">0</span>][<span class="nm">1</span>] = <span class="nm">7</span>    <span class="cm"># 0→1</span>
+adj[<span class="nm">0</span>][<span class="nm">2</span>] = <span class="nm">4</span>    <span class="cm"># 0→2</span>
+adj[<span class="nm">1</span>][<span class="nm">3</span>] = <span class="nm">9</span>    <span class="cm"># 1→3</span>
+adj[<span class="nm">2</span>][<span class="nm">1</span>] = <span class="nm">2</span>    <span class="cm"># 2→1</span>
+adj[<span class="nm">2</span>][<span class="nm">3</span>] = <span class="nm">6</span>    <span class="cm"># 2→3</span>
+<span class="cm"># Row 3 = all zeros (vertex 3 has no outgoing edges)</span>
+
+<span class="cm"># (ii) Outgoing edges from a vertex</span>
+<span class="kw">def</span> <span class="fn">out_edges</span>(adj, v):
+    result = []
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(adj)):
+        <span class="kw">if</span> adj[v][j] != <span class="nm">0</span>:
+            result.<span class="fn">append</span>((j, adj[v][j]))   <span class="cm"># (destination, cost)</span>
+    <span class="kw">return</span> result
+
+<span class="fn">print</span>(<span class="fn">out_edges</span>(adj, <span class="nm">0</span>))   <span class="cm"># → [(1, 7), (2, 4)]</span>
+<span class="fn">print</span>(<span class="fn">out_edges</span>(adj, <span class="nm">2</span>))   <span class="cm"># → [(1, 2), (3, 6)]</span>
+<span class="fn">print</span>(<span class="fn">out_edges</span>(adj, <span class="nm">3</span>))   <span class="cm"># → []  (vertex 3 has no outgoing edges)</span>
+
+<span class="cm"># (iii) Symmetry explanation:</span>
+<span class="cm"># The matrix is NOT symmetric.</span>
+<span class="cm"># In a directed graph, edge i→j does not imply edge j→i.</span>
+<span class="cm"># Example: adj[0][1] = 7 (edge 0→1 exists)</span>
+<span class="cm">#          adj[1][0] = 0 (NO edge 1→0 — one-way only)</span>
+<span class="cm"># Therefore adj[i][j] ≠ adj[j][i] in general → NOT symmetric.</span>
+
+<span class="cm">Mark scheme [6]:</span>
+<span class="cm">[1] 4×4 2D list initialised with zeros</span>
+<span class="cm">[1] sets only adj[FROM][TO] — does NOT set adj[TO][FROM] (directed)</span>
+<span class="cm">[1] out_edges: loops through all columns of row v</span>
+<span class="cm">[1] out_edges: appends (j, adj[v][j]) when adj[v][j] != 0</span>
+<span class="cm">[1] states: the matrix is NOT symmetric</span>
+<span class="cm">[1] explains: directed edges mean adj[i][j] ≠ adj[j][i] in general</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EX 5 ───────────────────────────────────────────── -->
+  <div class="ex">
+    <div class="ex-head" onclick="toggle('g5')">
+      <div class="ex-left">
+        <span class="ex-num">Ex 5</span>
+        <span class="ex-title">Read a graph from a file and build the matrix</span>
+      </div>
+      <div class="ex-meta">
+        <span class="badge b-hard">Hard</span>
+        <span class="badge b-mk">[7 marks]</span>
+        <span class="tog" id="g5-lbl">▼ show</span>
+      </div>
+    </div>
+    <div class="ex-body" id="g5" style="display:none;">
+      <div class="scenario">
+        A text file called <code class="ic">graph.txt</code> stores a weighted, undirected graph. Its format is:<br>
+        — Line 1: an integer — the number of vertices (n)<br>
+        — Each subsequent line: three values separated by spaces — <code class="ic">u v w</code> — meaning there is an edge between vertex u and vertex v with weight w.<br><br>
+        Example file:<br>
+        <code class="ic">4</code><br>
+        <code class="ic">0 1 5</code><br>
+        <code class="ic">0 2 10</code><br>
+        <code class="ic">1 3 3</code><br>
+        <code class="ic">2 3 8</code><br><br>
+        <strong>(i)</strong> Write a function <code class="ic">load_graph(filename)</code> that reads the file and returns the completed adjacency matrix as a 2D list.<br><br>
+        <strong>(ii)</strong> Write a procedure <code class="ic">print_matrix(adj)</code> that prints the adjacency matrix in a neat grid, with each value right-aligned in a field of width 4.<br><br>
+        <strong>(iii)</strong> Write the main program that calls both functions and prints the result.
+      </div>
+      <ul class="task-list">
+        <li>Write function <code class="ic">load_graph(filename)</code>. <span class="pts">[4]</span></li>
+        <li>Write procedure <code class="ic">print_matrix(adj)</code>. <span class="pts">[2]</span></li>
+        <li>Write the main program. <span class="pts">[1]</span></li>
+      </ul>
+      <div class="btn-row">
+        <button class="hint-btn" onclick="showHint('g5')">💡 Hint</button>
+        <button class="ans-btn" onclick="showAns('g5')">Show Answer</button>
+      </div>
+      <div class="hint-box" id="g5-hint">
+        load_graph: open file, read first line → n → build n×n grid of zeros. Then loop remaining lines: split each line to get u, v, w (convert to int). Set adj[u][v] = w AND adj[v][u] = w (undirected). Return adj. print_matrix: loop each row, use str(val).rjust(4) or f"{val:4d}" to right-align values.
+      </div>
+      <div class="ans-block" id="g5-ans">
+        <div class="ans-label">Model Answer</div>
+<pre class="code"><span class="cm"># (i) Load graph from file</span>
+<span class="kw">def</span> <span class="fn">load_graph</span>(filename):
+    <span class="kw">with</span> <span class="fn">open</span>(filename, <span class="st">'r'</span>) <span class="kw">as</span> f:
+        n   = <span class="fn">int</span>(f.<span class="fn">readline</span>().<span class="fn">strip</span>())       <span class="cm"># first line = number of vertices</span>
+        adj = [[<span class="nm">0</span>] * n <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n)]    <span class="cm"># create n×n grid of zeros</span>
+
+        <span class="kw">for</span> line <span class="kw">in</span> f:                          <span class="cm"># read each edge line</span>
+            parts = line.<span class="fn">strip</span>().<span class="fn">split</span>()
+            <span class="kw">if</span> <span class="fn">len</span>(parts) == <span class="nm">3</span>:
+                u, v, w = <span class="fn">int</span>(parts[<span class="nm">0</span>]), <span class="fn">int</span>(parts[<span class="nm">1</span>]), <span class="fn">int</span>(parts[<span class="nm">2</span>])
+                adj[u][v] = w         <span class="cm"># undirected: set BOTH directions</span>
+                adj[v][u] = w
+
+    <span class="kw">return</span> adj
+
+<span class="cm"># (ii) Print matrix neatly</span>
+<span class="kw">def</span> <span class="fn">print_matrix</span>(adj):
+    <span class="kw">for</span> row <span class="kw">in</span> adj:
+        <span class="fn">print</span>(<span class="st">''</span>.<span class="fn">join</span>(<span class="fn">str</span>(val).<span class="fn">rjust</span>(<span class="nm">4</span>) <span class="kw">for</span> val <span class="kw">in</span> row))
+
+<span class="cm"># (iii) Main program</span>
+adj = <span class="fn">load_graph</span>(<span class="st">'graph.txt'</span>)
+<span class="fn">print_matrix</span>(adj)
+
+<span class="cm">Mark scheme [7]:</span>
+<span class="cm">load_graph [4]:</span>
+<span class="cm">  [1] opens file correctly using with/open</span>
+<span class="cm">  [1] reads first line and builds n×n zero matrix</span>
+<span class="cm">  [1] reads each subsequent line and splits into u, v, w (converts to int)</span>
+<span class="cm">  [1] sets adj[u][v] = w AND adj[v][u] = w (both directions — undirected)</span>
+<span class="cm">print_matrix [2]:</span>
+<span class="cm">  [1] loops through each row</span>
+<span class="cm">  [1] prints values right-aligned (rjust or f-string formatting)</span>
+<span class="cm">Main [1]:</span>
+<span class="cm">  [1] calls load_graph then print_matrix with the result</span></pre>
+        <div style="background:#0a0e14;border:1px solid #2a3040;border-radius:8px;margin:.75rem 0;overflow:hidden;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#7eb8d4;padding:.5rem 1rem;background:#0d1420;border-bottom:1px solid #2a3040;">🖥️ Expected output for the example file</div>
+          <pre style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a8d890;padding:.75rem 1rem;line-height:1.7;margin:0;">   0   5  10   0
+   5   0   0   3
+  10   0   0   8
+   0   3   8   0</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL SUMMARY -->
+  <div class="box box-green" style="margin-top:2rem;">
+    <strong>🎯 Exam cheat sheet — everything from your slides in one place:</strong><br><br>
+    <strong>Graph</strong> = vertices (nodes) connected by edges (arcs).<br>
+    <strong>Unweighted</strong> = edges are just connections. Matrix has 0 or 1.<br>
+    <strong>Weighted</strong> = edges have numbers (cost/distance). Matrix has 0 or the weight.<br>
+    <strong>Directed (digraph)</strong> = edges have arrows (one-way). Matrix is NOT symmetric.<br>
+    <strong>Undirected</strong> = edges go both ways. Matrix IS always symmetric.<br>
+    <strong>Diagonal</strong> = always 0 in any adjacency matrix (no self-loops).<br>
+    <strong>adj[i][j]</strong> = "is there an edge FROM i TO j? And if weighted, what is its cost?"<br>
+    <strong>To find neighbours</strong> = loop through the row i and check which columns are non-zero.
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>Cambridge AS &amp; A Level · Computer Science 9618 · Chapter 23 · Section 03: Graphs</span>
+  <span>Undirected = symmetric 🔄 · Directed = not symmetric ➡️ · Diagonal = always 0 🚫</span>
+</footer>
+
+<script>
+function toggle(id){
+  const b=document.getElementById(id);
+  const l=document.getElementById(id+'-lbl');
+  const open=b.style.display==='block';
+  b.style.display=open?'none':'block';
+  if(l)l.textContent=open?'▼ show':'▲ hide';
+}
+function showHint(id){document.getElementById(id+'-hint').classList.toggle('visible');}
+function showAns(id){document.getElementById(id+'-ans').classList.toggle('visible');}
+</script>
+</body>
+</html>

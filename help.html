@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Paper 4 Study Guide 🐍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            color: #1a1a2e;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Cards */
+        .card {
+            background: #f8f9ff;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        .card:nth-child(7) { animation-delay: 0.7s; }
+        .card:nth-child(8) { animation-delay: 0.8s; }
+        .card:nth-child(9) { animation-delay: 0.9s; }
+        .card:nth-child(10) { animation-delay: 1.0s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-left: 5px solid #764ba2;
+            padding-left: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #1e1e2e;
+            color: #c9d1d9;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .code-block.wrong {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .code-block.correct {
+            border-left: 5px solid #2ecc71;
+        }
+
+        .code-block::before {
+            content: "📝";
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .correct-label {
+            color: #2ecc71;
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+        }
+
+        .wrong-label {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+        }
+
+        .tip {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .tip strong {
+            color: #856404;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .comparison-box {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .comparison-box.wrong {
+            background: #fee;
+            border-color: #e74c3c;
+        }
+
+        .comparison-box.correct {
+            background: #efe;
+            border-color: #2ecc71;
+        }
+
+        .emoji-big {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+
+        button.copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        button.copy-btn:hover {
+            background: #5a67d8;
+        }
+
+        .deadly-sins {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        .deadly-sins h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .deadly-sins ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .deadly-sins li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .deadly-sins li::before {
+            content: "💀";
+            position: absolute;
+            left: 0;
+        }
+
+        .cheat-sheet {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        .cheat-sheet h3 {
+            color: #f1c40f;
+            margin-bottom: 15px;
+        }
+
+        .cheat-sheet table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cheat-sheet td, .cheat-sheet th {
+            padding: 10px;
+            border-bottom: 1px solid #7f8c8d;
+            text-align: left;
+        }
+
+        .cheat-sheet th {
+            color: #f1c40f;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, #667eea, #764ba2, #667eea);
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐍 Python Paper 4 Survival Guide</h1>
+            
+            <p style="font-size: 0.9em; margin-top: 10px;">"Don't worry, you've got this!" 💪</p>
+        </div>
+
+        <!-- 1. GLOBAL VARIABLES -->
+        <div class="card">
+            <h2>🌍 1. GLOBAL Variables (The #1 Confusion!)</h2>
+            <div class="badge">⚠️ MOST STUDENTS GET THIS WRONG!</div>
+            
+            <div class="wrong-label">❌ NEVER DO THIS:</div>
+            <div class="code-block wrong">
+                # MAIN PROGRAM - NO 'global' here!<br>
+                global AnimalTopPointer    # ← FATAL ERROR!<br>
+                global ColourTopPointer    # ← FATAL ERROR!<br>
+                AnimalTopPointer = 0
+            </div>
+            
+            <div class="correct-label">✅ ALWAYS DO THIS:</div>
+            <div class="code-block correct">
+                # MAIN PROGRAM - NO 'global' keyword!<br>
+                Animal = []           # 20 elements<br>
+                Colour = []           # 10 elements<br>
+                AnimalTopPointer = 0<br>
+                ColourTopPointer = 0
+            </div>
+            
+            <div class="tip">
+                <strong>💡 REMEMBER:</strong> You only use "global" INSIDE functions!<br>
+                Never in the main program - that's a FATAL ERROR that will FAIL your exam!
+            </div>
+            
+            <div class="correct-label">✅ INSIDE a function (when MODIFYING):</div>
+            <div class="code-block correct">
+                def PushAnimal(DataToPush):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;global Animal, AnimalTopPointer    # ← NEEDED!<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;if AnimalTopPointer == 20:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return False<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Animal.append(DataToPush)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AnimalTopPointer += 1<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return True
+            </div>
+            
+            <div class="tip">
+                <strong>💡 QUICK RULE:</strong><br>
+                • READING a global variable? → NO "global" needed<br>
+                • MODIFYING (changing) a global variable? → YES, use "global"<br>
+                • Use commas: <code>global var1, var2, var3</code>
+            </div>
+        </div>
+
+        <!-- 2. FILE READING -->
+        <div class="card">
+            <h2>📁 2. Reading Files (ALWAYS handle errors!)</h2>
+            <div class="badge">🔒 ALWAYS use try-except!</div>
+            
+            <div class="correct-label">✅ THE RIGHT WAY (use 'with open'):</div>
+            <div class="code-block correct">
+                def ReadData():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;try:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with open("data.txt") as File:    # ← Auto-closes!<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for Line in File:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CleanLine = Line.strip()<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Process CleanLine<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;except IOError:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print("Could not find file")
+            </div>
+            
+            <div class="tip">
+                <strong>💡 WHY 'with open' is better:</strong><br>
+                • Auto-closes the file (no need to write .close())<br>
+                • Safer - even if errors happen, file closes properly!<br>
+                • This is what Cambridge wants to see!
+            </div>
+        </div>
+
+        <!-- 3. STRIP and SPLIT -->
+        <div class="card">
+            <h2>✂️ 3. .strip() and .split() (Remove that nasty \n!)</h2>
+            <div class="badge">📌 IMPORTANT!</div>
+            
+            <div class="grid-2">
+                <div class="comparison-box correct">
+                    <strong>✅ WITH .strip():</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+                        Line = "42\n"<br>
+                        Clean = Line.strip()<br>
+                        print(Clean)  # "42" (clean!)
+                    </div>
+                </div>
+                <div class="comparison-box wrong">
+                    <strong>❌ WITHOUT .strip():</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+                        Line = "42\n"<br>
+                        print(Line)   # "42\n" (has \n!)<br>
+                        # Comparison fails!<br>
+                        if Line == "42": # FALSE!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="correct-label">✅ For CSV files (values separated by commas):</div>
+            <div class="code-block correct">
+                # File contains: "528,permission\n"<br>
+                for Line in File:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Parts = Line.strip().split(",")<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;# Parts[0] = "528", Parts[1] = "permission"<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;ID = int(Parts[0])<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;Name = Parts[1]
+            </div>
+            
+            <div class="tip">
+                <strong>💡 ALWAYS use .strip() when reading lines!</strong> It removes the hidden \n character.<br>
+                Then use .split(",") if the line has commas separating values.
+            </div>
+        </div>
+
+        <!-- 4. ARRAYS/LISTS -->
+        <div class="card">
+            <h2>📊 4. Arrays/Lists (Creating them correctly!)</h2>
+            
+            <div class="wrong-label">❌ WRONG - This comment doesn't create space!</div>
+            <div class="code-block wrong">
+                DataArray = []  # 25 elements Integer  ← Actually has 0 elements!
+            </div>
+            
+            <div class="correct-label">✅ RIGHT - Actually creates space:</div>
+            <div class="code-block correct">
+                # 3 ways to do it (all correct):<br>
+                DataArray = [0] * 25              # ← SIMPLEST!<br>
+                DataArray = [None] * 25           # ← For null values<br>
+                DataArray = [-1] * 20             # ← For -1 values<br>
+                DataArray = [0 for x in range(25)] # ← Comprehension (mark scheme style)
+            </div>
+            
+            <div class="tip">
+                <strong>💡 QUICK REFERENCE:</strong><br>
+                • "array with 20 elements" → <code>[0] * 20</code><br>
+                • "initialised with null" → <code>[None] * 20</code><br>
+                • "initialised with -1" → <code>[-1] * 20</code><br>
+                • "empty array" → <code>[]</code> (then .append() later)
+            </div>
+        </div>
+
+        <!-- 5. APPEND vs ASSIGNMENT -->
+        <div class="card">
+            <h2>➕ 5. .append() vs = (Adding to lists)</h2>
+            
+            <div class="wrong-label">❌ WRONG - This replaces the whole list!</div>
+            <div class="code-block wrong">
+                myList = [1, 2, 3]<br>
+                myList = 4    # ← Now myList is just 4, list is GONE!
+            </div>
+            
+            <div class="correct-label">✅ RIGHT - Use .append() to add:</div>
+            <div class="code-block correct">
+                myList = [1, 2, 3]<br>
+                myList.append(4)   # ← Now myList = [1, 2, 3, 4]<br>
+                myList.append(5)   # ← Now myList = [1, 2, 3, 4, 5]
+            </div>
+            
+            <div class="tip">
+                <strong>💡 REMEMBER:</strong> .append() ADDS to the end. = REPLACES everything!
+            </div>
+        </div>
+
+        <!-- 6. FOR LOOPS with RANGE -->
+        <div class="card">
+            <h2>🔄 6. For Loops and range()</h2>
+            
+            <div class="grid-2">
+                <div class="comparison-box correct">
+                    <strong>📌 range(10):</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+                        for x in range(10):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(x)<br>
+                        # Prints: 0,1,2,3,4,5,6,7,8,9
+                    </div>
+                </div>
+                <div class="comparison-box correct">
+                    <strong>📌 range(1, 11):</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+                        for x in range(1, 11):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;print(x)<br>
+                        # Prints: 1,2,3,4,5,6,7,8,9,10
+                    </div>
+                </div>
+            </div>
+            
+            <div class="correct-label">✅ Looping through array indices:</div>
+            <div class="code-block correct">
+                myArray = [10, 20, 30, 40, 50]<br>
+                for x in range(len(myArray)):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;print(myArray[x])<br>
+                # Prints each value: 10, 20, 30, 40, 50
+            </div>
+            
+            <div class="tip">
+                <strong>💡 REMEMBER:</strong> range() stops BEFORE the end number!<br>
+                range(5) → 0,1,2,3,4 (NOT 5!)
+            </div>
+        </div>
+
+        <!-- 7. IF-ELSE (NO ELIF!) -->
+        <div class="card">
+            <h2>🔀 7. If-Else (No "elif" allowed!)</h2>
+            <div class="badge">⚠️ NEVER use "elif" - use nested if-else!</div>
+            
+            <div class="wrong-label">❌ DON'T use "elif":</div>
+            <div class="code-block wrong">
+                if risk == 1:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;result = 100<br>
+                elif risk == 2:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;result = 90<br>
+                elif risk == 3:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;result = 80
+            </div>
+            
+            <div class="correct-label">✅ DO this instead (nested if-else):</div>
+            <div class="code-block correct">
+                if risk == 1:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;result = 100<br>
+                else:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;if risk == 2:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = 90<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;else:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if risk == 3:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = 80
+            </div>
+            
+            <div class="tip">
+                <strong>💡 WHY?</strong> The mark scheme says NO "elif" - only "if" and "else"!<br>
+                It looks messy, but that's what Cambridge wants!
+            </div>
+        </div>
+
+        <!-- 8. STRING CONCATENATION -->
+        <div class="card">
+            <h2>🔗 8. String Concatenation (Using str())</h2>
+            
+            <div class="wrong-label">❌ ERROR - Can't add number to string:</div>
+            <div class="code-block wrong">
+                score = 95<br>
+                print("Your score is " + score)  # ← ERROR!
+            </div>
+            
+            <div class="correct-label">✅ RIGHT - Use str() to convert:</div>
+            <div class="code-block correct">
+                score = 95<br>
+                print("Your score is " + str(score))  # ← "Your score is 95"<br>
+                print("Score: " + str(score) + " points")  # ← "Score: 95 points"
+            </div>
+            
+            <div class="tip">
+                <strong>💡 REMEMBER:</strong> str() turns numbers into text so they can be added to strings!
+            </div>
+        </div>
+
+        <!-- 9. SUBSTRING with [:] -->
+        <div class="card">
+            <h2>✂️ 9. Substring (Slicing with [ : ])</h2>
+            
+            <div class="grid-2">
+                <div class="comparison-box correct">
+                    <strong>📌 Getting first 6 chars:</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+                        text = "HelloWorld"<br>
+                        first6 = text[0:6]<br>
+                        print(first6)  # "HelloW"<br>
+                        # [start:end] - end is NOT included!
+                    </div>
+                </div>
+                <div class="comparison-box correct">
+                    <strong>📌 From position to end:</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+                        text = "HelloWorld"<br>
+                        from5 = text[5:]<br>
+                        print(from5)   # "World"<br>
+                        # [5:] = from index 5 to end
+                    </div>
+                </div>
+            </div>
+            
+            <div class="correct-label">✅ More examples:</div>
+            <div class="code-block correct">
+                word = "Python"<br>
+                word[0:3]   # "Pyt" (indices 0,1,2)<br>
+                word[2:4]   # "th"<br>
+                word[:4]    # "Pyth" (from start to index 3)<br>
+                word[3:]    # "hon" (from index 3 to end)<br>
+                word[-2:]   # "on" (last 2 characters)
+            </div>
+            
+            <div class="tip">
+                <strong>💡 REMEMBER:</strong> [start:end] - end is EXCLUDED!<br>
+                And remember: computers count from 0, not 1!
+            </div>
+        </div>
+
+        <!-- 10. INHERITANCE with super() -->
+        <div class="card">
+            <h2>👨‍👦 10. Inheritance (Using super())</h2>
+            
+            <div class="correct-label">✅ RIGHT - Use super():</div>
+            <div class="code-block correct">
+                class Helicopter(Vehicle):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, IDP, MaxSpeedP, IncreaseAmountP, VertChangeP, MaxHeightP):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super().__init__(IDP, MaxSpeedP, IncreaseAmountP)  # ← NO 'self'!<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__VerticalPosition = 0<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__VerticalChange = VertChangeP<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.__MaxHeight = MaxHeightP
+            </div>
+            
+            <div class="tip">
+                <strong>💡 SUPER important:</strong> super().__init__() has NO 'self' inside!<br>
+                Just put the parameters directly!
+            </div>
+        </div>
+
+        <!-- DEADLY SINS -->
+        <div class="deadly-sins">
+            <h3>💀 DEADLY SINS (Things that will FAIL your exam)</h3>
+            <ul>
+                <li>Using "global" in the main program</li>
+                <li>Forgetting to use .strip() when reading files</li>
+                <li>Using "elif" instead of nested if-else</li>
+                <li>Creating array with [] and a comment (not actual size)</li>
+                <li>Forgetting exception handling (try-except) for files</li>
+                <li>Using = instead of .append() to add to lists</li>
+                <li>Forgetting str() when concatenating numbers to strings</li>
+                <li>Putting 'self' inside super().__init__()</li>
+            </ul>
+        </div>
+
+        <!-- CHEAT SHEET -->
+        <div class="cheat-sheet">
+            <h3>📋 QUICK CHEAT SHEET (Copy this!)</h3>
+            <table>
+                <tr>
+                    <th>What you want</th>
+                    <th>Write this</th>
+                </tr>
+                <tr>
+                    <td>Array with 20 elements (null)</td>
+                    <td><code>myArray = [None] * 20</code></td>
+                </tr>
+                <tr>
+                    <td>Array with 25 elements (zeros)</td>
+                    <td><code>myArray = [0] * 25</code></td>
+                </tr>
+                <tr>
+                    <td>Read file with error handling</td>
+                    <td><code>try: with open("file.txt") as f: ... except IOError:</code></td>
+                </tr>
+                <tr>
+                    <td>Remove \n from a line</td>
+                    <td><code>CleanLine = Line.strip()</code></td>
+                </tr>
+                <tr>
+                    <td>Split CSV line</td>
+                    <td><code>Parts = Line.strip().split(",")</code></td>
+                </tr>
+                <tr>
+                    <td>Add to a list</td>
+                    <td><code>myList.append(newItem)</code></td>
+                </tr>
+                <tr>
+                    <td>Loop 10 times (0 to 9)</td>
+                    <td><code>for x in range(10):</code></td>
+                </tr>
+                <tr>
+                    <td>Loop through array indices</td>
+                    <td><code>for x in range(len(myArray)):</code></td>
+                </tr>
+                <tr>
+                    <td>Get first 6 characters</td>
+                    <td><code>text[0:6]</code></td>
+                </tr>
+                <tr>
+                    <td>Number to string</td>
+                    <td><code>str(number)</code></td>
+                </tr>
+                <tr>
+                    <td>Call parent constructor</td>
+                    <td><code>super().__init__(parameters)</code></td>
+                </tr>
+                <tr>
+                    <td>Global variable inside function</td>
+                    <td><code>global var1, var2</code></td>
+                </tr>
+            </table>
+        </div>
+
+        <hr>
+
+        <div style="text-align: center; padding: 20px; color: #666;">
+            🎓 You've got this! Keep practicing and you'll pass! 💪
+        </div>
+    </div>
+
+    <script>
+        // Add copy functionality to all code blocks
+        document.querySelectorAll('.code-block').forEach(block => {
+            const btn = document.createElement('button');
+            btn.textContent = '📋 Copy';
+            btn.className = 'copy-btn';
+            btn.onclick = () => {
+                const text = block.innerText.replace('📝', '').trim();
+                navigator.clipboard.writeText(text);
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+            };
+            block.style.position = 'relative';
+            block.appendChild(btn);
+        });
+    </script>
+</body>
+</html>
