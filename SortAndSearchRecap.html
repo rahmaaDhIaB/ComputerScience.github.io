@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search & Sort — Exam Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;700&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --off: #f5f5f7;
+    --off2: #fbfbfd;
+    --border: #e8e8ed;
+    --border2: #d2d2d7;
+    --ink: #1d1d1f;
+    --ink2: #3a3a3c;
+    --ink3: #6e6e73;
+    --ink4: #a1a1a6;
+    --blue: #0071e3;
+    --blue-bg: #f0f6ff;
+    --blue-bd: #c7deff;
+    --green: #1a8d1a;
+    --green-bg: #f0faf0;
+    --green-bd: #b6e6b6;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --amber-bd: #fde68a;
+    --red: #c0392b;
+    --red-bg: #fff5f5;
+    --red-bd: #ffc5c5;
+    --purple: #6250a2;
+    --purple-bg: #f5f3ff;
+    --purple-bd: #ddd6fe;
+    --teal: #0b7a6e;
+    --teal-bg: #f0faf9;
+    --teal-bd: #b0e0db;
+    --radius: 18px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07), 0 0 1px rgba(0,0,0,0.05);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.10), 0 0 1px rgba(0,0,0,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    background: var(--off2);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, #e8f0ff 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--blue-bg);
+    color: var(--blue);
+    border: 1px solid var(--blue-bd);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--blue);
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--ink3);
+    font-weight: 400;
+    max-width: 480px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.5;
+  }
+  .hero-pills {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--off);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink2);
+  }
+  .hero-pill span { font-size: 13px; }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.9rem;
+  }
+  .section-num {
+    width: 28px; height: 28px;
+    background: var(--ink);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .card-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.25rem;
+  }
+  @media (max-width: 700px) {
+    .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ── ALGO HEADER ── */
+  .algo-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1.1rem;
+  }
+  .algo-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .algo-icon.blue  { background: var(--blue-bg); }
+  .algo-icon.green { background: var(--green-bg); }
+  .algo-icon.amber { background: var(--amber-bg); }
+  .algo-icon.teal  { background: var(--teal-bg); }
+  .algo-icon.purple { background: var(--purple-bg); }
+  .algo-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .algo-tagline {
+    font-size: 12.5px;
+    color: var(--ink3);
+    line-height: 1.4;
+  }
+
+  /* ── TAGS ── */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 100px;
+    letter-spacing: 0.02em;
+    margin: 2px 2px 0 0;
+  }
+  .tag-blue   { background: var(--blue-bg);   color: var(--blue);   border: 1px solid var(--blue-bd); }
+  .tag-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green-bd); }
+  .tag-amber  { background: var(--amber-bg);  color: var(--amber);  border: 1px solid var(--amber-bd); }
+  .tag-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red-bd); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-bd); }
+  .tag-teal   { background: var(--teal-bg);   color: var(--teal);   border: 1px solid var(--teal-bd); }
+  .tag-gray   { background: var(--off);       color: var(--ink2);   border: 1px solid var(--border2); }
+
+  /* ── RULE ROWS ── */
+  .rule-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .rule-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .rule-row:first-child { padding-top: 0; }
+  .rule-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .rule-label {
+    font-weight: 600;
+    color: var(--ink2);
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+  .rule-val { color: var(--ink); }
+
+  /* ── CODE BLOCK ── */
+  pre.code {
+    font-family: 'DM Mono', 'Menlo', monospace;
+    font-size: 12px;
+    line-height: 1.75;
+    background: var(--off);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    color: var(--ink2);
+    margin-top: 0.75rem;
+  }
+  .kw  { color: #c0392b; font-weight: 600; }
+  .fn  { color: var(--blue); }
+  .nm  { color: #6250a2; font-weight: 600; }
+  .cm  { color: var(--ink4); font-style: italic; }
+  .st  { color: var(--green); }
+
+  /* ── VISUAL ARRAY ── */
+  .vis-array {
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+    margin: 8px 0 4px;
+    flex-wrap: wrap;
+  }
+  .arr-cell {
+    width: 36px; height: 36px;
+    border: 2px solid var(--border2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    background: white;
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+  .arr-cell.hi     { border-color: var(--blue); background: var(--blue-bg); color: var(--blue); }
+  .arr-cell.found  { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+  .arr-cell.dead   { background: var(--off); color: var(--ink4); border-color: var(--border); }
+  .arr-cell.swap   { border-color: var(--amber); background: var(--amber-bg); color: var(--amber); }
+  .arr-cell.sorted { border-color: var(--green-bd); background: var(--green-bg); color: var(--green); }
+  .arr-label {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink3);
+    min-width: 90px;
+    padding-top: 10px;
+    flex-shrink: 0;
+  }
+  .arr-note {
+    font-size: 11.5px;
+    color: var(--ink3);
+    padding-top: 10px;
+    flex-shrink: 0;
+  }
+  .arr-note.g { color: var(--green); }
+  .arr-note.r { color: var(--red); }
+  .arr-note.a { color: var(--amber); }
+
+  /* ── STEP BADGE ── */
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: var(--ink);
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── COMPARE TABLE ── */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 0.75rem;
+  }
+  .cmp-table th {
+    background: var(--off);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink3);
+    border: 1px solid var(--border);
+  }
+  .cmp-table td {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+    color: var(--ink2);
+  }
+  .cmp-table tr:hover td { background: var(--off2); }
+
+  /* ── DANGER BOX ── */
+  .danger-box {
+    background: var(--red-bg);
+    border: 1px solid var(--red-bd);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    font-size: 13px;
+    color: var(--red);
+    line-height: 1.6;
+    margin-top: 0.75rem;
+  }
+  .danger-box strong { font-weight: 700; }
+  .tip-box {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-bd);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    font-size: 13px;
+    color: var(--amber);
+    line-height: 1.6;
+    margin-top: 0.75rem;
+  }
+  .tip-box strong { font-weight: 700; }
+  .info-box {
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-bd);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    font-size: 13px;
+    color: var(--blue);
+    line-height: 1.6;
+    margin-top: 0.75rem;
+  }
+  .info-box strong { font-weight: 700; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
+  }
+
+  /* ── EXAM TICK LIST ── */
+  .tick-list {
+    list-style: none;
+    margin-top: 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tick-list li {
+    display: flex;
+    gap: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink2);
+  }
+  .tick-list li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── VARIABLE PILL ROW ── */
+  .var-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .var-row:last-child { border-bottom: none; }
+  .var-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--off);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 2px 8px;
+    flex-shrink: 0;
+    color: var(--ink2);
+    white-space: nowrap;
+  }
+  .var-desc { color: var(--ink2); line-height: 1.5; }
+
+  /* ── WIDE CARD ── */
+  .wide-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── FULL-WIDTH GRID ── */
+  .full-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* ── EXAM BANNER ── */
+  .exam-banner {
+    background: linear-gradient(135deg, #0071e3 0%, #5856d6 100%);
+    border-radius: var(--radius);
+    padding: 2rem 2rem;
+    color: white;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 24px rgba(0,113,227,0.3);
+  }
+  .exam-banner-icon { font-size: 2.5rem; flex-shrink: 0; }
+  .exam-banner-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .exam-banner-sub {
+    font-size: 13.5px;
+    opacity: 0.85;
+    line-height: 1.5;
+  }
+  .exam-tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .exam-tip-card {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    backdrop-filter: blur(10px);
+  }
+  .exam-tip-card .tip-num {
+    font-size: 20px;
+    font-weight: 700;
+    opacity: 0.6;
+    margin-bottom: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+  .exam-tip-card .tip-text {
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  /* animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card, .wide-card {
+    animation: fadeUp 0.45s ease both;
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-badge">Cambridge 9618 · AS &amp; A Level · Computer Science</div>
+  <h1>Search &amp; Sort<br><em>Cheat Sheet</em></h1>
+  <p class="hero-sub">Everything you need to know before the exam. Short, sharp, visual.</p>
+  <div class="hero-pills">
+    <div class="hero-pill"><span>🔍</span> Linear Search</div>
+    <div class="hero-pill"><span>⚡</span> Binary Search</div>
+    <div class="hero-pill"><span>🫧</span> Bubble Sort</div>
+    <div class="hero-pill"><span>📥</span> Insertion Sort</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════
+       SECTION 1 — SEARCHING
+  ═══════════════════════════════════ -->
+  <div class="section-label">
+    <div class="section-num">1</div>
+    <div class="section-title">Searching Algorithms</div>
+  </div>
+
+  <div class="card-grid-2">
+
+    <!-- LINEAR SEARCH -->
+    <div class="card">
+      <div class="algo-header">
+        <div class="algo-icon blue">🔍</div>
+        <div>
+          <div class="algo-name">Linear Search</div>
+          <div class="algo-tagline">Check every element one by one — left to right</div>
+        </div>
+      </div>
+
+      <div class="rule-row">
+        <span class="rule-icon">✅</span>
+        <span class="rule-label">Works on</span>
+        <span class="rule-val"><span class="tag tag-green">Sorted</span> <span class="tag tag-green">Unsorted</span> — works on both!</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">⏱</span>
+        <span class="rule-label">Worst case</span>
+        <span class="rule-val"><strong>n</strong> comparisons — must check every element</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">🏁</span>
+        <span class="rule-label">Stops when</span>
+        <span class="rule-val">found = TRUE <em>or</em> index reaches max_index</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">📍</span>
+        <span class="rule-label">index starts</span>
+        <span class="rule-val">at <strong>−1</strong> (so first increment → index 0)</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Visual: found -->
+      <div style="font-size:11.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Search [3, 7, 1, 9, 4] for <strong style="color:var(--green)">9</strong></div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:3px;">
+        <div class="arr-cell dead">3</div>
+        <div class="arr-cell dead">7</div>
+        <div class="arr-cell dead">1</div>
+        <div class="arr-cell found">9</div>
+        <div class="arr-cell">4</div>
+        <span style="font-size:12px;color:var(--green);margin-left:4px;">✓ Found at index 3</span>
+      </div>
+
+      <pre class="code"><span class="kw">def</span> <span class="fn">linear_search</span>(my_list, search_value):
+    max_index = <span class="fn">len</span>(my_list) - <span class="nm">1</span>
+    found     = <span class="kw">False</span>
+    index     = -<span class="nm">1</span>          <span class="cm"># ← starts at -1</span>
+
+    <span class="kw">while not</span> found <span class="kw">and</span> index < max_index:
+        index += <span class="nm">1</span>           <span class="cm"># ← increment FIRST</span>
+        <span class="kw">if</span> my_list[index] == search_value:
+            found = <span class="kw">True</span>
+
+    <span class="kw">if</span> found:
+        <span class="fn">print</span>(<span class="st">"Found at:"</span>, index)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">"Not found"</span>)</pre>
+
+      <div class="danger-box">
+        <strong>⚠️ Don't forget:</strong> index += 1 happens INSIDE the loop, BEFORE the if-check.
+      </div>
+
+      <div class="speaker-notes" style="background: #f8f9fa; border-left: 4px solid #0071e3; padding: 1rem; margin-top: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; display: block;">
+      <strong>🎤 MR. RAYMOND'S SCRIPT (Linear Search):</strong><br>
+      “Look at the `index` variable. This is the biggest trap. It starts at -1, not 0. Why? Because the first thing we do inside the loop is `index += 1`. If we started at 0, we would skip element 0.<br>
+      Notice the `while` condition: `not found AND index < max_index`. If we reach the end, `index` becomes equal to `max_index`, the loop stops, and we output 'Not found'.<br>
+      <strong>Exam question:</strong> 'Why start at -1?' — To allow the first increment to hit index 0. 'Why two conditions?' — Efficiency. Stop as soon as we find it, don't keep searching.”<br>
+      <em>Walk through the visual array [3,7,1,9,4] searching for 9. Point at the boxes. Show them the 'dead' boxes vs the 'found' box.</em>
+    </div>
+    </div>
+    <!-- SPEAKER NOTES: LINEAR SEARCH -->
+    
+    <!-- BINARY SEARCH -->
+    <div class="card">
+      <div class="algo-header">
+        <div class="algo-icon amber">⚡</div>
+        <div>
+          <div class="algo-name">Binary Search</div>
+          <div class="algo-tagline">Halve the search space every step</div>
+        </div>
+      </div>
+
+      <div class="rule-row">
+        <span class="rule-icon">⚠️</span>
+        <span class="rule-label">Requires</span>
+        <span class="rule-val"><span class="tag tag-amber">SORTED list only</span> — won't work unsorted!</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">⏱</span>
+        <span class="rule-label">Worst case</span>
+        <span class="rule-val"><strong>log₂(n)</strong> — 1024 items = only 10 steps!</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">🏁</span>
+        <span class="rule-label">Stops when</span>
+        <span class="rule-val">found = TRUE <em>or</em> search_failed = TRUE</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">🔢</span>
+        <span class="rule-label">Middle</span>
+        <span class="rule-val"><strong>(first + last) // 2</strong> — integer division</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:11.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Search [1,3,5,7,9,11,15] for <strong style="color:var(--green)">7</strong></div>
+      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:3px;">
+        <div class="arr-cell dead">1</div>
+        <div class="arr-cell dead">3</div>
+        <div class="arr-cell dead">5</div>
+        <div class="arr-cell found">7</div>
+        <div class="arr-cell dead">9</div>
+        <div class="arr-cell dead">11</div>
+        <div class="arr-cell dead">15</div>
+        <span style="font-size:12px;color:var(--green);margin-left:4px;">✓ Found in 1 step!</span>
+      </div>
+
+      <pre class="code"><span class="kw">def</span> <span class="fn">binary_search</span>(my_list, search_item):
+    found = search_failed = <span class="kw">False</span>
+    first = <span class="nm">0</span>;  last = <span class="fn">len</span>(my_list) - <span class="nm">1</span>
+
+    <span class="kw">while not</span> found <span class="kw">and not</span> search_failed:
+        middle = (first + last) // <span class="nm">2</span>
+
+        <span class="kw">if</span>   my_list[middle] == search_item: found = <span class="kw">True</span>
+        <span class="kw">elif</span> first >= last:                  search_failed = <span class="kw">True</span>
+        <span class="kw">elif</span> my_list[middle] > search_item:  last  = middle - <span class="nm">1</span>
+        <span class="kw">else</span>:                                first = middle + <span class="nm">1</span>
+
+    <span class="kw">if</span> found: <span class="fn">print</span>(<span class="st">"Found at:"</span>, middle)
+    <span class="kw">else</span>:     <span class="fn">print</span>(<span class="st">"Not present"</span>)</pre>
+
+      <div class="danger-box">
+        <strong>⚠️ Order matters!</strong> Check exact match → then first≥last → then go left → then go right. Cambridge marks this order!
+      </div>
+          <!-- SPEAKER NOTES: BINARY SEARCH -->
+    <div class="speaker-notes" style="background: #f8f9fa; border-left: 4px solid #b45309; padding: 1rem; margin-top: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; display: block;">
+      <strong>🎤 MR. RAYMOND'S SCRIPT (Binary Search):</strong><br>
+      “Binary Search is ruthless. It demands a sorted list. If the data isn't sorted, this algorithm *will* fail.<br>
+      Watch the order of the `if` statements: 1) Did we find it? 2) Is the search space empty? 3) Is the middle value *greater* than what we want? (Go left) 4) Else, go right.<br>
+      <strong>Key variable: `middle = (first + last) // 2`.</strong> Use integer division. For 7 elements, the first middle is index 3. For 6 elements, it's index 2.<br>
+      <strong>Exam trick:</strong> They will ask 'What is the value of `search_failed` after iteration 2?' You must trace `first` and `last` moving closer together until they cross.”<br>
+      <em>Draw a number line on the board. Show them how 1024 items become 512, then 256, then 128... down to 1. That's 10 steps.</em>
+    </div>
+    </div>
+
+  </div>
+
+  <!-- Binary Search Variable Table -->
+  <div class="wide-card">
+    <div class="algo-header">
+      <div class="algo-icon amber">🔢</div>
+      <div>
+        <div class="algo-name">Binary Search — Variables Explained</div>
+        <div class="algo-tagline">Know every variable. Examiners ask about them.</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.5rem;margin-top:0.25rem;">
+      <div class="var-row" style="border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;">
+        <div class="var-name">first</div>
+        <div class="var-desc" style="font-size:13px;">Left boundary. Starts at 0. Moves RIGHT (+1 past middle) when value is in right half.</div>
+      </div>
+      <div class="var-row" style="border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;">
+        <div class="var-name">last</div>
+        <div class="var-desc" style="font-size:13px;">Right boundary. Starts at len−1. Moves LEFT (−1 past middle) when value is in left half.</div>
+      </div>
+      <div class="var-row" style="border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;">
+        <div class="var-name">middle</div>
+        <div class="var-desc" style="font-size:13px;">(first + last) // 2. The index we check each step. Recalculated every iteration.</div>
+      </div>
+      <div class="var-row" style="border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;">
+        <div class="var-name">search_failed</div>
+        <div class="var-desc" style="font-size:13px;">Becomes TRUE when first ≥ last and no match found. Means: no space left to search.</div>
+      </div>
+    </div>
+    <div class="tip-box" style="margin-top:1rem;">
+      <strong>🧠 When does search_failed become TRUE?</strong><br>
+      When first ≥ last — meaning only 1 element is left and it's not the match. No more halves to check. Loop exits, output "not found."
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SECTION 2 — SORTING
+  ═══════════════════════════════════ -->
+  <div class="section-label" style="margin-top:0.75rem;">
+    <div class="section-num">2</div>
+    <div class="section-title">Sorting Algorithms</div>
+  </div>
+
+  <div class="card-grid-2">
+
+    <!-- BUBBLE SORT -->
+    <div class="card">
+      <div class="algo-header">
+        <div class="algo-icon teal">🫧</div>
+        <div>
+          <div class="algo-name">Bubble Sort</div>
+          <div class="algo-tagline">Compare neighbours. Swap. Largest bubbles to the end.</div>
+        </div>
+      </div>
+
+      <div class="rule-row">
+        <span class="rule-icon">💡</span>
+        <span class="rule-label">Idea</span>
+        <span class="rule-val">Each pass, biggest unsorted value floats to its final spot</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">🔄</span>
+        <span class="rule-label">Passes</span>
+        <span class="rule-val">n−1 passes total (n = number of elements)</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">📦</span>
+        <span class="rule-label">Swap needs</span>
+        <span class="rule-val"><strong>temp</strong> variable — 3 step swap</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">📉</span>
+        <span class="rule-label">n shrinks</span>
+        <span class="rule-val">After each pass: n -= 1 (sorted end is off-limits)</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:11.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Sort [5, 3, 9, 1] — Pass 1 only</div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span style="font-size:11.5px;color:var(--ink3);width:80px;">j=0: 5&gt;3 ↔</span>
+          <div class="arr-cell swap">3</div><div class="arr-cell swap">5</div><div class="arr-cell">9</div><div class="arr-cell">1</div>
+        </div>
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span style="font-size:11.5px;color:var(--ink3);width:80px;">j=1: 5&lt;9 ✓</span>
+          <div class="arr-cell">3</div><div class="arr-cell hi">5</div><div class="arr-cell hi">9</div><div class="arr-cell">1</div>
+        </div>
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span style="font-size:11.5px;color:var(--ink3);width:80px;">j=2: 9&gt;1 ↔</span>
+          <div class="arr-cell">3</div><div class="arr-cell">5</div><div class="arr-cell swap">1</div><div class="arr-cell sorted">9</div>
+          <span class="arr-note g">9 locked ✅</span>
+        </div>
+      </div>
+
+      <pre class="code"><span class="kw">def</span> <span class="fn">BubbleSort</span>():
+    <span class="kw">global</span> DataStored, NumberItems
+    max_index = NumberItems - <span class="nm">1</span>
+    n         = max_index - <span class="nm">1</span>   <span class="cm"># shrinks each pass</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(max_index):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n + <span class="nm">1</span>):
+            <span class="kw">if</span> DataStored[j] > DataStored[j+<span class="nm">1</span>]:
+                temp              = DataStored[j]      <span class="cm"># step 1</span>
+                DataStored[j]     = DataStored[j+<span class="nm">1</span>]   <span class="cm"># step 2</span>
+                DataStored[j+<span class="nm">1</span>]  = temp               <span class="cm"># step 3</span>
+        n -= <span class="nm">1</span>  <span class="cm"># ← OUTSIDE inner loop, INSIDE outer</span></pre>
+
+      <div class="danger-box">
+        <strong>⚠️ n -= 1 position matters!</strong> It must be OUTSIDE the inner loop but INSIDE the outer loop.
+      </div>
+
+          <!-- SPEAKER NOTES: BUBBLE SORT -->
+    <div class="speaker-notes" style="background: #f8f9fa; border-left: 4px solid #0b7a6e; padding: 1rem; margin-top: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; display: block;">
+      <strong>🎤 MR. RAYMOND'S SCRIPT (Bubble Sort):</strong><br>
+      “Watch the animation. Compare j and j+1. If the left is bigger than the right, swap them. The biggest number 'bubbles' up to the end.<br>
+      The variable `n` shrinks (`n -= 1`) after each full pass. Why? Because the last element is already sorted, we don't need to check it again.<br>
+      <strong>The swap requires 3 lines:</strong><br>
+      1. `temp = DataStored[j]`<br>
+      2. `DataStored[j] = DataStored[j+1]`<br>
+      3. `DataStored[j+1] = temp`<br>
+      If you forget `temp`, you lose the value. I will deduct marks for that in the exam.”<br>
+      <em>Use two students holding cards. Ask them to swap. If they don't use a 'temp' table, they can't do it. This visual sticks.</em>
+    </div>
+    </div>
+
+    <!-- INSERTION SORT -->
+    <div class="card">
+      <div class="algo-header">
+        <div class="algo-icon purple">📥</div>
+        <div>
+          <div class="algo-name">Insertion Sort</div>
+          <div class="algo-tagline">Pick one item. Slide it into the sorted left side.</div>
+        </div>
+      </div>
+
+      <div class="rule-row">
+        <span class="rule-icon">💡</span>
+        <span class="rule-label">Idea</span>
+        <span class="rule-val">Left side = always sorted. Pick next, find its spot.</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">🔄</span>
+        <span class="rule-label">Outer loop</span>
+        <span class="rule-val">Starts at index <strong>1</strong> (index 0 alone = sorted)</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">📦</span>
+        <span class="rule-label">Needs temp?</span>
+        <span class="rule-val"><strong>value</strong> variable (not temp) — save before shifting</span>
+      </div>
+      <div class="rule-row">
+        <span class="rule-icon">📍</span>
+        <span class="rule-label">Insert at</span>
+        <span class="rule-val"><strong>j + 1</strong> after loop ends (j overshot by 1)</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:11.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Sort [5, 3, 1, 4] — inserting 3</div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span style="font-size:11.5px;color:var(--ink3);width:80px;">Save val=3</span>
+          <div class="arr-cell sorted">5</div><div class="arr-cell hi">3</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+          <span class="arr-note a">← picked up</span>
+        </div>
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span style="font-size:11.5px;color:var(--ink3);width:80px;">5&gt;3 → shift</span>
+          <div class="arr-cell" style="border-style:dashed;color:var(--ink4)">_</div><div class="arr-cell swap">5</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+        </div>
+        <div style="display:flex;gap:5px;align-items:center;">
+          <span style="font-size:11.5px;color:var(--ink3);width:80px;">Insert at 0</span>
+          <div class="arr-cell sorted">3</div><div class="arr-cell sorted">5</div><div class="arr-cell">1</div><div class="arr-cell">4</div>
+          <span class="arr-note g">sorted ✅</span>
+        </div>
+      </div>
+
+      <pre class="code"><span class="kw">def</span> <span class="fn">InsertionSort</span>():
+    <span class="kw">global</span> DataStored, NumberItems
+
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, NumberItems):    <span class="cm"># start at 1!</span>
+        value   = DataStored[i]          <span class="cm"># save the item</span>
+        current = i - <span class="nm">1</span>               <span class="cm"># look left</span>
+
+        <span class="kw">while</span> current >= <span class="nm">0</span> <span class="kw">and</span> DataStored[current] > value:
+            DataStored[current+<span class="nm">1</span>] = DataStored[current]  <span class="cm"># shift right</span>
+            current -= <span class="nm">1</span>                                 <span class="cm"># move left</span>
+
+        DataStored[current+<span class="nm">1</span>] = value  <span class="cm"># insert here</span></pre>
+
+      <div class="danger-box">
+        <strong>⚠️ Always insert at current + 1!</strong> When loop ends, current overshot one step left. current + 1 is the gap.
+      </div>
+        <!-- SPEAKER NOTES: INSERTION SORT -->
+    <div class="speaker-notes" style="background: #f8f9fa; border-left: 4px solid #6250a2; padding: 1rem; margin-top: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; display: block;">
+      <strong>🎤 MR. RAYMOND'S SCRIPT (Insertion Sort):</strong><br>
+      “Imagine you have a deck of cards in your left hand (sorted) and you pick a new card from the table with your right hand (`value`). You slide the bigger cards to the right to make space.<br>
+      We start at `i = 1` because index 0 alone is considered 'already sorted'.<br>
+      <strong>The tricky part:</strong> The `while` loop shifts items right. When the loop stops, `current` is pointing to the last item that was *smaller* than `value`. So the empty spot is at `current + 1`.<br>
+      <strong>Common exam error:</strong> Students write `DataStored[current] = value` instead of `DataStored[current+1]`. Don't do that.”<br>
+      <em>Act it out. Hold up your hand like it's holding sorted cards. Use the other hand to 'insert' a card. Show the shifting motion.</em>
+    </div>
+    </div>
+
+  </div>
+
+
+  <!-- footer -->
+  <div style="text-align:center;color:var(--ink4);font-size:12px;padding-top:0.5rem;">
+    Cambridge International AS &amp; A Level · Computer Science 9618 · Search &amp; Sort Cheat Sheet
+  </div>
+
+</div><!-- /container -->
+</body>
+</html>

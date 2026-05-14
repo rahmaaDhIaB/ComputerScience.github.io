@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked List Cheat Sheet 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f6f2;
+  --bg2: #ffffff;
+  --bg3: #eeece7;
+  --border: #d8d5cc;
+  --text: #18160f;
+  --muted: #7a7770;
+  --green: #1a7a00;
+  --green-bg: #edf7e8;
+  --green-border: #b0d8a0;
+  --pink: #b0005a;
+  --pink-bg: #fceef5;
+  --pink-border: #e0a0c0;
+  --blue: #0050a0;
+  --blue-bg: #eaf2ff;
+  --blue-border: #a0c0e8;
+  --yellow: #8a6000;
+  --yellow-bg: #fffae8;
+  --yellow-border: #e0c870;
+  --red: #b00000;
+  --red-bg: #fdecea;
+  --red-border: #e0a090;
+  --orange: #a04000;
+  --orange-bg: #fff3e8;
+  --orange-border: #e0b880;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;}
+
+.hero{background:linear-gradient(135deg,#f0f7e8 0%,#eaf2ff 60%,#fff3e8 100%);border-bottom:2px solid var(--border);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden;}
+.hero::after{content:'LINKED LIST';position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:8rem;color:rgba(26,122,0,0.05);letter-spacing:.1em;pointer-events:none;white-space:nowrap;}
+.hero-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:4rem;line-height:1;letter-spacing:.05em;color:var(--text);}
+.hero h1 span{color:var(--green);}
+.hero-sub{color:var(--muted);font-size:13px;margin-top:.5rem;}
+.hero-badges{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;}
+.hb{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:2px;border:1px solid;}
+.hb-g{border-color:var(--green);color:var(--green);background:var(--green-bg);}
+.hb-p{border-color:var(--pink);color:var(--pink);background:var(--pink-bg);}
+.hb-b{border-color:var(--blue);color:var(--blue);background:var(--blue-bg);}
+
+.page{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.full{grid-column:1/-1;}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.card-head{padding:.65rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;background:var(--bg3);}
+.card-head-icon{font-size:1rem;}
+.card-head-title{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.05em;color:var(--text);}
+.card-head-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-left:auto;text-transform:uppercase;letter-spacing:.1em;}
+.card-body{padding:.9rem 1rem;}
+
+.c-green .card-head{border-left:4px solid var(--green);}
+.c-pink  .card-head{border-left:4px solid var(--pink);}
+.c-blue  .card-head{border-left:4px solid var(--blue);}
+.c-yellow .card-head{border-left:4px solid var(--yellow);}
+.c-red   .card-head{border-left:4px solid var(--red);}
+.c-orange .card-head{border-left:4px solid var(--orange);}
+
+.kill{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem;margin-bottom:.6rem;}
+.kill-head{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.04em;margin-bottom:.3rem;}
+.kill-head.rd{color:var(--red);}
+.kill-head.gn{color:var(--green);}
+.kill-head.bl{color:var(--blue);}
+.kill-head.yl{color:var(--yellow);}
+.kill-list{list-style:none;padding:0;}
+.kill-list li{font-size:12.5px;color:var(--muted);padding:.15rem 0 .15rem 1.2rem;position:relative;}
+.kill-list li::before{content:'⚡';position:absolute;left:0;font-size:10px;}
+
+.rule{background:var(--bg3);border-radius:4px;padding:.55rem .85rem;margin:.35rem 0;display:flex;align-items:flex-start;gap:.6rem;font-size:13px;border:1px solid var(--border);}
+.rule-icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
+.rule-text{color:var(--text);line-height:1.5;}
+.rule-text strong{font-weight:700;}
+.rule-text .gn{color:var(--green);font-weight:600;}
+.rule-text .rd{color:var(--red);font-weight:600;}
+.rule-text .bl{color:var(--blue);font-weight:600;}
+
+.chain-viz{display:flex;align-items:center;gap:4px;overflow-x:auto;padding:.5rem 0;flex-wrap:nowrap;}
+.node{display:flex;border-radius:4px;overflow:hidden;border:1.5px solid var(--border);font-family:'DM Mono',monospace;font-size:11px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.07);}
+.node-d{padding:6px 10px;background:var(--bg3);color:var(--text);border-right:1px solid var(--border);}
+.node-p{padding:6px 8px;background:var(--bg2);color:var(--muted);font-size:9px;min-width:36px;text-align:center;}
+.node.head-n{border-color:var(--green);}
+.node.head-n .node-d{background:var(--green-bg);color:var(--green);font-weight:700;}
+.node.tail-n{border-color:var(--red);}
+.node.tail-n .node-p{color:var(--red);font-weight:700;}
+.arr-sym{color:var(--muted);font-size:14px;font-weight:700;flex-shrink:0;}
+.null-box{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;background:var(--red-bg);border:1.5px solid var(--red-border);color:var(--red);padding:4px 8px;border-radius:4px;flex-shrink:0;}
+.node-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;text-align:center;}
+.node-wrap{display:flex;flex-direction:column;align-items:center;}
+
+pre.c{font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.85;padding:.85rem 1rem;border-radius:6px;overflow-x:auto;white-space:pre;background:#f2f0eb;color:#18160f;border:1px solid var(--border);margin:.5rem 0;}
+.kw{color:#0050a0;font-weight:600;}
+.fn{color:var(--green);font-weight:500;}
+.st{color:#7a4000;}
+.cm{color:#a8a098;font-style:italic;}
+.nm{color:#8800aa;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:.5rem 0;}
+.tbl th{background:var(--bg3);color:var(--muted);padding:6px 10px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;text-align:left;font-weight:500;}
+.tbl td{padding:6px 10px;border:1px solid var(--border);color:var(--muted);background:var(--bg2);font-family:'DM Mono',monospace;font-size:11px;vertical-align:top;}
+.tbl td:first-child{color:var(--blue);font-weight:500;}
+.tbl tr:nth-child(even) td{background:var(--bg3);}
+.tg{color:var(--green)!important;font-weight:700;}
+.tr{color:var(--red)!important;font-weight:700;}
+
+.steps{display:flex;flex-direction:column;gap:.3rem;margin:.5rem 0;}
+.st-item{display:flex;gap:.6rem;align-items:flex-start;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.5rem .75rem;}
+.st-n{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;background:var(--green);color:#fff;border-radius:3px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.st-n.pk{background:var(--pink);}
+.st-n.bl{background:var(--blue);}
+.st-n.rd{background:var(--red);}
+.st-text{font-size:12.5px;color:var(--text);line-height:1.5;}
+
+.trans{display:grid;grid-template-columns:1fr auto 1fr;gap:.35rem;align-items:center;margin:.3rem 0;}
+.trans-from{font-family:'DM Mono',monospace;font-size:11px;background:var(--blue-bg);border:1px solid var(--blue-border);color:var(--blue);padding:5px 8px;border-radius:4px;text-align:center;}
+.trans-arrow{color:var(--muted);font-size:16px;text-align:center;}
+.trans-to{font-family:'DM Mono',monospace;font-size:11px;background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);padding:5px 8px;border-radius:4px;text-align:center;}
+
+.meme{background:var(--yellow-bg);border:1px solid var(--yellow-border);border-radius:6px;padding:.75rem 1rem;margin:.6rem 0;font-size:13px;color:var(--text);line-height:1.6;}
+.meme-head{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--yellow);letter-spacing:.05em;margin-bottom:.3rem;}
+
+.danger{background:var(--red-bg);border:1px solid var(--red-border);border-radius:4px;padding:.5rem .85rem;font-size:12.5px;color:var(--red);margin:.5rem 0;}
+.danger strong{font-weight:700;}
+
+.tip{background:var(--green-bg);border:1px solid var(--green-border);border-radius:4px;padding:.5rem .85rem;font-size:12.5px;color:var(--green);margin:.5rem 0;}
+.tip strong{font-weight:700;}
+
+.grid-viz{width:100%;border-collapse:collapse;font-size:11px;margin:.5rem 0;}
+.grid-viz th{background:var(--blue-bg);color:var(--blue);padding:5px 10px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;text-align:center;}
+.grid-viz td{padding:5px 10px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;text-align:center;}
+.grid-viz td.ghead{color:var(--green);font-weight:700;background:var(--green-bg);}
+.grid-viz td.gfree{color:#c8c5be;font-style:italic;}
+.grid-viz td.gred{color:var(--red);font-weight:700;}
+.grid-viz td.gslot{color:var(--blue);background:var(--blue-bg);font-weight:500;}
+
+code.ic{font-family:'DM Mono',monospace;font-size:11px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--blue);}
+
+.ribbon{background:linear-gradient(90deg,var(--green),#40a010);color:#fff;padding:.6rem 1rem;border-radius:4px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.05em;margin:.5rem 0;}
+
+footer{grid-column:1/-1;text-align:center;padding:1.5rem;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;border-top:1px solid var(--border);margin-top:.5rem;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Cambridge 9618 · Paper 4 · Exam Survival Kit</div>
+  <h1>Linked <span>List</span><br>Cheat Sheet</h1>
+  <div class="hero-sub">Everything you need. Nothing you don't. You've got this 🔥</div>
+  <div class="hero-badges">
+    <span class="hb hb-g">2 months later</span>
+    <span class="hb hb-p">Pre-exam panic</span>
+    <span class="hb hb-b">Certified saver</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- 4 RULES -->
+  <div class="card c-red full">
+    <div class="card-head">
+      <div class="card-head-icon">⚡</div>
+      <div class="card-head-title">The 4 Rules — Tattoo These On Your Brain</div>
+      <div class="card-head-sub">memorise or fail</div>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;">
+        <div class="kill">
+          <div class="kill-head rd">-1 means STOP 🛑</div>
+          <ul class="kill-list">
+            <li>pointer = -1 → no next item (end of list)</li>
+            <li>FirstNode = -1 → list is EMPTY</li>
+            <li>FirstEmpty = -1 → list is FULL (no space)</li>
+          </ul>
+        </div>
+        <div class="kill">
+          <div class="kill-head gn">Always Check Full First ✅</div>
+          <ul class="kill-list">
+            <li>Before ANY insert: check <code class="ic">FirstEmpty == -1</code></li>
+            <li>If full → print message → return</li>
+            <li>Forget this = lose marks instantly</li>
+          </ul>
+        </div>
+        <div class="kill">
+          <div class="kill-head bl">Two-Pointer Delete 🔗</div>
+          <ul class="kill-list">
+            <li>Need <code class="ic">current</code> AND <code class="ic">previous</code></li>
+            <li>previous starts at -1</li>
+            <li>Skip over: prev → next of current</li>
+          </ul>
+        </div>
+        <div class="kill">
+          <div class="kill-head yl">Recycle After Delete ♻️</div>
+          <ul class="kill-list">
+            <li>Clear the slot's data</li>
+            <li>Point deleted slot to old FirstEmpty</li>
+            <li>Set FirstEmpty = deleted slot</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE -->
+  <div class="card c-blue">
+    <div class="card-head">
+      <div class="card-head-icon">📦</div>
+      <div class="card-head-title">What's a Node?</div>
+      <div class="card-head-sub">one slot = two things</div>
+    </div>
+    <div class="card-body">
+      <div class="meme">
+        <div class="meme-head">Imagine a Post-it with two sections:</div>
+        Left side = the actual value (10, "Alice", whatever)<br>
+        Right side = slot number of the NEXT item<br>
+        That's it. Two columns. Done.
+      </div>
+      <div style="margin:.75rem 0;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;">How a linked list looks:</div>
+        <div class="chain-viz">
+          <div class="node-wrap">
+            <div class="node-label">head → slot 0</div>
+            <div class="node head-n"><div class="node-d">10</div><div class="node-p">→2</div></div>
+          </div>
+          <div class="arr-sym">→</div>
+          <div class="node-wrap">
+            <div class="node-label">slot 2</div>
+            <div class="node"><div class="node-d">20</div><div class="node-p">→4</div></div>
+          </div>
+          <div class="arr-sym">→</div>
+          <div class="node-wrap">
+            <div class="node-label">slot 4 (tail)</div>
+            <div class="node tail-n"><div class="node-d">30</div><div class="node-p">-1</div></div>
+          </div>
+          <div class="arr-sym">→</div>
+          <div class="null-box">-1 STOP</div>
+        </div>
+      </div>
+      <div class="tip"><strong>Order ≠ position.</strong> Slots 0, 2, 4 in memory but the list reads 10→20→30. The arrows create the order.</div>
+    </div>
+  </div>
+
+  <!-- VARIABLES -->
+  <div class="card c-green">
+    <div class="card-head">
+      <div class="card-head-icon">🔑</div>
+      <div class="card-head-title">4 Things That Matter</div>
+      <div class="card-head-sub">global variables</div>
+    </div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>Name</th><th>What it does</th></tr>
+        <tr><td class="tg">FirstNode</td><td>Slot of the FIRST item. -1 = empty list.</td></tr>
+        <tr><td class="tg">FirstEmpty</td><td>Slot of the first FREE space. -1 = full.</td></tr>
+        <tr><td style="color:var(--blue);">data [0]</td><td>Column 0 of the 2D array = the actual value</td></tr>
+        <tr><td style="color:var(--blue);">next [1]</td><td>Column 1 = pointer to next slot (-1 = none)</td></tr>
+      </table>
+      <div class="meme">
+        <div class="meme-head">The exam translation (2D array style):</div>
+        <div class="trans"><div class="trans-from">slots[i].value</div><div class="trans-arrow">→</div><div class="trans-to">LinkedList[i][0]</div></div>
+        <div class="trans"><div class="trans-from">slots[i].next_index</div><div class="trans-arrow">→</div><div class="trans-to">LinkedList[i][1]</div></div>
+        <div class="trans"><div class="trans-from">head_index</div><div class="trans-arrow">→</div><div class="trans-to">FirstNode</div></div>
+        <div class="trans"><div class="trans-from">first_free_index</div><div class="trans-arrow">→</div><div class="trans-to">FirstEmpty</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2D ARRAY -->
+  <div class="card c-yellow full">
+    <div class="card-head">
+      <div class="card-head-icon">🗃️</div>
+      <div class="card-head-title">The 2D Array — What the Exam Actually Uses</div>
+      <div class="card-head-sub">after inserting 30, 20, 10 at front</div>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;">
+        <div>
+          <table class="grid-viz">
+            <tr><th>Slot</th><th>[0] Data</th><th>[1] Next</th><th>Note</th></tr>
+            <tr><td class="gslot">0</td><td>10</td><td class="gred">-1</td><td style="text-align:left;color:var(--muted);font-size:9px;">tail (inserted 1st)</td></tr>
+            <tr><td class="gslot">1</td><td>20</td><td>0</td><td style="text-align:left;color:var(--muted);font-size:9px;">→ slot 0</td></tr>
+            <tr><td class="gslot">2</td><td class="ghead">30</td><td>1</td><td style="text-align:left;color:var(--green);font-size:9px;font-weight:600;">← HEAD (FirstNode=2)</td></tr>
+            <tr><td class="gslot">3</td><td class="gfree">empty</td><td>4</td><td style="text-align:left;color:#c8c5be;font-size:9px;">free → next free</td></tr>
+            <tr><td class="gslot">4</td><td class="gfree">empty</td><td class="gred">-1</td><td style="text-align:left;color:#c8c5be;font-size:9px;">last free slot</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="rule"><div class="rule-icon">🟢</div><div class="rule-text"><strong>FirstNode = 2</strong> → start reading from slot 2</div></div>
+          <div class="rule"><div class="rule-icon">♻️</div><div class="rule-text"><strong>FirstEmpty = 3</strong> → next insert goes to slot 3</div></div>
+          <div class="rule"><div class="rule-icon">📖</div><div class="rule-text">Traversal: slot 2 → slot 1 → slot 0 → <span class="rd">STOP (-1)</span></div></div>
+          <div class="rule"><div class="rule-icon">📢</div><div class="rule-text">Outputs: <strong>30, 20, 10</strong> (in that order)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSERT -->
+  <div class="card c-green">
+    <div class="card-head">
+      <div class="card-head-icon">➕</div>
+      <div class="card-head-title">Insert at Front</div>
+      <div class="card-head-sub">most common exam question</div>
+    </div>
+    <div class="card-body">
+      <div class="steps">
+        <div class="st-item"><div class="st-n">1</div><div class="st-text"><strong>Check full:</strong> <code class="ic">if FirstEmpty == -1</code> → print message, return</div></div>
+        <div class="st-item"><div class="st-n">2</div><div class="st-text"><strong>Grab slot:</strong> <code class="ic">new_slot = FirstEmpty</code></div></div>
+        <div class="st-item"><div class="st-n">3</div><div class="st-text"><strong>Move free pointer:</strong> <code class="ic">FirstEmpty = LinkedList[FirstEmpty][1]</code></div></div>
+        <div class="st-item"><div class="st-n">4</div><div class="st-text"><strong>Store data:</strong> <code class="ic">LinkedList[new_slot][0] = value</code></div></div>
+        <div class="st-item"><div class="st-n">5</div><div class="st-text"><strong>Point to old head:</strong> <code class="ic">LinkedList[new_slot][1] = FirstNode</code></div></div>
+        <div class="st-item"><div class="st-n">6</div><div class="st-text"><strong>Update head:</strong> <code class="ic">FirstNode = new_slot</code></div></div>
+      </div>
+<pre class="c"><span class="kw">def</span> <span class="fn">InsertFront</span>(value):
+    <span class="kw">global</span> LinkedList, FirstNode, FirstEmpty
+    <span class="kw">if</span> FirstEmpty == -<span class="nm">1</span>:
+        <span class="fn">print</span>(<span class="st">"List is full"</span>); <span class="kw">return</span>
+    new_slot                = FirstEmpty
+    FirstEmpty              = LinkedList[FirstEmpty][<span class="nm">1</span>]
+    LinkedList[new_slot][<span class="nm">0</span>] = value
+    LinkedList[new_slot][<span class="nm">1</span>] = FirstNode
+    FirstNode               = new_slot</pre>
+    </div>
+  </div>
+
+  <!-- TRAVERSE -->
+  <div class="card c-blue">
+    <div class="card-head">
+      <div class="card-head-icon">🚶</div>
+      <div class="card-head-title">Traverse / Output</div>
+      <div class="card-head-sub">walk the chain</div>
+    </div>
+    <div class="card-body">
+      <div class="meme">
+        <div class="meme-head">It's literally just following arrows</div>
+        Start at FirstNode. Follow [1] until you hit -1. Print [0] each time. That's the entire algorithm.
+      </div>
+      <div class="steps">
+        <div class="st-item"><div class="st-n bl">1</div><div class="st-text"><code class="ic">current = FirstNode</code></div></div>
+        <div class="st-item"><div class="st-n bl">2</div><div class="st-text"><code class="ic">while current != -1:</code> keep going</div></div>
+        <div class="st-item"><div class="st-n bl">3</div><div class="st-text">print <code class="ic">LinkedList[current][0]</code></div></div>
+        <div class="st-item"><div class="st-n bl">4</div><div class="st-text"><code class="ic">current = LinkedList[current][1]</code> → follow arrow</div></div>
+      </div>
+<pre class="c"><span class="kw">def</span> <span class="fn">OutputList</span>():
+    <span class="kw">global</span> LinkedList, FirstNode
+    current = FirstNode
+    <span class="kw">while</span> current != -<span class="nm">1</span>:
+        <span class="fn">print</span>(LinkedList[current][<span class="nm">0</span>])
+        current = LinkedList[current][<span class="nm">1</span>]</pre>
+      <div class="tip"><strong>Count items?</strong> Same loop + <code class="ic">count += 1</code> each iteration, then return count.</div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="card c-orange">
+    <div class="card-head">
+      <div class="card-head-icon">🔍</div>
+      <div class="card-head-title">Search / Find</div>
+      <div class="card-head-sub">traverse + check</div>
+    </div>
+    <div class="card-body">
+      <div class="meme">
+        <div class="meme-head">Same as traverse but with an if inside</div>
+        Walk the list. At each step: is this the one I'm looking for? Yes → done. No → keep walking.
+      </div>
+<pre class="c"><span class="kw">def</span> <span class="fn">SearchList</span>(target):
+    <span class="kw">global</span> LinkedList, FirstNode
+    current = FirstNode
+    <span class="kw">while</span> current != -<span class="nm">1</span>:
+        <span class="kw">if</span> LinkedList[current][<span class="nm">0</span>] == target:
+            <span class="fn">print</span>(<span class="st">"Found: slot"</span>, current); <span class="kw">return</span>
+        current = LinkedList[current][<span class="nm">1</span>]
+    <span class="fn">print</span>(<span class="st">"Not found"</span>)</pre>
+      <div class="danger"><strong>Don't forget:</strong> "Not found" goes AFTER the loop, not inside it!</div>
+    </div>
+  </div>
+
+  <!-- DELETE -->
+  <div class="card c-pink full">
+    <div class="card-head">
+      <div class="card-head-icon">🗑️</div>
+      <div class="card-head-title">Delete — The Boss Level</div>
+      <div class="card-head-sub">hardest but most marks</div>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div>
+          <div class="ribbon">The Skip-Over Trick Visualised</div>
+          <div style="font-size:12px;color:var(--text);line-height:2.2;font-family:'DM Mono',monospace;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:.6rem .85rem;margin:.4rem 0;">
+            Before: A → <span style="color:var(--red);font-weight:700;">B</span> → C &nbsp;&nbsp;(deleting B)<br>
+            After: &nbsp; A → C &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(A skips B)<br>
+            Code: &nbsp;&nbsp;<code class="ic">prev[1] = current[1]</code>
+          </div>
+          <div class="steps" style="margin-top:.5rem;">
+            <div class="st-item"><div class="st-n pk">1</div><div class="st-text"><strong>Two walkers:</strong> <code class="ic">current = FirstNode</code>, <code class="ic">previous = -1</code></div></div>
+            <div class="st-item"><div class="st-n pk">2</div><div class="st-text"><strong>Walk</strong> until you find target (move BOTH forward each step)</div></div>
+            <div class="st-item"><div class="st-n pk">3</div><div class="st-text"><strong>If</strong> <code class="ic">previous == -1</code>: deleting head → <code class="ic">FirstNode = current[1]</code></div></div>
+            <div class="st-item"><div class="st-n pk">4</div><div class="st-text"><strong>Else</strong>: <code class="ic">LinkedList[previous][1] = LinkedList[current][1]</code></div></div>
+            <div class="st-item"><div class="st-n pk">5</div><div class="st-text"><strong>Recycle:</strong> clear data, point slot to old FirstEmpty, FirstEmpty = current</div></div>
+          </div>
+        </div>
+        <div>
+<pre class="c" style="font-size:10.5px;"><span class="kw">def</span> <span class="fn">DeleteItem</span>(target):
+    <span class="kw">global</span> LinkedList, FirstNode, FirstEmpty
+
+    current  = FirstNode
+    previous = -<span class="nm">1</span>
+
+    <span class="cm"># Walk until we find it</span>
+    <span class="kw">while</span> current != -<span class="nm">1</span> <span class="kw">and</span> \
+          LinkedList[current][<span class="nm">0</span>] != target:
+        previous = current
+        current  = LinkedList[current][<span class="nm">1</span>]
+
+    <span class="cm"># Not found?</span>
+    <span class="kw">if</span> current == -<span class="nm">1</span>:
+        <span class="fn">print</span>(<span class="st">"Not found"</span>); <span class="kw">return</span>
+
+    <span class="cm"># Re-link (skip over deleted node)</span>
+    <span class="kw">if</span> previous == -<span class="nm">1</span>:
+        FirstNode = LinkedList[current][<span class="nm">1</span>]
+    <span class="kw">else</span>:
+        LinkedList[previous][<span class="nm">1</span>] = \
+            LinkedList[current][<span class="nm">1</span>]
+
+    <span class="cm"># Recycle the slot back to free list</span>
+    LinkedList[current][<span class="nm">0</span>] = -<span class="nm">1</span>
+    LinkedList[current][<span class="nm">1</span>] = FirstEmpty
+    FirstEmpty = current</pre>
+          <div class="danger"><strong>Don't forget to recycle!</strong> 3 lines at the end. Easy marks that students always miss.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARK SCHEME -->
+  <div class="card c-yellow">
+    <div class="card-head">
+      <div class="card-head-icon">💰</div>
+      <div class="card-head-title">Mark Scheme Patterns</div>
+      <div class="card-head-sub">examiner brain decoded</div>
+    </div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>Operation</th><th>What marks test</th></tr>
+        <tr><td>Insert</td><td>Full check · grab slot · advance FirstEmpty · store data · point to old head · update head</td></tr>
+        <tr><td>Traverse</td><td>Starts at FirstNode · loop until -1 · prints [0] · advances via [1]</td></tr>
+        <tr><td>Search</td><td>Same as traverse · checks [0]==target · returns/prints slot · "Not found" after loop</td></tr>
+        <tr><td>Delete</td><td>Two pointers · loop condition · moves both · handles head case · skips over · recycles</td></tr>
+      </table>
+      <div class="tip" style="margin-top:.5rem;"><strong>Pattern:</strong> Every function starts the same: <code class="ic">global ...</code> then <code class="ic">current = FirstNode</code>. When in doubt, write that first.</div>
+    </div>
+  </div>
+
+  <!-- MISTAKES -->
+  <div class="card c-red">
+    <div class="card-head">
+      <div class="card-head-icon">💀</div>
+      <div class="card-head-title">Don't Be That Student</div>
+      <div class="card-head-sub">common fails</div>
+    </div>
+    <div class="card-body">
+      <div class="rule"><div class="rule-icon">❌</div><div class="rule-text"><span class="rd">Forgot to check</span> <code class="ic">FirstEmpty == -1</code> before insert → mark gone</div></div>
+      <div class="rule"><div class="rule-icon">❌</div><div class="rule-text"><span class="rd">Only one pointer in delete</span> — need both current AND previous</div></div>
+      <div class="rule"><div class="rule-icon">❌</div><div class="rule-text"><span class="rd">Forgot to recycle the slot</span> after delete (3 lines, easy marks)</div></div>
+      <div class="rule"><div class="rule-icon">❌</div><div class="rule-text"><span class="rd">Put "Not found" inside the loop</span> → prints wrong number of times</div></div>
+      <div class="rule"><div class="rule-icon">❌</div><div class="rule-text"><span class="rd">Forgot to declare</span> <code class="ic">global</code> → function won't see the variables</div></div>
+      <div class="rule"><div class="rule-icon">❌</div><div class="rule-text"><span class="rd">Using [0] and [1] backwards</span> — [0] = DATA, [1] = NEXT POINTER</div></div>
+    </div>
+  </div>
+
+  <!-- FINAL RECAP -->
+  <div class="card c-green full">
+    <div class="card-head">
+      <div class="card-head-icon">⚡</div>
+      <div class="card-head-title">30-Second Recap — Read This Last Before You Walk In</div>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;">
+        <div class="rule"><div class="rule-icon">🟢</div><div class="rule-text"><strong>-1</strong> = EMPTY everywhere (no next, no head, no free space)</div></div>
+        <div class="rule"><div class="rule-icon">📦</div><div class="rule-text"><strong>[0]</strong> = data · <strong>[1]</strong> = next slot number</div></div>
+        <div class="rule"><div class="rule-icon">🚀</div><div class="rule-text"><strong>Insert:</strong> check full → grab → advance free → store → link → update head</div></div>
+        <div class="rule"><div class="rule-icon">🚶</div><div class="rule-text"><strong>Traverse:</strong> current = FirstNode → while != -1 → print [0] → follow [1]</div></div>
+        <div class="rule"><div class="rule-icon">🔍</div><div class="rule-text"><strong>Search:</strong> traverse + if [0]==target → found. After loop → not found.</div></div>
+        <div class="rule"><div class="rule-icon">🗑️</div><div class="rule-text"><strong>Delete:</strong> two walkers → skip over → recycle 3 lines. prev==-1? update head.</div></div>
+      </div>
+      <div style="text-align:center;margin-top:1rem;font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--green);letter-spacing:.1em;">
+        YOU KNOW THIS. GO PASS. 🔥
+      </div>
+    </div>
+  </div>
+
+  <footer>Cambridge 9618 · Linked List · Quick Reference · -1 ALWAYS MEANS STOP 🛑</footer>
+
+</div>
+</body>
+</html>
